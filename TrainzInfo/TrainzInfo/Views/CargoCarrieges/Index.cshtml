@@ -1,0 +1,54 @@
+﻿@model IEnumerable<TrainzInfo.Models.CargoCarrieges>
+
+@{
+    ViewData["Title"] = "Товарный вагон";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CarriegeType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxSpeed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CargoType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CargoWeight)
+            </th>
+            <th></th>
+        </tr>
+        
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarriegeType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxSpeed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CargoType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CargoWeight)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

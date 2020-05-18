@@ -24,7 +24,7 @@ namespace TrainzInfo.Controllers
         // GET: TrainzTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.trainzTypes.ToListAsync());
+            return View(await _context.TrainzTypes.ToListAsync());
         }
 
         // GET: TrainzTypes/Details/5
@@ -35,7 +35,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var trainzType = await _context.trainzTypes
+            var trainzType = await _context.TrainzTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (trainzType == null)
             {
@@ -75,7 +75,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var trainzType = await _context.trainzTypes.FindAsync(id);
+            var trainzType = await _context.TrainzTypes.FindAsync(id);
             if (trainzType == null)
             {
                 return NotFound();
@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var trainzType = await _context.trainzTypes
+            var trainzType = await _context.TrainzTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (trainzType == null)
             {
@@ -141,15 +141,15 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var trainzType = await _context.trainzTypes.FindAsync(id);
-            _context.trainzTypes.Remove(trainzType);
+            var trainzType = await _context.TrainzTypes.FindAsync(id);
+            _context.TrainzTypes.Remove(trainzType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TrainzTypeExists(int id)
         {
-            return _context.trainzTypes.Any(e => e.Id == id);
+            return _context.TrainzTypes.Any(e => e.Id == id);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TrainzInfo.Models.TrainzType>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Поезда";
 }
 
-<h1>Index</h1>
+    <h1>Поезда</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -27,7 +27,15 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                @if (item.Type == "Товарный поезд")
+                {
+                    <a asp-controller="CargoCarrieges" asp-action="Index">Добавить товарный вагон</a>
+                }
+                else
+                {
+                    <a asp-controller="PassangerCarrieges" asp-action="Index">Добавить пассажирский вагон</a>
+                }
             </td>
         </tr>
 }
