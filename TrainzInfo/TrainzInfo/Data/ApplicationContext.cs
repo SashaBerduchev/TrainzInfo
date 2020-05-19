@@ -20,5 +20,8 @@ namespace TrainzInfo.Data
         public DbSet<PassangerCarrieges> PassangerCarrieges { get; set; }
         public DbSet<Electic_locomotive> Electic_Locomotives { get; set; }
         public DbSet<Electrick_Lockomotive_Info> Electrick_Lockomotive_Infos { get; set; }
+        public DbSet<DieselLocomoives> DieselLocomoives { get; set; }
+        public DbSet<DieselLocomotiveInfo> DieselLocomotiveInfos { get; set; }
+
     }
 }

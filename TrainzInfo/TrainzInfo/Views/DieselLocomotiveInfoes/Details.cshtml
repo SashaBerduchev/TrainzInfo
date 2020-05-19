@@ -1,0 +1,56 @@
+﻿@model TrainzInfo.Models.DieselLocomotiveInfo
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Diesel_Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Diesel_Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Power)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Power)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Baseinfo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Baseinfo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AllInfo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AllInfo)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (Model != null)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
+    }
+    else
+    {
+        <meta http-equiv="refresh" content="600">
+    }
+    @*<a asp-action="Edit" asp-route-id="@Model.id">Edit</a>*@ |
+    <a asp-action="Index">Back to List</a>
+</div>
