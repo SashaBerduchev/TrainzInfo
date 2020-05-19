@@ -33,8 +33,8 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Electic_locomotive electic_Locomotives = await _context.Electic_Locomotives.Where(x => x.id == idloc).FirstOrDefaultAsync();
-            var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos
-                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Name);
+            var electrick_Lockomotive_Info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_Locomotives.Name).FirstOrDefault();
+                
             if (electrick_Lockomotive_Info == null)
             {
                 Electrick_Lockomotive_Info electrick_Lockomotive_Info_add = new Electrick_Lockomotive_Info {
@@ -45,9 +45,11 @@ namespace TrainzInfo.Controllers
                     AllInfo = ""
                 };
                 _context.Add(electrick_Lockomotive_Info_add);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-            return View(electrick_Lockomotive_Info);
+            var electrick_Lockomotive_Info_result = await _context.Electrick_Lockomotive_Infos
+                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Name);
+            return View(electrick_Lockomotive_Info_result);
         }
 
         // GET: Electrick_Lockomotive_Info/Create
@@ -93,7 +95,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Electric_Type,Power,Baseinfo,AllInfo")] Electrick_Lockomotive_Info electrick_Lockomotive_Info)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Electric_Type,Power,Baseinfo,AllInfo")] Electrick_Lockomotive_Info electrick_Lockomotive_Info)
         {
             if (id != electrick_Lockomotive_Info.id)
             {
