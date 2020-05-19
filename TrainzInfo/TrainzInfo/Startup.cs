@@ -16,6 +16,7 @@ namespace TrainzInfo
 {
     public class Startup
     {
+        public bool DEBUG_MODE = false;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,9 +28,14 @@ namespace TrainzInfo
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddControllersWithViews();
-            
+            string connection = "";
             // получаем строку подключения из файла конфигурации
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            if (DEBUG_MODE == true) {
+                connection = Configuration.GetConnectionString("DefaultConnection");
+            }else if(DEBUG_MODE == false)
+            {
+                connection = Configuration.GetConnectionString("WebConnection");
+            }
             // добавляем контекст MobileContext в качестве сервиса в приложение
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
