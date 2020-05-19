@@ -241,6 +241,57 @@ namespace TrainzInfo.Migrations
                     b.ToTable("CargoCarrieges");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Electic_locomotive", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ALlPowerP")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SectionCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Electic_Locomotives");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Electrick_Lockomotive_Info", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AllInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Baseinfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Electric_Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Power")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Electrick_Lockomotive_Infos");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.LocomotivesType", b =>
                 {
                     b.Property<int>("id")

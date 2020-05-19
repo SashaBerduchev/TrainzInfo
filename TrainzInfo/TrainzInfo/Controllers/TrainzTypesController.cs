@@ -17,13 +17,16 @@ namespace TrainzInfo.Controllers
 
         public TrainzTypesController(ApplicationContext context)
         {
-            Trace.WriteLine(this);
+            
             _context = context;
+            Trace.WriteLine(this);
+
         }
 
         // GET: TrainzTypes
         public async Task<IActionResult> Index()
         {
+            //return View(await _context.TrainzTypes.ToListAsync());
             return View(await _context.TrainzTypes.ToListAsync());
         }
 
@@ -66,6 +69,7 @@ namespace TrainzInfo.Controllers
             }
             return View(trainzType);
         }
+
 
         // GET: TrainzTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)

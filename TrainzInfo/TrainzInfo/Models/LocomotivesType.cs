@@ -8,5 +8,6 @@ namespace TrainzInfo.Models
         [Required]
         [MaxLength(100)]
         public string Type { get; set; }
+        
     }
 }

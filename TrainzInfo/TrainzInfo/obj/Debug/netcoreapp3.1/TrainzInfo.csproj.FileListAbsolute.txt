@@ -366,3 +366,13 @@ C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\T
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarrieges\Details.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarrieges\Edit.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarrieges\Index.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Create.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Delete.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Details.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Edit.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Index.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electrick_Lockomotive_Info\Create.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electrick_Lockomotive_Info\Delete.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electrick_Lockomotive_Info\Details.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electrick_Lockomotive_Info\Edit.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electrick_Lockomotive_Info\Index.cshtml.g.cs
