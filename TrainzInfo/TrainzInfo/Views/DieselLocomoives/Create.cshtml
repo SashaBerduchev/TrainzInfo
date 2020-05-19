@@ -35,6 +35,16 @@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+            <div>
+                <input type="file" id="fileLoader" name="files"  title="Load File" />
+                <asp:Button id="BtnLoad" runat="server" Text="ASP click Me" onclientclick="openfileDialog()" />
+                <script>
+                    function openfileDialog() {
+                        document.getElementById("fileLoader").click();
+                        document.openfileDialog();
+                    }
+                </script>
+            </div>
         </form>
     </div>
 </div>

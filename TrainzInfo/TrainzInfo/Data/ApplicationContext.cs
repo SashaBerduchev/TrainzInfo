@@ -17,11 +17,12 @@ namespace TrainzInfo.Data
         public DbSet<TrainzType> TrainzTypes { get; set; }
         public DbSet<LocomotivesType> LocomotivesTypes { get; set; }
         public DbSet<CargoCarrieges> CargoCarrieges { get; set; }
-        public DbSet<PassangerCarrieges> PassangerCarrieges { get; set; }
         public DbSet<Electic_locomotive> Electic_Locomotives { get; set; }
         public DbSet<Electrick_Lockomotive_Info> Electrick_Lockomotive_Infos { get; set; }
         public DbSet<DieselLocomoives> DieselLocomoives { get; set; }
         public DbSet<DieselLocomotiveInfo> DieselLocomotiveInfos { get; set; }
-
+        public DbSet<PassangerCarriere> PassangerCarrieres { get; set; }
+        public DbSet<CargoCarriegesInfo> CargoCarriegesInfos { get; set; }
+        public DbSet<PassangerCarriegesInfo> PassangerCarriegesInfos { get; set; }
     }
 }

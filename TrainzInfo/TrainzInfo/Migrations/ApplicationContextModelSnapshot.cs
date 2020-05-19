@@ -241,6 +241,26 @@ namespace TrainzInfo.Migrations
                     b.ToTable("CargoCarrieges");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.CargoCarriegesInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Info")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("CargoCarriegesInfos");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.DieselLocomoives", b =>
                 {
                     b.Property<int>("id")
@@ -255,6 +275,7 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SectionCount")
@@ -303,6 +324,7 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SectionCount")
@@ -360,23 +382,47 @@ namespace TrainzInfo.Migrations
                     b.ToTable("LocomotivesTypes");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.PassangerCarrieges", b =>
+            modelBuilder.Entity("TrainzInfo.Models.PassangerCarriegesInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CarriegeType")
+                    b.Property<string>("Info")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PlaceCount")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.ToTable("PassangerCarrieges");
+                    b.ToTable("PassangerCarriegesInfos");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.PassangerCarriere", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Calss")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CountPlace")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PlaceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("PassangerCarrieres");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.TrainzType", b =>

@@ -78,6 +78,8 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                
+                
                 _context.Add(dieselLocomotiveInfo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -44,9 +44,15 @@
                 @Html.DisplayFor(modelItem => item.CargoWeight)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
+                @if (Model != null)
+                {
+                    <a asp-controller="CargoCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Долнительная информация</a> 
+                }
+                else
+                {
+                    <meta http-equiv="refresh" content="600">
+                }
             </td>
         </tr>
 }
