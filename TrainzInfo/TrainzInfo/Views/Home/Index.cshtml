@@ -13,7 +13,7 @@
     </div>
 <body>
     <div class="text-center">
-        <p><img src="CHS8.png" alt="Железная дорога" width="300" height="250" title="Электровоз ЧС8"></p>
+        <p>@*<img src="/Home/CHS8.png" alt="Железная дорога" width="300" height="250" title="Электровоз ЧС8">*@</p>
     </div>
     <table class="table">
         <thead>
@@ -39,13 +39,14 @@
                     @Html.DisplayFor(modelItem => item.BaseNewsInfo)
                 </td>
                 <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
+                    <a asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a> |
                     @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@ |
                     @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
+                    <a asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+
                 </td>
             </tr>
             }
         </tbody>
     </table>
-
 </body>

@@ -31,6 +31,15 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    @if (Model != null)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>
+    }
+    else
+    {
+        <meta http-equiv="refresh" content="900">
+
+    }
+    <a asp-action="Index">Вернутся обратно</a>
 </div>
