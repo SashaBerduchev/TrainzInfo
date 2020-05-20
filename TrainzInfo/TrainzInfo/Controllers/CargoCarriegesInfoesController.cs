@@ -53,7 +53,7 @@ namespace TrainzInfo.Controllers
             }
             catch (Exception exp)
             {
-                return NotFound();
+                return View(exp);
             }
             return View(cargoCarriegesInfo_result);
         }
@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(cargoCarriegesInfo);
         }

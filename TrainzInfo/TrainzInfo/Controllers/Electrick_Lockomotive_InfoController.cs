@@ -120,7 +120,7 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(electrick_Lockomotive_Info);
         }

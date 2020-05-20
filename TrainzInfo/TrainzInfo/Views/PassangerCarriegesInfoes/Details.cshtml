@@ -4,20 +4,19 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Type</h1>
 
 <div>
-    <h4>PassangerCarriegesInfo</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
+        <dt class="col-sm-2">
+            @Html.DisplayName("Тип вагона")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Type)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Info)
+        <dt class="col-sm-2">
+            @Html.DisplayName("Информация")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Info)
@@ -25,6 +24,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model != null)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>
+    }
+    else
+    {
+        <meta http-equiv="refresh" content="900">
+
+    }
+    <a asp-controller="PassangerCarrieres" asp-action="Index">Вернутся обратно</a>
 </div>

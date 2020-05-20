@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
@@ -17,6 +19,7 @@ namespace TrainzInfo.Controllers
         public PassangerCarriegesInfoesController(ApplicationContext context)
         {
             _context = context;
+            Trace.WriteLine(this);
         }
 
         // GET: PassangerCarriegesInfoes
@@ -26,21 +29,42 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: PassangerCarriegesInfoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? idcar)
         {
-            if (id == null)
+            if (idcar == null)
             {
                 return NotFound();
             }
 
-            var passangerCarriegesInfo = await _context.PassangerCarriegesInfos
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (passangerCarriegesInfo == null)
+            PassangerCarriere passangerCarriere = await _context.PassangerCarrieres.Where(x => x.id == idcar).FirstOrDefaultAsync();
+            var passanger_carrieges_info = _context.PassangerCarriegesInfos.Where(m => m.Type == passangerCarriere.Calss).FirstOrDefault();
+
+            if (passanger_carrieges_info == null)
+            {
+                PassangerCarriegesInfo passangerCarriegesInfo = new PassangerCarriegesInfo
+                {
+                    Type = passangerCarriere.Calss,
+                    Info = ""
+                };
+                _context.Add(passangerCarriegesInfo);
+                Trace.WriteLine("POST: " + passangerCarriegesInfo);
+                await _context.SaveChangesAsync();
+            }
+            PassangerCarriegesInfo passangerCarriegesInfo_result;
+            try
+            {
+                passangerCarriegesInfo_result = _context.PassangerCarriegesInfos.Where(m => m.Type == passangerCarriere.Calss).FirstOrDefault();
+                if(passangerCarriegesInfo_result == null)
+                {
+                    return View(Details(idcar));
+                }
+            }
+            catch (Exception exp)
             {
                 return NotFound();
             }
-
-            return View(passangerCarriegesInfo);
+            Trace.WriteLine("RESPONSE: " + passangerCarriegesInfo_result);
+            return View(passangerCarriegesInfo_result);
         }
 
         // GET: PassangerCarriegesInfoes/Create
@@ -78,6 +102,7 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            RedirectToAction(nameof(Details));
             return View(passangerCarriegesInfo);
         }
 
@@ -111,9 +136,9 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Edit));
             }
-            return View(passangerCarriegesInfo);
+            return View(Details(passangerCarriegesInfo.id));
         }
 
         // GET: PassangerCarriegesInfoes/Delete/5
