@@ -396,3 +396,8 @@ C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\T
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarriegesInfoes\Details.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarriegesInfoes\Edit.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\PassangerCarriegesInfoes\Index.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsInfoes\Create.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsInfoes\Delete.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsInfoes\Details.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsInfoes\Edit.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsInfoes\Index.cshtml.g.cs

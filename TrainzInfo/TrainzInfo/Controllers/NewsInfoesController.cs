@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using TrainzInfo.Data;
+using TrainzInfo.Models;
+
+namespace TrainzInfo.Controllers
+{
+    public class NewsInfoesController : Controller
+    {
+        private readonly ApplicationContext _context;
+
+        public NewsInfoesController(ApplicationContext context)
+        {
+            _context = context;
+        }
+
+        // GET: NewsInfoes
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.NewsInfos.ToListAsync());
+        }
+
+        // GET: NewsInfoes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var newsInfo = await _context.NewsInfos
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (newsInfo == null)
+            {
+                return NotFound();
+            }
+
+            return View(newsInfo);
+        }
+
+        // GET: NewsInfoes/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: NewsInfoes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(newsInfo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(newsInfo);
+        }
+
+        // GET: NewsInfoes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var newsInfo = await _context.NewsInfos.FindAsync(id);
+            if (newsInfo == null)
+            {
+                return NotFound();
+            }
+            return View(newsInfo);
+        }
+
+        // POST: NewsInfoes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
+        {
+            if (id != newsInfo.id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(newsInfo);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!NewsInfoExists(newsInfo.id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(newsInfo);
+        }
+
+        // GET: NewsInfoes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var newsInfo = await _context.NewsInfos
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (newsInfo == null)
+            {
+                return NotFound();
+            }
+
+            return View(newsInfo);
+        }
+
+        // POST: NewsInfoes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var newsInfo = await _context.NewsInfos.FindAsync(id);
+            _context.NewsInfos.Remove(newsInfo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool NewsInfoExists(int id)
+        {
+            return _context.NewsInfos.Any(e => e.id == id);
+        }
+    }
+}

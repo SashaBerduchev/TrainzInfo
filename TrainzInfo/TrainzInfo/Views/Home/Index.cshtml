@@ -2,12 +2,50 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Добро пожаловать!</h1>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-</div>
+    <div class="text-center">
+        <h1 class="display-4">Добро пожаловать!</h1>
+        @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+        <p ><big> Данный сайт посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
+            Здесь вы гайдете много интересной информации о жлезнодорожном транспорте и новости</big>
+        </p>
+        <a asp-controller="NewsInfoes" asp-action="Create">Создать новость</a> |
+
+    </div>
 <body>
     <div class="text-center">
         <p><img src="CHS8.png" alt="Железная дорога" width="300" height="250" title="Электровоз ЧС8"></p>
     </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Название")
+                </th>
+                <th>
+                    @Html.DisplayName("Общее")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (NewsInfo item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameNews)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BaseNewsInfo)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
+                    @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@ |
+                    @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
 </body>
