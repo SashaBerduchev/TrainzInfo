@@ -9,7 +9,7 @@
 <div>
     <h4>Электровоз</h4>
     <hr />
-    <a asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Html.DisplayNameFor(model => model.Name)</a>
+    <a asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Name</a>
     <dl class="">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)

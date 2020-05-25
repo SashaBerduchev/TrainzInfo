@@ -41,7 +41,7 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="dotnet-aspnet-codegenerator-design.dll">
-      <publishTime>03/27/2020 20:10:02</publishTime>
+      <publishTime>05/12/2020 19:55:52</publishTime>
     </File>
     <File Include="es/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:09:00</publishTime>
@@ -206,25 +206,25 @@
       <publishTime>04/29/2019 22:04:14</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll">
-      <publishTime>03/27/2020 20:09:46</publishTime>
+      <publishTime>05/12/2020 19:55:36</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Core.dll">
-      <publishTime>03/27/2020 20:09:54</publishTime>
+      <publishTime>05/12/2020 19:55:42</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.dll">
-      <publishTime>03/27/2020 20:09:56</publishTime>
+      <publishTime>05/12/2020 19:55:46</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll">
-      <publishTime>03/27/2020 20:09:56</publishTime>
+      <publishTime>05/12/2020 19:55:44</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll">
-      <publishTime>03/27/2020 20:09:50</publishTime>
+      <publishTime>05/12/2020 19:55:40</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll">
-      <publishTime>03/27/2020 20:09:48</publishTime>
+      <publishTime>05/12/2020 19:55:38</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll">
-      <publishTime>03/27/2020 20:09:58</publishTime>
+      <publishTime>05/12/2020 19:55:48</publishTime>
     </File>
     <File Include="Newtonsoft.Json.dll">
       <publishTime>03/24/2018 17:44:14</publishTime>
@@ -386,28 +386,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>05/19/2020 22:38:13</publishTime>
+      <publishTime>05/20/2020 22:20:08</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>05/19/2020 22:34:15</publishTime>
+      <publishTime>05/20/2020 22:07:39</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>05/19/2020 22:34:15</publishTime>
+      <publishTime>05/20/2020 22:07:39</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>05/19/2020 22:34:15</publishTime>
+      <publishTime>05/20/2020 22:07:39</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
-      <publishTime>05/19/2020 08:21:14</publishTime>
+      <publishTime>05/20/2020 22:07:44</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>05/19/2020 22:34:19</publishTime>
+      <publishTime>05/20/2020 22:18:12</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>05/19/2020 22:34:19</publishTime>
+      <publishTime>05/20/2020 22:18:12</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>05/19/2020 22:38:13</publishTime>
+      <publishTime>05/20/2020 22:20:08</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
       <publishTime>05/18/2020 13:06:12</publishTime>

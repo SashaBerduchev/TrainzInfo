@@ -227,3 +227,8 @@ C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\T
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\NewsInfoes\Details.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\NewsInfoes\Edit.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\NewsInfoes\Index.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ListRollingStones\Create.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ListRollingStones\Delete.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ListRollingStones\Details.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ListRollingStones\Edit.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ListRollingStones\Index.cshtml.g.cs

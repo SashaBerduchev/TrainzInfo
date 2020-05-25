@@ -365,6 +365,37 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Electrick_Lockomotive_Infos");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.ListRollingStone", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Depot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ListRollingStones");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.LocomotivesType", b =>
                 {
                     b.Property<int>("id")

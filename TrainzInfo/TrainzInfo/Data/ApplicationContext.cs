@@ -25,5 +25,6 @@ namespace TrainzInfo.Data
         public DbSet<CargoCarriegesInfo> CargoCarriegesInfos { get; set; }
         public DbSet<PassangerCarriegesInfo> PassangerCarriegesInfos { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }
+        public DbSet<ListRollingStone> ListRollingStones {get;set;}
     }
 }
