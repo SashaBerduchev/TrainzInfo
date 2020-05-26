@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace TrainzInfo.Models
         public int Power { get; set; }
         public string Baseinfo { get; set; }
         public string AllInfo { get; set; }
+        [Required]
+        public string Imgsrc { get; set; }
     }
 }

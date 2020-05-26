@@ -4,16 +4,19 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+    <h1>@Model.Name</h1>
 
 <div>
-    <h4>@Model.Name</h4>
+    <h4>Подробности</h4>
     <hr />
     <a asp-controller="DieselLocomotiveInfoes" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация тепловозе  </a>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
+        <dd>
+            <img src="@Model.Imgsrc" />
+        </dd>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>

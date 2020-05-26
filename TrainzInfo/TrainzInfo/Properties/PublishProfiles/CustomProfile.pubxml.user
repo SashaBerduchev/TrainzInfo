@@ -14,7 +14,7 @@
       <publishTime>05/18/2020 13:06:12</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>05/19/2020 09:10:53</publishTime>
+      <publishTime>05/26/2020 15:35:41</publishTime>
     </File>
     <File Include="cs/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:08:58</publishTime>
@@ -386,28 +386,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>05/26/2020 12:13:53</publishTime>
+      <publishTime>05/26/2020 20:00:18</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>05/26/2020 12:12:36</publishTime>
+      <publishTime>05/26/2020 19:52:33</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>05/26/2020 12:12:36</publishTime>
+      <publishTime>05/26/2020 19:52:33</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>05/26/2020 12:12:36</publishTime>
+      <publishTime>05/26/2020 19:52:33</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>05/20/2020 22:07:44</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>05/26/2020 12:12:39</publishTime>
+      <publishTime>05/26/2020 19:52:41</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>05/26/2020 12:12:38</publishTime>
+      <publishTime>05/26/2020 19:52:41</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>05/26/2020 12:13:54</publishTime>
+      <publishTime>05/26/2020 20:00:19</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
       <publishTime>05/18/2020 13:06:12</publishTime>

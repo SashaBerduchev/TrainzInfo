@@ -14,5 +14,7 @@ namespace TrainzInfo.Models
         public int MaxSpeed { get; set; }
         public int SectionCount { get; set; }
         public int DiseslPower { get; set; }
+        [Required]
+        public string Imgsrc { get; set; }
     }
 }

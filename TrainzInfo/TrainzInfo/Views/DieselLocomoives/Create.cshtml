@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Создвть</h1>
 
 <h4>DieselLocomoives</h4>
 <hr />
@@ -33,17 +33,12 @@
                 <span asp-validation-for="DiseslPower" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="Imgsrc" class="control-label"></label>
+                <input asp-for="Imgsrc" class="form-control" />
+                <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
-            <div>
-                <input type="file" id="fileLoader" name="files"  title="Load File" />
-                <asp:Button id="BtnLoad" runat="server" Text="ASP click Me" onclientclick="openfileDialog()" />
-                <script>
-                    function openfileDialog() {
-                        document.getElementById("fileLoader").click();
-                        document.openfileDialog();
-                    }
-                </script>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

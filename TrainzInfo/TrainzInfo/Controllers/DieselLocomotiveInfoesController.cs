@@ -46,7 +46,8 @@ namespace TrainzInfo.Controllers
                     Power = dieselLocomoives.DiseslPower,
                     Diesel_Type = "",
                     Baseinfo = "",
-                    AllInfo = ""
+                    AllInfo = "",
+                    Imgsrc = ""
                 };
                 _context.Add(dieselLocomotiveInfo);
                 await _context.SaveChangesAsync();
@@ -74,7 +75,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Diesel_Type,Power,Baseinfo,AllInfo")] DieselLocomotiveInfo dieselLocomotiveInfo)
+        public async Task<IActionResult> Create([Bind("id,Name,Diesel_Type,Power,Baseinfo,AllInfo,Imgsrc")] DieselLocomotiveInfo dieselLocomotiveInfo)
         {
             if (ModelState.IsValid)
             {
@@ -108,7 +109,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Diesel_Type,Power,Baseinfo,AllInfo")] DieselLocomotiveInfo dieselLocomotiveInfo)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Diesel_Type,Power,Baseinfo,AllInfo,Imgsrc")] DieselLocomotiveInfo dieselLocomotiveInfo)
         {
             if (id != dieselLocomotiveInfo.id)
             {
@@ -133,7 +134,6 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details));
             }
             return View(dieselLocomotiveInfo);
         }
