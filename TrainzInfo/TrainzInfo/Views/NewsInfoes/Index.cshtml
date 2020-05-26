@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.NewsInfoAll)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +38,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NewsInfoAll)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |

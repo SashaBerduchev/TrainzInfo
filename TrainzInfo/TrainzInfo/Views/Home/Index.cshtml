@@ -24,6 +24,9 @@
                 <th>
                     @Html.DisplayName("Общее")
                 </th>
+                <th>
+                    @Html.DisplayName("Дата")
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -37,6 +40,9 @@
 
                 <td>
                     @Html.DisplayFor(modelItem => item.BaseNewsInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
                 </td>
                 <td>
                     <a asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a> |

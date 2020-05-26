@@ -26,7 +26,8 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View( await _context.NewsInfos.ToListAsync());
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            return View(newsInfo);
         }
 
         public IActionResult Privacy()

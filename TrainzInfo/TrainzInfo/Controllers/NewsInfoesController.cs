@@ -22,7 +22,8 @@ namespace TrainzInfo.Controllers
         // GET: NewsInfoes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.NewsInfos.ToListAsync());
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            return View(newsInfo);
         }
 
         // GET: NewsInfoes/Details/5
@@ -58,6 +59,7 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                newsInfo.DateTime = DateTime.Now;
                 _context.Add(newsInfo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
