@@ -57,11 +57,11 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Speed,SectionCount,ALlPowerP")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Speed,SectionCount,ALlPowerP,LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (ModelState.IsValid)
             {
-                Trace.WriteLine("POST: " + electic_locomotive);
+                Trace.WriteLine("POST: " +this + electic_locomotive);
                 _context.Add(electic_locomotive);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -93,7 +93,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Speed,SectionCount,ALlPowerP")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Speed,SectionCount,ALlPowerP,LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (id != electic_locomotive.id)
             {

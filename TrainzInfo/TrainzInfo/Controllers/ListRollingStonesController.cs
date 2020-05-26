@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,21 +22,21 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ListRollingStones
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? idlocname)
         {
-            return View(await _context.ListRollingStones.ToListAsync());
+            return View(await _context.ListRollingStones.Where(x=>x.Name == idlocname).ToListAsync());
         }
 
         // GET: ListRollingStones/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? idlocname)
         {
-            if (id == null)
+            if (idlocname == null)
             {
                 return NotFound();
             }
 
             var listRollingStone = await _context.ListRollingStones
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Name == idlocname);
             if (listRollingStone == null)
             {
                 return NotFound();
@@ -55,7 +56,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City")] ListRollingStone listRollingStone)
+        public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status")] ListRollingStone listRollingStone)
         {
             if (ModelState.IsValid)
             {
@@ -86,12 +87,14 @@ namespace TrainzInfo.Controllers
                     Number = "",
                     Depot = ""
                 };
+                Trace.WriteLine("POST " + this + listRollingStoneObj);
                 _context.ListRollingStones.Add(listRollingStoneObj);
                 _context.SaveChanges();
                 ListRollingStone listRollingStoneNew = await _context.ListRollingStones.Where(x => x.Name == electrick_Lockomotive.Name).FirstOrDefaultAsync();
-
+                Trace.WriteLine("RESPONSE" + this + listRollingStoneNew);
                 return View(listRollingStoneNew);
             }
+            Trace.WriteLine("RESPONSE" + this + listRollingStone);
             return View(listRollingStone);
         }
 
@@ -100,7 +103,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Number,Depot,Country,City")] ListRollingStone listRollingStone)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Number,Depot,Country,City,Status")] ListRollingStone listRollingStone)
         {
             if (id != listRollingStone.id)
             {
@@ -127,21 +130,20 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(listRollingStone);
         }
 
         // GET: ListRollingStones/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? idlocname)
         {
-            if (id == null)
+            if (idlocname == null)
             {
                 return NotFound();
             }
 
             var listRollingStone = await _context.ListRollingStones
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Name == idlocname);
             if (listRollingStone == null)
             {
                 return NotFound();

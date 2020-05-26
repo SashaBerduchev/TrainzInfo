@@ -18,5 +18,7 @@ namespace TrainzInfo.Models
         public string Country { get; set; }
         [Required]
         public string City { get; set; }
+        [Required]
+        public string Status { get; set; }
     }
 }

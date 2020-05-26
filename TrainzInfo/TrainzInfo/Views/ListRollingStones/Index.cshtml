@@ -27,6 +27,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,9 +52,12 @@
                 @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-idlocname="@item.Name">Edit</a> |
+                <a asp-action="Details" asp-route-idlocname="@item.Name">Details</a> |
+                <a asp-action="Delete" asp-route-idlocname="@item.Name">Delete</a>
             </td>
         </tr>
 }

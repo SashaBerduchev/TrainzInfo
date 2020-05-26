@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TrainzInfo.Models
 {
@@ -9,7 +13,10 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public int Speed { get; set; }
-        public int SectionCount{ get; set; }
+        [Required]
+        public int SectionCount { get; set; }
+        [Required]
         public int ALlPowerP { get; set; }
+        public string LocomotiveImg { get; set; }
     }
 }
