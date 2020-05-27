@@ -13,5 +13,7 @@ namespace TrainzInfo.Models
         public string Type { get; set; }
         [Required]
         public string Info { get; set; }
+        [Required]
+        public string Imgsrc { get; set; }
     }
 }

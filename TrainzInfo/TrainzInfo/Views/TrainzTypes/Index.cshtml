@@ -30,11 +30,11 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |*@
                 @if (item.Type == "Товарный поезд")
                 {
-                    <a asp-controller="CargoCarrieges" asp-action="Index">Добавить товарный вагон</a>
+                    <a class="btn btn-primary" asp-controller="CargoCarrieges" asp-action="Index">Товарные вагоны</a>
                 }
                 else
                 {
-                    <a asp-controller="PassangerCarrieres" asp-action="Index">Добавить пассажирский вагон</a>
+                    <a class="btn btn-info" asp-controller="PassangerCarrieres" asp-action="Index">Пассажирские вагоны</a>
                 }
             </td>
         </tr>

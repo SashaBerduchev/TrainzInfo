@@ -13,6 +13,7 @@ namespace TrainzInfo.Controllers
     public class CargoCarriegesInfoesController : Controller
     {
         private readonly ApplicationContext _context;
+        private int GlobalID;
 
         public CargoCarriegesInfoesController(ApplicationContext context)
         {
@@ -28,9 +29,12 @@ namespace TrainzInfo.Controllers
         // GET: CargoCarriegesInfoes/Details/5
         public async Task<IActionResult> Details(int? idcar)
         {
-            if (idcar == null)
+            if (idcar == null && GlobalID == null)
             {
                 return NotFound();
+            }else if(GlobalID != null && GlobalID != -1 && idcar == null)
+            {
+                idcar = GlobalID;
             }
 
             CargoCarrieges cargoCarrieges = await _context.CargoCarrieges.Where(x => x.id == idcar).FirstOrDefaultAsync();
@@ -38,13 +42,21 @@ namespace TrainzInfo.Controllers
 
             if (cargo_carriges_info == null)
             {
-                CargoCarriegesInfo  cargoCarriegesInfo  = new CargoCarriegesInfo
+                CargoCarriegesInfo cargoCarriegesInfo = new CargoCarriegesInfo
                 {
                     Type = cargoCarrieges.CarriegeType,
+                    Imgsrc = cargo_carriges_info.Imgsrc,
                     Info = ""
                 };
                 _context.Add(cargoCarriegesInfo);
                 await _context.SaveChangesAsync();
+            }
+            else if (cargo_carriges_info.Imgsrc == "")
+            {
+                CargoCarrieges cargoCarriegesImg = _context.CargoCarrieges.Where(x => x.id == cargo_carriges_info.id).FirstOrDefault();
+                cargo_carriges_info.Imgsrc = cargoCarriegesImg.Imgsrc;
+                _context.Update(cargo_carriges_info);
+
             }
             CargoCarriegesInfo cargoCarriegesInfo_result;
             try
@@ -55,6 +67,7 @@ namespace TrainzInfo.Controllers
             {
                 return View(exp);
             }
+            GlobalID = -1;
             return View(cargoCarriegesInfo_result);
         }
 
@@ -101,7 +114,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Type,Info")] CargoCarriegesInfo cargoCarriegesInfo)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Type,Info,Imgsrc")] CargoCarriegesInfo cargoCarriegesInfo)
         {
             if (id != cargoCarriegesInfo.id)
             {
@@ -112,6 +125,11 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    if (cargoCarriegesInfo.Imgsrc == "")
+                    {
+                        CargoCarrieges cargoCarrieges = _context.CargoCarrieges.Where(x => x.id == cargoCarriegesInfo.id).FirstOrDefault();
+                        cargoCarriegesInfo.Imgsrc = cargoCarrieges.Imgsrc;
+                    }
                     _context.Update(cargoCarriegesInfo);
                     await _context.SaveChangesAsync();
                 }
@@ -126,7 +144,9 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details));
+                GlobalID = cargoCarriegesInfo.id;
+                int idcar = cargoCarriegesInfo.id;
+                return RedirectToAction(nameof(Index));
             }
             return View(cargoCarriegesInfo);
         }
