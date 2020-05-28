@@ -31,9 +31,12 @@
                 @Html.DisplayFor(modelItem => item.Info)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                <img src="@item.Imgsrc" width="160" height="150">
+            </td>
+            <td>
+                <a class="btn btn-outline-success"  asp-action="Edit" asp-route-id="@item.id"> Редактировать </a>
+                <a class="btn btn-outline-primary" asp-controller="CargoCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Информация</a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id"> Удалить </a>
             </td>
         </tr>
 }

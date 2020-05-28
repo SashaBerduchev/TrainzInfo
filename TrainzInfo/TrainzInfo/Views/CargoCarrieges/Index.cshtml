@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CarriegeType)
+                @Html.DisplayName("Тип вагона")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaxSpeed)
+                @Html.DisplayName("Конструкционная скорость")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CargoType)
+                @Html.DisplayName("Тип перевозимых грузов")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CargoWeight)
+                @Html.DisplayName("Вес груза")
             </th>
             <th></th>
         </tr>
@@ -44,10 +44,14 @@
                 @Html.DisplayFor(modelItem => item.CargoWeight)
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
+                <img src="@item.Imgsrc" width="170" height="150"/>
+            </td>
+            <td>
                 @if (Model != null)
                 {
-                    <a asp-controller="CargoCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Долнительная информация</a> 
+                    <a class="btn btn-outline-info" asp-controller="CargoCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Долнительная информация</a>
+                    <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.id"> Редактировать </a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id"> Удалить  </a>
                 }
                 else
                 {

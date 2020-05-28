@@ -8,7 +8,8 @@
         <p ><big> Данный сайт посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
             Здесь вы найдете много интересной информации о железнодорожном транспорте и новости</big>
         </p>
-        <a asp-controller="NewsInfoes" asp-action="Create">Создать новость</a> |
+        <a class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a> 
+
 
     </div>
 <body>
@@ -56,10 +57,10 @@
                     @Html.DisplayFor(modelItem => item.DateTime)
                 </td>
                 <td>
-                    <a asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a> ||
+                    <a class="btn btn-primary" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
                     @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
                     @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
-                    <a asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                    <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>
 
                 </td>
             </tr>

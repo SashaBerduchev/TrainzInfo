@@ -15,6 +15,9 @@ namespace TrainzInfo.Models
         public int MaxSpeed { get; set; }
         [Required]
         public string CargoType { get; set; }
+        [Required]
         public int CargoWeight { get; set; }
+        [Required]
+        public string Imgsrc { get; set; }
     }
 }

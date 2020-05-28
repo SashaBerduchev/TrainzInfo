@@ -56,7 +56,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,CarriegeType,MaxSpeed,CargoType,CargoWeight")] CargoCarrieges cargoCarrieges)
+        public async Task<IActionResult> Create([Bind("id,CarriegeType,MaxSpeed,CargoType,CargoWeight,Imgsrc")] CargoCarrieges cargoCarrieges)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,CarriegeType,MaxSpeed,CargoType,CargoWeight")] CargoCarrieges cargoCarrieges)
+        public async Task<IActionResult> Edit(int id, [Bind("id,CarriegeType,MaxSpeed,CargoType,CargoWeight,Imgsrc")] CargoCarrieges cargoCarrieges)
         {
             if (id != cargoCarrieges.id)
             {
