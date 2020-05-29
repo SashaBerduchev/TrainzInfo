@@ -11,10 +11,10 @@
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:35</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>05/26/2020 15:35:41</publishTime>
+      <publishTime>05/27/2020 11:08:35</publishTime>
     </File>
     <File Include="cs/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:08:58</publishTime>
@@ -227,10 +227,10 @@
       <publishTime>05/12/2020 19:55:48</publishTime>
     </File>
     <File Include="Newtonsoft.Json.dll">
-      <publishTime>03/24/2018 17:44:14</publishTime>
+      <publishTime>10/21/2019 17:38:46</publishTime>
     </File>
     <File Include="NuGet.Frameworks.dll">
-      <publishTime>04/24/2018 21:27:10</publishTime>
+      <publishTime>10/21/2019 17:37:41</publishTime>
     </File>
     <File Include="pl/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:09:00</publishTime>
@@ -305,19 +305,19 @@
       <publishTime>08/15/2019 18:14:28</publishTime>
     </File>
     <File Include="runtimes/win-arm64/native/sni.dll">
-      <publishTime>07/12/2017 11:24:24</publishTime>
+      <publishTime>10/21/2019 17:38:10</publishTime>
     </File>
     <File Include="runtimes/win-x64/native/e_sqlite3.dll">
       <publishTime>08/15/2019 18:13:54</publishTime>
     </File>
     <File Include="runtimes/win-x64/native/sni.dll">
-      <publishTime>07/12/2017 11:24:22</publishTime>
+      <publishTime>10/21/2019 17:38:10</publishTime>
     </File>
     <File Include="runtimes/win-x86/native/e_sqlite3.dll">
       <publishTime>08/15/2019 18:13:34</publishTime>
     </File>
     <File Include="runtimes/win-x86/native/sni.dll">
-      <publishTime>07/12/2017 11:24:22</publishTime>
+      <publishTime>10/21/2019 17:38:11</publishTime>
     </File>
     <File Include="runtimes/win/lib/netcoreapp2.0/System.Runtime.Caching.dll">
       <publishTime>05/15/2018 13:29:40</publishTime>
@@ -344,19 +344,19 @@
       <publishTime>04/14/2020 22:38:40</publishTime>
     </File>
     <File Include="System.Composition.AttributedModel.dll">
-      <publishTime>11/05/2016 04:55:42</publishTime>
+      <publishTime>10/21/2019 17:37:52</publishTime>
     </File>
     <File Include="System.Composition.Convention.dll">
-      <publishTime>11/05/2016 04:55:42</publishTime>
+      <publishTime>10/21/2019 17:37:52</publishTime>
     </File>
     <File Include="System.Composition.Hosting.dll">
-      <publishTime>11/05/2016 04:55:42</publishTime>
+      <publishTime>10/21/2019 17:37:54</publishTime>
     </File>
     <File Include="System.Composition.Runtime.dll">
-      <publishTime>11/05/2016 04:55:44</publishTime>
+      <publishTime>10/21/2019 17:37:54</publishTime>
     </File>
     <File Include="System.Composition.TypedParts.dll">
-      <publishTime>11/05/2016 04:55:46</publishTime>
+      <publishTime>10/21/2019 17:37:54</publishTime>
     </File>
     <File Include="System.Configuration.ConfigurationManager.dll">
       <publishTime>05/15/2018 13:29:38</publishTime>
@@ -386,136 +386,136 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>05/26/2020 20:00:18</publishTime>
+      <publishTime>05/28/2020 09:32:19</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>05/26/2020 19:52:33</publishTime>
+      <publishTime>05/28/2020 09:28:03</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>05/26/2020 19:52:33</publishTime>
+      <publishTime>05/28/2020 09:28:03</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>05/26/2020 19:52:33</publishTime>
+      <publishTime>05/28/2020 09:28:03</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
-      <publishTime>05/20/2020 22:07:44</publishTime>
+      <publishTime>05/28/2020 09:28:10</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>05/26/2020 19:52:41</publishTime>
+      <publishTime>05/28/2020 09:28:09</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>05/26/2020 19:52:41</publishTime>
+      <publishTime>05/28/2020 09:28:09</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>05/26/2020 20:00:19</publishTime>
+      <publishTime>05/28/2020 09:32:20</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/favicon.ico">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/js/site.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/LICENSE">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery-validation/LICENSE.md">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery/dist/jquery.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery/dist/jquery.min.js">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery/dist/jquery.min.map">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="wwwroot/lib/jquery/LICENSE.txt">
-      <publishTime>05/18/2020 13:06:12</publishTime>
+      <publishTime>05/27/2020 11:08:39</publishTime>
     </File>
     <File Include="zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:09:00</publishTime>

@@ -15,5 +15,9 @@ namespace TrainzInfo.Models
         public int CountPlace { get; set; }
         [Required]
         public string PlaceType { get; set; }
+        [Required]
+        public string ImgsrcOutside { get; set; }
+        [Required]
+        public string ImgsrcInside { get; set; }
     }
 }

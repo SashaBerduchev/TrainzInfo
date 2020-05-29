@@ -29,6 +29,16 @@
                 <span asp-validation-for="PlaceType" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ImgsrcOutside" class="control-label"></label>
+                <input asp-for="ImgsrcOutside" class="form-control" />
+                <span asp-validation-for="ImgsrcOutside" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImgsrcInside" class="control-label"></label>
+                <input asp-for="ImgsrcInside" class="form-control" />
+                <span asp-validation-for="ImgsrcInside" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

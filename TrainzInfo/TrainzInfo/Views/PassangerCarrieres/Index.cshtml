@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Пассажирские вагоны</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -37,9 +37,15 @@
                 @Html.DisplayFor(modelItem => item.PlaceType)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Редактировать</a> |
-                <a asp-controller="PassangerCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Подробная информация</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <img src="@item.ImgsrcInside" width="180" height="150" />
+            </td>
+            <td>
+                <img src="@item.ImgsrcOutside" width="180" height="150" />
+            </td>
+            <td>
+                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> |
+                <a class="btn btn-outline-info" asp-controller="PassangerCarriegesInfoes" asp-action="Details" asp-route-idcar="@item.id">Подробная информация</a> |
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
             </td>
         </tr>
 }
