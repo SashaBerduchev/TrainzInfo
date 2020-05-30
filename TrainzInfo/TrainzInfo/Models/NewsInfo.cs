@@ -17,6 +17,7 @@ namespace TrainzInfo.Models
         public DateTime DateTime { get; set; }
         [Required]
         public string Imgsrc { get; set; }
+        public string user { get; set; }
         
     }
 }

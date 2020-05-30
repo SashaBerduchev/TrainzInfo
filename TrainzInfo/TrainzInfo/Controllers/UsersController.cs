@@ -56,7 +56,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Age")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace TrainzInfo.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View();
             }
 
             var user = await _context.Users.FindAsync(id);
@@ -88,46 +88,66 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password")] User user)
         {
             if (id != user.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            try
             {
-                try
+                User userlogin = await _context.Users.Where(x => x.Name == user.Name).FirstOrDefaultAsync();
+                if (userlogin == null)
                 {
+                    return RedirectToAction(nameof(Index));
+                }
+                else if(userlogin.Password != user.Password)
+                {
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    user.Email = "";
+                    user.Status = "True";
                     _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
+                    NewsInfo newsInfo = new NewsInfo
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        NameNews = "", BaseNewsInfo = "", NewsInfoAll = "", Imgsrc = "", DateTime = DateTime.Now, user = user.Name
+                    };
+                    _context.NewsInfos.Add(newsInfo);
+                    _context.SaveChanges();
+                    return Redirect("/Home");
                 }
-                return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(user.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            //}
             return View(user);
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? name)
         {
-            if (id == null)
+            if (name == null)
             {
                 return NotFound();
             }
-
             var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Name == name);
             if (user == null)
             {
                 return NotFound();
@@ -139,12 +159,18 @@ namespace TrainzInfo.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
+
             var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
+            user.Status = "False";
+            //_context.Users.Remove(user);
+            //await _context.SaveChangesAsync();
+            _context.Update(user);
+            NewsInfo news = _context.NewsInfos.Where(x => x.user == user.Name).FirstOrDefault();
+            _context.NewsInfos.Remove(news);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Home");
         }
 
         private bool UserExists(int id)

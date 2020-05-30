@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand"  asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -26,6 +26,20 @@
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="LocomotivesTypes" asp-action="Index">Типы локомотивов</a>
+                            @if (Model != null && Model is List<NewsInfo>)
+                            {
+                                if (Model[0] is NewsInfo && Model[0].user == null)
+                                {
+                                    <a class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Edit">Вход</a>
+                                    <a class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
+                                }
+                                else if (Model[0] is NewsInfo)
+                                {
+                                    @Html.DisplayName(Model[0].user)
+                                    <a class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Delete" asp-route-name="@Model[0].user">Выйти</a>
+                                }
+
+                            }
                         </li>
                     </ul>
                 </div>

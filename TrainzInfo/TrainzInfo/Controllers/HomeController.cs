@@ -27,6 +27,14 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index()
         {
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            for(int i=0; i<newsInfo.Count; i++)
+            {
+                if(newsInfo[i].user == null && newsInfo[i].NameNews == "")
+                {
+                    _context.Remove(newsInfo[i]);
+                    _context.SaveChanges();
+                }
+            }
             return View(newsInfo);
         }
 
