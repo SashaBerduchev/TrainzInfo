@@ -64,7 +64,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View("IndexRegister");
         }
 
         // GET: Users/Edit/5
@@ -102,11 +102,11 @@ namespace TrainzInfo.Controllers
                 User userlogin = await _context.Users.Where(x => x.Name == user.Name).FirstOrDefaultAsync();
                 if (userlogin == null)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return Redirect("Unregister");
                 }
                 else if(userlogin.Password != user.Password)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return View("Unregister");
 
                 }
                 else
@@ -171,6 +171,33 @@ namespace TrainzInfo.Controllers
             _context.NewsInfos.Remove(news);
             await _context.SaveChangesAsync();
             return Redirect("/Home");
+        }
+
+        // GET: Users/Delete/5
+        public async Task<IActionResult> DeleteUser(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await _context.Users
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpPost, ActionName("DeleteUser")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUserConfirm(int? id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            _context.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
