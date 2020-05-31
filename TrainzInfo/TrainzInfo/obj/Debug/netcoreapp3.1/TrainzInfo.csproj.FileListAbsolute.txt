@@ -641,3 +641,4 @@ D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzIn
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\IndexRegister.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Unregister.cshtml.g.cs
 C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\DeleteUser.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ListRollingStones\EditLocomotive.cshtml.g.cs

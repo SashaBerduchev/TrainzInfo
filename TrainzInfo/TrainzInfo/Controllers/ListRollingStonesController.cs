@@ -56,7 +56,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status")] ListRollingStone listRollingStone)
+        public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Number,Depot,Country,City,Status")] ListRollingStone listRollingStone)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
             if (id != listRollingStone.id)
             {
@@ -116,7 +116,8 @@ namespace TrainzInfo.Controllers
                     listRollingStone.id = 0;
                     _context.ListRollingStones.Add(listRollingStone);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    List<ListRollingStone> listRollingStoneRequest = await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync();
+                    return View("Index", listRollingStoneRequest);
 
                 }
                 catch (DbUpdateConcurrencyException)
@@ -132,6 +133,55 @@ namespace TrainzInfo.Controllers
                 }
             }
             return View(listRollingStone);
+        }
+
+        // GET: ListRollingStones/Edit/5
+        public async Task<IActionResult> EditLocomotive(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ListRollingStone listRollingStone = await _context.ListRollingStones.FindAsync(id);
+            if (listRollingStone == null)
+            {
+                return NotFound();
+            }
+            return View(listRollingStone);
+        }
+
+        [HttpPost, ActionName("EditLocomotive")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLocomotive(int id, [Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
+        {
+            if (id != listRollingStone.id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Trace.WriteLine("POST " + this + listRollingStone);
+                    _context.Update(listRollingStone);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ListRollingStoneExists(listRollingStone.id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            Trace.WriteLine("RESPONSE " + this + listRollingStone);
+            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
         }
 
         // GET: ListRollingStones/Delete/5
@@ -160,7 +210,8 @@ namespace TrainzInfo.Controllers
             var listRollingStone = await _context.ListRollingStones.FindAsync(id);
             _context.ListRollingStones.Remove(listRollingStone);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            List<ListRollingStone> listRollingStoneRequest = await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync();
+            return View("Index", listRollingStoneRequest);
         }
 
         private bool ListRollingStoneExists(int id)

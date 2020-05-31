@@ -43,11 +43,12 @@
                 @Html.DisplayFor(modelItem => item.ALlPowerP)
             </td>
             <td>
-                <img src="@item.LocomotiveImg" width="180" height="100" />
+                <img src="@item.LocomotiveImg" width="180" height="120" />
             </td>
             <td>
                 @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
+                <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Name">Смотреть перечень локомотивов @item.Name</a>
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
             </td>
         </tr>
