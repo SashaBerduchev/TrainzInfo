@@ -62,9 +62,8 @@ namespace TrainzInfo.Controllers
             {
                 _context.Add(listRollingStone);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(listRollingStone);
+            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
         }
 
         // GET: ListRollingStones/Edit/5
@@ -210,8 +209,7 @@ namespace TrainzInfo.Controllers
             var listRollingStone = await _context.ListRollingStones.FindAsync(id);
             _context.ListRollingStones.Remove(listRollingStone);
             await _context.SaveChangesAsync();
-            List<ListRollingStone> listRollingStoneRequest = await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync();
-            return View("Index", listRollingStoneRequest);
+            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
         }
 
         private bool ListRollingStoneExists(int id)
