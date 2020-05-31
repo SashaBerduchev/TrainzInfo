@@ -464,3 +464,6 @@ D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Trainz
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.csproj.CopyComplete
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\DeleteUser.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\IndexRegister.cshtml.g.cs
+C:\Все Мои данные\Проекты\C-Sharp\WEB\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Unregister.cshtml.g.cs
