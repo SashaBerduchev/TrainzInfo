@@ -26,6 +26,7 @@
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
                             <a class="btn btn-primary text-white" asp-area="" asp-controller="LocomotivesTypes" asp-action="Index">Типы локомотивов</a>
+                            <a class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
                             @if (Model != null && Model is List<NewsInfo>)
                             {
                                 if (Model[0] is NewsInfo && Model[0].user == null)

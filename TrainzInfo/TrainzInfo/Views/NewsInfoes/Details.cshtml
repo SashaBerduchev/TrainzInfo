@@ -11,7 +11,7 @@
     <dl class="row">
         <dd class="col-sm-10">
             @*@Html.DisplayFor(model => model.Imgsrc)*@
-            <img src="@Model.Imgsrc" width="900" height="500" />
+            <img src="@Model.Imgsrc" width="1000" height="550" />
         </dd>
         <dt class="col-sm-2">
             @*@Html.DisplayNameFor(model => model.NameNews)*@
@@ -46,3 +46,9 @@
     }
     <a asp-action="Index">Вернутся обратно</a>
 </div>
+<style>
+        row {
+            background: #c7b39b url(@Model.Imgsrc); /* Цвет фона и путь к файлу */
+            color: #fff; /* Цвет текста */
+        }
+</style>
