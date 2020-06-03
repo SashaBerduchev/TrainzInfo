@@ -18,12 +18,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="BaseNewsInfo" class="control-label"></label>
-                <input asp-for="BaseNewsInfo" class="form-control" />
+                <input id="BaseNews" asp-for="BaseNewsInfo" class="form-control" />
                 <span asp-validation-for="BaseNewsInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label   asp-for="NewsInfoAll" class="control-label"></label>
-                <input width="450" height="600" asp-for="NewsInfoAll" class="form-control" />
+                <input id="NewsInfoAll" asp-for="NewsInfoAll" class="form-control" />     
                 <span asp-validation-for="NewsInfoAll" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,7 +42,19 @@
         </form>
     </div>
 </div>
+<style>
+    #BaseNews {
+        width: 500px;
+        height: 100px;
+    }
+</style>
+<style>
+    #NewsInfoAll {
+        width: 500px;
+        height: 300px;
+    }
 
+</style>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
