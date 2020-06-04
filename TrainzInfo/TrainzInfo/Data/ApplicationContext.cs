@@ -5,7 +5,7 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Data
 {
-    public class ApplicationContext : IdentityDbContext
+    public class ApplicationContext : DbContext
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
@@ -26,5 +26,6 @@ namespace TrainzInfo.Data
         public DbSet<PassangerCarriegesInfo> PassangerCarriegesInfos { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }
         public DbSet<ListRollingStone> ListRollingStones {get;set;}
+        public DbSet<NewsComments> NewsComments { get; set; }
     }
 }

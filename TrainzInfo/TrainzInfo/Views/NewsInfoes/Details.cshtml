@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Details";
 }
-
 <h1>@Model.NameNews</h1>
 
 <div>
@@ -35,6 +34,8 @@
 </div>
 <div>
 
+    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Edit" asp-route-id="@Model.id">Комментировать</a>
+    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии</a>
     @if (Model != null)
     {
         <a asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>

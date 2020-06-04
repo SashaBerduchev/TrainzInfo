@@ -22,7 +22,6 @@
                     color: #fff; /* Цвет текста */
                 }
             </style>
-            </style>
         </head>
     </div>
     <body>
@@ -72,10 +71,10 @@
                                 @Html.DisplayFor(modelItem => item.DateTime)
                             </td>
                             <td>
-                                <a class="btn btn-primary" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
+                                <a class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
                                 @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
                                 @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
-                                <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                                @*<a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
 
                             </td>
                         </tr>

@@ -880,3 +880,10 @@ C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreap
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.dll
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.local.json
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsComments\Create.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsComments\Delete.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsComments\Details.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsComments\Edit.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\NewsComments\Index.cshtml.g.cs

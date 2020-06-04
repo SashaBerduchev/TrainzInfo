@@ -65,7 +65,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(newsInfo);
+            return Redirect("/Home/Index");
         }
 
         // GET: NewsInfoes/Edit/5
