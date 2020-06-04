@@ -13,27 +13,27 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NameNews" class="control-label"></label>
-                <input asp-for="NameNews" width=140 height=150 class="form-control" />
+                <input id="NameNews"  asp-for="NameNews" width=140 height=150 class="form-control" />
                 <span asp-validation-for="NameNews" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BaseNewsInfo" class="control-label"></label>
-                <input id="BaseNews" asp-for="BaseNewsInfo" class="form-control" />
+                <textarea id="BaseNews" asp-for="BaseNewsInfo" class="form-control" ></textarea>
                 <span asp-validation-for="BaseNewsInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label   asp-for="NewsInfoAll" class="control-label"></label>
-                <input id="NewsInfoAll" asp-for="NewsInfoAll" class="form-control" />     
+                <label asp-for="NewsInfoAll" class="control-label"></label>
+                <textarea id="NewsInfoAll" asp-for="NewsInfoAll" class="form-control" ></textarea>
                 <span asp-validation-for="NewsInfoAll" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DateTime" class="control-label"></label>
-                <input asp-for="DateTime" class="form-control" />
-                <span asp-validation-for=@DateTime.Now class="text-danger"></span>
-            </div>
+            @*<div class="form-group">
+                    <label asp-for="DateTime" class="control-label"></label>
+                    <input asp-for="DateTime" class="form-control" />
+                    <span asp-validation-for=@DateTime.Now class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <label asp-for="Imgsrc" class="control-label"></label>
-                <input width="600" asp-for="Imgsrc" class="form-control" />
+                <textarea id="News" asp-for="Imgsrc" class="form-control"></textarea>
                 <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,13 +45,25 @@
 <style>
     #BaseNews {
         width: 500px;
-        height: 100px;
+        height: 300px;
+    }
+</style>
+<style>
+    #NameNews {
+        width: 700px;
+        height: 50px;
     }
 </style>
 <style>
     #NewsInfoAll {
-        width: 500px;
+        width: 800px;
         height: 300px;
+    }
+</style>
+<style>
+    #News {
+        width: 600px;
+        height: 100px;
     }
 
 </style>
