@@ -1,0 +1,50 @@
+﻿@model TrainzInfo.Models.UserLocomotivePhotos
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Создать</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserSername" class="control-label"></label>
+                <input asp-for="UserSername" class="form-control" />
+                <span asp-validation-for="UserSername" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BaseInfo" class="control-label"></label>
+                <input asp-for="BaseInfo" class="form-control" />
+                <span asp-validation-for="BaseInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AllInfo" class="control-label"></label>
+                <input asp-for="AllInfo" class="form-control" />
+                <span asp-validation-for="AllInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhotoLink" class="control-label"></label>
+                <input asp-for="PhotoLink" class="form-control" />
+                <span asp-validation-for="PhotoLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

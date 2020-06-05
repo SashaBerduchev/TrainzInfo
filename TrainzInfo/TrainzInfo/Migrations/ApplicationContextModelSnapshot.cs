@@ -404,6 +404,41 @@ namespace TrainzInfo.Migrations
 
                     b.ToTable("Users");
                 });
+
+            modelBuilder.Entity("TrainzInfo.Models.UserLocomotivePhotos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AllInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BaseInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameLocomotive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhotoLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserSername")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLocomotivePhotos");
+                });
 #pragma warning restore 612, 618
         }
     }
