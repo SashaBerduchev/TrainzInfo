@@ -25,7 +25,8 @@ namespace TrainzInfo.Controllers
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name).ToListAsync();
             return View(locomotivePhoto);
         }
-        public async Task<IActionResult> IndexAll(string? name)
+        
+        public async Task<IActionResult> IndexAll()
         {
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.ToListAsync();
             return View(locomotivePhoto);

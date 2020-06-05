@@ -5,7 +5,11 @@
 }
 
 <h1>Список</h1>
-
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+</style>
 <p>
     <a class="btn btn-info" asp-action="Create">Добавить</a>
     <a class="btn btn-info" asp-action="IndexAll">Показать весь список</a>
@@ -15,6 +19,9 @@
         <tr>
             <th>
                 @Html.DisplayName("Фото")
+            </th>
+            <th>
+                @Html.DisplayName("Название локомотива")
             </th>
             <th>
                 @Html.DisplayName("Имя")
@@ -36,6 +43,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.PhotoLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameLocomotive)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)

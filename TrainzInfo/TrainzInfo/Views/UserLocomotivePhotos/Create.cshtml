@@ -6,6 +6,11 @@
 
 <h1>Создать</h1>
 
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+</style>
 
 <hr />
 <div class="row">
@@ -13,28 +18,39 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
+                @Html.DisplayName("Название локомотива");
+                @*<label asp-for="NameLocomotive" class="control-label"></label>*@
+                <input asp-for="NameLocomotive" class="form-control" />
+                <span asp-validation-for="NameLocomotive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Имя");
+                @*<label asp-for="UserName" class="control-label"></label>*@
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserSername" class="control-label"></label>
+                @Html.DisplayName("Фамилия");
+                @*<label asp-for="UserSername" class="control-label"></label>*@
                 <input asp-for="UserSername" class="form-control" />
                 <span asp-validation-for="UserSername" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BaseInfo" class="control-label"></label>
-                <input asp-for="BaseInfo" class="form-control" />
+                @Html.DisplayName("Краткие сведенья");
+                @*<label asp-for="BaseInfo" class="control-label"></label>*@
+                <textarea asp-for="BaseInfo" class="form-control" />
                 <span asp-validation-for="BaseInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AllInfo" class="control-label"></label>
-                <input asp-for="AllInfo" class="form-control" />
+                @Html.DisplayName("Подробности: дата сьемки, место сьемки");
+                @*<label asp-for="AllInfo" class="control-label"></label>*@
+                <textarea id="area" asp-for="AllInfo" class="form-control" />
                 <span asp-validation-for="AllInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhotoLink" class="control-label"></label>
-                <input asp-for="PhotoLink" class="form-control" />
+                @Html.DisplayName("Ссылка на фото");
+                @*<label asp-for="PhotoLink" class="control-label"></label>*@
+                <input id="input" asp-for="PhotoLink" class="form-control" />
                 <span asp-validation-for="PhotoLink" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,7 +59,17 @@
         </form>
     </div>
 </div>
-
+<style>
+    #area {
+        width: 600px;
+        height: 100px;
+    }
+</style>
+<style>
+    #input {
+        width: 600px;
+    }
+</style>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

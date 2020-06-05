@@ -3,8 +3,14 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IndexAll";
 }
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+</style>
+<a class="btn btn-info" asp-action="Create">Добавить Ваше фото</a>
 <table class="table">
     <thead>
         <tr>
@@ -13,6 +19,9 @@
             </th>
             <th>
                 @Html.DisplayName("Имя")
+            </th>
+            <th>
+                @Html.DisplayName("Название локомотива")
             </th>
             <th>
                 @Html.DisplayName("Фамилия")
@@ -31,10 +40,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PhotoLink)
+                    <img src="@item.PhotoLink" width="350" height="200" />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameLocomotive)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UserSername)
@@ -54,3 +66,15 @@
         }
     </tbody>
 </table>
+<style>
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>
