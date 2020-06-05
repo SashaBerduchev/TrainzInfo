@@ -38,36 +38,36 @@
             <div class="form-group">
                 @Html.DisplayName("Краткие сведенья");
                 @*<label asp-for="BaseInfo" class="control-label"></label>*@
-                <textarea asp-for="BaseInfo" class="form-control" />
+                <textarea asp-for="BaseInfo" class="form-control" ></textarea>
                 <span asp-validation-for="BaseInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 @Html.DisplayName("Подробности: дата сьемки, место сьемки");
                 @*<label asp-for="AllInfo" class="control-label"></label>*@
-                <textarea id="area" asp-for="AllInfo" class="form-control" />
+                <textarea id="area" asp-for="AllInfo" class="form-control" ></textarea>
                 <span asp-validation-for="AllInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 @Html.DisplayName("Ссылка на фото");
                 @*<label asp-for="PhotoLink" class="control-label"></label>*@
-                <input id="input" asp-for="PhotoLink" class="form-control" />
+                <textarea id="input" asp-for="PhotoLink" class="form-control" ></textarea>
                 <span asp-validation-for="PhotoLink" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 <style>
     #area {
-        width: 600px;
+        width: 800px;
         height: 100px;
     }
 </style>
 <style>
     #input {
-        width: 600px;
+        width: 800px;
     }
 </style>
 <div>
