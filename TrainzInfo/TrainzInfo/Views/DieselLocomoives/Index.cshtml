@@ -50,6 +50,7 @@
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
                 <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Name">Смотреть перечень локомотивов @item.Name</a>
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <a class="btn btn-outline-success" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Name">Фото пользователей</a>
             </td>
         </tr>
 }
