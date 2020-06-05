@@ -10,7 +10,8 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+            <div class="container" style="position: inherit; left: -350px;">
+                <img src="https://ticket.pp.ua/media/images/header-img.png" , width="380" height="130"/>
                 <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -19,14 +20,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="btn btn-success text-white" asp-area="" asp-controller="Home" asp-action="Index">Домой</a>
+                            <a id="btn1" class="btn btn-success text-white" asp-area="" asp-controller="Home" asp-action="Index">Домой</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="navbar-nav">
                             @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
-                            <a class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
-                            <a class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
-                            <a class="btn btn-primary text-white" asp-area="" asp-controller="LocomotivesTypes" asp-action="Index">Типы локомотивов</a>
-                            <a class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+                            <a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
+                            <a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
+                            <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="LocomotivesTypes" asp-action="Index">Типы локомотивов</a>
+                            <a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
                             @if (Model != null && Model is List<NewsInfo>)
                             {
                                 if (Model[0] is NewsInfo && Model[0].user == null)
@@ -68,5 +69,18 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>
+<style>
+    #btn{
+        width:290px;
+        height : 40px
+    }
+    </style>
+<style>
+    #btn1 {
+        width: 130px;
+        height: 40px
+    }
+</style>
