@@ -33,7 +33,11 @@
     <li class="navbar-nav">
         <a class="btn btn-info" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото пользователей</a>
     </li>
-    <table class="table" style="animation-direction">
+    <li id="btn_column" class="col-3">
+        <a  class="btn btn-info" style="margin:10px; left=50px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
+        <a  class="btn btn-info" style="margin:10px; left:50px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>
+    </li>
+    <table class="table" style="top: -60px">
         <thead>
             <tr>
 
@@ -100,6 +104,19 @@
     <style>
         #btn {
             width: 150px;
+        }
+    </style>
+    <style>
+        #btn_column {
+            left: 1150px;
+            top: 70px;
+            width:500px;
+        }
+    </style>
+    <style>
+
+        #btn1 {
+            margin:10px;
         }
     </style>
 </body>
