@@ -24,6 +24,11 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Clients.ToListAsync());
         }
+        public async Task<Client> GetUpdate()
+        {
+            Client client = await _context.Clients.FirstAsync();
+            return client;
+        }
 
         // GET: Clients/Details/5
         public async Task<IActionResult> Details(int? id)

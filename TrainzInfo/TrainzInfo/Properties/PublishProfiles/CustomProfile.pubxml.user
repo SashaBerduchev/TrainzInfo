@@ -104,13 +104,13 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="Microsoft.AspNetCore.Cryptography.Internal.dll">
-      <publishTime>04/16/2020 17:55:26</publishTime>
+      <publishTime>05/21/2020 20:22:10</publishTime>
     </File>
     <File Include="Microsoft.AspNetCore.Cryptography.KeyDerivation.dll">
-      <publishTime>04/16/2020 17:56:44</publishTime>
+      <publishTime>05/21/2020 20:24:16</publishTime>
     </File>
     <File Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll">
-      <publishTime>04/16/2020 17:57:34</publishTime>
+      <publishTime>05/21/2020 20:25:52</publishTime>
     </File>
     <File Include="Microsoft.AspNetCore.Razor.Language.dll">
       <publishTime>11/16/2019 06:08:46</publishTime>
@@ -146,61 +146,61 @@
       <publishTime>04/15/2020 01:02:40</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
-      <publishTime>04/15/2020 16:49:24</publishTime>
+      <publishTime>05/21/2020 02:30:50</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.dll">
-      <publishTime>04/15/2020 16:49:38</publishTime>
+      <publishTime>05/21/2020 02:31:04</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Relational.dll">
-      <publishTime>04/15/2020 16:49:48</publishTime>
+      <publishTime>05/21/2020 02:31:16</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Sqlite.dll">
       <publishTime>04/15/2020 16:49:56</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.SqlServer.dll">
-      <publishTime>04/15/2020 16:49:54</publishTime>
+      <publishTime>05/21/2020 02:31:18</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Abstractions.dll">
-      <publishTime>04/15/2020 03:35:40</publishTime>
+      <publishTime>05/20/2020 23:55:38</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Memory.dll">
-      <publishTime>04/15/2020 03:36:14</publishTime>
+      <publishTime>05/20/2020 23:56:26</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.Abstractions.dll">
-      <publishTime>04/15/2020 03:35:56</publishTime>
+      <publishTime>05/20/2020 23:55:56</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.Binder.dll">
-      <publishTime>04/15/2020 03:36:22</publishTime>
+      <publishTime>05/20/2020 23:56:48</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Configuration.dll">
-      <publishTime>04/15/2020 03:36:08</publishTime>
+      <publishTime>05/20/2020 23:56:46</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyInjection.Abstractions.dll">
-      <publishTime>04/15/2020 03:36:10</publishTime>
+      <publishTime>05/20/2020 23:56:12</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyInjection.dll">
-      <publishTime>04/15/2020 03:36:04</publishTime>
+      <publishTime>05/20/2020 23:56:04</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyModel.dll">
       <publishTime>04/15/2020 01:02:54</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Identity.Core.dll">
-      <publishTime>04/16/2020 17:57:32</publishTime>
+      <publishTime>05/21/2020 20:25:48</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Identity.Stores.dll">
-      <publishTime>04/16/2020 17:57:34</publishTime>
+      <publishTime>05/21/2020 20:25:50</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Logging.Abstractions.dll">
-      <publishTime>04/15/2020 03:37:16</publishTime>
+      <publishTime>05/20/2020 23:56:52</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Logging.dll">
-      <publishTime>04/15/2020 03:38:22</publishTime>
+      <publishTime>05/20/2020 23:56:56</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Options.dll">
-      <publishTime>04/15/2020 03:36:06</publishTime>
+      <publishTime>05/20/2020 23:56:02</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Primitives.dll">
-      <publishTime>04/15/2020 03:36:32</publishTime>
+      <publishTime>05/20/2020 23:56:22</publishTime>
     </File>
     <File Include="Microsoft.Identity.Client.dll">
       <publishTime>04/29/2019 22:04:14</publishTime>
@@ -364,11 +364,26 @@
     <File Include="System.Diagnostics.DiagnosticSource.dll">
       <publishTime>04/14/2020 22:48:06</publishTime>
     </File>
+    <File Include="System.Private.ServiceModel.dll">
+      <publishTime>11/15/2019 17:31:08</publishTime>
+    </File>
     <File Include="System.Runtime.Caching.dll">
       <publishTime>05/15/2018 13:29:40</publishTime>
     </File>
     <File Include="System.Security.Cryptography.ProtectedData.dll">
       <publishTime>05/15/2018 13:29:44</publishTime>
+    </File>
+    <File Include="System.ServiceModel.dll">
+      <publishTime>11/15/2019 17:31:16</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Http.dll">
+      <publishTime>11/15/2019 17:31:12</publishTime>
+    </File>
+    <File Include="System.ServiceModel.NetTcp.dll">
+      <publishTime>11/15/2019 17:31:16</publishTime>
+    </File>
+    <File Include="System.ServiceModel.Primitives.dll">
+      <publishTime>11/15/2019 17:31:24</publishTime>
     </File>
     <File Include="System.Text.Json.dll">
       <publishTime>04/14/2020 22:49:30</publishTime>
@@ -386,28 +401,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>06/09/2020 11:26:40</publishTime>
+      <publishTime>06/10/2020 09:25:37</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>06/09/2020 11:25:22</publishTime>
+      <publishTime>06/10/2020 09:23:43</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>06/09/2020 11:25:22</publishTime>
+      <publishTime>06/10/2020 09:23:43</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>06/09/2020 11:25:22</publishTime>
+      <publishTime>06/10/2020 09:23:43</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
-      <publishTime>06/09/2020 11:25:29</publishTime>
+      <publishTime>06/10/2020 09:23:49</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>06/09/2020 11:25:29</publishTime>
+      <publishTime>06/10/2020 09:23:48</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>06/09/2020 11:25:29</publishTime>
+      <publishTime>06/10/2020 09:23:48</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>06/09/2020 11:26:40</publishTime>
+      <publishTime>06/10/2020 09:25:37</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
       <publishTime>06/01/2020 12:11:52</publishTime>
