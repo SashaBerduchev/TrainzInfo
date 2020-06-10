@@ -73,15 +73,14 @@ namespace TrainzInfo.Controllers
             return Redirect("/Home/Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async void CreateAction([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll,Imgsrc")] NewsInfo newsInfo)
+        
+        public async void CreateAction(object content)
         {
             if (ModelState.IsValid)
             {
-                newsInfo.DateTime = DateTime.Now;
-                _context.Add(newsInfo);
-                await _context.SaveChangesAsync();
+                //newsInfo.DateTime = DateTime.Now;
+                //_context.Add(newsInfo);
+                //await _context.SaveChangesAsync();
             }
         }
         // GET: NewsInfoes/Edit/5
