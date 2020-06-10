@@ -10,7 +10,7 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         [Required]
-        public double Version { get; set; }
+        public string Version { get; set; }
         [Required]
         public string Link { get; set; }
 
