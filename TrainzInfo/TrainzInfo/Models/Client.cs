@@ -13,6 +13,8 @@ namespace TrainzInfo.Models
         public string Version { get; set; }
         [Required]
         public string Link { get; set; }
+        [Required]
+        public bool IsUpdate { get; set; }
 
     }
 }

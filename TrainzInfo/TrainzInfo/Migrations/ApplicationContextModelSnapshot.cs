@@ -80,6 +80,9 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsUpdate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
