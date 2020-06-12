@@ -30,32 +30,28 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/%D0%A7%D0%A18-082%2C_%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%2C_%D0%9A%D0%B8%D0%B5%D0%B2%2C_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D1%8F_%D0%9A%D0%B8%D0%B5%D0%B2-%D0%9F%D0%B0%D1%81%D1%81%D0%B0%D0%B6%D0%B8%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%28Trainpix_207464%29.jpg" width="900" height="600" alt="Железная дорога" title="Электровоз ЧС8" />
             </p>
         </div>*@
-    <li class="navbar-nav">
-        <a class="btn btn-info" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото пользователей</a>
+    <li class="row">
+        <a class="btn btn-info" style="margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото пользователей</a>
+        <a class="btn btn-info" style="margin:10px; left=50px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
+        <a class="btn btn-info" style="margin:10px; left:50px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>
     </li>
-    <li id="btn_column" class="col-3">
-        <a  class="btn btn-info" style="margin:10px; left=50px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
-        <a  class="btn btn-info" style="margin:10px; left:50px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>
-    </li>
-    <table class="table" style="top: -60px">
-        <thead>
-            <tr>
 
-                <th>
-                    @Html.DisplayName("Картинка")
-                </th>
-                <th>
-                    @Html.DisplayName("Название")
-                </th>
-                <th>
-                    @Html.DisplayName("Общее")
-                </th>
-                <th>
-                    @Html.DisplayName("Дата")
-                </th>
-                <th></th>
-            </tr>
-        </thead>
+    <table align="center">
+        <thead>
+                <tr>
+
+                    <th>
+                        @Html.DisplayName("Картинка")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Название")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Дата")
+                    </th>
+                    
+                </tr>
+            </thead>
         <tbody>
             @foreach (NewsInfo item in Model)
             {
@@ -66,19 +62,15 @@
                         <td>
                             <img src="@item.Imgsrc" width="360" height="200" />
                         </td>
-                        <td class="td">
-                            @Html.DisplayFor(modelItem => item.NameNews)
-                        </td>
-
                         <td>
-                            @Html.DisplayFor(modelItem => item.BaseNewsInfo)
+                            @Html.DisplayFor(modelItem => item.NameNews)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.DateTime)
                         </td>
                         <td>
                             <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
-                            
+
                             @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
                             @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
                             @*<a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
@@ -89,7 +81,6 @@
             }
         </tbody>
     </table>
-
     <style type="text/css">
         td {
             background: #6a5eff; /* Цвет фона */
@@ -102,6 +93,17 @@
             text-decoration: solid;
         }
     </style>
+    <@*style>
+        table {
+            width: 800%; /* Ширина таблицы в процентах */
+            left: 160px;
+            top: 50px;
+        }
+
+        .col1 {
+            width: 130px; /* Ширина ячейки */
+        }
+    </style>*@
     <style>
         #btn {
             width: 150px;
@@ -111,13 +113,13 @@
         #btn_column {
             left: 1150px;
             top: 70px;
-            width:500px;
+            width: 500px;
         }
     </style>
     <style>
 
         #btn1 {
-            margin:10px;
+            margin: 10px;
         }
     </style>
 </body>
