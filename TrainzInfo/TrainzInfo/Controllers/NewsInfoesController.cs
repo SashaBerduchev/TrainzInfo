@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -73,15 +74,18 @@ namespace TrainzInfo.Controllers
             return Redirect("/Home/Index");
         }
 
+        [HttpPost]
         
-        public async void CreateAction(object content)
+        public async void CreateAction([FromBody] string content)
         {
-            if (ModelState.IsValid)
-            {
-                //newsInfo.DateTime = DateTime.Now;
-                //_context.Add(newsInfo);
-                //await _context.SaveChangesAsync();
-            }
+            Trace.WriteLine(content);
+            NewsInfo pars = JsonConvert.DeserializeObject<NewsInfo>(content);
+            pars.DateTime = DateTime.Now;
+            _context.Add(pars);
+            Trace.WriteLine(pars);
+            await _context.SaveChangesAsync();
+            
+
         }
         // GET: NewsInfoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
