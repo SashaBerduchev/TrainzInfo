@@ -1168,3 +1168,13 @@ D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.S
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.csproj.CoreCompileInputs.cache
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.MvcApplicationPartsAssemblyInfo.cache
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.NetTcp.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.Private.ServiceModel.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.Http.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.NetTcp.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.Primitives.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Create.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Delete.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Details.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Edit.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Index.cshtml.g.cs
