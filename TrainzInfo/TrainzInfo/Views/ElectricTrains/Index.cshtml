@@ -1,0 +1,70 @@
+﻿@model IEnumerable<TrainzInfo.Models.ElectricTrain>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Электрички</h1>
+
+<p>
+    <a class="btn btn-outline-info" asp-action="Create">Создать</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Название")
+            </th>
+            <th>
+                @Html.DisplayName("Депо")
+            </th>
+            <th>
+                @Html.DisplayName("Колчество вагонов")
+            </th>
+            <th>
+                @Html.DisplayName("Максимальная скорость")
+            </th>
+            <th>
+                @Html.DisplayName("Картинка")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Depot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VagonsCountP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxSpeed)
+            </td>
+            <td>
+                <img src="@item.Imgsrc" width="250" height="150" />
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Редактировать</a> |
+                @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
+                @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<style type="text/css">
+    td {
+        background: #fff; /* Цвет фона */
+        padding: 5px; /* Поля в ячейках */
+        opacity: 0.8; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width 700;
+        color: black;
+        text-decoration: solid;
+    }
+</style>

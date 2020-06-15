@@ -184,6 +184,37 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Electic_Locomotives");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Depot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaxSpeed")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VagonsCountP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Electrics");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Electrick_Lockomotive_Info", b =>
                 {
                     b.Property<int>("id")

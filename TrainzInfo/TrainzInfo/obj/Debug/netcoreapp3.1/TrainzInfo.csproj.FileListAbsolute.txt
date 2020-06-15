@@ -1183,3 +1183,8 @@ D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Vi
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Details.cshtml.g.cs
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Edit.cshtml.g.cs
 D:\Projects\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Index.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\Create.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\Delete.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\Details.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\Edit.cshtml.g.cs
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\Index.cshtml.g.cs

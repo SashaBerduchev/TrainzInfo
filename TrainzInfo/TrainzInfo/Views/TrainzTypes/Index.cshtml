@@ -15,7 +15,7 @@
         </style>
     </head>
 <p>
-    <a asp-action="Create">Create New</a>
+    @*<a asp-action="Create">Create New</a>*@
 </p>
 <table class="table">
     <thead>
@@ -34,13 +34,22 @@
             </td>
             <td>
                 @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
                 @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a> |*@
                 @if (item.Type == "Товарный поезд")
                 {
                     <a class="btn btn-primary" asp-controller="CargoCarrieges" asp-action="Index">Товарные вагоны</a>
                 }
-                else if( item.Type =="Пассажирский вагон")
+                else if (item.Type == "Пассажирский вагон")
+                {
+                    <a class="btn btn-info" asp-controller="PassangerCarrieres" asp-action="Index">Пассажирские вагоны</a>
+                }
+                else if (item.Type == "Электрички")
+                {
+                    <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Index">Электрички</a>
+                }
+
+                else if (item.Type == "Дизель-поезда")
                 {
                     <a class="btn btn-info" asp-controller="PassangerCarrieres" asp-action="Index">Пассажирские вагоны</a>
                 }
@@ -51,13 +60,12 @@
 </table>
 <style type="text/css">
     td {
-        background: #6a5eff; /* Цвет фона */
-        position: center;
+        background: #fff; /* Цвет фона */
         padding: 5px; /* Поля в ячейках */
-        opacity: 1.9; /* Полупрозрачность таблицы */
+        opacity: 0.8; /* Полупрозрачность таблицы */
         filter: alpha(Opacity=50); /* Для IE */
-        width: 700px;
-        color: white;
+        width 700;
+        color: black;
         text-decoration: solid;
     }
 </style>

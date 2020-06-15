@@ -54,7 +54,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Calss,CountPlace,PlaceType,ImgsrcOutside,ImgsrcOutside")] PassangerCarriere passangerCarriere)
+        public async Task<IActionResult> Create([Bind("id,Calss,CountPlace,PlaceType,ImgsrcOutside,ImgsrcInside")] PassangerCarriere passangerCarriere)
         {
             if (ModelState.IsValid)
             {
