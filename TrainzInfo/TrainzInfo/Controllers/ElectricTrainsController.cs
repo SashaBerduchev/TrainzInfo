@@ -24,7 +24,8 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Electrics.ToListAsync());
         }
-
+        
+       
         // GET: ElectricTrains/Details/5
         public async Task<IActionResult> Details(int? id)
         {

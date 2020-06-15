@@ -21,7 +21,11 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
 
         }
-
+        public async Task<List<Electic_locomotive>> IndexAction()
+        {
+            List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.ToListAsync();
+            return Electic_locomotive;
+        }
         // GET: Electic_locomotive
         public async Task<IActionResult> Index()
         {

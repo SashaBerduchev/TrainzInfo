@@ -75,7 +75,6 @@ namespace TrainzInfo.Controllers
         }
 
         [HttpPost]
-        
         public async void CreateAction([FromBody] string content)
         {
             Trace.WriteLine(content);
