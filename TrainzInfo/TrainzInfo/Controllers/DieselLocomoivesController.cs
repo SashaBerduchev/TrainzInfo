@@ -21,6 +21,12 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
         }
 
+        public async Task<List<DieselLocomoives>> IndexAction()
+        {
+            List<DieselLocomoives> diesels = await _context.DieselLocomoives.ToListAsync();
+            return diesels;
+        }
+
         // GET: DieselLocomoives
         public async Task<IActionResult> Index()
         {

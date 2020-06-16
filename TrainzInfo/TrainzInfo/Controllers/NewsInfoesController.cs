@@ -71,7 +71,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return Redirect("/Home/Index");
+            return View("/Home/Index");
         }
 
         [HttpPost]
@@ -83,7 +83,7 @@ namespace TrainzInfo.Controllers
             _context.Add(pars);
             Trace.WriteLine(pars);
             await _context.SaveChangesAsync();
-            
+
 
         }
         // GET: NewsInfoes/Edit/5
