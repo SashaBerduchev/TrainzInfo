@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200616215122_Diesel_trinz")]
+    partial class Diesel_trinz
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,7 +158,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("DieselLocomotiveInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Diesel_trainz", b =>
+            modelBuilder.Entity("TrainzInfo.Models.Diesel_trinz", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
