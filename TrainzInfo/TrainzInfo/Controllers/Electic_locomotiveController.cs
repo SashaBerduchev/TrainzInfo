@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -75,6 +77,13 @@ namespace TrainzInfo.Controllers
             
         }
 
+        [HttpPost]
+        public async void CreateAction ([FromBody] string data)
+        {
+            Electic_locomotive electic_Locomotive =  JsonConvert.DeserializeObject<Electic_locomotive>(data);
+            _context.Add(electic_Locomotive);
+            await _context.SaveChangesAsync();
+        }
         // GET: Electic_locomotive/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
