@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -61,12 +64,25 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,UserSername,BaseInfo,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Create([Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();
+                try
+                {
+                    MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
+                    m.Body = userLocomotivePhotos.UserName + "Ваша публикация опубликована";
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465);
+                    smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
+                    smtp.EnableSsl = true;
+                    smtp.Send(m);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.ToString());
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(userLocomotivePhotos);
@@ -93,7 +109,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,BaseInfo,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
         {
             if (id != userLocomotivePhotos.Id)
             {

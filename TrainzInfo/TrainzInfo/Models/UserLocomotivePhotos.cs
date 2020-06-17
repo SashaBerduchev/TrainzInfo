@@ -15,10 +15,13 @@ namespace TrainzInfo.Models
         [Required]
         public string UserSername { get; set; }
         [Required]
+        public string Email { get; set; }
+        [Required]
         public string BaseInfo { get; set; }
         [Required]
         public string AllInfo{ get; set; }
         [Required]
         public string PhotoLink { get; set; }
+        
     }
 }
