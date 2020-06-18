@@ -12,9 +12,8 @@ namespace TrainzInfo.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Depot { get; set; }
-        [Required]
         public string VagonsCountP { get; set; }
+        
         [Required]
         public int MaxSpeed { get; set; }
         [Required]

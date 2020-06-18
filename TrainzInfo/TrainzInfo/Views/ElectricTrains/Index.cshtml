@@ -5,7 +5,9 @@
 }
 
 <h1>Электрички</h1>
-
+<head>
+    <link rel="stylesheet" href="">
+</head>
 <p>
     <a class="btn btn-outline-info" asp-action="Create">Создать</a>
 </p>
@@ -14,9 +16,6 @@
         <tr>
             <th>
                 @Html.DisplayName("Название")
-            </th>
-            <th>
-                @Html.DisplayName("Депо")
             </th>
             <th>
                 @Html.DisplayName("Колчество вагонов")
@@ -37,9 +36,6 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Depot)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.VagonsCountP)
             </td>
             <td>
@@ -50,6 +46,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Редактировать</a> |
+                <a class="btn btn-info" asp-controller="ElectrickTrainsLists" asp-action="Index">Список подвижного состава</a>
                 @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
                 @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
             </td>

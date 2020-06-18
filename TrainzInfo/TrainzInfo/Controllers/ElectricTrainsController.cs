@@ -67,7 +67,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Depot,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Create([Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
         {
             if (ModelState.IsValid)
             {
@@ -99,7 +99,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Depot,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
         {
             if (id != electricTrain.id)
             {

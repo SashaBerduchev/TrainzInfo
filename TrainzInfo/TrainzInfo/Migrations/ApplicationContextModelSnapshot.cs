@@ -214,10 +214,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Depot")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Imgsrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -236,6 +232,37 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Electrics");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.ElectrickTrainsList", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Depo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberTrain")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ElectrickTrainsList");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Electrick_Lockomotive_Info", b =>
