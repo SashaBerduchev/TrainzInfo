@@ -28,10 +28,9 @@ namespace TrainzInfo.Controllers
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name).ToListAsync();
             return View(locomotivePhoto);
         }
-        
         public async Task<IActionResult> IndexAll()
         {
-            List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.ToListAsync();
+            List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.OrderByDescending(x=>x.DateTime).ToListAsync();
             return View(locomotivePhoto);
         }
 
@@ -68,6 +67,7 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                userLocomotivePhotos.DateTime = DateTime.Now;
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();
                 try
@@ -109,7 +109,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,NameLocomotive,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
         {
             if (id != userLocomotivePhotos.Id)
             {
@@ -120,6 +120,7 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    userLocomotivePhotos.DateTime = DateTime.Now;
                     _context.Update(userLocomotivePhotos);
                     await _context.SaveChangesAsync();
                 }
@@ -134,7 +135,7 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAll));
             }
             return View(userLocomotivePhotos);
         }

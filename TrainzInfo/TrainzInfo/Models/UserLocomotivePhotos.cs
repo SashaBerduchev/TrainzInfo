@@ -22,6 +22,6 @@ namespace TrainzInfo.Models
         public string AllInfo{ get; set; }
         [Required]
         public string PhotoLink { get; set; }
-        
+        public DateTime DateTime { get; set; }
     }
 }
