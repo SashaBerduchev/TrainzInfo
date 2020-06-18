@@ -87,7 +87,7 @@ namespace TrainzInfo.Controllers
                     Trace.WriteLine(e.ToString());
                 }
                 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAll));
             }
             return View(userTrainzPhoto);
         }
@@ -170,7 +170,7 @@ namespace TrainzInfo.Controllers
             var userTrainzPhoto = await _context.UserTrainzPhotos.FindAsync(id);
             _context.UserTrainzPhotos.Remove(userTrainzPhoto);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexAll));
         }
 
         private bool UserTrainzPhotoExists(int id)
