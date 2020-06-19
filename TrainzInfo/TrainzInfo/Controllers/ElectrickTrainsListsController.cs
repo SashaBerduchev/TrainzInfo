@@ -20,9 +20,10 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ElectrickTrainsLists
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? name)
         {
-            return View(await _context.ElectrickTrainsList.ToListAsync());
+            List<ElectrickTrainsList> trainsLists =  await _context.ElectrickTrainsList.Where(x=>x.Name == name).ToListAsync();
+            return View(trainsLists);
         }
 
         // GET: ElectrickTrainsLists/Details/5
