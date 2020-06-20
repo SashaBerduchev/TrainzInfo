@@ -1,0 +1,53 @@
+﻿@model TrainzInfo.Models.ElectrickTrainzInformation
+
+@{
+    ViewData["Title"] = "Details";
+}
+@if (Model == null)
+{
+    <meta http-equiv="refresh" content="600">
+}
+else
+{
+    <h1>@Model.Name</h1>
+
+    <div>
+        
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AllInformation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AllInformation)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Imgsrc)
+            </dt>
+            <dd class="col-sm-10">
+                <img src="@Model.Imgsrc" />
+            </dd>
+        </dl>
+        
+    </div>
+    <div>
+        @if (Model == null)
+        {
+            <meta http-equiv="refresh" content="600">
+        }
+        else
+        {
+            <a asp-action="Edit" asp-route-id="@Model.id">Edit</a>
+        }
+
+        <a asp-action="Index">Back to List</a>
+        
+    </div>
+}

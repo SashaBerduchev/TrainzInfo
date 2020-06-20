@@ -47,6 +47,7 @@
                 </td>
                 <td>
                     <a class="btn btn-success" style="margin:10px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> 
+                    <a class="btn btn-primary" asp-controller="ElectrickTrainzInformations" asp-action="Details" asp-route-name="@item.Name">Информация</a>
                     <a class="btn btn-info" style="margin:10px;" asp-controller="ElectrickTrainsLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
                     <a class="btn btn-light" style="margin:10px;" asp-controller="UserTrainzPhotoes" asp-action="Index" asp-route-name="@item.Name">Фото пользователей</a>
                     @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
