@@ -14,6 +14,8 @@ namespace TrainzInfo.Models
         [Required]
         public int VagonCount { get; set; }
         [Required]
+        public int Power { get; set; }
+        [Required]
         public string ImgSrc { get; set; }
     }
 }

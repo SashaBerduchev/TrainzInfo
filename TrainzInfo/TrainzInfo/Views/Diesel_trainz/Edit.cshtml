@@ -14,17 +14,26 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                @Html.DisplayName("Название")
+                @*<label asp-for="Name" class="control-label"></label>*@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VagonCount" class="control-label"></label>
+                @Html.DisplayName("Колличество вагонов")
+                @*<label asp-for="VagonCount" class="control-label"></label>*@
                 <input asp-for="VagonCount" class="form-control" />
                 <span asp-validation-for="VagonCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImgSrc" class="control-label"></label>
+                @Html.DisplayName("Мощность дизеля")
+                @*<label asp-for="Power" class="control-label"></label>*@
+                <input asp-for="Power" class="form-control" />
+                <span asp-validation-for="Power" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Картинка")
+                @*<label asp-for="ImgSrc" class="control-label"></label>*@
                 <input asp-for="ImgSrc" class="form-control" />
                 <span asp-validation-for="ImgSrc" class="text-danger"></span>
             </div>

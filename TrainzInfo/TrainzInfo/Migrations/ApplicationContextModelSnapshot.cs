@@ -156,6 +156,37 @@ namespace TrainzInfo.Migrations
                     b.ToTable("DieselLocomotiveInfos");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.DieselTrainzList", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Depo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberTrain")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DieselTrainzLists");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Diesel_trainz", b =>
                 {
                     b.Property<int>("id")
@@ -170,6 +201,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Power")
+                        .HasColumnType("int");
 
                     b.Property<int>("VagonCount")
                         .HasColumnType("int");

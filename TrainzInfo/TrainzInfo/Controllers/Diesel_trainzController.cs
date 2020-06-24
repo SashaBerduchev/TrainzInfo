@@ -54,7 +54,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,VagonCount,ImgSrc")] Diesel_trainz diesel_trainz)
+        public async Task<IActionResult> Create([Bind("id,Name,VagonCount,Power,ImgSrc")] Diesel_trainz diesel_trainz)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonCount,ImgSrc")] Diesel_trainz diesel_trainz)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonCount,Power,ImgSrc")] Diesel_trainz diesel_trainz)
         {
             if (id != diesel_trainz.id)
             {
