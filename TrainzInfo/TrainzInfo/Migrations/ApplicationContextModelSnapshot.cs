@@ -96,6 +96,30 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Addres")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UkrainsRailwaysid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("UkrainsRailwaysid");
+
+                    b.ToTable("Depots");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.DieselLocomoives", b =>
                 {
                     b.Property<int>("id")
@@ -536,6 +560,30 @@ namespace TrainzInfo.Migrations
                     b.ToTable("TrainzTypes");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Information")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UkrainsRailways");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -649,6 +697,15 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("UserTrainzPhotos");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailways")
+                        .WithMany()
+                        .HasForeignKey("UkrainsRailwaysid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
