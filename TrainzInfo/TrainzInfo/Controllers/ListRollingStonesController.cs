@@ -50,6 +50,8 @@ namespace TrainzInfo.Controllers
         {
             SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
             ViewBag.depots = selectListItems;
+            SelectList selectListsNameLocomotive = new SelectList(_context.Electic_Locomotives.Select(x => x.Name).ToList());
+            ViewBag.locomotives = selectListsNameLocomotive;
             return View();
         }
 
