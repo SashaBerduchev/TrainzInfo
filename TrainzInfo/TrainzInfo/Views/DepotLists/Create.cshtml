@@ -20,9 +20,8 @@
                 @Html.DisplayName("Название филии железной дороги")
                 @*<label asp-for="UkrainsRailways" class="control-label"></label>*@
                 @*<input asp-for="UkrainsRailways" class="form-control" />*@
-                <div class="DropDown">
-                    @Html.DropDownList("Name", ViewBag.UzRailways as SelectList)
-                </div>
+                @Html.DropDownList("UkrainsRailways", ViewBag.UzRailways as SelectList)
+                
                 <span asp-validation-for="UkrainsRailways" class="text-danger"></span>
             </div>
             <div class="form-group">
