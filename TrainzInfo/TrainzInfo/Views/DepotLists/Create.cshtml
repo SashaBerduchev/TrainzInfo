@@ -26,7 +26,8 @@
             </div>
             <div class="form-group">
                 @Html.DisplayName("Горол")
-                <input asp-for="Addres" class="form-control" />
+                @*<input asp-for="Addres" class="form-control" />*@
+                @Html.DropDownList("Addres", ViewBag.citys as SelectList) <a class="btn btn-outline-info" asp-controller="Cities" asp-action="Create">Добавить город</a>
                 <span asp-validation-for="Addres" class="text-danger"></span>
             </div>
             <div class="form-group">

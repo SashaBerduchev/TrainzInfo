@@ -37,5 +37,6 @@ namespace TrainzInfo.Data
         public DbSet<DieselTrainzList> DieselTrainzLists { get; set; }
         public DbSet<UkrainsRailways> UkrainsRailways { get; set; }
         public DbSet<DepotList> Depots { get; set; }
+        public DbSet<City> Cities { get; set; }
     }
 }
