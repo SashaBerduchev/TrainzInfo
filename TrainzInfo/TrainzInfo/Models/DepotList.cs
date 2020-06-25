@@ -12,7 +12,7 @@ namespace TrainzInfo.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public UkrainsRailways UkrainsRailways { get; set; }
+        public string UkrainsRailways { get; set; }
         public string Addres { get; set; }
     }
 }

@@ -6,6 +6,7 @@
 
 <h1>Филии АТ Укрзализныця</h1>
 
+
 @*<p>
         <a asp-action="Create">Create New</a>
     </p>*@
@@ -26,7 +27,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                     @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a>*@ |
+                     <a asp-action="Edit" asp-route-id="@item.id">Edit</a>
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a> 
                     @*    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
                 </td>

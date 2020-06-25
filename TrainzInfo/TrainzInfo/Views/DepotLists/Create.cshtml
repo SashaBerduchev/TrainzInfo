@@ -4,21 +4,29 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Создать депо</h1>
 
-<h4>DepotList</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                @Html.DisplayName("Название депо")
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Addres" class="control-label"></label>
+                @Html.DisplayName("Название филии железной дороги")
+                @*<label asp-for="UkrainsRailways" class="control-label"></label>*@
+                @*<input asp-for="UkrainsRailways" class="form-control" />*@
+                <div class="DropDown">
+                    @Html.DropDownList("Name", ViewBag.UzRailways as SelectList)
+                </div>
+                <span asp-validation-for="UkrainsRailways" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Адресс")
                 <input asp-for="Addres" class="form-control" />
                 <span asp-validation-for="Addres" class="text-danger"></span>
             </div>
@@ -33,3 +41,12 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+    .DropDown{
+        width:100px;
+        height:50px;
+    }
+</style>

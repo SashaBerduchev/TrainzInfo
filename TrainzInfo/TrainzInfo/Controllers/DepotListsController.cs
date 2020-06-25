@@ -25,6 +25,11 @@ namespace TrainzInfo.Controllers
             return View(await _context.Depots.ToListAsync());
         }
 
+        public void IndexActionResult()
+        {
+            SelectList uz = new SelectList(_context.UkrainsRailways.Select(x=>x.Name).ToList());
+            ViewBag.UzRailways = uz;
+        }
         // GET: DepotLists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -46,6 +51,7 @@ namespace TrainzInfo.Controllers
         // GET: DepotLists/Create
         public IActionResult Create()
         {
+            IndexActionResult();
             return View();
         }
 
@@ -54,7 +60,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Addres")] DepotList depotList)
+        public async Task<IActionResult> Create([Bind("id,Name,UkrainsRailways,Addres")] DepotList depotList)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +92,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Addres")] DepotList depotList)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,UkrainsRailways,Addres")] DepotList depotList)
         {
             if (id != depotList.id)
             {
