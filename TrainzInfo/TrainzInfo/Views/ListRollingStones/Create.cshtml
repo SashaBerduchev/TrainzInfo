@@ -23,8 +23,9 @@
                 <span asp-validation-for="Number" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Depot" class="control-label"></label>
-                <input asp-for="Depot" class="form-control" />
+                @Html.DisplayName("Депо приписки   ")
+                @*<input asp-for="Depot" class="form-control" />*@
+                @Html.DropDownList("Depot", ViewBag.depots as SelectList)
                 <span asp-validation-for="Depot" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,7 +34,7 @@
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
+                @Html.DisplayName("Город")
                 <input asp-for="City" class="form-control" />
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>

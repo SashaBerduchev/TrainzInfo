@@ -401,28 +401,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>06/25/2020 09:32:26</publishTime>
+      <publishTime>06/25/2020 10:58:43</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>06/25/2020 09:30:56</publishTime>
+      <publishTime>06/25/2020 10:56:26</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>06/25/2020 09:30:56</publishTime>
+      <publishTime>06/25/2020 10:56:26</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>06/25/2020 09:30:56</publishTime>
+      <publishTime>06/25/2020 10:56:26</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>06/15/2020 10:28:36</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>06/25/2020 09:31:06</publishTime>
+      <publishTime>06/25/2020 10:56:37</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>06/25/2020 09:31:06</publishTime>
+      <publishTime>06/25/2020 10:56:37</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>06/25/2020 09:32:26</publishTime>
+      <publishTime>06/25/2020 10:58:44</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>06/20/2020 11:17:19</publishTime>

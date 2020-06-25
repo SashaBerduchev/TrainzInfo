@@ -48,6 +48,8 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones/Create
         public IActionResult Create()
         {
+            SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
+            ViewBag.depots = selectListItems;
             return View();
         }
 
