@@ -37,9 +37,10 @@
                 @Html.DisplayFor(modelItem => item.Addres)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
+                <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список подвижного состава</a>
+                @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ 
+                @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
             </td>
         </tr>
 }

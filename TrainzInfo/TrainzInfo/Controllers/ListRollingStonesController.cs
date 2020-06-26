@@ -27,6 +27,12 @@ namespace TrainzInfo.Controllers
             return View(await _context.ListRollingStones.Where(x=>x.Name == idlocname).ToListAsync());
         }
 
+        public async Task<IActionResult> IndexDepot(string? depotname)
+        {
+            List<ListRollingStone> rollingStones = await _context.ListRollingStones.Where(x => x.Depot == depotname).ToListAsync();
+            return View("IndexDepot", rollingStones);
+        }
+
         // GET: ListRollingStones/Details/5
         public async Task<IActionResult> Details(string? idlocname)
         {
@@ -151,6 +157,10 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList depots = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
+            ViewBag.depots = depots;
+            SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            ViewBag.citys = citys;
             return View(listRollingStone);
         }
 

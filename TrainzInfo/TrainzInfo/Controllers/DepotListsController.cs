@@ -20,9 +20,10 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: DepotLists
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? uzname)
         {
-            return View(await _context.Depots.ToListAsync());
+            List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailways == uzname).ToListAsync();
+            return View(depots);
         }
 
         public void IndexActionResult()
