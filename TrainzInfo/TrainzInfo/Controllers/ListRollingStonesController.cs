@@ -60,6 +60,8 @@ namespace TrainzInfo.Controllers
             ViewBag.locomotives = selectListsNameLocomotive;
             SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
             ViewBag.citys = citys;
+            SelectList status = new SelectList(_context.Statuses.Select(x => x.Status_namr).ToList());
+            ViewBag.status = status;
             return View();
         }
 

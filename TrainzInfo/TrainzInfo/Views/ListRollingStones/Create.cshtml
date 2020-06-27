@@ -41,7 +41,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                @Html.DropDownList("Status", ViewBag.status as SelectList)
+                <a class="btn btn-success" asp-controller="Status" asp-action="Create">Добавить статус</a>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
