@@ -13,9 +13,11 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"/>
+                <label asp-for="Name" class="control-label" />
                 @*<input asp-for="Name" class="form-control" />*@
                 @Html.DropDownList("Name", ViewBag.locomotives as SelectList)
+                <a class="btn btn-info" asp-controller="Electic_locomotive" asp-action="Create">Добавить электровоз</a>
+                <a class="btn btn-info" asp-controller="DieselLocomoives" asp-action="Create">Добавить тепловоз</a>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -63,3 +65,9 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+</style>
