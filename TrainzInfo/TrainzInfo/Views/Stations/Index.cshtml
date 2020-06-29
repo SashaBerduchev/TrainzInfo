@@ -1,0 +1,75 @@
+﻿@model IEnumerable<TrainzInfo.Models.Stations>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Станции</h1>
+
+<p>
+    <a class="btn btn-dark" asp-action="Create">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Railway)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Oblast)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imgsrc)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Railway)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Oblast)
+            </td>
+            <td>
+                <img src="@item.Imgsrc" width="300" height="200">
+            </td>
+            <td>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<style>
+    body {
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

@@ -1,0 +1,53 @@
+﻿@model TrainzInfo.Models.Stations
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Stations</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @*<label asp-for="Name" class="control-label"></label>*@
+                @Html.DisplayName("Название станции")
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Город")
+                @Html.DropDownList("City", ViewBag.city as SelectList)
+                <a class="btn btn-dark" asp-controller="Cities" asp-action="Create">Добавить город</a>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Филия железной дороги")
+                @Html.DropDownList("Railway", ViewBag.uz as SelectList)
+                <span asp-validation-for="Railway" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Область")
+                @Html.DropDownList("Oblast", ViewBag.oblast as SelectList)
+                <a class="btn btn-dark" asp-controller="Oblasts" asp-action="Create">Добавить область</a>
+                <span asp-validation-for="Oblast" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Картинка(ссылка)")
+                <input asp-for="Imgsrc" class="form-control" />
+                <span asp-validation-for="Imgsrc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

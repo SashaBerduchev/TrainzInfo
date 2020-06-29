@@ -509,6 +509,26 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsInfos");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OblCenter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Oblasts");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.PassangerCarriegesInfo", b =>
                 {
                     b.Property<int>("id")
@@ -558,6 +578,38 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("PassangerCarrieres");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Oblast")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Railway")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Stations");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Status", b =>
