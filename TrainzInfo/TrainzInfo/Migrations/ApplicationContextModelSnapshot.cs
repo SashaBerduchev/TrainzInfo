@@ -612,6 +612,40 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Stations");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImgTrain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Station")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeOfArrive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeOfDepet")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TrainInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UzFilia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("StationsShadules");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Status", b =>
                 {
                     b.Property<int>("id")
@@ -628,6 +662,34 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Statuses");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NameOfTrain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StationFrom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StationTo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Trains");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.TrainzType", b =>
                 {
                     b.Property<int>("Id")
@@ -641,6 +703,22 @@ namespace TrainzInfo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TrainzTypes");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TypeOfPassTrains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>

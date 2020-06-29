@@ -41,5 +41,8 @@ namespace TrainzInfo.Data
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Oblast> Oblasts { get; set; }
         public DbSet<Stations> Stations { get; set; }
+        public DbSet<TypeOfPassTrain> TypeOfPassTrains { get; set; }
+        public DbSet<Train> Trains { get; set; }
+        public DbSet<StationsShadule> StationsShadules { get; set; }
     }
 }

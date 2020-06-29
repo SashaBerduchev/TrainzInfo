@@ -1,0 +1,65 @@
+﻿@model IEnumerable<TrainzInfo.Models.StationsShadule>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Station)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UzFilia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfArrive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfDepet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrainInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImgTrain)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Station)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UzFilia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfArrive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfDepet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrainInfo)
+            </td>
+            <td>
+                <img src="@item.ImgTrain" width="300" height="200"/>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
