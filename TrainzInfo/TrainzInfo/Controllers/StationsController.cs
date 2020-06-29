@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -19,12 +20,24 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        public void CreateAction([FromBody] string data)
+        {
+            Stations info = JsonConvert.DeserializeObject<Stations>(data);
+            _context.Stations.Add(info);
+            _context.SaveChanges();
+        }
         // GET: Stations
         public async Task<IActionResult> Index()
         {
             return View(await _context.Stations.ToListAsync());
         }
 
+        public async Task<List<Stations>> IndexAction()
+        {
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            return stations;
+        }
         // GET: Stations/Details/5
         public async Task<IActionResult> Details(int? id)
         {

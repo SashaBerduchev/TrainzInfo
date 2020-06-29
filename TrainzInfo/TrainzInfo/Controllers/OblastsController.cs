@@ -25,6 +25,10 @@ namespace TrainzInfo.Controllers
             return View(await _context.Oblasts.ToListAsync());
         }
 
+        public async Task<List<Oblast>> IndexAction()
+        {
+            return await _context.Oblasts.ToListAsync();
+        }
         // GET: Oblasts/Details/5
         public async Task<IActionResult> Details(int? id)
         {

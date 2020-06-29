@@ -24,7 +24,10 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Cities.ToListAsync());
         }
-
+        public async Task<List<City>> IndexAction()
+        {
+            return await _context.Cities.ToListAsync();
+        }
         // GET: Cities/Details/5
         public async Task<IActionResult> Details(int? id)
         {

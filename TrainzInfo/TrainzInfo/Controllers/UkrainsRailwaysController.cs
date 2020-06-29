@@ -21,6 +21,10 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+        public async Task<List<UkrainsRailways>> IndexAcrion()
+        {
+            return await _context.UkrainsRailways.ToListAsync();
+        }
         // GET: UkrainsRailways
         public async Task<IActionResult> Index()
         {
