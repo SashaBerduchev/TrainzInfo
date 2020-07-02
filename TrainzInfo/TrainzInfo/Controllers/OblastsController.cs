@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -28,6 +29,14 @@ namespace TrainzInfo.Controllers
         public async Task<List<Oblast>> IndexAction()
         {
             return await _context.Oblasts.ToListAsync();
+        }
+
+        [HttpPost]
+        public void CreateAction([FromBody] string data)
+        {
+            Oblast oblast = JsonConvert.DeserializeObject<Oblast>(data);
+            _context.Oblasts.Add(oblast);
+            _context.SaveChanges();
         }
         // GET: Oblasts/Details/5
         public async Task<IActionResult> Details(int? id)

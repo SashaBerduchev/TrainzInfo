@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -45,7 +46,13 @@ namespace TrainzInfo.Controllers
 
             return View(city);
         }
-
+        [HttpPost]
+        public void CreateAction([FromBody] string data)
+        {
+            City city = JsonConvert.DeserializeObject<City>(data);
+            _context.Cities.Add(city);
+            _context.SaveChanges();
+        }
         // GET: Cities/Create
         public IActionResult Create()
         {
