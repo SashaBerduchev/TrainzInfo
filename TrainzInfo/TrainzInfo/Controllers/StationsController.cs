@@ -97,6 +97,12 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList city = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            SelectList oblast = new SelectList(_context.Oblasts.Select(x => x.Name).ToList());
+            SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
+            ViewBag.city = city;
+            ViewBag.oblast = oblast;
+            ViewBag.uz = uz;
             return View(stations);
         }
 
