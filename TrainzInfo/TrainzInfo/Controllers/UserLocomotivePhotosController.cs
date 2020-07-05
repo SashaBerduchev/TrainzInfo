@@ -55,6 +55,12 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos/Create
         public IActionResult Create()
         {
+            List<string> locomotives = new List<string>();
+            locomotives = _context.Electic_Locomotives.Select(x=>x.Name).ToList();
+            locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
+            SelectList selectLists = new SelectList(locomotives);
+            ViewBag.locomotives = selectLists;
+            
             return View();
         }
 
@@ -72,12 +78,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 try
                 {
-                    MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
-                    m.Body = userLocomotivePhotos.UserName + "Ваша публикация опубликована";
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465);
-                    smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
-                    smtp.EnableSsl = true;
-                    smtp.Send(m);
+                    SendMessage(userLocomotivePhotos);
                 }
                 catch (Exception e)
                 {
@@ -86,6 +87,16 @@ namespace TrainzInfo.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(userLocomotivePhotos);
+        }
+
+        private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
+        {
+            MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
+            m.Body = userLocomotivePhotos.UserName + "Ваша публикация опубликована";
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
+            smtp.EnableSsl = true;
+            smtp.Send(m);
         }
 
         // GET: UserLocomotivePhotos/Edit/5
