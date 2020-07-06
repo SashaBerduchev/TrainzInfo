@@ -76,15 +76,10 @@ namespace TrainzInfo.Controllers
                 userLocomotivePhotos.DateTime = DateTime.Now;
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();
-                try
-                {
-                    SendMessage(userLocomotivePhotos);
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.ToString());
-                    SendMessage(userLocomotivePhotos);
-                }
+                
+
+                SendMessage(userLocomotivePhotos);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(userLocomotivePhotos);
@@ -92,12 +87,19 @@ namespace TrainzInfo.Controllers
 
         private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
         {
-            MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
-            m.Body = userLocomotivePhotos.UserName + " Ваша публикация опубликована, Спасибо Вам";
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
-            smtp.EnableSsl = true;
-            smtp.Send(m);
+            try
+            {
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
+                m.Body = userLocomotivePhotos.UserName + " Ваша публикация опубликована, Спасибо Вам";
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
+                smtp.EnableSsl = true;
+                smtp.Send(m);
+            }catch(Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                SendMessage(userLocomotivePhotos);
+            }
         }
 
         // GET: UserLocomotivePhotos/Edit/5
