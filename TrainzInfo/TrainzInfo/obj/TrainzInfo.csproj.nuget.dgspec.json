@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
+    "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
+    "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "projectUniqueName": "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
         "projectName": "TrainzInfo",
-        "projectPath": "D:\\Projects\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
-        "packagesPath": "C:\\Users\\Администратор\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+        "projectPath": "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "packagesPath": "C:\\Users\\sasha\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Администратор\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sasha\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -94,12 +91,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[3.1.2, 3.1.2]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -108,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

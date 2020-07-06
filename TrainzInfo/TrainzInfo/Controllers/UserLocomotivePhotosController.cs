@@ -83,6 +83,7 @@ namespace TrainzInfo.Controllers
                 catch (Exception e)
                 {
                     Trace.WriteLine(e.ToString());
+                    SendMessage(userLocomotivePhotos);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -92,7 +93,7 @@ namespace TrainzInfo.Controllers
         private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
         {
             MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
-            m.Body = userLocomotivePhotos.UserName + "Ваша публикация опубликована";
+            m.Body = userLocomotivePhotos.UserName + " Ваша публикация опубликована, Спасибо Вам";
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
             smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
             smtp.EnableSsl = true;
