@@ -43,8 +43,15 @@ namespace TrainzInfo.Controllers
             return View(stationsShadule);
         }
 
+        
         // GET: StationsShadules/Create
         public IActionResult Create()
+        {
+            Loading();
+            return View();
+        }
+        [HttpPost]
+        public void Loading()
         {
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.uz = uz;
@@ -52,7 +59,6 @@ namespace TrainzInfo.Controllers
             ViewBag.trainz = trainz;
             SelectList stations = new SelectList(_context.Stations.Select(x => x.Name).ToList());
             ViewBag.stations = stations;
-            return View();
         }
 
         // POST: StationsShadules/Create

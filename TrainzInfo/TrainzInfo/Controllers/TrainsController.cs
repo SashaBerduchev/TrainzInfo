@@ -63,8 +63,9 @@ namespace TrainzInfo.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(train);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();;
                 return RedirectToAction(nameof(Index));
+                
             }
             return View(train);
         }
