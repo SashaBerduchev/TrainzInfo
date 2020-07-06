@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -76,10 +78,7 @@ namespace TrainzInfo.Controllers
                 userLocomotivePhotos.DateTime = DateTime.Now;
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();
-                
-
                 SendMessage(userLocomotivePhotos);
-
                 return RedirectToAction(nameof(Index));
             }
             return View(userLocomotivePhotos);
@@ -98,7 +97,14 @@ namespace TrainzInfo.Controllers
             }catch(Exception exp)
             {
                 Trace.WriteLine(exp.ToString());
-                SendMessage(userLocomotivePhotos);
+                string expstr = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                for (int i = 0; i < expstr.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
             }
         }
 
