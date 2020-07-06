@@ -77,7 +77,7 @@ namespace TrainzInfo.Controllers
                 {
                     MailMessage m = new MailMessage("sashaberduchev@gmail.com", userTrainzPhoto.Email);
                     m.Body = userTrainzPhoto.UserName + "Ваша публикация опубликована";
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 465);
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                     smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
                     smtp.EnableSsl = true;
                     smtp.Send(m);
