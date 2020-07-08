@@ -29,7 +29,7 @@ namespace TrainzInfo
                 connection = Configuration.GetConnectionString("DefaultConnection");
             }else if(DEBUG_MODE == false)
             {
-                connection = Configuration.GetConnectionString("WebConnection");
+                connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
             }
             // ��������� �������� MobileContext � �������� ������� � ����������
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

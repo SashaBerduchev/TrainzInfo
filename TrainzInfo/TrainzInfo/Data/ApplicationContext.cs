@@ -1,7 +1,7 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using TrainzInfo.Models;
 
 namespace TrainzInfo.Data
@@ -11,8 +11,17 @@ namespace TrainzInfo.Data
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
+            string trace = "SERVER START!!";
             //Database.EnsureCreated();   // создаем базу данных при первом обращении
             Trace.WriteLine(this);
+            Trace.WriteLine(trace);
+            FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
+            for (int i = 0; i < trace.Length; i++)
+            {
+                byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
+            }
+            fileStreamLog.Close();
         }
         public DbSet<User> Users { get; set; }
         public DbSet<TrainzType> TrainzTypes { get; set; }
