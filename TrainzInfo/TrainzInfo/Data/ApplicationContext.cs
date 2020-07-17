@@ -21,6 +21,7 @@ namespace TrainzInfo.Data
                 byte[] array = Encoding.Default.GetBytes(trace.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
             }
+
             fileStreamLog.Close();
         }
         public DbSet<User> Users { get; set; }

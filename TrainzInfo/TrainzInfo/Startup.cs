@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
+using System.Text;
 using TrainzInfo.Data;
 
 namespace TrainzInfo
@@ -25,16 +27,26 @@ namespace TrainzInfo
             //services.AddControllersWithViews();
             string connection = "";
             // �������� ������ ����������� �� ����� ������������
+            string trace = "";
             if (DEBUG_MODE == true) {
                 connection = Configuration.GetConnectionString("DefaultConnection");
+                trace = "test connection good";
             }else if(DEBUG_MODE == false)
             {
                 connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
+                trace = "server connection good!!";
             }
             // ��������� �������� MobileContext � �������� ������� � ����������
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
+            FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
+            for (int i = 0; i < trace.Length; i++)
+            {
+                byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
+            }
 
+            fileStreamLog.Close();
             services.AddDbContext<ApplicationContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TrainzInfoContext")));
 
