@@ -33,8 +33,13 @@ namespace TrainzInfo
                 trace = "test connection good";
             }else if(DEBUG_MODE == false)
             {
+
+                //connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
+                connection = Configuration.GetConnectionString("TrainzInfoContext");
+
                 connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
                 trace = "server connection good!!";
+
             }
             // ��������� �������� MobileContext � �������� ������� � ����������
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

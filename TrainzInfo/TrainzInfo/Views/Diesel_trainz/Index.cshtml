@@ -45,7 +45,7 @@
             <td>
                 <a class="btn btn-info" asp-controller="DieselTrainzLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-controller="Diesel_train_info" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a> |
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>

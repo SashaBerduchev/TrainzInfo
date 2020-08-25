@@ -226,6 +226,30 @@ namespace TrainzInfo.Migrations
                     b.ToTable("DieselTrainzLists");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Diesel_train_info", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AllInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Diesel_Train_Infos");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Diesel_trainz", b =>
                 {
                     b.Property<int>("id")
