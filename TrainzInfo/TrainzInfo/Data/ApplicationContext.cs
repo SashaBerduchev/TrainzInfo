@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -15,14 +16,20 @@ namespace TrainzInfo.Data
             //Database.EnsureCreated();   // создаем базу данных при первом обращении
             Trace.WriteLine(this);
             Trace.WriteLine(trace);
-            FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
-            for (int i = 0; i < trace.Length; i++)
+            try
             {
-                byte[] array = Encoding.Default.GetBytes(trace.ToString());
-                fileStreamLog.Write(array, 0, array.Length);
-            }
+                FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
+                for (int i = 0; i < trace.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
 
-            fileStreamLog.Close();
+                fileStreamLog.Close();
+            }catch(Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+            }
         }
         public DbSet<User> Users { get; set; }
         public DbSet<TrainzType> TrainzTypes { get; set; }

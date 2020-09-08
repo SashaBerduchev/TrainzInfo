@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -78,10 +80,26 @@ namespace TrainzInfo.Controllers
         [HttpPost]
         public async void CreateAction([FromBody] string info)
         {
-            Trace.WriteLine(info);
-            UkrainsRailways ukrainsRailways = JsonConvert.DeserializeObject<UkrainsRailways>(info);
-            _context.Add(ukrainsRailways);
-            await _context.SaveChangesAsync();
+            try
+            {
+                Trace.WriteLine(info);
+                UkrainsRailways ukrainsRailways = JsonConvert.DeserializeObject<UkrainsRailways>(info);
+                _context.Add(ukrainsRailways);
+                await _context.SaveChangesAsync();
+            }catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                string e = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Exception.log", FileMode.Append);
+                for (int i = 0; i < e.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(e.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+
+                }
+
+                fileStreamLog.Close();
+            }
         }
         // GET: UkrainsRailways/Edit/5
         public async Task<IActionResult> Edit(int? id)
