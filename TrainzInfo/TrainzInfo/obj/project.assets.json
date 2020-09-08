@@ -9524,24 +9524,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Администратор\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Sasha\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+      "projectUniqueName": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
       "projectName": "TrainzInfo",
-      "projectPath": "D:\\Projects\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
-      "packagesPath": "C:\\Users\\Администратор\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+      "projectPath": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+      "packagesPath": "C:\\Users\\Sasha\\.nuget\\packages\\",
+      "outputPath": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\Администратор\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Sasha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -9625,16 +9626,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Ошибка чтения файла кэша D:\\Projects\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\project.nuget.cache: Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }

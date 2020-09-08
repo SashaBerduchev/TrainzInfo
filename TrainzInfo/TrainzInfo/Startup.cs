@@ -35,10 +35,10 @@ namespace TrainzInfo
             {
 
                 //connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
-                connection = Configuration.GetConnectionString("TrainzInfoContext");
+                connection = Configuration.GetConnectionString("WebConnection");
 
-                connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
-                trace = "server connection good!!";
+                //connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
+                trace = ("server connection good!!" + connection);
 
             }
             // ��������� �������� MobileContext � �������� ������� � ����������
