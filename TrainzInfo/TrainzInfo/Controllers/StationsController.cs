@@ -28,9 +28,11 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Stations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? filialsName)
         {
-            return View(await _context.Stations.ToListAsync());
+            List<Stations> stations = await _context.Stations.Where(x => x.Railway == filialsName).ToListAsync();
+            ViewBag.Filia = filialsName;
+            return View(stations);
         }
 
         public async Task<List<Stations>> IndexAction()
