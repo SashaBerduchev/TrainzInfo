@@ -35,6 +35,11 @@ namespace TrainzInfo.Controllers
             return View(stations);
         }
 
+        public async Task<IActionResult> IndexAll()
+        {
+            return View(await _context.Stations.ToListAsync());
+        }
+
         public async Task<List<Stations>> IndexAction()
         {
             List<Stations> stations = await _context.Stations.ToListAsync();

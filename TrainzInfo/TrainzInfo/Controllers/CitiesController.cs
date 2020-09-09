@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,6 +28,68 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Cities.ToListAsync());
         }
+
+        [HttpPost]
+        public void DownloadActionOblast([FromBody] string? content)
+        {
+            try
+            {
+                Trace.WriteLine(content);
+                Oblast oblast = JsonConvert.DeserializeObject<Oblast>(content);
+                _context.Oblasts.Add(oblast);
+                _context.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                string trace = e.ToString();
+                try
+                {
+                    FileStream fileStreamLog = new FileStream(@"Exception.log", FileMode.Append);
+                    for (int i = 0; i < trace.Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                        fileStreamLog.Write(array, 0, array.Length);
+                    }
+
+                    fileStreamLog.Close();
+                }
+                catch (Exception exp)
+                {
+                    Trace.WriteLine(exp.ToString());
+                }
+            }
+        }
+
+        [HttpPost]
+        public  void DownloadActionCity([FromBody] string? content)
+        {
+            try
+            {
+                Trace.WriteLine(content);
+                City city = JsonConvert.DeserializeObject<City>(content);
+                _context.Cities.Add(city);
+                _context.SaveChanges();
+            }catch(Exception e)
+            {
+                string trace = e.ToString();
+                try
+                {
+                    FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
+                    for (int i = 0; i < trace.Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                        fileStreamLog.Write(array, 0, array.Length);
+                    }
+
+                    fileStreamLog.Close();
+                }
+                catch (Exception exp)
+                {
+                    Trace.WriteLine(exp.ToString());
+                }
+            }
+        }
+
         public async Task<List<City>> IndexAction()
         {
             return await _context.Cities.ToListAsync();
