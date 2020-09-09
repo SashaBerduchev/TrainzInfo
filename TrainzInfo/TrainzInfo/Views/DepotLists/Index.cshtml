@@ -5,7 +5,7 @@
 }
 
 <h1>Список депо</h1>
-
+<H2>@Html.DisplayName(ViewBag.Filia)</H2>
 <p>
     <a class="btn btn-info" asp-action="Create">Добавить</a>
 </p>
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayName("Название")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UkrainsRailways)
+                @Html.DisplayName("Филия")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Addres)
+                @Html.DisplayName("Станция")
             </th>
             <th></th>
         </tr>

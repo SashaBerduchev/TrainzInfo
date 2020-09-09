@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -19,10 +23,41 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        public void DownloadActionDepot([FromBody] string? content)
+        {
+            try
+            {
+                Trace.WriteLine(content);
+                DepotList depotList = JsonConvert.DeserializeObject<DepotList>(content);
+                _context.Depots.Add(depotList);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                string trace = e.ToString();
+                try
+                {
+                    FileStream fileStreamLog = new FileStream(@"Exception.log", FileMode.Append);
+                    for (int i = 0; i < trace.Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                        fileStreamLog.Write(array, 0, array.Length);
+                    }
+
+                    fileStreamLog.Close();
+                }
+                catch (Exception exp)
+                {
+                    Trace.WriteLine(exp.ToString());
+                }
+            }
+        }
         // GET: DepotLists
         public async Task<IActionResult> Index(string? uzname)
         {
             List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailways == uzname).ToListAsync();
+            ViewBag.Filia = uzname;
             return View(depots);
         }
 
