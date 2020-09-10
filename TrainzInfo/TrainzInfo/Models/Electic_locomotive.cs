@@ -10,7 +10,7 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         [Required]
-        public int Number { get; set; }
+        public string Number { get; set; }
         [Required]
         public int Speed { get; set; }
         [Required]

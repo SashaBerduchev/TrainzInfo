@@ -143,13 +143,13 @@
       <publishTime>09/12/2019 17:08:34</publishTime>
     </File>
     <File Include="Microsoft.Data.SqlClient.dll">
-      <publishTime>09/26/2019 20:43:28</publishTime>
+      <publishTime>05/15/2020 23:07:32</publishTime>
     </File>
     <File Include="Microsoft.Data.Sqlite.dll">
-      <publishTime>04/15/2020 16:49:30</publishTime>
+      <publishTime>07/22/2020 02:48:34</publishTime>
     </File>
     <File Include="Microsoft.DotNet.PlatformAbstractions.dll">
-      <publishTime>04/15/2020 01:02:40</publishTime>
+      <publishTime>02/28/2020 21:05:14</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
       <publishTime>07/22/2020 02:48:28</publishTime>
@@ -158,13 +158,13 @@
       <publishTime>07/22/2020 02:48:46</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Relational.dll">
-      <publishTime>05/21/2020 02:31:16</publishTime>
+      <publishTime>07/22/2020 02:48:54</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Sqlite.dll">
-      <publishTime>04/15/2020 16:49:56</publishTime>
+      <publishTime>07/22/2020 02:49:02</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.SqlServer.dll">
-      <publishTime>05/21/2020 02:31:18</publishTime>
+      <publishTime>07/22/2020 02:49:00</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Abstractions.dll">
       <publishTime>07/22/2020 00:41:22</publishTime>
@@ -188,7 +188,7 @@
       <publishTime>07/22/2020 00:41:46</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyModel.dll">
-      <publishTime>04/15/2020 01:02:54</publishTime>
+      <publishTime>02/28/2020 21:04:04</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Identity.Core.dll">
       <publishTime>05/21/2020 20:25:48</publishTime>
@@ -210,6 +210,21 @@
     </File>
     <File Include="Microsoft.Identity.Client.dll">
       <publishTime>04/29/2019 22:04:14</publishTime>
+    </File>
+    <File Include="Microsoft.IdentityModel.JsonWebTokens.dll">
+      <publishTime>06/24/2019 19:50:38</publishTime>
+    </File>
+    <File Include="Microsoft.IdentityModel.Logging.dll">
+      <publishTime>06/24/2019 19:53:26</publishTime>
+    </File>
+    <File Include="Microsoft.IdentityModel.Protocols.dll">
+      <publishTime>06/24/2019 19:54:24</publishTime>
+    </File>
+    <File Include="Microsoft.IdentityModel.Protocols.OpenIdConnect.dll">
+      <publishTime>06/24/2019 19:59:32</publishTime>
+    </File>
+    <File Include="Microsoft.IdentityModel.Tokens.dll">
+      <publishTime>06/24/2019 19:56:06</publishTime>
     </File>
     <File Include="Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll">
       <publishTime>08/03/2020 18:29:50</publishTime>
@@ -302,7 +317,7 @@
       <publishTime>05/15/2018 13:29:40</publishTime>
     </File>
     <File Include="runtimes/unix/lib/netcoreapp2.1/Microsoft.Data.SqlClient.dll">
-      <publishTime>09/26/2019 20:43:26</publishTime>
+      <publishTime>05/15/2020 23:07:24</publishTime>
     </File>
     <File Include="runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll">
       <publishTime>01/17/2020 18:41:36</publishTime>
@@ -332,7 +347,7 @@
       <publishTime>05/15/2018 13:29:40</publishTime>
     </File>
     <File Include="runtimes/win/lib/netcoreapp2.1/Microsoft.Data.SqlClient.dll">
-      <publishTime>09/26/2019 20:43:26</publishTime>
+      <publishTime>05/15/2020 23:07:26</publishTime>
     </File>
     <File Include="runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll">
       <publishTime>01/17/2020 18:41:44</publishTime>
@@ -385,6 +400,9 @@
     <File Include="System.Diagnostics.DiagnosticSource.dll">
       <publishTime>04/14/2020 22:48:06</publishTime>
     </File>
+    <File Include="System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>06/24/2019 19:49:50</publishTime>
+    </File>
     <File Include="System.Private.ServiceModel.dll">
       <publishTime>11/15/2019 17:31:08</publishTime>
     </File>
@@ -410,7 +428,7 @@
       <publishTime>11/15/2019 17:31:24</publishTime>
     </File>
     <File Include="System.Text.Json.dll">
-      <publishTime>04/14/2020 22:49:30</publishTime>
+      <publishTime>01/17/2020 18:42:32</publishTime>
     </File>
     <File Include="tr/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 17:09:00</publishTime>
@@ -425,28 +443,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>09/09/2020 16:01:29</publishTime>
+      <publishTime>09/10/2020 12:26:35</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>09/09/2020 16:01:07</publishTime>
+      <publishTime>09/10/2020 12:25:31</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>09/09/2020 16:01:07</publishTime>
+      <publishTime>09/10/2020 12:25:31</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>09/09/2020 16:01:07</publishTime>
+      <publishTime>09/10/2020 12:25:31</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
-      <publishTime>09/09/2020 13:16:14</publishTime>
+      <publishTime>09/10/2020 11:48:31</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>09/09/2020 16:01:11</publishTime>
+      <publishTime>09/10/2020 12:26:34</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>09/09/2020 16:01:11</publishTime>
+      <publishTime>09/10/2020 12:26:34</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>09/09/2020 16:01:29</publishTime>
+      <publishTime>09/10/2020 12:26:35</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>09/08/2020 09:01:54</publishTime>

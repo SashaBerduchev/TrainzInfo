@@ -11,13 +11,16 @@
     }
 </style>
 <p>
-    <a asp-action="Create">Добавить электровоз</a>
+    <a class="btn btn-info" asp-action="Create">Добавить электровоз</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayName("Название")
+            </th>
+            <th>
+                @Html.DisplayName("Номер")
             </th>
             <th>
                 @Html.DisplayName("Скорость")
@@ -35,7 +38,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Seria + " - " + item.Number)
+                @Html.DisplayFor(modelItem => item.Seria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Speed)

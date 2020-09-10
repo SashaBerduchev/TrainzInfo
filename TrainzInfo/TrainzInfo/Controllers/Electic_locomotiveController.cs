@@ -33,7 +33,6 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Electic_Locomotives.ToListAsync());
         }
-
         // GET: Electic_locomotive/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -67,7 +66,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Seria, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (ModelState.IsValid)
             {
@@ -110,7 +109,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (id != electic_locomotive.id)
             {

@@ -101,7 +101,6 @@ namespace TrainzInfo.Controllers
                     Name = electrick_Lockomotive.Name,
                     City = "",
                     Country = "",
-                    Number = "",
                     Depot = ""
                 };
                 Trace.WriteLine("POST " + this + listRollingStoneObj);

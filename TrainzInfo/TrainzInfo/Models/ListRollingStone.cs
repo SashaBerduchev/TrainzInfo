@@ -11,7 +11,6 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Number { get; set; }
         [Required]
         public string Depot { get; set; }
         [Required]
