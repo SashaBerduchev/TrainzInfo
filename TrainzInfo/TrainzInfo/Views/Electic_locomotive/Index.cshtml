@@ -35,7 +35,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Seria + " - " + item.Number)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Speed)
@@ -52,9 +52,9 @@
             <td>
                 @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
-                <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Name">Смотреть перечень локомотивов @item.Name</a>
+                <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria</a>
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
-                <a class="btn btn-outline-success" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Name">Фото пользователей</a>
+                <a class="btn btn-outline-success" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
             </td>
         </tr>
 }

@@ -286,15 +286,22 @@ namespace TrainzInfo.Migrations
                     b.Property<int>("ALlPowerP")
                         .HasColumnType("int");
 
-                    b.Property<string>("LocomotiveImg")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Depo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LocomotiveImg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
                     b.Property<int>("SectionCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Seria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Speed")
                         .HasColumnType("int");
@@ -450,6 +457,22 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("ListRollingStones");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Seria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Locomotive_Series");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.LocomotivesType", b =>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.Name</h1>
+<h1>@Model.Seria</h1>
 <style>
     body {
         background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
@@ -13,13 +13,13 @@
 <div>
     <h4>Электровоз</h4>
     <hr />
-    <a asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Name</a>
+    <a asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Seria</a>
     <dl class="">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayName("Электровоз")
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Seria + " - " + model.Number)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Speed)

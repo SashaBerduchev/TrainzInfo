@@ -55,6 +55,10 @@ namespace TrainzInfo.Controllers
         // GET: Electic_locomotive/Create
         public IActionResult Create()
         {
+            SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            ViewBag.Seria = seria;
+            SelectList depo = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            ViewBag.Depo = depo;
             return View();
         }
 
@@ -63,7 +67,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Speed,SectionCount,ALlPowerP,LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (ModelState.IsValid)
             {
@@ -106,7 +110,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Speed,SectionCount,ALlPowerP,LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (id != electic_locomotive.id)
             {

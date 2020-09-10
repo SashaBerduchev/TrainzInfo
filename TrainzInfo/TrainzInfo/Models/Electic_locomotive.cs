@@ -10,13 +10,17 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public int Number { get; set; }
         [Required]
         public int Speed { get; set; }
         [Required]
         public int SectionCount { get; set; }
         [Required]
         public int ALlPowerP { get; set; }
+        [Required]
+        public string Seria { get; set; }
+        [Required]
+        public string Depo { get; set; }
         public string LocomotiveImg { get; set; }
     }
 }

@@ -33,12 +33,12 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Electic_locomotive electic_Locomotives = await _context.Electic_Locomotives.Where(x => x.id == idloc).FirstOrDefaultAsync();
-            var electrick_Lockomotive_Info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_Locomotives.Name).FirstOrDefault();
+            var electrick_Lockomotive_Info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_Locomotives.Seria).FirstOrDefault();
                 
             if (electrick_Lockomotive_Info == null)
             {
                 Electrick_Lockomotive_Info electrick_Lockomotive_Info_add = new Electrick_Lockomotive_Info {
-                    Name = electic_Locomotives.Name,
+                    Name = electic_Locomotives.Seria + " - " + electic_Locomotives.Number.ToString(),
                     Power = electic_Locomotives.ALlPowerP,
                     Electric_Type = "",
                     Baseinfo = "",
@@ -48,7 +48,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
             }
             var electrick_Lockomotive_Info_result = await _context.Electrick_Lockomotive_Infos
-                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Name);
+                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Seria + " - " + electic_Locomotives.Number);
             return View(electrick_Lockomotive_Info_result);
         }
 

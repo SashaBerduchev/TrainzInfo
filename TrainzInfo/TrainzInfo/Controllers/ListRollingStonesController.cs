@@ -24,11 +24,13 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones
         public async Task<IActionResult> Index(string? idlocname)
         {
+            
             return View(await _context.ListRollingStones.Where(x=>x.Name == idlocname).ToListAsync());
         }
 
         public async Task<IActionResult> IndexDepot(string? depotname)
         {
+            ViewBag.Depo = depotname;
             List<ListRollingStone> rollingStones = await _context.ListRollingStones.Where(x => x.Depot == depotname).ToListAsync();
             return View("IndexDepot", rollingStones);
         }
@@ -56,7 +58,7 @@ namespace TrainzInfo.Controllers
         {
             SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
             ViewBag.depots = selectListItems;
-            List<string> locomotives = _context.Electic_Locomotives.Select(x => x.Name).ToList();
+            List<string> locomotives = _context.Electic_Locomotives.Select(x => x.Seria + " - " + x.Number).ToList();
             locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
             SelectList selectListsNameLocomotive = new SelectList(locomotives);
             ViewBag.locomotives = selectListsNameLocomotive;

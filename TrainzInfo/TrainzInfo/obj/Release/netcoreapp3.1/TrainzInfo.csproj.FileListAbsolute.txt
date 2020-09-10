@@ -1389,3 +1389,14 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Stations\IndexAll.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Locomotive_series\Create.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Locomotive_series\Delete.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Locomotive_series\Details.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Locomotive_series\Edit.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Locomotive_series\Index.cshtml.g.cs
