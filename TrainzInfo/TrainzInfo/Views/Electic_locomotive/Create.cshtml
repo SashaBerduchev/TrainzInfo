@@ -40,11 +40,6 @@
             </div>
             <div class="form-group">
                 <label asp-for="LocomotiveImg" class="control-label"></label>
-                @Html.DropDownList("Depo", ViewBag.Depo as SelectList)
-                <span asp-validation-for="Depo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LocomotiveImg" class="control-label"></label>
                 <input asp-for="LocomotiveImg" class="form-control" />
                 <span asp-validation-for="LocomotiveImg" class="text-danger"></span>
             </div>

@@ -19,7 +19,6 @@ namespace TrainzInfo.Models
         public string City { get; set; }
         [Required]
         public string Status { get; set; }
-        [Required]
         public string Photo { get; set; }
     }
 }

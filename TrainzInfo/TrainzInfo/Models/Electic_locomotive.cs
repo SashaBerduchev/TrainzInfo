@@ -19,8 +19,6 @@ namespace TrainzInfo.Models
         public int ALlPowerP { get; set; }
         [Required]
         public string Seria { get; set; }
-        [Required]
-        public string Depo { get; set; }
         public string LocomotiveImg { get; set; }
     }
 }

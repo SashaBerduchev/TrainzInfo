@@ -76,11 +76,14 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
-            if (ModelState.IsValid)
+            listRollingStone.Country = "Украина";
+            if(listRollingStone.Photo == null)
             {
-                _context.Add(listRollingStone);
-                await _context.SaveChangesAsync();
+                listRollingStone.Photo = "";
             }
+             _context.Add(listRollingStone);
+             await _context.SaveChangesAsync();
+            
             return View("Index", await _context.ListRollingStones.ToListAsync());
         }
 
@@ -185,6 +188,10 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     Trace.WriteLine("POST " + this + listRollingStone);
+                    if (listRollingStone.Photo == null)
+                    {
+                        listRollingStone.Photo = "";
+                    }
                     _context.Update(listRollingStone);
                     await _context.SaveChangesAsync();
                 }

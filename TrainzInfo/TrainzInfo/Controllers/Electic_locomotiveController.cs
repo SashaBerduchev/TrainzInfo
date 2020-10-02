@@ -66,7 +66,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (ModelState.IsValid)
             {
@@ -83,9 +83,16 @@ namespace TrainzInfo.Controllers
         [HttpPost]
         public async void CreateAction ([FromBody] string data)
         {
-            Electic_locomotive electic_Locomotive =  JsonConvert.DeserializeObject<Electic_locomotive>(data);
-            _context.Add(electic_Locomotive);
-            await _context.SaveChangesAsync();
+            try
+            {
+                List<Electic_locomotive> electic_Locomotive = JsonConvert.DeserializeObject<List<Electic_locomotive>>(data);
+                _context.AddRange(electic_Locomotive);
+                await _context.SaveChangesAsync();
+            }catch(Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                Console.WriteLine(e.Message);
+            }
         }
         // GET: Electic_locomotive/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -109,7 +116,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, Depo, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, LocomotiveImg")] Electic_locomotive electic_locomotive)
         {
             if (id != electic_locomotive.id)
             {
