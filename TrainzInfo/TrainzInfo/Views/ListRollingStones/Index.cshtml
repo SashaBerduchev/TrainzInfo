@@ -7,7 +7,7 @@
 <h1>Список</h1>
 
 <p>
-    <a asp-action="Create">Добавить</a>
+    <a class="btn btn-info" asp-action="Create">Добавить</a>
 </p>
 <table class="table">
     <thead>
@@ -63,5 +63,14 @@
 <style>
     body {
         background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+    }
+    td {
+        background: #fff; /* Цвет фона */
+        padding: 5px; /* Поля в ячейках */
+        opacity: 0.8; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width 700;
+        color: black;
+        text-decoration: solid;
     }
 </style>

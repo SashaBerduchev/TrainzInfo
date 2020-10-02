@@ -81,7 +81,7 @@ namespace TrainzInfo.Controllers
                 _context.Add(listRollingStone);
                 await _context.SaveChangesAsync();
             }
-            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
+            return View("Index", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Edit/5
@@ -201,7 +201,7 @@ namespace TrainzInfo.Controllers
                 }
             }
             Trace.WriteLine("RESPONSE " + this + listRollingStone);
-            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
+            return View("Index", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Delete/5
