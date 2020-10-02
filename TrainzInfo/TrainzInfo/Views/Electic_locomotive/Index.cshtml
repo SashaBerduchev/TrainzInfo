@@ -56,7 +56,7 @@
                 <img src="@item.LocomotiveImg" width="180" height="120" />
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.id">Edit</a> |*@
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
                 <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria</a>
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
