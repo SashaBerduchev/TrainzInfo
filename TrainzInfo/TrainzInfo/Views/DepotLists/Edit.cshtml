@@ -19,8 +19,8 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UkrainsRailways" class="control-label"></label>
-                <input asp-for="UkrainsRailways" class="form-control" />
+                @Html.DisplayName("Филии")
+                @Html.DropDownList("UkrainsRailways", ViewBag.Ukrrailways as SelectList)
                 <span asp-validation-for="UkrainsRailways" class="text-danger"></span>
             </div>
             <div class="form-group">

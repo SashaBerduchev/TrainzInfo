@@ -70,7 +70,8 @@
                             @Html.DisplayFor(modelItem => item.NameNews)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.DateTime)
+                            @Html.DisplayFor(modelItem => item.DateTime.Year)
+                            
                         </td>
                         <td>
                             <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>

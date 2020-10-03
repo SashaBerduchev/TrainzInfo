@@ -122,6 +122,10 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+
+            SelectList uzlist = new SelectList(await _context.UkrainsRailways.Select(x => x.Name).ToListAsync());
+            ViewBag.Ukrrailways = uzlist;
+
             return View(depotList);
         }
 

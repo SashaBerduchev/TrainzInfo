@@ -56,10 +56,21 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones/Create
         public IActionResult Create()
         {
+            List<string> liststone = _context.ListRollingStones.Select(x => x.Name).ToList();
             SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
             ViewBag.depots = selectListItems;
             List<string> locomotives = _context.Electic_Locomotives.Select(x => x.Seria + " - " + x.Number).ToList();
             locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
+            for (int i = 0; i < locomotives.Count; i++)
+            {
+                for (int j = 0; j < liststone.Count; j++)
+                {
+                    if(locomotives[i] == liststone[j])
+                    {
+                        locomotives.RemoveAt(i);
+                    }
+                }
+            }
             SelectList selectListsNameLocomotive = new SelectList(locomotives);
             ViewBag.locomotives = selectListsNameLocomotive;
             SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
