@@ -4,13 +4,13 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@Model.Seria</h1>
 <style>
     body {
         background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
     }
 </style>
-<h4>Electic_locomotive</h4>
+<h4>Электровоз</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,32 +18,32 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Seria" class="control-label"></label>
+                @Html.DisplayName("Название");
                 <input asp-for="Seria" class="form-control" />
                 <span asp-validation-for="Seria" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Speed" class="control-label"></label>
+                @Html.DisplayName("Номер");
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Скорость");
                 <input asp-for="Speed" class="form-control" />
                 <span asp-validation-for="Speed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SectionCount" class="control-label"></label>
+                @Html.DisplayName("Количество секций");
                 <input asp-for="SectionCount" class="form-control" />
                 <span asp-validation-for="SectionCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ALlPowerP" class="control-label"></label>
+                @Html.DisplayName("Общая мощность");
                 <input asp-for="ALlPowerP" class="form-control" />
                 <span asp-validation-for="ALlPowerP" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LocomotiveImg" class="control-label"></label>
+                @Html.DisplayName("Фото");
                 <input asp-for="LocomotiveImg" class="form-control" />
                 <span asp-validation-for="LocomotiveImg" class="text-danger"></span>
             </div>
