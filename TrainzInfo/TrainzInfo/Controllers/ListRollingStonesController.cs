@@ -88,14 +88,15 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
             listRollingStone.Country = "Украина";
+            Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
             if(listRollingStone.Photo == null)
             {
-                listRollingStone.Photo = "";
+                listRollingStone.Photo = electic_Locomotive.LocomotiveImg;
             }
              _context.Add(listRollingStone);
              await _context.SaveChangesAsync();
             
-            return View("Index", await _context.ListRollingStones.ToListAsync());
+            return View("IndexAll", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Edit/5
@@ -178,10 +179,13 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+          
             SelectList depots = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
             ViewBag.depots = depots;
             SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
             ViewBag.citys = citys;
+            SelectList status = new SelectList(_context.Statuses.Select(x => x.Status_namr).ToList());
+            ViewBag.status = status;
             return View(listRollingStone);
         }
 
@@ -199,9 +203,10 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     Trace.WriteLine("POST " + this + listRollingStone);
+                    Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
                     if (listRollingStone.Photo == null)
                     {
-                        listRollingStone.Photo = "";
+                        listRollingStone.Photo = electic_Locomotive.LocomotiveImg;
                     }
                     _context.Update(listRollingStone);
                     await _context.SaveChangesAsync();
@@ -219,7 +224,7 @@ namespace TrainzInfo.Controllers
                 }
             }
             Trace.WriteLine("RESPONSE " + this + listRollingStone);
-            return View("Index", await _context.ListRollingStones.ToListAsync());
+            return View("IndexAll", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Delete/5
