@@ -68,6 +68,7 @@ namespace TrainzInfo.Controllers
                     if(locomotives[i] == liststone[j])
                     {
                         locomotives.RemoveAt(i);
+                        i = 0;
                     }
                 }
             }
