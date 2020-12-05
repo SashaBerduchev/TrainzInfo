@@ -9,9 +9,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container" style="position: inherit; left: -380px;">
-                <img src="https://ticket.pp.ua/media/images/header-img.png" , width="380" height="130"/>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" >
+            <div class="container" style="        position: inherit; left: -360px;">
+                <img src="http://pro100news.info/wp-content/uploads/%D0%BE%D0%BE-300x197.png" , width="380" height="130"/>
                 <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -22,14 +22,15 @@
                         <li class="nav-item">
                             <a id="btn1" class="btn btn-success text-white" asp-area="" asp-controller="Home" asp-action="Index">Домой</a>
                         </li>
-                        <li class="navbar-nav">
+                        <li class="navbar-nav" >
+                            
                             @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
                             <a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
                             <a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="LocomotivesTypes" asp-action="Index">Типы локомотивов</a>
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Железные дороги Украины</a>
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
-                            @if (Model != null && Model is List<NewsInfo> && Model.Count >0 )
+                            @if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
                             {
                                 if (Model[0] is NewsInfo && Model[0].user == null)
                                 {

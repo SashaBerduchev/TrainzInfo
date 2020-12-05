@@ -443,28 +443,28 @@
       <publishTime>08/14/2019 23:20:54</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>12/05/2020 13:40:05</publishTime>
+      <publishTime>12/05/2020 14:13:26</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>12/05/2020 13:39:37</publishTime>
+      <publishTime>12/05/2020 14:13:16</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>12/05/2020 13:39:37</publishTime>
+      <publishTime>12/05/2020 14:13:17</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>12/05/2020 13:39:37</publishTime>
+      <publishTime>12/05/2020 14:13:16</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>12/05/2020 13:39:47</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>12/05/2020 13:39:46</publishTime>
+      <publishTime>12/05/2020 14:13:23</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>12/05/2020 13:39:46</publishTime>
+      <publishTime>12/05/2020 14:13:23</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>12/05/2020 13:40:06</publishTime>
+      <publishTime>12/05/2020 14:13:26</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>10/07/2020 12:45:40</publishTime>
