@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,15 +21,13 @@ namespace TrainzInfo.Controllers
 
         public UsersController(ApplicationContext context)
         {
-            Trace.WriteLine(this);
             _context = context;
         }
-
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -36,14 +38,14 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
+            var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (users == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(users);
         }
 
         // GET: Users/Create
@@ -53,19 +55,46 @@ namespace TrainzInfo.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password,Status")] Users users)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                _context.Add(users);
                 await _context.SaveChangesAsync();
+                SendMessage(users);
                 return RedirectToAction(nameof(Index));
             }
-            return View("IndexRegister");
+            return View(users);
+        }
+
+        private void SendMessage(Users users)
+        {
+            try
+            {
+                MailMessage m = new MailMessage("sashaberduchev24@ukr.net", users.Email);
+                m.Body = users.Email + " Благодарим за регистрацию";
+                SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
+                smtp.EnableSsl = false;
+                smtp.Send(m);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                string expstr = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                for (int i = 0; i < expstr.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+            }
         }
 
         // GET: Users/Edit/5
@@ -73,137 +102,84 @@ namespace TrainzInfo.Controllers
         {
             if (id == null)
             {
-                return View();
+                return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var users = await _context.User.FindAsync(id);
+            if (users == null)
             {
                 return NotFound();
             }
-            return View(user);
+            return View(users);
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age,Email,Password,Status")] Users users)
         {
-            if (id != user.Id)
+            if (id != users.Id)
             {
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
-            try
+            if (ModelState.IsValid)
             {
-                User userlogin = await _context.Users.Where(x => x.Name == user.Name).FirstOrDefaultAsync();
-                if (userlogin == null)
+                try
                 {
-                    return Redirect("Unregister");
+                    _context.Update(users);
+                    await _context.SaveChangesAsync();
                 }
-                else if(userlogin.Password != user.Password)
+                catch (DbUpdateConcurrencyException)
                 {
-                    return View("Unregister");
-
-                }
-                else
-                {
-                    user.Email = "";
-                    user.Status = "True";
-                    _context.Update(user);
-                    NewsInfo newsInfo = new NewsInfo
+                    if (!UsersExists(users.Id))
                     {
-                        NameNews = "", BaseNewsInfo = "", NewsInfoAll = "", Imgsrc = "", DateTime = DateTime.Now, user = user.Name
-                    };
-                    _context.NewsInfos.Add(newsInfo);
-                    _context.SaveChanges();
-                    return Redirect("/Home");
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(user.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-            //}
-            return View(user);
+            return View(users);
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string? name)
-        {
-            if (name == null)
-            {
-                return NotFound();
-            }
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Name == name);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
-        {
-
-            var user = await _context.Users.FindAsync(id);
-            user.Status = "False";
-            //_context.Users.Remove(user);
-            //await _context.SaveChangesAsync();
-            _context.Update(user);
-            NewsInfo news = _context.NewsInfos.Where(x => x.user == user.Name).FirstOrDefault();
-            _context.NewsInfos.Remove(news);
-            await _context.SaveChangesAsync();
-            return Redirect("/Home");
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> DeleteUser(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var user = await _context.Users
+
+            var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (users == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(users);
         }
 
-        [HttpPost, ActionName("DeleteUser")]
+        // POST: Users/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteUserConfirm(int? id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Remove(user);
+            var users = await _context.User.FindAsync(id);
+            _context.User.Remove(users);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _context.User.Any(e => e.Id == id);
         }
     }
 }

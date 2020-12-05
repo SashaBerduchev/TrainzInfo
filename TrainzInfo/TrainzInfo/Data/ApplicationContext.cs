@@ -31,7 +31,7 @@ namespace TrainzInfo.Data
                 Trace.WriteLine(exp.ToString());
             }
         }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Users> User { get; set; }
         public DbSet<TrainzType> TrainzTypes { get; set; }
         public DbSet<LocomotivesType> LocomotivesTypes { get; set; }
         public DbSet<CargoCarrieges> CargoCarrieges { get; set; }

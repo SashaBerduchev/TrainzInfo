@@ -1,4 +1,4 @@
-﻿@model TrainzInfo.Models.User
+﻿@model TrainzInfo.Models.Users
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>User</h4>
+    <h4>Users</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -21,6 +21,24 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Age)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
 </div>

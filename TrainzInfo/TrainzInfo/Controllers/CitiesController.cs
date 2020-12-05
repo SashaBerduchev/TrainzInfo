@@ -21,6 +21,7 @@ namespace TrainzInfo.Controllers
         public CitiesController(ApplicationContext context)
         {
             _context = context;
+            Trace.WriteLine(this);
         }
 
         // GET: Cities

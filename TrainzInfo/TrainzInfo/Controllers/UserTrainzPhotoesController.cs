@@ -53,6 +53,9 @@ namespace TrainzInfo.Controllers
         // GET: UserTrainzPhotoes/Create
         public IActionResult Create()
         {
+            List<string> users = _context.User.Select(x => x.Name).ToList();
+            SelectList selectLists = new SelectList(users);
+            ViewBag.User = selectLists;
             return View();
         }
 
@@ -69,17 +72,19 @@ namespace TrainzInfo.Controllers
             }
             if (ModelState.IsValid)
             {
+                string email = _context.User.Where(x => x.Name == userTrainzPhoto.UserName).FirstOrDefault().Email;
+                userTrainzPhoto.Email = email;
                 userTrainzPhoto.DateTime = DateTime.Now;
                 _context.Add(userTrainzPhoto);
                 await _context.SaveChangesAsync();
 
                 try
                 {
-                    MailMessage m = new MailMessage("sashaberduchev@gmail.com", userTrainzPhoto.Email);
+                    MailMessage m = new MailMessage("sashaberduchev24@ukr.net", userTrainzPhoto.Email);
                     m.Body = userTrainzPhoto.UserName + "Ваша публикация опубликована";
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                    smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
-                    smtp.EnableSsl = true;
+                    SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
+                    smtp.UseDefaultCredentials = true;
+                    smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
                     smtp.Send(m);
                 }
                 catch (Exception e)

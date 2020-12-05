@@ -21,6 +21,7 @@ namespace TrainzInfo.Controllers
         public DepotListsController(ApplicationContext context)
         {
             _context = context;
+            Trace.WriteLine(this);
         }
 
         [HttpPost]

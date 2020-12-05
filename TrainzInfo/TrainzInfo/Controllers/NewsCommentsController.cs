@@ -140,11 +140,11 @@ namespace TrainzInfo.Controllers
         {
             try
             {
-                MailMessage m = new MailMessage("sashaberduchev@gmail.com", newsComments.Email);
+                MailMessage m = new MailMessage("sashaberduchev24@ukr.net", newsComments.Email);
                 m.Body = newsComments.Name + " Ваша публикация опубликована, Спасибо Вам";
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                SmtpClient smtp = new SmtpClient("smtp.ukr.com", 465);
                 smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
+                smtp.Credentials = new NetworkCredential("sashaberduchev24@ukr.net", "Sasha240396");
                 smtp.EnableSsl = true;
                 smtp.Send(m);
             }
