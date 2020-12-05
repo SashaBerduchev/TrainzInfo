@@ -61,27 +61,35 @@
             {
                 if (item.NameNews != "")
                 {
-                    <tr>
+            <tr>
 
-                        <td>
-                            <img src="@item.Imgsrc" width="360" height="200" />
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NameNews)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateTime.Year)
-                            
-                        </td>
-                        <td>
-                            <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
+                <td>
+                    <img src="@item.Imgsrc" width="360" height="200" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameNews)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime.Year)
 
-                            @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
-                            @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
-                            @*<a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime.Month)
 
-                        </td>
-                    </tr>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime.Day)
+
+                </td>
+                <td>
+                    <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
+
+                    @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
+                    @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
+                    @*<a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+
+                </td>
+            </tr>
                 }
             }
         </tbody>
