@@ -18,24 +18,26 @@
     <dl class="row">
         <dd class="col-sm-10">
             @*@Html.DisplayFor(model => model.Imgsrc)*@
-            <img src="@Model.Imgsrc" width="1100" height="550" />
+            <img src="@Model.Imgsrc" width="800" height="550" />
         </dd>
         <dt class="col-sm-2">
             @*@Html.DisplayNameFor(model => model.NameNews)*@
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" style="        font-size: 25px
+">
             @Html.DisplayFor(model => model.NameNews)
         </dd>
         <dt class="col-sm-2">
             @*@Html.DisplayNameFor(model => model.BaseNewsInfo)*@
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" style="        font-size: 25px
+">
             @Html.DisplayFor(model => model.BaseNewsInfo)
         </dd>
         <dt class="col-sm-2">
             @*@Html.DisplayNameFor(model => model.NewsInfoAll)*@
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" style="font-size: 25px">
             @Html.DisplayFor(model => model.NewsInfoAll)
         </dd>
     </dl>
@@ -43,7 +45,7 @@
 <div>
 
     <a class="btn btn-info" asp-controller="NewsComments" asp-action="Edit" asp-route-id="@Model.id">Комментировать</a>
-    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии</a>
+    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии + @Convert.ToString(ViewBag.count)</a>
     @if (Model != null)
     {
         <a asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>

@@ -50,6 +50,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Trace.WriteLine("POST " + newsInfo);
+            ViewBag.count = _context.NewsComments.Where(x=>x.NewsID == newsInfo.id).Count();
             return View(newsInfo);
         }
 
