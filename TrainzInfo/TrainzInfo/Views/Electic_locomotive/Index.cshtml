@@ -14,60 +14,30 @@
     <a class="btn btn-info" asp-action="Create">Добавить электровоз</a>
 </p>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Название")
-            </th>
-            <th>
-                @Html.DisplayName("Номер")
-            </th>
-            <th>
-                @Html.DisplayName("Скорость")
-            </th>
-            <th>
-                @Html.DisplayName("Колличество секций")
-            </th>
-            <th>
-                @Html.DisplayName("Мощность")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Seria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Speed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SectionCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ALlPowerP)
-            </td>
-            <td>
-                <img src="@item.LocomotiveImg" width="260" height="170" />
-            </td>
-            <td>
-                <a class="btn btn-outline-warning" asp-action="edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a> 
+<div class="maininfo" style="position:absolute">
+    @foreach(var item in Model)
+    {
+        <div style="margin:25px; width:500px; background-color:aliceblue">
+            <div>
+                <img src="@item.LocomotiveImg" width="280" height="190" />
+            </div>
+            <div>
+                <div>@Html.DisplayFor(modelItem => item.Seria)</div>
+                <div>@Html.DisplayFor(modelItem => item.Number)</div>
+                <div>@Html.DisplayFor(modelItem => item.Speed)</div>
+                <div>@Html.DisplayFor(modelItem => item.ALlPowerP)</div>
+            </div>
+            <div style="position:absolute; left:400px; top:100px; width:250px">
+                <a class="btn btn-outline-warning" asp-action="edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a>
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
-                <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria - @item.Number</a>
+                @*<a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria - @item.Number</a>*@
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
                 <a class="btn btn-outline-success" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </div>
+        </div>
+    }
+</div>
+
 <style type="text/css">
     td {
         background: #fff; /* Цвет фона */

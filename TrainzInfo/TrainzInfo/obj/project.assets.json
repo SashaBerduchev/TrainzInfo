@@ -9500,7 +9500,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Саня\\.nuget\\packages\\": {}
+    "C:\\Users\\Саня\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
@@ -9511,6 +9512,9 @@
       "packagesPath": "C:\\Users\\Саня\\.nuget\\packages\\",
       "outputPath": "D:\\Project\\Trainz\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
         "C:\\Users\\Саня\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
