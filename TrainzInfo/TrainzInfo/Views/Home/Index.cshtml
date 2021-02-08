@@ -1,27 +1,39 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-
 <div class="text-center">
-    <h1 class="display-4">Добро пожаловать!</h1>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-    <p>
-        <big>
-            Данный сайт посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
-            Здесь вы найдете много интересной информации о железнодорожном транспорте и новости
-        </big>
-    </p>
 
     <head>
         <meta charset="utf-8">
         <title>Фон</title>
         <style>
             body {
-                background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcScDNWcFxHDwgif3KnEeJTBP0qABTnFDcaf28vXTq_KqkdFsT87&usqp=CAU);
+                background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
             }
         </style>
     </head>
+
+    <h1 class="display-4">Добро пожаловать!</h1>
+    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    <div class="maincard" style="background-color:aliceblue;  left:50px; height:440px">
+        <p>
+            <div style="width:500px; left:50px; font-size:25px; margin:50px">
+                Данный сайт посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
+                Здесь вы найдете много интересной информации о железнодорожном транспорте и новости с железной дороги и транспорта
+            </div>
+        </p>
+
+
+        <div class="btn_panel" style=" position: absolute; left:710px; top:300px; width:450px">
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="ElectricTrains" asp-action="Index">Смотреть весь список электричек</a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Diesel_trainz" asp-action="Index">Смотреть весь список дизель - поездов </a>
+            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Stations" asp-action="IndexAll">Смотреть весь список станций</a>
+        </div>
+    </div>
 </div>
 <body>
     @*<div class="text-center">
@@ -30,36 +42,30 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/%D0%A7%D0%A18-082%2C_%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%2C_%D0%9A%D0%B8%D0%B5%D0%B2%2C_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D1%8F_%D0%9A%D0%B8%D0%B5%D0%B2-%D0%9F%D0%B0%D1%81%D1%81%D0%B0%D0%B6%D0%B8%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%28Trainpix_207464%29.jpg" width="900" height="600" alt="Железная дорога" title="Электровоз ЧС8" />
             </p>
         </div>*@
-    <div class="btn_panel" style=" position: absolute; left:850px; top:400px; width:300px">
-        <li class="row">
-            <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>
-            <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
-            <a class="btn btn-info" style="margin:10px; width:400px; left=50px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
-            <a class="btn btn-info" style="margin:10px; width:400px; left:50px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>
-            <a class="btn btn-info" style="margin:10px; width:400px; left:50px;" asp-controller="ElectricTrains" asp-action="Index">Смотреть весь список электричек</a>
-            <a class="btn btn-info" style="margin:10px; width:400px; left:50px;" asp-controller="Diesel_trainz" asp-action="Index">Смотреть весь список дизель - поездов </a>
-            <a class="btn btn-info" style="margin:10px; width:400px; left=50px;" asp-controller="Stations" asp-action="IndexAll">Смотреть весь список станций</a>
-        </li>
-    </div>
-    <div class="infotable" style="left: 350px">
+
+    <div class="infocont" style="left: 350px">
         @foreach (NewsInfo info in Model)
         {
             if (info.NameNews != "")
             {
-                <div class="img" >
-                    <img src="@info.Imgsrc" width="360" height="260" />
-                </div>
-                <div class="Data">
-                    @Html.DisplayFor(modelItem => info.DateTime.Date);
-                </div>
-                <div class="name" style="width: 600px; font-size:25px">
-                    @Html.DisplayFor(modelItem => info.NameNews);
-                </div>
-                <div class="name" style="width: 600px; font-size:25px">
-                    @Html.DisplayFor(modelItem => info.BaseNewsInfo);
-                </div>
-                <div class="btn">
-                       <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                <div class="basecont" style="background-color:azure; margin:20px">
+                    <div class="img" >
+                        <img src="@info.Imgsrc" width="360" height="260" style="margin:20px;" />
+                    </div>
+                    <div class="Data" style="color:black; margin:10px">
+                        @Html.DisplayFor(modelItem => info.DateTime.Date);
+                    </div>
+                    <div style="margin:20px">
+                        <div class="name" style="width: 950px; font-size:27px; color:black;">
+                            @Html.DisplayFor(modelItem => info.NameNews);
+                        </div>
+                        <div class="name" style="width: 950px; font-size:27px; color:black;">
+                            @Html.DisplayFor(modelItem => info.BaseNewsInfo);
+                        </div>
+                    </div>
+                    <div class="btn">
+                           <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                    </div>
                 </div>
             }
         }
@@ -109,3 +115,4 @@
         }
     </style>
 </body>
+   
