@@ -64,5 +64,6 @@ namespace TrainzInfo.Data
         public DbSet<StationsShadule> StationsShadules { get; set; }
         public DbSet<Diesel_train_info> Diesel_Train_Infos { get; set; }
         public DbSet<Locomotive_series> Locomotive_Series { get; set; }
+        public DbSet<LocomotiveBaseInfo> locomotiveBaseInfos { get; set; }
     }
 }

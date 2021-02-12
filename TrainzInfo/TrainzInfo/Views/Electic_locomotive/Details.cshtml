@@ -47,10 +47,11 @@
         <div style="position:relative; left:650px; top:-750px;">
             <a class="btn btn-info" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Seria</a>
         </div>
-        <div style="position:relative; left:350px; top:-850px; width:350px; font-size:25px;">
-            @Html.DisplayName(ViewBag.base_info)
+        <div style="position:relative; left:250px; top:-900px; width:400px; font-size:20px;">
+            <p>@ViewBag.base_info</p>
         </div>
     </div>
+</div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
     <a asp-action="Index">Back to List</a>

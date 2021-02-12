@@ -27,25 +27,14 @@
                 <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => item.Speed)</div>
                 <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => item.ALlPowerP)</div>
             </div>
-            <div style="position:relative; left:780px; top:-350px; width:250px">
-                <a class="btn btn-outline-primary" style="width:250px" asp-action="edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a>
-                <a class="btn btn-outline-info" style="width:250px" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
+            <div style="position:relative; left:780px; top:-380px; width:250px">
+                <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a>
+                <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
                 @*<a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria - @item.Number</a>*@
-                <a class="btn btn-outline-danger" style="width:250px" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
-                <a class="btn btn-outline-success" style="width:250px" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
+                <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
             </div>
         </div>
     }
 </div>
 
-<style type="text/css">
-    td {
-        background: #fff; /* Цвет фона */
-        padding: 5px; /* Поля в ячейках */
-        opacity: 0.8; /* Полупрозрачность таблицы */
-        filter: alpha(Opacity=50); /* Для IE */
-        width 700;
-        color: black;
-        text-decoration: solid;
-    }
-</style>

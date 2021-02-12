@@ -38,7 +38,7 @@ namespace TrainzInfo.Controllers
             if (electrick_Lockomotive_Info == null)
             {
                 Electrick_Lockomotive_Info electrick_Lockomotive_Info_add = new Electrick_Lockomotive_Info {
-                    Name = electic_Locomotives.Seria + " - " + electic_Locomotives.Number.ToString(),
+                    Name = electic_Locomotives.Seria,
                     Power = electic_Locomotives.ALlPowerP,
                     Electric_Type = "",
                     Baseinfo = "",
@@ -47,9 +47,11 @@ namespace TrainzInfo.Controllers
                 _context.Add(electrick_Lockomotive_Info_add);
                 await _context.SaveChangesAsync();
             }
-            var electrick_Lockomotive_Info_result = await _context.Electrick_Lockomotive_Infos
-                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Seria + " - " + electic_Locomotives.Number);
-            return View(electrick_Lockomotive_Info_result);
+           
+
+            var base_info = _context.locomotiveBaseInfos.Where(x => x.Name == electic_Locomotives.Seria).Select(x => x.BaseInfo).ToList().FirstOrDefault();
+            ViewBag.base_info = base_info;
+            return View(electrick_Lockomotive_Info);
         }
 
         // GET: Electrick_Lockomotive_Info/Create
@@ -108,6 +110,7 @@ namespace TrainzInfo.Controllers
                 {
                     _context.Update(electrick_Lockomotive_Info);
                     await _context.SaveChangesAsync();
+                    return View(electrick_Lockomotive_Info);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,9 +123,9 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details));
+                
             }
-            return View(electrick_Lockomotive_Info);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Electrick_Lockomotive_Info/Delete/5

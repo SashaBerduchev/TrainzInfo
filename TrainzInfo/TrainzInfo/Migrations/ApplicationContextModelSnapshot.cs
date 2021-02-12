@@ -452,6 +452,26 @@ namespace TrainzInfo.Migrations
                     b.ToTable("ListRollingStones");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.LocomotiveBaseInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BaseInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("locomotiveBaseInfos");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
                 {
                     b.Property<int>("id")
