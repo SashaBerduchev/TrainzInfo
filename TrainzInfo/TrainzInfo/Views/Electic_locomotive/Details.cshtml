@@ -13,38 +13,44 @@
 <div>
     <h4>Электровоз</h4>
     <hr />
-    <a asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Seria</a>
-    <dl class="">
-        <dt class="col-sm-2">
-            @Html.DisplayName("Электровоз")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayName(Model.Seria + " - " +Model.Number)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Скорость")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Speed)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Количество секций")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SectionCount)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Общая мощность")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ALlPowerP)
-        </dd>
-        <dd class="col-sm-10">
-            @*@Html.DisplayFor(model => model.ALlPowerP)*@
-            <img src="@Model.LocomotiveImg" width="900" height="600">
-        </dd>
-    </dl>
-</div>
+    <div style="background-color:aliceblue">
+        <dl class="">
+            <dt class="col-sm-2">
+                @Html.DisplayName("Электровоз")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayName(Model.Seria + " - " + Model.Number)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayName("Скорость")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Speed)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayName("Количество секций")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SectionCount)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayName("Общая мощность")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ALlPowerP)
+            </dd>
+            <dd class="col-sm-10">
+                @*@Html.DisplayFor(model => model.ALlPowerP)*@
+                <img src="@Model.LocomotiveImg" width="900" height="600">
+            </dd>
+        </dl>
+        <div style="position:relative; left:650px; top:-750px;">
+            <a class="btn btn-info" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Details" asp-route-idloc="@Model.id">Подробная информация обэлектровозе @Model.Seria</a>
+        </div>
+        <div style="position:relative; left:350px; top:-850px; width:350px; font-size:25px;">
+            @Html.DisplayName(ViewBag.base_info)
+        </div>
+    </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
     <a asp-action="Index">Back to List</a>

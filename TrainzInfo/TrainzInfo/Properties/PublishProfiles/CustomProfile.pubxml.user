@@ -314,7 +314,7 @@
       <publishTime>05/28/2019 15:30:42</publishTime>
     </File>
     <File Include="runtimes/unix/lib/netcoreapp2.0/System.Runtime.Caching.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>05/15/2018 13:29:40</publishTime>
     </File>
     <File Include="runtimes/unix/lib/netcoreapp2.1/Microsoft.Data.SqlClient.dll">
       <publishTime>09/06/2019 00:20:18</publishTime>
@@ -443,28 +443,28 @@
       <publishTime>08/14/2019 23:20:54</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>02/12/2021 11:36:01</publishTime>
+      <publishTime>02/12/2021 16:02:42</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>02/08/2021 16:24:11</publishTime>
+      <publishTime>02/12/2021 16:00:50</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>02/08/2021 16:24:11</publishTime>
+      <publishTime>02/12/2021 16:00:51</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>02/08/2021 16:24:11</publishTime>
+      <publishTime>02/12/2021 16:00:50</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>02/08/2021 16:24:24</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>02/12/2021 11:34:32</publishTime>
+      <publishTime>02/12/2021 16:01:04</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>02/12/2021 11:34:32</publishTime>
+      <publishTime>02/12/2021 16:01:04</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>02/12/2021 11:36:05</publishTime>
+      <publishTime>02/12/2021 16:02:48</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>02/08/2021 10:27:40</publishTime>

@@ -47,7 +47,8 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            var base_info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_locomotive.Seria + " - " + electic_locomotive.Number).Select(x => x.Baseinfo).ToList().FirstOrDefault();
+            ViewBag.base_info = base_info;
             return View(electic_locomotive);
         }
 
