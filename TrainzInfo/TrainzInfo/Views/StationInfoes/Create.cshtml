@@ -1,0 +1,40 @@
+﻿@model TrainzInfo.Models.StationInfo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>StationInfo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.DisplayName("Станция")
+                @Html.DropDownList("Name", ViewBag.stations as SelectList)
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="width:250px;">
+                @Html.DisplayName("Короткая информация")
+                <input asp-for="BaseInfo" class="form-control"  />
+                <span asp-validation-for="BaseInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Основная информация")
+                <input asp-for="AllInfo" class="form-control" style="width:250px;" />
+                <span asp-validation-for="AllInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

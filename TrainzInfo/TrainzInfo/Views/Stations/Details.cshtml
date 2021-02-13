@@ -11,12 +11,21 @@
     <hr />
 
     <div style="background-color:aliceblue;">
-        <div style="margin:20px; position:relative; left:450px; top:150px; font-size:30px">
+        <div style="margin:20px; position:relative; left:430px; top:40px; font-size:20px">
             <div>@Html.DisplayName("Город: ") @Html.DisplayFor(model => model.City)</div>
             <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(model => model.Railway)</div>
             <div>@Html.DisplayName("Область: ") @Html.DisplayFor(model => model.Oblast)</div>
         </div>
-        <div style="position:relative; top:-120px; margin:20px;"><img src ="@Model.Imgsrc" width="400" height="300"></div>
+        <div style="position:relative; top:-70px; margin:20px;"><img src="@Model.Imgsrc" width="400" height="300"></div>
+        <div>
+            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-280px;"><p>@ViewBag.baseinfo</p></div>
+            <div style="font-size:17px; position:relative; top:-280px; margin:20px"><p>@ViewBag.allinfo</p></div>
+        </div>
+    </div>
+    
+    <div>
+        <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Добавить информацию о станции</a>
+        <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-name="@Model.Name">Редактировать общую информацию</a>
     </div>
 </div>
 <div>

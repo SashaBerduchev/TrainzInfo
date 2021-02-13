@@ -60,6 +60,8 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
+            ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.BaseInfo).FirstOrDefault();
+            ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.AllInfo).FirstOrDefault();
             return View(stations);
         }
 
