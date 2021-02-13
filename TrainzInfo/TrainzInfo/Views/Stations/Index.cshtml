@@ -9,55 +9,30 @@
 <p>
     <a class="btn btn-dark" asp-action="Create">Добавить</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Railway)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Oblast)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Imgsrc)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Railway)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Oblast)
-            </td>
-            <td>
-                <img src="@item.Imgsrc" width="300" height="200">
-            </td>
-            <td>
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>
-                <a class="btn btn-info" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a> 
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div>
+    @foreach (var item in Model)
+    {
+    <div style="background-color:aliceblue; margin:20px; height:290px;">
+        <div style="margin:20px; position:relative; top:20px">
+            <img src="@item.Imgsrc" width="350" height="250">
+        </div>
+        <div style="position:relative; left:370px; top:-200px; font-size:20px; margin:20px">
+            <div>@Html.DisplayName("Назание старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
+            <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
+            <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
+            <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+        </div>
+        <div style="width:150px; position:relative;  left:750px; top:-400px">
+            <a class="btn btn-info" style="width:250px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>
+            <a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
+            <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-id="@item.id">Информация</a>
+            @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+        </div>
+    </div>
+    }
+</div>
+
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);

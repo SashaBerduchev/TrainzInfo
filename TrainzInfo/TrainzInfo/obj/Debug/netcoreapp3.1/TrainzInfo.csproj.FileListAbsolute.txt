@@ -1392,9 +1392,6 @@ D:\Projects\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\staticwebas
 D:\Projects\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\staticwebassets\TrainzInfo.StaticWebAssets.xml
 D:\Projects\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\appsettings.Development.json
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.local.json
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\appsettings.json
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\TrainzInfo.exe
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\TrainzInfo.deps.json
@@ -1468,7 +1465,6 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.Diagnostic
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.Private.ServiceModel.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.Runtime.Caching.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.Http.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.NetTcp.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.Primitives.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ServiceModel.dll
@@ -1718,12 +1714,9 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserL
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserLocomotivePhotos\IndexAll.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Create.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Delete.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\DeleteUser.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Details.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Edit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Index.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\IndexRegister.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Unregister.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserTrainzPhotoes\Create.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserTrainzPhotoes\Delete.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserTrainzPhotoes\Details.cshtml.g.cs
