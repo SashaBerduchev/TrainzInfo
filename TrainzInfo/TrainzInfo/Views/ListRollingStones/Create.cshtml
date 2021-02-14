@@ -9,15 +9,16 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4" style="background-color:aliceblue; position:center">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label" />
                 @*<input asp-for="Name" class="form-control" />*@
                 @Html.DropDownList("Name", ViewBag.locomotives as SelectList)
-                <a class="btn btn-info" asp-controller="Electic_locomotive" asp-action="Create">Добавить электровоз</a>
-                <a class="btn btn-info" asp-controller="DieselLocomoives" asp-action="Create">Добавить тепловоз</a>
+                <div style="position:relative; left:150px; width:300px;">
+                    <a class="btn btn-info" target="_blank" style=" width:200px" asp-controller="Electic_locomotive" asp-action="Create">Добавить локомотив</a>
+                </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -32,13 +33,13 @@
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
+                @Html.DisplayName("Статус  ")
                 @Html.DropDownList("Status", ViewBag.status as SelectList)
-                <a class="btn btn-success" asp-controller="Status" asp-action="Create">Добавить статус</a>
+                <a class="btn btn-success" target="_blank" asp-controller="Status" asp-action="Create">Добавить статус</a>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
+                @Html.DisplayName("Фото(ссылка на внешний источник)   ")
                 <input asp-for="Photo" class="form-control" />
                 <span asp-validation-for="Photo" class="text-danger"></span>
             </div>

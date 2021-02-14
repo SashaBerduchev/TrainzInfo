@@ -9,33 +9,17 @@
     <a class="btn btn-info" asp-controller="DepotLists" asp-action="Index" asp-route-uzname="@Model.Name">Список депо</a>
     <a class="btn btn-success" asp-controller="Stations" asp-action="Index" asp-route-filialsName="@Model.Name">Список всех станций</a>
 </div>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayName("Название")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Информация")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Information)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Карта")
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.Photo">
-        </dd>
-    </dl>
+<div style="background-color:aliceblue">
+    <div style="position:relative; left:150px; margin:20px; top:20px"><img src="@Model.Photo" width="700" height="600"></div>
+    <div style="margin:20px; font-size:25px;">
+        <div><b>@Html.DisplayName("Название: ")</b>   @Html.DisplayFor(model => model.Name)</div>
+        <div><b>@Html.DisplayName("Информация: ")</b> @Html.DisplayFor(model => model.Information)</div>
+    </div>
 </div>
-<div>
+@*<div>
     <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div*@>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);

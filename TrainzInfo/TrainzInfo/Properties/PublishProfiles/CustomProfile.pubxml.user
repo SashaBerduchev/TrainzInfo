@@ -524,28 +524,28 @@
       <publishTime>11/12/2020 00:16:28</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>02/13/2021 09:13:12</publishTime>
+      <publishTime>02/13/2021 10:36:14</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>02/13/2021 09:13:06</publishTime>
+      <publishTime>02/13/2021 10:35:31</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>02/13/2021 09:13:06</publishTime>
+      <publishTime>02/13/2021 10:35:31</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>02/13/2021 09:13:06</publishTime>
+      <publishTime>02/13/2021 10:35:31</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>02/12/2021 21:06:19</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>02/13/2021 09:13:10</publishTime>
+      <publishTime>02/13/2021 10:35:35</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>02/13/2021 09:13:10</publishTime>
+      <publishTime>02/13/2021 10:35:35</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>02/13/2021 09:13:12</publishTime>
+      <publishTime>02/13/2021 10:36:15</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>02/12/2021 20:24:52</publishTime>
