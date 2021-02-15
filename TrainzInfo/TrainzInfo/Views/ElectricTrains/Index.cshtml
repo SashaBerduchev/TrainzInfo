@@ -11,65 +11,39 @@
 <p>
     <a class="btn btn-outline-info" asp-action="Create">Создать</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Название")
-            </th>
-            <th>
-                @Html.DisplayName("Колчество вагонов")
-            </th>
-            <th>
-                @Html.DisplayName("Максимальная скорость")
-            </th>
-            <th>
-                @Html.DisplayName("Картинка")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VagonsCountP)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxSpeed)
-                </td>
-                <td>
-                    <img src="@item.Imgsrc" width="250" height="150" />
-                </td>
-                <td>
-                    <a class="btn btn-success" style="margin:10px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> 
-                    <a class="btn btn-primary" asp-controller="ElectrickTrainzInformations" asp-action="Details" asp-route-name="@item.Name">Информация</a>
-                    <a class="btn btn-info" style="margin:10px;" asp-controller="ElectrickTrainsLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
-                    <a class="btn btn-light" style="margin:10px;" asp-controller="UserTrainzPhotoes" asp-action="Index" asp-route-name="@item.Name">Фото пользователей</a>
-                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a> |*@
-                    @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
-                </td>
-            </tr>
-        }
-    </tbody>
-    <style>
-        td {
-            background: #6a5eff; /* Цвет фона */
-            position: center;
-            padding: 5px; /* Поля в ячейках */
-            opacity: 1.9; /* Полупрозрачность таблицы */
-            filter: alpha(Opacity=50); /* Для IE */
-            width: 700px;
-            color: white;
-            text-decoration: solid;
-        }
-    </style>
-    <style>
-        body {
-            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
-        }
-    </style>
+<div style="background-color:aliceblue">
+    @foreach (var item in Model)
+    {
+    <div style="font-size:25px; height:270px">
+        <div style="margin:20px; position:relative; top:10px;"><img src="@item.Imgsrc" width="350" height="250" /> </div>
+        <div style="position:relative; left:390px; top:-220px">
+            <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
+            <div>@Html.DisplayName("Колчество вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div>
+            <div>@Html.DisplayName("Максимальная скорость: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
+            <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>
+            <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelitem => item.DepotCity)</div>
+        </div>
+        <div style="position:relative; left:800px; top:-400px">
+            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a>
+        </div>
+    </div>
+    }
+</div>
+
+<style>
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

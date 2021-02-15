@@ -18,5 +18,8 @@ namespace TrainzInfo.Models
         public int MaxSpeed { get; set; }
         [Required]
         public string Imgsrc{ get; set; }
+        [Required]
+        public string DepotTrain { get; set; }
+        public string DepotCity { get; set; }
     }
 }

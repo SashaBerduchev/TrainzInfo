@@ -25,13 +25,13 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.Electrics.ToListAsync());
         }
-        
+
         public async Task<List<ElectricTrain>> IndexAction()
         {
             List<ElectricTrain> electrics = await _context.Electrics.ToListAsync();
             return electrics;
         }
-       [HttpPost]
+        [HttpPost]
         public async void CreateAction([FromBody] string data)
         {
             ElectricTrain electric = JsonConvert.DeserializeObject<ElectricTrain>(data);
@@ -59,6 +59,8 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Create
         public IActionResult Create()
         {
+            SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            ViewBag.depots = depots;
             return View();
         }
 
@@ -67,10 +69,12 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Create([Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc, DepotTrain")] ElectricTrain electricTrain)
         {
             if (ModelState.IsValid)
             {
+                var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
+                electricTrain.DepotCity = depo;
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -91,6 +95,8 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            ViewBag.depots = depots;
             return View(electricTrain);
         }
 
@@ -99,33 +105,35 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity")] ElectricTrain electricTrain)
         {
             if (id != electricTrain.id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            try
             {
-                try
-                {
-                    _context.Update(electricTrain);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ElectricTrainExists(electricTrain.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
+                electricTrain.DepotCity = depocity;
+                _context.Update(electricTrain);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ElectricTrainExists(electricTrain.id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            //}
             return View(electricTrain);
         }
 

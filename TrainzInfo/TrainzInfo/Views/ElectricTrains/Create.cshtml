@@ -12,22 +12,27 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                @Html.DisplayName("Название")
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VagonsCountP" class="control-label"></label>
+                @Html.DisplayName("Колличество вагонов")
                 <input asp-for="VagonsCountP" class="form-control" />
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaxSpeed" class="control-label"></label>
+                @Html.DisplayName("Депо приписки")
+                @Html.DropDownList("DepotTrain", ViewBag.depots as SelectList)
+                <span asp-validation-for="VagonsCountP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Макимальная скорость")
                 <input asp-for="MaxSpeed" class="form-control" />
                 <span asp-validation-for="MaxSpeed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Imgsrc" class="control-label"></label>
+                @Html.DisplayName("картинка(ссылка на файл)")
                 <input asp-for="Imgsrc" class="form-control" />
                 <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
@@ -41,4 +46,8 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

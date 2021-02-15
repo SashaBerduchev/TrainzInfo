@@ -315,6 +315,13 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DepotCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepotTrain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Imgsrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

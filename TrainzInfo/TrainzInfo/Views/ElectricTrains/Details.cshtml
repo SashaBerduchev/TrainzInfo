@@ -4,39 +4,30 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Name</h1>
 
 <div>
-    <h4>ElectricTrain</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VagonsCountP)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VagonsCountP)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxSpeed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxSpeed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Imgsrc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Imgsrc)
-        </dd>
-    </dl>
+
+    <div style="background-color:aliceblue; height:450px;">
+        <div style="margin:20px"><img src="@Model.Imgsrc" width="650" height="450"></div>
+        <div style="position:relative; left:700px; top:-420px; font-size:25px">
+            <div>@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name)</div>
+            <div>@Html.DisplayName("Колличество вагонов: ") @Html.DisplayName(Model.VagonsCountP)</div>
+            <div>@Html.DisplayName("Максимальная скорость: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
+            <div>@Html.DisplayName("Город приписки: ") @Html.DisplayName(Model.DepotCity)</div>
+            <div>@Html.DisplayName("Депо пиписки: ") @Html.DisplayName(Model.DepotTrain)</div>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+    <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+
