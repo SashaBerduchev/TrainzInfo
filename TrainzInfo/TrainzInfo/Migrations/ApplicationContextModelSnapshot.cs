@@ -675,6 +675,15 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DopImgSrc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DopImgSrcSec")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DopImgSrcThd")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Imgsrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
