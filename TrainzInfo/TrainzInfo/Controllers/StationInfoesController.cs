@@ -13,7 +13,6 @@ namespace TrainzInfo.Controllers
     public class StationInfoesController : Controller
     {
         private readonly ApplicationContext _context;
-
         public StationInfoesController(ApplicationContext context)
         {
             _context = context;
