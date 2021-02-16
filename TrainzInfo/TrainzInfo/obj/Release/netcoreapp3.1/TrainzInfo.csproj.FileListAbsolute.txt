@@ -1834,3 +1834,8 @@ D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Raz
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\StationInfoes\Details.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\StationInfoes\Edit.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\StationInfoes\Index.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Plants\Create.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Plants\Delete.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Plants\Details.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Plants\Edit.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Plants\Index.cshtml.g.cs

@@ -61,6 +61,8 @@ namespace TrainzInfo.Controllers
         {
             SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
             ViewBag.depots = depots;
+            SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
+            ViewBag.plants = plants;
             return View();
         }
 
@@ -97,6 +99,8 @@ namespace TrainzInfo.Controllers
             }
             SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
             ViewBag.depots = depots;
+            SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
+            ViewBag.plants = plants;
             return View(electricTrain);
         }
 

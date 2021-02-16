@@ -659,6 +659,26 @@ namespace TrainzInfo.Migrations
                     b.ToTable("PassangerCarrieres");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Plants", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("plants");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
                 {
                     b.Property<int>("id")
