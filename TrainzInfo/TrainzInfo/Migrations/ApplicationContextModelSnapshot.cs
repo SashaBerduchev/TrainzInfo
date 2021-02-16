@@ -315,6 +315,9 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DepotCity")
                         .HasColumnType("nvarchar(max)");
 
@@ -326,11 +329,20 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastKvr")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("MaxSpeed")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlaceKvr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Plant")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VagonsCountP")

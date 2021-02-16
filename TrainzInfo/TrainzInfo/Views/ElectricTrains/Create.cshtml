@@ -32,6 +32,27 @@
                 <span asp-validation-for="MaxSpeed" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @Html.DisplayName("Год создания");
+                <input type="date" asp-for="Created" class="form-control" />
+                <span asp-validation-for=Created class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Завод постройки");
+                <input asp-for="Plant" class="form-control" />
+                <span asp-validation-for=Plant class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @Html.DisplayName("Последний КВР(год)");
+                <input type="date" asp-for="LastKvr" class="form-control" />
+                <span asp-validation-for=LastKvr class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Завод проводивший КВР");
+                <input asp-for="PlaceKvr" class="form-control" />
+                <span asp-validation-for=PlaceKvr class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 @Html.DisplayName("картинка(ссылка на файл)")
                 <input asp-for="Imgsrc" class="form-control" />
                 <span asp-validation-for="Imgsrc" class="text-danger"></span>
