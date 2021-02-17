@@ -9,7 +9,7 @@
 <div>
     <hr />
 
-    <div style="background-color:aliceblue; height:450px;">
+    <div style="background-color:aliceblue;">
         <div style="margin:20px"><img src="@Model.Imgsrc" width="650" height="450"></div>
         <div style="position:relative; left:700px; top:-420px; font-size:25px">
             <div>@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name)</div>
@@ -18,11 +18,17 @@
             <div>@Html.DisplayName("Город приписки: ") @Html.DisplayName(Model.DepotCity)</div>
             <div>@Html.DisplayName("Депо пиписки: ") @Html.DisplayName(Model.DepotTrain)</div>
             <div>@Html.DisplayName("Построено: ") @Html.DisplayName(Model.Created.Year.ToString())</div>
-            <div>@Html.DisplayName("Завод постройки") @Html.DisplayName(Model.Plant)</div>
-            <div>@Html.DisplayName("Последний КВР: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
-            <div>@Html.DisplayName("Завод проводивши КВР: ") @Html.DisplayName(Model.PlaceKvr)</div>
-            
+            <div style="width:450px" >@Html.DisplayName("Завод постройки") @Html.DisplayName(Model.Plant)</div>
+            <div >@Html.DisplayName("Последний КВР: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
+            <div style="width:450px" >@Html.DisplayName("Завод проводивши КВР: ") @Html.DisplayName(Model.PlaceKvr)</div>
+            <div style="position:relative; left:-670px; top:50px; font-size:22px; width:1000px;">
+                <div><p>@ViewBag.baseinfo</p></div>
+                <div><p>@ViewBag.allinfo</p></div>
+            </div>
         </div>
+    </div>
+    <div style="margin:20px;">
+        <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-id="@Model.id">Изменить общую информацию о поезде</a>
     </div>
 </div>
 <div>

@@ -2193,3 +2193,8 @@ D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Plants\Details.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Plants\Edit.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Plants\Index.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Create.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Delete.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Details.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Edit.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Index.cshtml.g.cs

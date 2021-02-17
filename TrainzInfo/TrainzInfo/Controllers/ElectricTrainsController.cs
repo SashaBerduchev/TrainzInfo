@@ -52,6 +52,9 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            var train = _context.SuburbanTrainsInfos.Where(x => x.id == electricTrain.id).FirstOrDefault();
+            ViewBag.baseinfo = train.BaseInfo.ToString();
+            ViewBag.allinfo = train.AllInfo.ToString();
 
             return View(electricTrain);
         }
@@ -63,6 +66,8 @@ namespace TrainzInfo.Controllers
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;
+            SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
+            ViewBag.models = models;
             return View();
         }
 
@@ -138,7 +143,7 @@ namespace TrainzInfo.Controllers
             }
             return RedirectToAction(nameof(Index));
             //}
-            return View(electricTrain);
+            //return View(electricTrain);
         }
 
         // GET: ElectricTrains/Delete/5
