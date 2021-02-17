@@ -76,7 +76,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
         {
             if (ModelState.IsValid)
             {
@@ -106,6 +106,8 @@ namespace TrainzInfo.Controllers
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;
+            SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
+            ViewBag.models = models;
             return View(electricTrain);
         }
 
@@ -114,7 +116,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
         {
             if (id != electricTrain.id)
             {

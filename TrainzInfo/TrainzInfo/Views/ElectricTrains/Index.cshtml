@@ -18,7 +18,7 @@
     <div style="font-size:25px; height:270px">
         <div style="margin:20px; position:relative; top:10px;"><img src="@item.Imgsrc" width="350" height="250" /> </div>
         <div style="position:relative; left:390px; top:-220px">
-            <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
+            <div>@Html.DisplayName("Название: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
             <div>@Html.DisplayName("Колчество вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div>
             <div>@Html.DisplayName("Максимальная скорость: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
             <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>

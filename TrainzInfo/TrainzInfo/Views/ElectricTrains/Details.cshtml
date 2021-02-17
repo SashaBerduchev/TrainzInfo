@@ -12,7 +12,7 @@
     <div style="background-color:aliceblue;">
         <div style="margin:20px"><img src="@Model.Imgsrc" width="650" height="450"></div>
         <div style="position:relative; left:700px; top:-420px; font-size:25px">
-            <div>@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name)</div>
+            <div>@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</div>
             <div>@Html.DisplayName("Колличество вагонов: ") @Html.DisplayName(Model.VagonsCountP)</div>
             <div>@Html.DisplayName("Максимальная скорость: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
             <div>@Html.DisplayName("Город приписки: ") @Html.DisplayName(Model.DepotCity)</div>
@@ -29,10 +29,10 @@
     </div>
     <div style="margin:20px;">
         <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-id="@Model.id">Изменить общую информацию о поезде</a>
+        <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать данные о поезде </a>
     </div>
 </div>
 <div>
-    <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
     <a asp-action="Index">Back to List</a>
 </div>
 

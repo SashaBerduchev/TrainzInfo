@@ -335,6 +335,10 @@ namespace TrainzInfo.Migrations
                     b.Property<int>("MaxSpeed")
                         .HasColumnType("int");
 
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
