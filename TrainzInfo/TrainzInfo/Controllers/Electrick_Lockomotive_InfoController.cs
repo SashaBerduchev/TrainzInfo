@@ -77,14 +77,14 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Electrick_Lockomotive_Info/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? idname)
         {
-            if (id == null)
+            if (idname == null && idname == "")
             {
                 return NotFound();
             }
 
-            var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos.FindAsync(id);
+            var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos.Where(x => x.Name == idname).FirstOrDefaultAsync();
             if (electrick_Lockomotive_Info == null)
             {
                 return NotFound();

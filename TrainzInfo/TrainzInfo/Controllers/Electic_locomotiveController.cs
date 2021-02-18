@@ -49,6 +49,8 @@ namespace TrainzInfo.Controllers
             }
             var base_info = _context.locomotiveBaseInfos.Where(x => x.Name == electic_locomotive.Seria).Select(x=>x.BaseInfo).ToList().FirstOrDefault();
             ViewBag.base_info = base_info;
+            var all_info = _context.locomotiveBaseInfos.Where(x => x.Name == electic_locomotive.Seria).Select(x => x.BaseInfo).ToList().FirstOrDefault();
+            ViewBag.allinfo = all_info;
             return View(electic_locomotive);
         }
 
