@@ -57,6 +57,8 @@ namespace TrainzInfo.Controllers
         // GET: Electrick_Lockomotive_Info/Create
         public IActionResult Create()
         {
+            SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            ViewBag.seria = series;
             return View();
         }
 
@@ -69,6 +71,10 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(electrick_Lockomotive_Info.Name == null)
+                {
+                    return RedirectToAction(nameof(Create));
+                }
                 _context.Add(electrick_Lockomotive_Info);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +93,7 @@ namespace TrainzInfo.Controllers
             var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos.Where(x => x.Name == idname).FirstOrDefaultAsync();
             if (electrick_Lockomotive_Info == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Create));
             }
             return View(electrick_Lockomotive_Info);
         }
