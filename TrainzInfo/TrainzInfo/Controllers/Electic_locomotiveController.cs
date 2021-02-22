@@ -23,14 +23,22 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
 
         }
+
         public async Task<List<Electic_locomotive>> IndexAction()
         {
             List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.ToListAsync();
             return Electic_locomotive;
         }
         // GET: Electic_locomotive
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string Seria)
         {
+            SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            ViewBag.seria = series;
+
+            if(Seria != null && Seria != "")
+            {
+                return View(await _context.Electic_Locomotives.Where(x=> x.Seria == Seria).ToListAsync());
+            }
             return View(await _context.Electic_Locomotives.ToListAsync());
         }
         // GET: Electic_locomotive/Details/5
@@ -47,15 +55,22 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            var base_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x=>x.Baseinfo).ToList().FirstOrDefault();
+            var base_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x=>x.Baseinfo).FirstOrDefault();
             ViewBag.base_info = base_info;
-            var all_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x => x.AllInfo).ToList().FirstOrDefault();
+            var all_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x => x.AllInfo).FirstOrDefault();
             ViewBag.allinfo = all_info;
             return View(electic_locomotive);
         }
 
-        // GET: Electic_locomotive/Create
-        public IActionResult Create()
+
+        public IActionResult Filter([Bind("Seria")] string Seria)
+        {
+
+            return View(_context.Electic_Locomotives.Where(x=>x.Seria == Seria).ToList());
+        }
+
+    // GET: Electic_locomotive/Create
+    public IActionResult Create()
         {
             SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.Seria = seria;
