@@ -62,13 +62,6 @@ namespace TrainzInfo.Controllers
             return View(electic_locomotive);
         }
 
-
-        public IActionResult Filter([Bind("Seria")] string Seria)
-        {
-
-            return View(_context.Electic_Locomotives.Where(x=>x.Seria == Seria).ToList());
-        }
-
     // GET: Electic_locomotive/Create
     public IActionResult Create()
         {

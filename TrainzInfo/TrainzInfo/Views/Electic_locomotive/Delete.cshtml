@@ -4,7 +4,7 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h1>@Model.Seria - @Model.Number.ToString()</h1>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
@@ -15,9 +15,6 @@
     <h4>Electic_locomotive</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Seria + " - " + model.Number.ToString())
-        </dt>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Speed)
         </dt>
