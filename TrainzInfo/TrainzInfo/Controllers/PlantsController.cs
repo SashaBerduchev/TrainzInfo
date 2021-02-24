@@ -46,7 +46,7 @@ namespace TrainzInfo.Controllers
         // GET: Plants/Create
         public IActionResult Create()
         {
-            SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            SelectList citys = new SelectList(_context.Cities.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
             ViewBag.citys = citys;
             return View();
         }
