@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -78,13 +81,32 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
         {
-            if (ModelState.IsValid)
+            try
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depo;
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exp)
+            {
+                string trace = exp.ToString();
+                try
+                {
+                    FileStream fileStreamLog = new FileStream(@"Exception.log", FileMode.Append);
+                    for (int i = 0; i < trace.Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                        fileStreamLog.Write(array, 0, array.Length);
+                    }
+
+                    fileStreamLog.Close();
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.StackTrace);
+                }
             }
             return View(electricTrain);
         }
