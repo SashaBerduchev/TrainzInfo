@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -65,7 +67,9 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Create
         public IActionResult Create()
         {
-            SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users;
+            SelectList depots = new SelectList(_context.Depots.OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;
@@ -79,7 +83,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
             try
             {
@@ -87,6 +91,8 @@ namespace TrainzInfo.Controllers
                 electricTrain.DepotCity = depo;
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
+                Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
+                SendMessage(user);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception exp)
@@ -111,6 +117,32 @@ namespace TrainzInfo.Controllers
             return View(electricTrain);
         }
 
+        private async void SendMessage(Users users)
+        {
+            try
+            {
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email );
+                m.Body = "Ваша публикация опубликована, Спасибо Вам";
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential("sashaberduchev", "SashaVinichuk");
+                smtp.EnableSsl = true;
+                smtp.SendMailAsync(m);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                string expstr = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                for (int i = 0; i < expstr.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString() + " mail: " +  users.Email);
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+            }
+        }
+
         // GET: ElectricTrains/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -124,6 +156,9 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users; 
             SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
@@ -138,7 +173,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
             if (id != electricTrain.id)
             {
@@ -153,6 +188,9 @@ namespace TrainzInfo.Controllers
                 electricTrain.DepotCity = depocity;
                 _context.Update(electricTrain);
                 await _context.SaveChangesAsync();
+                Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
+                SendMessage(user);
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -169,6 +207,7 @@ namespace TrainzInfo.Controllers
             //}
             //return View(electricTrain);
         }
+
 
         // GET: ElectricTrains/Delete/5
         public async Task<IActionResult> Delete(int? id)

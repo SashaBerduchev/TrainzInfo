@@ -10,6 +10,8 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         [Required]
+        public string User { get; set; }
+        [Required]
         public string Number { get; set; }
         [Required]
         public int Speed { get; set; }

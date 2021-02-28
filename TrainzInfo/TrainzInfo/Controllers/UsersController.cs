@@ -71,21 +71,21 @@ namespace TrainzInfo.Controllers
             return View(users);
         }
 
-        private void SendMessage(Users users)
+        private async void SendMessage(Users users)
         {
             try
             {
-                MailMessage m = new MailMessage("sashaberduchev24@ukr.net", users.Email);
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email);
                 m.Body = users.Email + " Благодарим за регистрацию";
-                SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
+                smtp.Credentials = new NetworkCredential("sashaberduchev", "SashaVinichuk");
                 smtp.EnableSsl = false;
-                smtp.Send(m);
+                smtp.SendMailAsync(m);
             }
             catch (Exception exp)
             {
-                Trace.WriteLine(exp.ToString());
+                Trace.WriteLine(exp.StackTrace);
                 string expstr = exp.ToString();
                 FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
                 for (int i = 0; i < expstr.Length; i++)

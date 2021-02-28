@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +69,8 @@ namespace TrainzInfo.Controllers
     // GET: Electic_locomotive/Create
     public IActionResult Create()
         {
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users;
             SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.Seria = seria;
             SelectList depo = new SelectList(_context.Depots.Select(x => x.Name).ToList());
@@ -77,13 +83,15 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
         {
             if (ModelState.IsValid)
             {
                 Trace.WriteLine("POST: " +this + electic_locomotive);
                 _context.Add(electic_locomotive);
                 await _context.SaveChangesAsync();
+                Users user = await _context.User.Where(x => x.Name == electic_locomotive.User).FirstOrDefaultAsync();
+                SendMessage(user);
                 return RedirectToAction(nameof(Index));
             }
             Trace.WriteLine("RESPONSE: " + electic_locomotive);
@@ -118,6 +126,8 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users;
             return View(electic_locomotive);
             
         }
@@ -127,7 +137,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, LocomotiveImg")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
         {
             if (id != electic_locomotive.id)
             {
@@ -141,6 +151,8 @@ namespace TrainzInfo.Controllers
                     Trace.WriteLine("POST: " + electic_locomotive);
                     _context.Update(electic_locomotive);
                     await _context.SaveChangesAsync();
+                    Users user = await _context.User.Where(x => x.Name == electic_locomotive.User).FirstOrDefaultAsync();
+                    SendMessage(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -191,6 +203,32 @@ namespace TrainzInfo.Controllers
         private bool Electic_locomotiveExists(int id)
         {
             return _context.Electic_Locomotives.Any(e => e.id == id);
+        }
+
+        private async void SendMessage(Users users)
+        {
+            try
+            {
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email);
+                m.Body = "Благодарим за редактирование публикации" + "  " +  users.Name;
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential("sashaberduchev", "SashaVinichuk");
+                smtp.EnableSsl = true;
+                smtp.SendMailAsync(m);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                string expstr = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                for (int i = 0; i < expstr.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString() + " mail: " + users.Email);
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+            }
         }
     }
 }
