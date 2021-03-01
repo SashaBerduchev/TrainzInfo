@@ -30,6 +30,31 @@ namespace TrainzInfo.Controllers
             return View(await _context.User.ToListAsync());
         }
 
+        public async Task<IActionResult> Enter(string Name, string Password)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = await _context.User.Where(x => x.Name == Name).FirstOrDefaultAsync();
+            if(user.Name == null)
+            {
+                return View();
+            }
+            if (user.Password == null)
+            {
+                return View();
+            }else
+            {
+                if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                {
+                    user.Status = "true";
+                    _context.User.Update(user);
+                    await _context.SaveChangesAsync();
+                    return (RedirectToAction(nameof(Index)));
+                }
+            }
+            return View();
+
+        }
+
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -61,8 +86,10 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password,Status")] Users users)
         {
+            users.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             if (ModelState.IsValid)
             {
+
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 SendMessage(users);

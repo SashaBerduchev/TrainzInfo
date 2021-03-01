@@ -2208,3 +2208,9 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Subur
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Details.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Edit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\SuburbanTrainsInfoes\Index.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Create.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Delete.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Details.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Edit.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Index.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Enter.cshtml.g.cs

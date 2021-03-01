@@ -448,6 +448,21 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Electrick_Lockomotive_Infos");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.IpAdresses", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("IpAddres")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("IpAdresses");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.ListRollingStone", b =>
                 {
                     b.Property<int>("id")
@@ -1008,6 +1023,9 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

@@ -22,10 +22,22 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
             _logger = logger;
             _context = context;
+            
         }
 
         public async Task<IActionResult> Index()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
+            if (ipaddres == null || ipaddres == "")
+            {
+                IpAdresses ipAdresses = new IpAdresses
+                {
+                    IpAddres = remoteIpAddres
+                };
+                _context.IpAdresses.Add(ipAdresses);
+                await _context.SaveChangesAsync();
+            }
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
             for(int i=0; i<newsInfo.Count; i++)
             {
