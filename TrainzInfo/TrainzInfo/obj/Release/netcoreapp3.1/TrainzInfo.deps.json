@@ -28,9 +28,9 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.12",
           "Microsoft.CodeAnalysis": "3.8.0",
           "Microsoft.EntityFrameworkCore.Design": "3.1.12",
-          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.11",
-          "Microsoft.EntityFrameworkCore.Sqlite": "3.1.11",
-          "Microsoft.EntityFrameworkCore.Tools": "3.1.11",
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.12",
+          "Microsoft.EntityFrameworkCore.Sqlite": "3.1.12",
+          "Microsoft.EntityFrameworkCore.Tools": "3.1.12",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.5",
           "Newtonsoft.Json": "12.0.3",
           "System.Private.ServiceModel": "4.7.0",
@@ -831,14 +831,14 @@
           "ref/netcoreapp2.1/Microsoft.Data.SqlClient.dll": {}
         }
       },
-      "Microsoft.Data.Sqlite.Core/3.1.11": {
+      "Microsoft.Data.Sqlite.Core/3.1.12": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.0.2"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.Data.Sqlite.dll": {
-            "assemblyVersion": "3.1.11.0",
-            "fileVersion": "3.100.1120.56709"
+            "assemblyVersion": "3.1.12.0",
+            "fileVersion": "3.100.1221.7003"
           }
         },
         "compile": {
@@ -911,45 +911,45 @@
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Relational.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite/3.1.11": {
+      "Microsoft.EntityFrameworkCore.Sqlite/3.1.12": {
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Sqlite.Core": "3.1.11",
+          "Microsoft.EntityFrameworkCore.Sqlite.Core": "3.1.12",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.0.2"
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite.Core/3.1.11": {
+      "Microsoft.EntityFrameworkCore.Sqlite.Core/3.1.12": {
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "3.1.11",
+          "Microsoft.Data.Sqlite.Core": "3.1.12",
           "Microsoft.DotNet.PlatformAbstractions": "3.1.6",
           "Microsoft.EntityFrameworkCore.Relational": "3.1.12",
           "Microsoft.Extensions.DependencyModel": "3.1.6"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Sqlite.dll": {
-            "assemblyVersion": "3.1.11.0",
-            "fileVersion": "3.100.1120.56709"
+            "assemblyVersion": "3.1.12.0",
+            "fileVersion": "3.100.1221.7003"
           }
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Sqlite.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.SqlServer/3.1.11": {
+      "Microsoft.EntityFrameworkCore.SqlServer/3.1.12": {
         "dependencies": {
           "Microsoft.Data.SqlClient": "1.1.3",
           "Microsoft.EntityFrameworkCore.Relational": "3.1.12"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.dll": {
-            "assemblyVersion": "3.1.11.0",
-            "fileVersion": "3.100.1120.56709"
+            "assemblyVersion": "3.1.12.0",
+            "fileVersion": "3.100.1221.7003"
           }
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/3.1.11": {
+      "Microsoft.EntityFrameworkCore.Tools/3.1.12": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Design": "3.1.12"
         }
@@ -4478,12 +4478,12 @@
       "path": "microsoft.data.sqlclient/1.1.3",
       "hashPath": "microsoft.data.sqlclient.1.1.3.nupkg.sha512"
     },
-    "Microsoft.Data.Sqlite.Core/3.1.11": {
+    "Microsoft.Data.Sqlite.Core/3.1.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5H5l8+hC6vMIHK1NqzRLFH8Hl7R07qc0sbEDxCmz49D3YaqiYag5XOBwC3rxz9yMphDGW2dV3vk85pVUwBvCrA==",
-      "path": "microsoft.data.sqlite.core/3.1.11",
-      "hashPath": "microsoft.data.sqlite.core.3.1.11.nupkg.sha512"
+      "sha512": "sha512-VMe+5645cAdmsLWq/ClZNLO8hzzV98crMti934kIQwDfwM1TWgT3yQWnplygbopSk0SgXThWpOQcHmXBT2E6VQ==",
+      "path": "microsoft.data.sqlite.core/3.1.12",
+      "hashPath": "microsoft.data.sqlite.core.3.1.12.nupkg.sha512"
     },
     "Microsoft.DotNet.PlatformAbstractions/3.1.6": {
       "type": "package",
@@ -4527,33 +4527,33 @@
       "path": "microsoft.entityframeworkcore.relational/3.1.12",
       "hashPath": "microsoft.entityframeworkcore.relational.3.1.12.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.Sqlite/3.1.11": {
+    "Microsoft.EntityFrameworkCore.Sqlite/3.1.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4JGEwtuCtSHJ06rg2FthD6O7kdl48AAHcZBsEUpWkyNH3TGaNClmLLtvPF4u+aKerPT6vqOA/Fe9xFWo92niTA==",
-      "path": "microsoft.entityframeworkcore.sqlite/3.1.11",
-      "hashPath": "microsoft.entityframeworkcore.sqlite.3.1.11.nupkg.sha512"
+      "sha512": "sha512-pNde4W4eUkrcUz8OLZ9Bu81d3dC6ZtUuCc9Cry6I2eRrhH7pBd7Tx/476LMbHMVLVM20J7b3QwbLdqMjh0SZCQ==",
+      "path": "microsoft.entityframeworkcore.sqlite/3.1.12",
+      "hashPath": "microsoft.entityframeworkcore.sqlite.3.1.12.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.Sqlite.Core/3.1.11": {
+    "Microsoft.EntityFrameworkCore.Sqlite.Core/3.1.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-eig+YtmVkHMVRZTvvMpC7ALLp8x1MJnBtrQB5QW0VB66HPmNLGKRYzVlX/uZWaqbwtYTo0/slBQxhvGecSGqOQ==",
-      "path": "microsoft.entityframeworkcore.sqlite.core/3.1.11",
-      "hashPath": "microsoft.entityframeworkcore.sqlite.core.3.1.11.nupkg.sha512"
+      "sha512": "sha512-ToCjSguyueZ6E3X4yrDyT5L8UJMxbSqeV9gbfHw/QJ8yrV/rZV875kLoLJG9XMOi17HSFFmBE4xUXP/e6aiUVg==",
+      "path": "microsoft.entityframeworkcore.sqlite.core/3.1.12",
+      "hashPath": "microsoft.entityframeworkcore.sqlite.core.3.1.12.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.SqlServer/3.1.11": {
+    "Microsoft.EntityFrameworkCore.SqlServer/3.1.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oZUmYUZpWmzy+uJBlAdQNbktiZjf1/dsTreAb8vmWHFfnZGZB7daHGbTCxlzTXduasrosyidp4AU99KwoOc1VA==",
-      "path": "microsoft.entityframeworkcore.sqlserver/3.1.11",
-      "hashPath": "microsoft.entityframeworkcore.sqlserver.3.1.11.nupkg.sha512"
+      "sha512": "sha512-KzT15iYnGiZYsvpVyZB0r5MiA/nKZ3f6MjImJeZEEUGAMe2WfFAhRgLTl8HFwt3OyySVBU81ItFpWZ+i/gLC+g==",
+      "path": "microsoft.entityframeworkcore.sqlserver/3.1.12",
+      "hashPath": "microsoft.entityframeworkcore.sqlserver.3.1.12.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.Tools/3.1.11": {
+    "Microsoft.EntityFrameworkCore.Tools/3.1.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Zask6iZndp4RywI3VKpMxmSTk3gPqBCp1TIR/+og2hIbNtGMVEtKTWRDVIZgiE8G7qQTYr6kDAxeBJnS2qVBRQ==",
-      "path": "microsoft.entityframeworkcore.tools/3.1.11",
-      "hashPath": "microsoft.entityframeworkcore.tools.3.1.11.nupkg.sha512"
+      "sha512": "sha512-qZiitt8bqFtK+KDaEOzYqZWRbIofWFGZLX5OYdFfU++RcxWPpLCBUOi87FJ+rVrHC95+54SaDAXgNFTzVsHX8w==",
+      "path": "microsoft.entityframeworkcore.tools/3.1.12",
+      "hashPath": "microsoft.entityframeworkcore.tools.3.1.12.nupkg.sha512"
     },
     "Microsoft.Extensions.Caching.Abstractions/3.1.12": {
       "type": "package",

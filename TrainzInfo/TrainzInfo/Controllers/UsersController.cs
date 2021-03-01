@@ -51,12 +51,22 @@ namespace TrainzInfo.Controllers
                         user.Status = "true";
                         _context.User.Update(user);
                         await _context.SaveChangesAsync();
-                        return (RedirectToAction(nameof(Index)));
+                        return (RedirectToAction(nameof(Entering)));
                     }
                 }
             }
             return View();
 
+        }
+        
+        public async Task<IActionResult> Entering()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Exiting()
+        {
+            return View();
         }
 
         // GET: Users/Details/5
@@ -97,7 +107,7 @@ namespace TrainzInfo.Controllers
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 SendMessage(users);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Enter));
             }
             return View(users);
         }
@@ -221,7 +231,7 @@ namespace TrainzInfo.Controllers
             users.Status = "false";
             _context.User.Update(users);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Exiting));
         }
 
         // POST: Users/Delete/5

@@ -1861,3 +1861,5 @@ D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Raz
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\IpAdresses\Index.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Enter.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Exit.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Entering.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Exiting.cshtml.g.cs

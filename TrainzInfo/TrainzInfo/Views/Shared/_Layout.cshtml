@@ -29,7 +29,7 @@
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
                             @if(ViewBag.user != null)
                             {
-                                <div style="font-size:15px">
+                                <div style="font-size:25px; color:cornflowerblue">
                                     <a asp-controller="Users" asp-action="Details" asp-route-name="@ViewBag.user">@Html.DisplayName(ViewBag.user)</a>
                                 </div>
                                 <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-name="@ViewBag.user">Выйти</a>

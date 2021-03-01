@@ -14,12 +14,12 @@
         <form method="get">
             <div class="form-inline">
                 <div class="form-group">
-                    @Html.DisplayName("Имя");
+                    @Html.DisplayName("Имя")
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    @Html.DisplayName("Пароль");
+                    @Html.DisplayName("Пароль")
                     <input type="password" asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
@@ -28,3 +28,8 @@
         </form>
     </div>
 </div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

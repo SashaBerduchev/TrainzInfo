@@ -197,7 +197,7 @@
       <publishTime>05/15/2020 23:07:32</publishTime>
     </File>
     <File Include="Microsoft.Data.Sqlite.dll">
-      <publishTime>11/17/2020 22:57:56</publishTime>
+      <publishTime>01/20/2021 16:33:36</publishTime>
     </File>
     <File Include="Microsoft.DotNet.PlatformAbstractions.dll">
       <publishTime>06/17/2020 04:37:52</publishTime>
@@ -212,10 +212,10 @@
       <publishTime>01/20/2021 16:33:46</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Sqlite.dll">
-      <publishTime>11/17/2020 22:58:06</publishTime>
+      <publishTime>01/20/2021 16:33:52</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.SqlServer.dll">
-      <publishTime>11/17/2020 22:58:04</publishTime>
+      <publishTime>01/20/2021 16:33:50</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Abstractions.dll">
       <publishTime>01/20/2021 05:05:28</publishTime>
@@ -524,28 +524,28 @@
       <publishTime>11/12/2020 00:16:28</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>02/24/2021 15:18:58</publishTime>
+      <publishTime>03/01/2021 13:34:28</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>02/24/2021 15:16:57</publishTime>
+      <publishTime>03/01/2021 13:12:45</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>02/24/2021 15:16:57</publishTime>
+      <publishTime>03/01/2021 13:12:46</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>02/24/2021 15:16:57</publishTime>
+      <publishTime>03/01/2021 13:12:45</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
-      <publishTime>02/22/2021 12:40:23</publishTime>
+      <publishTime>03/01/2021 11:55:37</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>02/24/2021 15:18:50</publishTime>
+      <publishTime>03/01/2021 13:12:59</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>02/24/2021 15:18:50</publishTime>
+      <publishTime>03/01/2021 13:12:59</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>02/24/2021 15:19:03</publishTime>
+      <publishTime>03/01/2021 13:34:36</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>02/08/2021 10:27:40</publishTime>
