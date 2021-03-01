@@ -39,13 +39,10 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
             }
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
-            for(int i=0; i<newsInfo.Count; i++)
+            Users user = _context.User.Where(x => x.IpAddress == remoteIpAddres).FirstOrDefault();
+            if (user != null && user.Status == "true")
             {
-                if(newsInfo[i].user == null && newsInfo[i].NameNews == "")
-                {
-                    _context.Remove(newsInfo[i]);
-                    _context.SaveChanges();
-                }
+                ViewBag.user = user.Name;
             }
             return View(newsInfo);
         }

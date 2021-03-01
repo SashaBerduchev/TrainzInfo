@@ -34,21 +34,25 @@ namespace TrainzInfo.Controllers
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = await _context.User.Where(x => x.Name == Name).FirstOrDefaultAsync();
-            if(user.Name == null)
+            if (user != null)
             {
-                return View();
-            }
-            if (user.Password == null)
-            {
-                return View();
-            }else
-            {
-                if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                if ( user.Name != Name)
                 {
-                    user.Status = "true";
-                    _context.User.Update(user);
-                    await _context.SaveChangesAsync();
-                    return (RedirectToAction(nameof(Index)));
+                    return View();
+                }
+                if ( user.Password != Password)
+                {
+                    return View();
+                }
+                else
+                {
+                    if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                    {
+                        user.Status = "true";
+                        _context.User.Update(user);
+                        await _context.SaveChangesAsync();
+                        return (RedirectToAction(nameof(Index)));
+                    }
                 }
             }
             return View();
@@ -176,21 +180,48 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? name)
         {
-            if (id == null)
+            if (name == null || name == "")
             {
                 return NotFound();
             }
 
             var users = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Name == name);
             if (users == null)
             {
                 return NotFound();
             }
 
             return View(users);
+        }
+
+        public async Task<IActionResult> Exit(string? name)
+        {
+            if (name == null || name =="")
+            {
+                return NotFound();
+            }
+
+            var users = await _context.User
+                .FirstOrDefaultAsync(m => m.Name == name);
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return View(users);
+        }
+        [HttpPost, ActionName("Exit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExitConfirm(int? id)
+        {
+            var users = await _context.User.Where(x=>x.Id == id).FirstOrDefaultAsync();
+            users.Status = "false";
+            _context.User.Update(users);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Users/Delete/5

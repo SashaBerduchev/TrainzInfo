@@ -27,7 +27,20 @@
                             <a id="btn" class="btn btn-primary text-white" style="width:180px" asp-area="" asp-controller="Electic_locomotive" asp-action="Index">Локомотивы</a>
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Железные дороги Украины</a>
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
-                            @if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
+                            @if(ViewBag.user != null)
+                            {
+                                <div style="font-size:15px">
+                                    <a asp-controller="Users" asp-action="Details" asp-route-name="@ViewBag.user">@Html.DisplayName(ViewBag.user)</a>
+                                </div>
+                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-name="@ViewBag.user">Выйти</a>
+
+                            }
+                            else
+                            {
+                                <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вход</a>
+                                <a id="btn3" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
+                            }
+                            @*@if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
                             {
                                 if (Model[0] is NewsInfo && Model[0].user == null)
                                 {
@@ -40,7 +53,7 @@
                                     <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Delete" asp-route-name="@Model[0].user">Выйти</a>
                                 }
 
-                            }
+                            }*@
                         </li>
                     </ul>
                 </div>

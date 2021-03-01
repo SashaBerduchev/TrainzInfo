@@ -2214,3 +2214,4 @@ D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Edit.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\IpAdresses\Index.cshtml.g.cs
 D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Enter.cshtml.g.cs
+D:\Project\Trainz\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Exit.cshtml.g.cs
