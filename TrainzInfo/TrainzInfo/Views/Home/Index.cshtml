@@ -47,7 +47,7 @@
         <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Users" asp-action="Index">Пользователи</a>
         <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Roles" asp-action="Index">Роли</a>
         <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
-       } else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher"){
+       } else if (ViewBag.user.Role != null &&  ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin"){
         <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
        }
     </div>
@@ -61,7 +61,7 @@
             </p>
         </div>*@
 
-    <div class="infocont" style="left: 350px">
+    <div class="infocont" style=" position:relative;  top:20px">
         @foreach (NewsInfo info in Model)
         {
             if (info.NameNews != "")

@@ -22,23 +22,30 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
             _logger = logger;
             _context = context;
-            
+
         }
 
         public async Task<IActionResult> Index()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            //var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
-            //if (ipaddres == null || ipaddres == "")
-            //{
-            IpAdresses ipAdresses = new IpAdresses
+            var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
+            if (ipaddres == null || ipaddres == "")
             {
-                IpAddres = remoteIpAddres,
-                Date = DateTime.Now
-            };
-             _context.IpAdresses.Add(ipAdresses);
-             await _context.SaveChangesAsync();
-            //}
+                IpAdresses ipAdresses = new IpAdresses
+                {
+                    IpAddres = remoteIpAddres,
+                    Date = DateTime.Now
+                };
+                _context.IpAdresses.Add(ipAdresses);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+               IpAdresses ipaddreslocal = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
+                ipaddreslocal.Date = DateTime.Now;
+                _context.IpAdresses.Update(ipaddreslocal);
+                await _context.SaveChangesAsync();
+            }
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
