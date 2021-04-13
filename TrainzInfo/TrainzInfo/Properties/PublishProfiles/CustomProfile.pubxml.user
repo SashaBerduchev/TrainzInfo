@@ -8,7 +8,7 @@
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAfbDMxLPxdU6U81jnhNpc/QAAAAACAAAAAAAQZgAAAAEAACAAAAAYwNKbbm9BMP+z2FnfLZHGMFppjjR+1VqFuA/RHazq/wAAAAAOgAAAAAIAACAAAADC2BH+VOOj0DQCK3xt+emNdBx90szAP1mNC7ur8uwMyCAAAACFbn/8lDx2/9O9xPw9UfF6bP7BnzunETaWTFMenCYxakAAAABgnoS3XvSOG1KXqFlF0AciMKn5Xbn15npALHtpVUJA79Dm5Iq+D4BcXQRaxMvg9tEdngI53YH6iHSEu5Rcvqks</EncryptedPassword>
     <_PublishTargetUrl>ftp://trainzinfo.somee.com/www.trainzinfo.somee.com</_PublishTargetUrl>
-    <History>True|2021-04-13T09:58:17.3059410Z;True|2021-04-13T12:33:18.1276385+03:00;</History>
+    <History>True|2021-04-13T10:14:56.8786813Z;True|2021-04-13T12:58:17.3059410+03:00;True|2021-04-13T12:33:18.1276385+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -525,28 +525,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>04/13/2021 12:48:14</publishTime>
+      <publishTime>04/13/2021 13:05:38</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>04/13/2021 12:41:11</publishTime>
+      <publishTime>04/13/2021 13:03:35</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>04/13/2021 12:41:11</publishTime>
+      <publishTime>04/13/2021 13:03:36</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>04/13/2021 12:41:11</publishTime>
+      <publishTime>04/13/2021 13:03:35</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>04/13/2021 12:20:19</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>04/13/2021 12:45:49</publishTime>
+      <publishTime>04/13/2021 13:04:11</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>04/13/2021 12:45:48</publishTime>
+      <publishTime>04/13/2021 13:04:11</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/13/2021 12:48:15</publishTime>
+      <publishTime>04/13/2021 13:05:38</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>02/12/2021 20:24:52</publishTime>

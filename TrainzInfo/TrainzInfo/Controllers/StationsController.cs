@@ -48,6 +48,7 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             if (id == null)
             {
                 return NotFound();
@@ -59,9 +60,13 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.BaseInfo).FirstOrDefault();
             ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.AllInfo).FirstOrDefault();
+            if (user != null && user.Role != null)
+            {
+                ViewBag.user = user.Role;
+            }
             return View(stations);
         }
 
