@@ -22,7 +22,7 @@ namespace TrainzInfo.Controllers
         // GET: IpAdresses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.IpAdresses.ToListAsync());
+            return View(await _context.IpAdresses.OrderByDescending(x=>x.Date).ToListAsync());
         }
 
         // GET: IpAdresses/Details/5

@@ -30,9 +30,9 @@
                             @if(ViewBag.user != null)
                             {
                                 <div style="font-size:25px; color:cornflowerblue">
-                                    <a asp-controller="Users" asp-action="Details" asp-route-name="@ViewBag.user">@Html.DisplayName(ViewBag.user)</a>
+                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">@Html.DisplayName(ViewBag.user.Name)</a>
                                 </div>
-                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-name="@ViewBag.user">Выйти</a>
+                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Выйти</a>
 
                             }
                             else

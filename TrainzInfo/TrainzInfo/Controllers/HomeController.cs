@@ -28,21 +28,22 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
-            if (ipaddres == null || ipaddres == "")
+            //var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
+            //if (ipaddres == null || ipaddres == "")
+            //{
+            IpAdresses ipAdresses = new IpAdresses
             {
-                IpAdresses ipAdresses = new IpAdresses
-                {
-                    IpAddres = remoteIpAddres
-                };
-                _context.IpAdresses.Add(ipAdresses);
-                await _context.SaveChangesAsync();
-            }
+                IpAddres = remoteIpAddres,
+                Date = DateTime.Now
+            };
+             _context.IpAdresses.Add(ipAdresses);
+             await _context.SaveChangesAsync();
+            //}
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
-            Users user = _context.User.Where(x => x.IpAddress == remoteIpAddres).FirstOrDefault();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
-                ViewBag.user = user.Name;
+                ViewBag.user = user;
             }
             return View(newsInfo);
         }

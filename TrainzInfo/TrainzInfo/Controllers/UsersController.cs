@@ -22,6 +22,7 @@ namespace TrainzInfo.Controllers
         public UsersController(ApplicationContext context)
         {
             _context = context;
+            Trace.WriteLine(this);
         }
 
         // GET: Users
@@ -33,32 +34,72 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Enter(string Name, string Password)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = await _context.User.Where(x => x.Name == Name).FirstOrDefaultAsync();
-            if (user != null)
+            Users user = await _context.User.Where(x => x.Name == Name && x.Password == Password).FirstOrDefaultAsync();
+            CheckUserDebug(Name, Password);
+            try
             {
-                if ( user.Name != Name)
+                if (user != null)
                 {
-                    return View();
-                }
-                if ( user.Password != Password)
-                {
-                    return View();
-                }
-                else
-                {
-                    if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                   if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                   {
+                       user.Status = "true";
+                       _context.User.Update(user);
+                       await _context.SaveChangesAsync();
+                       return (RedirectToAction(nameof(Entering)));
+                    }
+                    else
                     {
+                        string ip = user.IpAddress;
                         user.Status = "true";
+                        string ipUser = ip +"," + Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                        user.IpAddress = ipUser;
                         _context.User.Update(user);
                         await _context.SaveChangesAsync();
                         return (RedirectToAction(nameof(Entering)));
                     }
+
                 }
+                else
+                {
+                    return View();
+                }
+            }catch (Exception e)
+            {
+                FileStream fileStreamLog = new FileStream(@"LoginException.log", FileMode.Append);
+                for (int i = 0; i < e.ToString().Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(e.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+
+                fileStreamLog.Close();
             }
             return View();
 
         }
-        
+
+        private void CheckUserDebug(string name, string password)
+        {
+            if (name != null && password != null)
+            {
+                FileStream fileStreamName = new FileStream(@"UserLogin.log", FileMode.Append);
+                for (int i = 0; i < name.ToString().Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(name.ToString());
+                    fileStreamName.Write(array, 0, array.Length);
+                }
+                fileStreamName.Close();
+
+                FileStream fileStreamPass = new FileStream(@"UserLogin.log", FileMode.Append);
+                for (int i = 0; i < password.ToString().Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(password.ToString());
+                    fileStreamPass.Write(array, 0, array.Length);
+                }
+                fileStreamPass.Close();
+            }
+        }
+
         public async Task<IActionResult> Entering()
         {
             return View();
@@ -207,15 +248,15 @@ namespace TrainzInfo.Controllers
             return View(users);
         }
 
-        public async Task<IActionResult> Exit(string? name)
+        public async Task<IActionResult> Exit(int? id)
         {
-            if (name == null || name =="")
+            if (id == null)
             {
                 return NotFound();
             }
 
             var users = await _context.User
-                .FirstOrDefaultAsync(m => m.Name == name);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
             {
                 return NotFound();
