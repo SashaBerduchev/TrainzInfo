@@ -2224,3 +2224,9 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Entering.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Exit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Exiting.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\System.ComponentModel.Annotations.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Roles\Create.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Roles\Delete.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Roles\Details.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Roles\Edit.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Roles\Index.cshtml.g.cs

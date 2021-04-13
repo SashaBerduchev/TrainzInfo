@@ -31,11 +31,11 @@ namespace TrainzInfo.Controllers
             return View(await _context.User.ToListAsync());
         }
 
-        public async Task<IActionResult> Enter(string Name, string Password)
+        public async Task<IActionResult> Enter(string Email, string Password)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = await _context.User.Where(x => x.Name == Name && x.Password == Password).FirstOrDefaultAsync();
-            CheckUserDebug(Name, Password);
+            Users user = await _context.User.Where(x => x.Email == Email && x.Password == Password).FirstOrDefaultAsync();
+            CheckUserDebug(Email, Password);
             try
             {
                 if (user != null)
@@ -139,9 +139,14 @@ namespace TrainzInfo.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password,Status")] Users users)
+        public async Task<IActionResult> Create([Bind("Id,Name,Age,Email,Password,Status,Role")] Users users)
         {
             users.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userexist = _context.User.Where(x => x.Email == users.Email).FirstOrDefault();
+            if(userexist != null)
+            {
+                return RedirectToAction(nameof(Create));
+            }
             if (ModelState.IsValid)
             {
 
@@ -192,6 +197,8 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList selectLists = new SelectList(await _context.Roles.Select(x => x.NameRole).ToListAsync());
+            ViewBag.roles = selectLists;
             return View(users);
         }
 
@@ -200,7 +207,7 @@ namespace TrainzInfo.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age,Email,Password,Status")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Age,Email,Password,Status,Role")] Users users)
         {
             if (id != users.Id)
             {
@@ -231,15 +238,15 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string? name)
+        public async Task<IActionResult> Delete(int? Id)
         {
-            if (name == null || name == "")
+            if (Id == null )
             {
                 return NotFound();
             }
 
             var users = await _context.User
-                .FirstOrDefaultAsync(m => m.Name == name);
+                .FirstOrDefaultAsync(m => m.Id == Id);
             if (users == null)
             {
                 return NotFound();

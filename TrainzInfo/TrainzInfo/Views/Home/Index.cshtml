@@ -13,7 +13,7 @@
 </head>
 <div class="text-center">
 
-    
+
 
     <h1 class="display-4">Добро пожаловать!</h1>
     @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
@@ -26,7 +26,7 @@
         </p>
 
 
-        <div class="btn_panel" style=" position: relative; left:580px; top:-300px; width:450px">
+        <div class="btn_panel" style=" position: relative; left:580px; padding:20px; top:-300px; width:450px">
             <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>
             <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
             <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
@@ -36,7 +36,23 @@
             <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Stations" asp-action="IndexAll">Смотреть весь список станций</a>
         </div>
     </div>
+    
 </div>
+@if (ViewBag.user != null)
+{
+<div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:650px">
+    <div style="left:50px">
+        @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
+        {
+        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Users" asp-action="Index">Пользователи</a>
+        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Roles" asp-action="Index">Роли</a>
+        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
+       } else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher"){
+        <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+       }
+    </div>
+</div>
+}
 <body>
     @*<div class="text-center">
             <p>
@@ -73,7 +89,7 @@
         }
     </div>
         
-    <a asp-controller="IpAdresses" asp-action="Index">IP</a>
+    
    
 </body>
    

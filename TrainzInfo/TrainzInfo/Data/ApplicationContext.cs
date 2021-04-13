@@ -69,5 +69,6 @@ namespace TrainzInfo.Data
         public DbSet<Plants> plants { get; set; }
         public DbSet<SuburbanTrainsInfo> SuburbanTrainsInfos { get; set; }
         public DbSet<IpAdresses> IpAdresses { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

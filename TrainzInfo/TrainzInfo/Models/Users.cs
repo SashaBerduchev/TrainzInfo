@@ -20,5 +20,6 @@ namespace TrainzInfo.Models
         public string Password { get; set; }
         public string Status { get; set; }
         public string IpAddress { get; set; }
+        public string Role { get; set; }
     }
 }
