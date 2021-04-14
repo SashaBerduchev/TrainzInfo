@@ -149,7 +149,7 @@ namespace TrainzInfo.Controllers
             }
             if (ModelState.IsValid)
             {
-
+                users.Role = "Gest";
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 SendMessage(users);

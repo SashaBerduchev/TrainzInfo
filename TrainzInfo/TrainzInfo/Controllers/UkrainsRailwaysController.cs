@@ -30,6 +30,7 @@ namespace TrainzInfo.Controllers
         // GET: UkrainsRailways
         public async Task<IActionResult> Index()
         {
+            
             return View(await _context.UkrainsRailways.ToListAsync());
         }
 

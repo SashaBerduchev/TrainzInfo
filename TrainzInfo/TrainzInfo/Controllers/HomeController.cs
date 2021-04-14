@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -22,11 +24,14 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
             _logger = logger;
             _context = context;
-
+            
         }
+
+        
 
         public async Task<IActionResult> Index()
         {
+            var useragent = Request.Headers;
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
             if (ipaddres == null || ipaddres == "")

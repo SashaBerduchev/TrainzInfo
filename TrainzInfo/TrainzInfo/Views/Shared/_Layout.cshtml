@@ -23,7 +23,7 @@
                             
                             @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>*@
-                            <a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>
+                            @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
                             <a id="btn" class="btn btn-primary text-white" style="width:180px" asp-area="" asp-controller="Electic_locomotive" asp-action="Index">Локомотивы</a>
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Железные дороги Украины</a>
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
@@ -38,7 +38,7 @@
                             else
                             {
                                 <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вход</a>
-                                <a id="btn3" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
+                                <a id="btn3" class="btn btn-outline-primary" style="width:120px" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
                             }
                             @*@if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
                             {

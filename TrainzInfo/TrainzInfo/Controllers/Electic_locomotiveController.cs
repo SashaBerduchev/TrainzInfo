@@ -36,6 +36,13 @@ namespace TrainzInfo.Controllers
         // GET: Electic_locomotive
         public async Task<IActionResult> Index(string Seria)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.seria = series;
 
@@ -48,6 +55,13 @@ namespace TrainzInfo.Controllers
         // GET: Electic_locomotive/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             if (id == null)
             {
                 return NotFound();

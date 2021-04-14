@@ -57,6 +57,13 @@ namespace TrainzInfo.Controllers
         // GET: DepotLists
         public async Task<IActionResult> Index(string? uzname)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailways == uzname).ToListAsync();
             ViewBag.Filia = uzname;
             return View(depots);
