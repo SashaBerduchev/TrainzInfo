@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
-<h1>@Model.NameNews</h1>
+<h1 style="background-color:aliceblue">@Model.NameNews</h1>
 <head>
     <meta charset="utf-8">
     <title>Фон</title>
@@ -13,49 +13,56 @@
         }
     </style>
 </head>
-<div>
+<div style="background-color:aliceblue">
     <hr />
-    <dl class="row">
-        <dd class="col-sm-10">
-            @*@Html.DisplayFor(model => model.Imgsrc)*@
-            <img src="@Model.Imgsrc" width="800" height="550" />
-        </dd>
-        <dt class="col-sm-2">
-            @*@Html.DisplayNameFor(model => model.NameNews)*@
-        </dt>
-        <dd class="col-sm-10" style="        font-size: 25px
+    <div style="position:relative; left:20px">
+        <dl class="row">
+            <dd class="col-sm-10">
+                @*@Html.DisplayFor(model => model.Imgsrc)*@
+                <img src="@Model.Imgsrc" width="800" height="550" />
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.NameNews)*@
+            </dt>
+            <dd class="col-sm-10" style="        font-size: 25px
 ">
-            @Html.DisplayFor(model => model.NameNews)
-        </dd>
-        <dt class="col-sm-2">
-            @*@Html.DisplayNameFor(model => model.BaseNewsInfo)*@
-        </dt>
-        <dd class="col-sm-10" style="        font-size: 25px
+                @Html.DisplayFor(model => model.NameNews)
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.BaseNewsInfo)*@
+            </dt>
+            <dd class="col-sm-10" style="        font-size: 25px
 ">
-            @Html.DisplayFor(model => model.BaseNewsInfo)
-        </dd>
-        <dt class="col-sm-2">
-            @*@Html.DisplayNameFor(model => model.NewsInfoAll)*@
-        </dt>
-        <dd class="col-sm-10" style="font-size: 25px">
-            @Html.DisplayFor(model => model.NewsInfoAll)
-        </dd>
-    </dl>
-</div>
-<div>
-
-    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Edit" asp-route-id="@Model.id">Комментировать</a>
-    <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии + @Convert.ToString(ViewBag.count)</a>
-    @if (Model != null)
+                @Html.DisplayFor(model => model.BaseNewsInfo)
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.NewsInfoAll)*@
+            </dt>
+            <dd class="col-sm-10" style="font-size: 25px">
+                @Html.DisplayFor(model => model.NewsInfoAll)
+            </dd>
+        </dl>
+    </div>
+    @if (ViewBag.user != null)
     {
-        <a asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Edit" asp-route-id="@Model.id">Комментировать</a>
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии + @Convert.ToString(ViewBag.count)</a>
     }
-    else
-    {
-        <meta http-equiv="refresh" content="900">
 
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+        {
+            if (Model != null)
+            {
+                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>
+            }
+            else
+            {
+                <meta http-equiv="refresh" content="900">
+            }
+        }
     }
-    <a asp-action="Index">Вернутся обратно</a>
 </div>
 <style>
         row {
