@@ -44,7 +44,7 @@
                 <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
                 @if (ViewBag.user != null)
                 {
-                    if (ViewBag.user.Role == "Publisher" || ViewBag.user == "Superadmin" || ViewBag.user == "Admin")
+                    if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
                         <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a>
                         <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Удалить</a>

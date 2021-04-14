@@ -49,10 +49,7 @@ namespace TrainzInfo.Controllers
                     }
                     else
                     {
-                        string ip = user.IpAddress;
-                        user.Status = "true";
-                        string ipUser = ip +"," + Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                        user.IpAddress = ipUser;
+                        user.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
                         _context.User.Update(user);
                         await _context.SaveChangesAsync();
                         return (RedirectToAction(nameof(Entering)));

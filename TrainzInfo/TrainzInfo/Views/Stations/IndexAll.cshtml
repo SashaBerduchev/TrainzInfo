@@ -7,7 +7,13 @@
 <h1> Все станции</h1>
 
 <p>
-    <a class="btn btn-dark" asp-action="Create">Добавить</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-dark" asp-action="Create">Добавить</a>
+        }
+    }
 </p>
 <div>
     @foreach (var item in Model)
