@@ -40,15 +40,15 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Trains/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? number)
         {
-            if (id == null)
+            if (number == null)
             {
                 return NotFound();
             }
 
             var train = await _context.Trains
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Number == number);
             if (train == null)
             {
                 return NotFound();
@@ -60,7 +60,13 @@ namespace TrainzInfo.Controllers
         // GET: Trains/Create
         public IActionResult Create()
         {
-            SelectList city = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            SelectList city = new SelectList(_context.Cities.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
             ViewBag.city = city;
             SelectList type = new SelectList(_context.TypeOfPassTrains.Select(x => x.Type).ToList());
             ViewBag.type = type;
@@ -72,7 +78,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,StationFrom,StationTo,Type,NameOfTrain")] Train train)
+        public async Task<IActionResult> Create([Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain")] Train train)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +111,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,StationFrom,StationTo,Type,NameOfTrain")] Train train)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain")] Train train)
         {
             if (id != train.id)
             {

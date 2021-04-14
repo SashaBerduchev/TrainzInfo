@@ -800,7 +800,6 @@ namespace TrainzInfo.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ImgTrain")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Station")
@@ -813,9 +812,8 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("TimeOfDepet")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TrainInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TrainInfo")
+                        .HasColumnType("int");
 
                     b.Property<string>("UzFilia")
                         .IsRequired()
@@ -874,8 +872,10 @@ namespace TrainzInfo.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("NameOfTrain")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
                     b.Property<string>("StationFrom")
                         .IsRequired()

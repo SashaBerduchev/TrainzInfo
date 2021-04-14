@@ -10,12 +10,13 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         [Required]
+        public int Number { get; set; }
+        [Required]
         public string StationFrom { get; set; }
         [Required]
         public string StationTo { get; set; }
         [Required]
         public string Type { get; set; }
-        [Required]
         public string NameOfTrain { get; set; }
     }
 }

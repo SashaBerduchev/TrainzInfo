@@ -4,31 +4,35 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-dark" asp-action="Create">Добавить</a>
+        }
+    }
+
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Station)
+                @Html.DisplayName("Номер")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UzFilia)
+                @Html.DisplayName("Станция")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TimeOfArrive)
+                @Html.DisplayName("Филия")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TimeOfDepet)
+                @Html.DisplayName("Время прибытия")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrainInfo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImgTrain)
+                @Html.DisplayName("Время отправления")
             </th>
             <th></th>
         </tr>
@@ -38,7 +42,11 @@
         {
             <tr>
                 <td>
+                    <a asp-controller="Trains" asp-action="Details" asp-route-number="@item.TrainInfo">@Html.DisplayFor(modelItem => item.TrainInfo)</a>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Station)
+                    
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UzFilia)
@@ -46,20 +54,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TimeOfArrive.TimeOfDay)
                 </td>
-                <td>
+                <td width="70px">
                     @Html.DisplayFor(modelItem => item.TimeOfDepet.TimeOfDay)
                 </td>
-                <td width="70px">
-                    @Html.DisplayFor(modelItem => item.TrainInfo)
-                </td>
-                <td>
-                    <img src="@item.ImgTrain" width="150" height="100" />
-                </td>
-                <td>
-                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ |
+                <!--<td>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |-->
+                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
                     <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.id">Delete</a>
-                </td>
+                </td>-->
             </tr>
         }
     </tbody>
@@ -71,13 +73,13 @@
 </style>
 <style type="text/css">
     td {
-        background: #6a5eff; /* Цвет фона */
+        background-color: aliceblue; /* Цвет фона */
         position: center;
         padding: 5px; /* Поля в ячейках */
         opacity: 1.9; /* Полупрозрачность таблицы */
         filter: alpha(Opacity=50); /* Для IE */
         width: 700px;
-        color: white;
+        color: cornflowerblue;
         text-decoration: solid;
     }
 </style>

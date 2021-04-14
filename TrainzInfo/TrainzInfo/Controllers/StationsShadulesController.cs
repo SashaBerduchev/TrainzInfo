@@ -21,9 +21,15 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: StationsShadules
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? station)
         {
-            return View(await _context.StationsShadules.ToListAsync());
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            return View(await _context.StationsShadules.Where(x=>x.Station == station).ToListAsync());
         }
         public async Task<List<StationsShadule>> IndexAction()
         {
@@ -68,7 +74,7 @@ namespace TrainzInfo.Controllers
         {
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.uz = uz;
-            SelectList trainz = new SelectList(_context.Trains.Select(x => x.NameOfTrain + " " + x.StationFrom + " " + x.StationTo).ToList());
+            SelectList trainz = new SelectList(_context.Trains.Select(x => x.Number).ToList());
             ViewBag.trainz = trainz;
             SelectList stations = new SelectList(_context.Stations.Select(x => x.Name).ToList());
             ViewBag.stations = stations;
@@ -81,12 +87,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Station,UzFilia,TimeOfArrive,TimeOfDepet,TrainInfo,ImgTrain")] StationsShadule stationsShadule)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(stationsShadule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(stationsShadule);
         }
 

@@ -13,13 +13,10 @@ namespace TrainzInfo.Models
         public string Station { get; set; }
         [Required]
         public string UzFilia { get; set; }
-        [Required]
         public DateTime TimeOfArrive { get; set; }
-        [Required]
         public DateTime TimeOfDepet { get; set; }
         [Required]
-        public string TrainInfo { get; set; }
-        [Required]
+        public int TrainInfo { get; set; }
         public string ImgTrain { get; set; }
     }
 }
