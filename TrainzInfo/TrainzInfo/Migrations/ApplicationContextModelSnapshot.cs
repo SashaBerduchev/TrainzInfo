@@ -894,6 +894,31 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Trains");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.TrainzStations", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NameStationStop")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOFTrain")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeOfArrive")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeOfDepet")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TrainzStations");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.TrainzType", b =>
                 {
                     b.Property<int>("Id")

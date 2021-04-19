@@ -8,7 +8,7 @@
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAfbDMxLPxdU6U81jnhNpc/QAAAAACAAAAAAAQZgAAAAEAACAAAAAYwNKbbm9BMP+z2FnfLZHGMFppjjR+1VqFuA/RHazq/wAAAAAOgAAAAAIAACAAAADC2BH+VOOj0DQCK3xt+emNdBx90szAP1mNC7ur8uwMyCAAAACFbn/8lDx2/9O9xPw9UfF6bP7BnzunETaWTFMenCYxakAAAABgnoS3XvSOG1KXqFlF0AciMKn5Xbn15npALHtpVUJA79Dm5Iq+D4BcXQRaxMvg9tEdngI53YH6iHSEu5Rcvqks</EncryptedPassword>
     <_PublishTargetUrl>ftp://trainzinfo.somee.com/www.trainzinfo.somee.com</_PublishTargetUrl>
-    <History>True|2021-04-14T19:29:23.9798243Z;True|2021-04-14T20:25:16.7583070+03:00;True|2021-04-14T14:19:09.1104856+03:00;True|2021-04-14T10:32:21.1250886+03:00;True|2021-04-13T14:13:25.9386008+03:00;True|2021-04-13T13:50:08.2348818+03:00;False|2021-04-13T13:39:57.7039476+03:00;False|2021-04-13T13:38:37.9535765+03:00;False|2021-04-13T13:38:07.0386732+03:00;True|2021-04-13T13:14:56.8786813+03:00;True|2021-04-13T12:58:17.3059410+03:00;True|2021-04-13T12:33:18.1276385+03:00;</History>
+    <History>True|2021-04-18T20:32:05.9824331Z;True|2021-04-14T22:29:23.9798243+03:00;True|2021-04-14T20:25:16.7583070+03:00;True|2021-04-14T14:19:09.1104856+03:00;True|2021-04-14T10:32:21.1250886+03:00;True|2021-04-13T14:13:25.9386008+03:00;True|2021-04-13T13:50:08.2348818+03:00;False|2021-04-13T13:39:57.7039476+03:00;False|2021-04-13T13:38:37.9535765+03:00;False|2021-04-13T13:38:07.0386732+03:00;True|2021-04-13T13:14:56.8786813+03:00;True|2021-04-13T12:58:17.3059410+03:00;True|2021-04-13T12:33:18.1276385+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -525,28 +525,28 @@
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>04/14/2021 22:19:50</publishTime>
+      <publishTime>04/18/2021 23:22:32</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>04/14/2021 22:18:28</publishTime>
+      <publishTime>04/18/2021 23:21:41</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>04/14/2021 22:18:28</publishTime>
+      <publishTime>04/18/2021 23:21:41</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>04/14/2021 22:18:28</publishTime>
+      <publishTime>04/18/2021 23:21:41</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>04/14/2021 10:21:39</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>04/14/2021 22:18:34</publishTime>
+      <publishTime>04/18/2021 23:21:49</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>04/14/2021 22:18:34</publishTime>
+      <publishTime>04/18/2021 23:21:49</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/14/2021 22:19:50</publishTime>
+      <publishTime>04/18/2021 23:22:33</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>02/12/2021 20:24:52</publishTime>

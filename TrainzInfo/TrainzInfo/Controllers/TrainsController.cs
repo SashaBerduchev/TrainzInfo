@@ -53,7 +53,15 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
 
+            List<TrainzStations> stations = await _context.TrainzStations.Where(x => x.NumberOFTrain == train.Number).ToListAsync();
+            ViewBag.stations = stations;
             return View(train);
         }
 
@@ -66,7 +74,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            SelectList city = new SelectList(_context.Cities.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList city = new SelectList(_context.Stations.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
             ViewBag.city = city;
             SelectList type = new SelectList(_context.TypeOfPassTrains.Select(x => x.Type).ToList());
             ViewBag.type = type;

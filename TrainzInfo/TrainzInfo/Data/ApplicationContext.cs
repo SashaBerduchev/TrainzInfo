@@ -72,6 +72,7 @@ namespace TrainzInfo.Data
         public DbSet<SuburbanTrainsInfo> SuburbanTrainsInfos { get; set; }
         public DbSet<IpAdresses> IpAdresses { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<TrainzStations> TrainzStations { get; set; }
 
     }
 

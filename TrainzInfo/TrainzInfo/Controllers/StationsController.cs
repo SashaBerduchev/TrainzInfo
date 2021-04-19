@@ -58,26 +58,27 @@ namespace TrainzInfo.Controllers
             return stations;
         }
         // GET: Stations/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? name)
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            if (id == null)
+            if (name == null || name == "")
             {
                 return NotFound();
             }
 
             var stations = await _context.Stations
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Name == name);
             if (stations == null)
             {
                 return NotFound();
             }
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            
             ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.BaseInfo).FirstOrDefault();
             ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.AllInfo).FirstOrDefault();
-            if (user != null && user.Role != null)
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
             {
-                ViewBag.user = user.Role;
+                ViewBag.user = user;
             }
             return View(stations);
         }
@@ -85,8 +86,8 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Create
         public IActionResult Create()
         {
-            SelectList city = new SelectList( _context.Cities.Select(x => x.Name).ToList());
-            SelectList oblast = new SelectList(_context.Oblasts.Select(x => x.Name).ToList());
+            SelectList city = new SelectList( _context.Cities.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.city = city;
             ViewBag.oblast = oblast;

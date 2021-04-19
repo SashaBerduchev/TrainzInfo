@@ -32,7 +32,7 @@
         <div style="width:150px; position:relative;  left:750px; top:-350px">
             <a class="btn btn-info" style="width:250px; margin:20px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Рассписание по станции</a>
             @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
-            <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-id="@item.id">Информация</a>
+            <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
             @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
         </div>
     </div>
