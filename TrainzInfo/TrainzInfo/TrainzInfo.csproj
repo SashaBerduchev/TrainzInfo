@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210419192814_update-database.cs" />
+    <Compile Remove="Migrations\20210419192814_update-database.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />

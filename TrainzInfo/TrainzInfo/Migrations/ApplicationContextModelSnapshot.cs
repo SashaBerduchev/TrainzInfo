@@ -276,6 +276,37 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Diesel_Trinzs");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.DizelTrainzList", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Depo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberTrain")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DizelTrainzLists");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Electic_locomotive", b =>
                 {
                     b.Property<int>("id")

@@ -2235,3 +2235,8 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Train
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\TrainzStations\Details.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\TrainzStations\Edit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\TrainzStations\Index.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\DizelTrainzLists\Create.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\DizelTrainzLists\Delete.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\DizelTrainzLists\Details.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\DizelTrainzLists\Edit.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\DizelTrainzLists\Index.cshtml.g.cs

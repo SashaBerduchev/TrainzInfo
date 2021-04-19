@@ -73,8 +73,8 @@ namespace TrainzInfo.Data
         public DbSet<IpAdresses> IpAdresses { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<TrainzStations> TrainzStations { get; set; }
+        public DbSet<DizelTrainzList> DizelTrainzLists { get; set; }
 
     }
 
-    
 }
