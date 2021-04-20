@@ -15,6 +15,8 @@ namespace TrainzInfo.Models
         public int NumberTrain { get; set; }
         [Required]
         public string Depo { get; set; }
+        public string City { get; set; }
+        public string Power { get; set; }
         [Required]
         public string Status { get; set; }
         [Required]

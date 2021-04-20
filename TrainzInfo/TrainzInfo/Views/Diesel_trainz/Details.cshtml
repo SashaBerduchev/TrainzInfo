@@ -4,33 +4,41 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Name</h1>
 
 <div>
-    <h4>Diesel_trainz</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VagonCount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VagonCount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImgSrc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImgSrc)
-        </dd>
-    </dl>
+    <div style="background-color:aliceblue">
+        <div style="margin:20px">
+            <img src="@Model.ImgSrc" width="380" height="270">
+        </div>
+        <div style="position:relative; left:450px; top:-250px">
+            <div style="font-size:25px">@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name)</div>
+            <div style="font-size:25px">@Html.DisplayName("Колличество вагонов: ") @Html.DisplayName(Model.VagonCount.ToString())</div>
+            <div style="font-size:25px">@Html.DisplayName("Мощность: ") @Html.DisplayName(Model.Power.ToString())</div>
+            <div>
+                <div>
+                    @Html.DisplayName(Model.BaseInfo)
+                </div>
+                <div>
+                    @Html.DisplayName(Model.AllInfo)
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
+
+        }
+    }
 </div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

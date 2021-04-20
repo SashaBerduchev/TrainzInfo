@@ -32,6 +32,18 @@
                 <span asp-validation-for="Power" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @Html.DisplayName("Базовая информация")
+                @*<label asp-for="Power" class="control-label"></label>*@
+                <textarea style="width:500px; height:500px" asp-for="BaseInfo" class="form-control"></textarea>
+                <span asp-validation-for="Power" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Подробное описание")
+                @*<label asp-for="Power" class="control-label"></label>*@
+                <textarea style="width:500px; height:500px" asp-for="AllInfo" class="form-control"></textarea>
+                <span asp-validation-for="Power" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 @Html.DisplayName("Картинка")
                 @*<label asp-for="ImgSrc" class="control-label"></label>*@
                 <input asp-for="ImgSrc" class="form-control" />
@@ -47,4 +59,8 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

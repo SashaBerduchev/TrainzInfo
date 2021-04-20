@@ -28,15 +28,22 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Diesel_trainz/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? name)
         {
-            if (id == null)
+            if (name == null && name == "")
             {
                 return NotFound();
             }
 
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             var diesel_trainz = await _context.Diesel_Trinzs
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Name == name);
             if (diesel_trainz == null)
             {
                 return NotFound();
@@ -56,7 +63,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,VagonCount,Power,ImgSrc")] Diesel_trainz diesel_trainz)
+        public async Task<IActionResult> Create([Bind("id,Name,VagonCount,Power,ImgSrc,BaseInfo,AllInfo")] Diesel_trainz diesel_trainz)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +95,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonCount,Power,ImgSrc")] Diesel_trainz diesel_trainz)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,VagonCount,Power,ImgSrc,BaseInfo,AllInfo")] Diesel_trainz diesel_trainz)
         {
             if (id != diesel_trainz.id)
             {

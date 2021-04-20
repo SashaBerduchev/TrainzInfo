@@ -7,18 +7,37 @@
 <h1>Дизель-поезда</h1>
 
 <p>
-    <a class="btn btn-info" asp-action="Create">Добавить</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-info" asp-action="Create">Добавить</a>
+        }
+    }
     <a target="_blank" class="btn btn-info" asp-controller="Diesel_trainz" asp-action="Index">Серии поездов</a>
 </p>
 
 @foreach (var item in Model)
 {
-    <div style="background-color:aliceblue">
+    <div style="background-color:aliceblue; height:350px">
         <div style="position:relative; left:10px; top:10px"><img src="@item.Imgsrc" width="350" height="200"></div>
-        <div style="position:relative; left:380px; top:-120px; font-size:30px">
-            <div>@Html.DisplayName(item.Name)</div>
-            <div>@Html.DisplayName(item.NumberTrain.ToString())</div>
-            <div>@Html.DisplayName(item.Status)</div>
+        <div style="position:relative; left:380px; top:-170px; font-size:30px">
+            <div>@Html.DisplayName("Название: ") @Html.DisplayName(item.Name)</div>
+            <div>@Html.DisplayName("Номер машины: ") @Html.DisplayName(item.NumberTrain.ToString())</div>
+            <div>@Html.DisplayName("Депо приписки: ") @Html.DisplayName(item.Depo)</div>
+            <div>@Html.DisplayName("Горд приписки: ") @Html.DisplayName(item.City)</div>
+            <div>@Html.DisplayName("Мозность дизеля: ") @Html.DisplayName(item.Power)</div>
+            <div style="width:290px; position:relative; left:450px; top:-200px">
+                <a class="btn btn-info" style="width:250px" asp-controller="DizelTrainzLists" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+                    {
+                        <a class="btn btn-success" style="width:250px" asp-controller="DizelTrainzLists" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
+                        <a class="btn btn-danger" style="width:250px" asp-controller="DizelTrainzLists" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                    }
+                }
+            </div>
         </div>
     </div>
 }

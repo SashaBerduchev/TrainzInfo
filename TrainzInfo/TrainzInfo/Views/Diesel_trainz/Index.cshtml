@@ -12,20 +12,23 @@
 
 @foreach (var item in Model)
 {
-    <div style="background-color:aliceblue; margin:10px; height:400px">
-        <div style="margin:20px; top:10px;"><img src="@item.ImgSrc" width="300" height="220"></div>
-        <div style="position:relative; left:350px; top: -150px; font-size:20px">
-            <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
-            <div>@Html.DisplayName("Колличество вагонов: ")  @Html.DisplayFor(modelItem => item.VagonCount)</div>
-            <div>@Html.DisplayName("Мощность дизеля: ")  @Html.DisplayFor(modelItem => item.Power)</div>
-        </div>
-        <div class="btn_panel" style="position:relative; left: 580px; top:-300px; width:280px;">
-            <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="DizelTrainzLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
-            <a class="btn btn-success" style="width:220px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> 
-            <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="Diesel_train_info" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a> 
-            <a class="btn btn-danger" style="width:220px; margin:10px" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
-        </div>
+<div style="background-color:aliceblue; margin:10px; height:700px">
+    <div style="margin:20px; top:10px;"><img src="@item.ImgSrc" width="300" height="220"></div>
+    <div style="position:relative; left:350px; top: -150px; font-size:20px">
+        <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
+        <div>@Html.DisplayName("Колличество вагонов: ")  @Html.DisplayFor(modelItem => item.VagonCount)</div>
+        <div>@Html.DisplayName("Мощность дизеля: ")  @Html.DisplayFor(modelItem => item.Power)</div>
+        <div>@Html.DisplayName("Информация")  </div>
+
     </div>
+    <div class="btn_panel" style="position:relative; left: 580px; top:-300px; width:280px;">
+        <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="DizelTrainzLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
+        <a class="btn btn-success" style="width:220px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
+        <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="Diesel_trainz" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a>
+        <a class="btn btn-danger" style="width:220px; margin:10px" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+    </div>
+    <div style="position:relative; top:-250px; left:20px">@Html.DisplayFor(modelItem => item.BaseInfo)</div>
+</div>
 }
 
 <style>

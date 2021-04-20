@@ -14,32 +14,32 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                @Html.DisplayName("Название")
+                @Html.DropDownList("Name", ViewBag.names as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberTrain" class="control-label"></label>
+                @Html.DisplayName("Номер")
                 <input asp-for="NumberTrain" class="form-control" />
                 <span asp-validation-for="NumberTrain" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Depo" class="control-label"></label>
-                <input asp-for="Depo" class="form-control" />
+                @Html.DisplayName("Депо приписки")
+                @Html.DropDownList("Depo", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="Depo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                @Html.DisplayName("Статус")
+                @Html.DropDownList("Status", ViewBag.status as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Imgsrc" class="control-label"></label>
+                @Html.DisplayName("Картинка(ссылка)")
                 <input asp-for="Imgsrc" class="form-control" />
                 <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -49,3 +49,8 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
