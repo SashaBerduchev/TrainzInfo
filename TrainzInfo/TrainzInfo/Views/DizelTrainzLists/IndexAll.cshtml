@@ -1,0 +1,29 @@
+﻿@model IEnumerable<TrainzInfo.Models.DizelTrainzList>
+
+@{
+    ViewData["Title"] = "DizelTrainz";
+}
+
+<h1>Дизель-поезда</h1>
+
+<p>
+    <a class="btn btn-info" asp-action="Create">Добавить</a>
+    <a target="_blank" class="btn btn-info" asp-controller="Diesel_trainz" asp-action="Index">Серии поездов</a>
+</p>
+
+@foreach (var item in Model)
+{
+    <div style="background-color:aliceblue">
+        <div style="position:relative; left:10px; top:10px"><img src="@item.Imgsrc" width="350" height="200"></div>
+        <div style="position:relative; left:380px; top:-120px; font-size:30px">
+            <div>@Html.DisplayName(item.Name)</div>
+            <div>@Html.DisplayName(item.NumberTrain.ToString())</div>
+            <div>@Html.DisplayName(item.Status)</div>
+        </div>
+    </div>
+}
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

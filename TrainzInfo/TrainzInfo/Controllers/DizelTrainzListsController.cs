@@ -20,7 +20,12 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: DizelTrainzLists
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? name)
+        {
+            return View(await _context.DizelTrainzLists.Where(x=>x.Name == name).ToListAsync());
+        }
+
+        public async Task<IActionResult> IndexAll()
         {
             return View(await _context.DizelTrainzLists.ToListAsync());
         }

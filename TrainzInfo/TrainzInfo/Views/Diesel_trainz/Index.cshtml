@@ -9,49 +9,25 @@
 <p>
     <a asp-action="Create">Создать новый</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Название")
-            </th>
-            <th>
-                @Html.DisplayName("Количество вагонов")
-            </th>
-            <th>
-                @Html.DisplayName("Мощность двигателя")
-            </th>
-            <th>
-                @Html.DisplayName("Картинка")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VagonCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Power)
-            </td>
-            <td>
-                <img src="@item.ImgSrc" width="180" height="120">
-            </td>
-            <td>
-                <a class="btn btn-info" asp-controller="DieselTrainzLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-controller="Diesel_train_info" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
+
+@foreach (var item in Model)
+{
+    <div style="background-color:aliceblue; margin:10px; height:400px">
+        <div style="margin:20px; top:10px;"><img src="@item.ImgSrc" width="300" height="220"></div>
+        <div style="position:relative; left:350px; top: -150px; font-size:20px">
+            <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
+            <div>@Html.DisplayName("Колличество вагонов: ")  @Html.DisplayFor(modelItem => item.VagonCount)</div>
+            <div>@Html.DisplayName("Мощность дизеля: ")  @Html.DisplayFor(modelItem => item.Power)</div>
+        </div>
+        <div class="btn_panel" style="position:relative; left: 580px; top:-300px; width:280px;">
+            <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="DizelTrainzLists" asp-action="Index" asp-route-name="@item.Name">Список подвижного состава</a>
+            <a class="btn btn-success" style="width:220px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> 
+            <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="Diesel_train_info" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a> 
+            <a class="btn btn-danger" style="width:220px; margin:10px" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
