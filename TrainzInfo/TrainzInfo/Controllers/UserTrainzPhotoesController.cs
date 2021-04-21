@@ -25,6 +25,13 @@ namespace TrainzInfo.Controllers
         // GET: UserTrainzPhotoes
         public async Task<IActionResult> Index(string? name)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             List<UserTrainzPhoto> locomotivePhoto = await _context.UserTrainzPhotos.Where(x => x.LocmotiveName == name).ToListAsync();
             return View(locomotivePhoto);
         }

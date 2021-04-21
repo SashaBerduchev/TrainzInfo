@@ -32,6 +32,12 @@ namespace TrainzInfo.Controllers
         }
         public async Task<IActionResult> IndexAll()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.OrderByDescending(x=>x.DateTime).ToListAsync();
             return View(locomotivePhoto);
         }
@@ -75,6 +81,14 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+                if (user != null && user.Status == "true")
+                {
+                    userLocomotivePhotos.UserName = user.Name;
+                    userLocomotivePhotos.UserSername = user.Name;
+                    userLocomotivePhotos.Email = user.Email;
+                }
                 userLocomotivePhotos.DateTime = DateTime.Now;
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();

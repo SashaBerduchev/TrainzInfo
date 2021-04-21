@@ -1,19 +1,22 @@
 ﻿@model IEnumerable<TrainzInfo.Models.UserLocomotivePhotos>
-
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IndexAll";
 }
-
-<h1>Список</h1>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
 </style>
-<p>
-    <a class="btn btn-info" asp-action="Create">Добавить</a>
-    <a class="btn btn-info" asp-action="IndexAll">Показать весь список</a>
-</p>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
+    {
+        <a class="btn btn-info" asp-action="Create">Добавить Ваше фото</a>
+    }
+}
 <table class="table">
     <thead>
         <tr>
@@ -22,12 +25,6 @@
             </th>
             <th>
                 @Html.DisplayName("Название локомотива")
-            </th>
-            <th>
-                @Html.DisplayName("Имя")
-            </th>
-            <th>
-                @Html.DisplayName("Фамилия")
             </th>
             <th>
                 @Html.DisplayName("Краткая информация")
@@ -39,32 +36,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <img src="@item.PhotoLink" width="370" height="250">
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NameLocomotive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserSername)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BaseInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AllInfo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.PhotoLink" width="350" height="200" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameLocomotive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BaseInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllInfo)
+                </td>
+                <td>
+                    <a class="btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<style>
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

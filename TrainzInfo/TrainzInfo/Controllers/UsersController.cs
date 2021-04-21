@@ -40,12 +40,12 @@ namespace TrainzInfo.Controllers
             {
                 if (user != null)
                 {
-                   if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
-                   {
-                       user.Status = "true";
-                       _context.User.Update(user);
-                       await _context.SaveChangesAsync();
-                       return (RedirectToAction(nameof(Entering)));
+                    if (user.IpAddress == Request.HttpContext.Connection.RemoteIpAddress.ToString())
+                    {
+                        user.Status = "true";
+                        _context.User.Update(user);
+                        await _context.SaveChangesAsync();
+                        return (RedirectToAction(nameof(Entering)));
                     }
                     else
                     {
@@ -60,7 +60,8 @@ namespace TrainzInfo.Controllers
                 {
                     return View();
                 }
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 FileStream fileStreamLog = new FileStream(@"LoginException.log", FileMode.Append);
                 for (int i = 0; i < e.ToString().Length; i++)
@@ -99,11 +100,23 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> Entering()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             return View();
         }
 
         public async Task<IActionResult> Exiting()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             return View();
         }
 
@@ -140,7 +153,7 @@ namespace TrainzInfo.Controllers
         {
             users.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userexist = _context.User.Where(x => x.Email == users.Email).FirstOrDefault();
-            if(userexist != null)
+            if (userexist != null)
             {
                 return RedirectToAction(nameof(Create));
             }
@@ -211,33 +224,32 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            try
             {
-                try
-                {
-                    _context.Update(users);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsersExists(users.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(users);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsersExists(users.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             return View(users);
         }
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? Id)
         {
-            if (Id == null )
+            if (Id == null)
             {
                 return NotFound();
             }
@@ -272,7 +284,7 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExitConfirm(int? id)
         {
-            var users = await _context.User.Where(x=>x.Id == id).FirstOrDefaultAsync();
+            var users = await _context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
             users.Status = "false";
             _context.User.Update(users);
             await _context.SaveChangesAsync();

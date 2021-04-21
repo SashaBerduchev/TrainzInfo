@@ -10,7 +10,13 @@
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
 </style>
-<a class="btn btn-info" asp-action="Create">Добавить Ваше фото</a>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
+    {
+        <a class="btn btn-info" asp-action="Create">Добавить Ваше фото</a>
+    }
+}
 <table class="table">
     <thead>
         <tr>
@@ -18,13 +24,7 @@
                 @Html.DisplayName("Фото")
             </th>
             <th>
-                @Html.DisplayName("Имя")
-            </th>
-            <th>
                 @Html.DisplayName("Название локомотива")
-            </th>
-            <th>
-                @Html.DisplayName("Фамилия")
             </th>
             <th>
                 @Html.DisplayName("Краткая информация")
@@ -43,13 +43,7 @@
                     <img src="@item.PhotoLink" width="350" height="200" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.NameLocomotive)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserSername)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BaseInfo)
