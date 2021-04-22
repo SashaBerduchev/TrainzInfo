@@ -77,13 +77,13 @@ namespace TrainzInfo.Controllers
             if (id == null)
             {
                 string infoName = TempData["NewsName"] as string;
-                if(infoName == null)
+                if (infoName == null)
                 {
                     return NotFound();
                 }
                 news = _context.NewsInfos.Where(x => x.NameNews == infoName).FirstOrDefault();
             }
-            
+
             news = _context.NewsInfos.Where(x => x.id == id).FirstOrDefault();
             if (news == null)
             {
@@ -121,18 +121,33 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
         {
-            try
+            //try
+            //{
+            newsInfo.DateTime = DateTime.Now;
+            _context.NewsInfos.Add(newsInfo);
+            _context.SaveChanges();
+            FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
+            var str = "Writing DONE!!!";
+            for (int i = 0; i < str.ToString().Length; i++)
             {
-                newsInfo.DateTime = DateTime.Now;
-                _context.Add(newsInfo);
-                await _context.SaveChangesAsync();
-                
-            }catch(Exception exp)
-            {
-                Trace.WriteLine(exp.ToString());
+                byte[] array = Encoding.Default.GetBytes(str.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
             }
-            TempData["NewsName"] = newsInfo.NameNews;
+            fileStreamLog.Close();
             return RedirectToAction(nameof(Index));
+            //    }
+            //        catch(exception exp)
+            //        {
+            //            filestream filestreamlog = new filestream(@"exceptionlog.log", filemode.append);
+            //            for (int i = 0; i<exp.tostring().length; i++)
+            //            {
+            //                byte[] array = encoding.default.getbytes(exp.tostring());
+            //    filestreamlog.write(array, 0, array.length);
+            //            }
+            //trace.writeline(exp.tostring());
+            //        }
+            TempData["NewsName"] = newsInfo.NameNews;
+            return View();
         }
 
         public FileContentResult GetImage(int id)
@@ -142,7 +157,7 @@ namespace TrainzInfo.Controllers
 
             if (news != null)
             {
-                var file =  File(news.Image, news.ImageMimeTypeOfData);
+                var file = File(news.Image, news.ImageMimeTypeOfData);
                 return file;
             }
             else
