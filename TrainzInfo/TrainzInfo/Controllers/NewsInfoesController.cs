@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TrainzInfo.Data;
@@ -57,7 +57,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Trace.WriteLine("POST " + newsInfo);
-            ViewBag.count = _context.NewsComments.Where(x=>x.NewsID == newsInfo.id).Count();
+            ViewBag.count = _context.NewsComments.Where(x => x.NewsID == newsInfo.id).Count();
             return View(newsInfo);
         }
 
@@ -70,18 +70,85 @@ namespace TrainzInfo.Controllers
         // POST: NewsInfoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll,Imgsrc")] NewsInfo newsInfo)
+
+        public IActionResult AddImageForm(int? id)
         {
-            if (ModelState.IsValid)
+            NewsInfo news;
+            if (id == null)
+            {
+                string infoName = TempData["NewsName"] as string;
+                if(infoName == null)
+                {
+                    return NotFound();
+                }
+                news = _context.NewsInfos.Where(x => x.NameNews == infoName).FirstOrDefault();
+            }
+            
+            news = _context.NewsInfos.Where(x => x.id == id).FirstOrDefault();
+            if (news == null)
+            {
+                return NotFound();
+            }
+            return View(news);
+        }
+
+        [HttpPost()]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    NewsInfo news = await _context.NewsInfos.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    news.ImageMimeTypeOfData = uploads.ContentType;
+                    news.Image = p1;
+                    _context.NewsInfos.Update(news);
+                    _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost()]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
+        {
+            try
             {
                 newsInfo.DateTime = DateTime.Now;
                 _context.Add(newsInfo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
+            }catch(Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
             }
-            return View("/Home/Index");
+            TempData["NewsName"] = newsInfo.NameNews;
+            return RedirectToAction(nameof(AddImageForm));
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            NewsInfo news = _context.NewsInfos
+                .FirstOrDefault(g => g.id == id);
+
+            if (news != null)
+            {
+                var file =  File(news.Image, news.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpPost]

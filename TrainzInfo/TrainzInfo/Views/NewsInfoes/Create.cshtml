@@ -1,4 +1,6 @@
-﻿@model TrainzInfo.Models.NewsInfo
+﻿
+@model TrainzInfo.Models.NewsInfo
+
 
 @{
     ViewData["Title"] = "Create";
@@ -31,11 +33,7 @@
                     <input asp-for="DateTime" class="form-control" />
                     <span asp-validation-for=@DateTime.Now class="text-danger"></span>
                 </div>*@
-        <div class="form-group">
-            @Html.DisplayName("Ссылку на картинку")
-            <textarea id="News" asp-for="Imgsrc" class="form-control"></textarea>
-            <span asp-validation-for="Imgsrc" class="text-danger"></span>
-        </div>
+        
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>

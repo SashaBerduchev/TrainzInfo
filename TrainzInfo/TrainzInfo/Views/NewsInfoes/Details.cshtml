@@ -19,7 +19,16 @@
         <dl class="row">
             <dd class="col-sm-10">
                 @*@Html.DisplayFor(model => model.Imgsrc)*@
-                <img src="@Model.Imgsrc" width="800" height="550" />
+                @if (Model.Image == null)
+                {
+                    <img src="@Model.Imgsrc" width="350" height="350">
+                }
+                else
+                {
+                    <img class="img-thumbnail" width="350" height="350"
+                         src="@Url.Action("GetImage", "NewsInfoes",
+                        new { Model.id })" />
+                }
             </dd>
             <dt class="col-sm-2">
                 @*@Html.DisplayNameFor(model => model.NameNews)*@
@@ -56,6 +65,7 @@
             if (Model != null)
             {
                 <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model.id">Редактировать информацию</a>
+                <a class="btn btn-outline-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
             }
             else
             {

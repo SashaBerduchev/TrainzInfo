@@ -642,8 +642,13 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Imgsrc")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameNews")
