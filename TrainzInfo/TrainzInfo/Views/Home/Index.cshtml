@@ -92,7 +92,15 @@
                         </div>
                     </div>
                     <div class="btn">
-                           <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                        <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                        @if (ViewBag.user != null)
+                        {
+                            if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+                            {
+                                <a class="btn btn-outline-info" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Добавить картинку</a>
+                            }
+                        }
+
                     </div>
                 </div>
             }

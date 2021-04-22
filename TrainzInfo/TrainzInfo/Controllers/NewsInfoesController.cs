@@ -132,7 +132,7 @@ namespace TrainzInfo.Controllers
                 Trace.WriteLine(exp.ToString());
             }
             TempData["NewsName"] = newsInfo.NameNews;
-            return RedirectToAction(nameof(AddImageForm));
+            return RedirectToAction(nameof(Index));
         }
 
         public FileContentResult GetImage(int id)
