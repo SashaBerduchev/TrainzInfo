@@ -20,7 +20,18 @@
     {
         <div style="background-color:aliceblue; margin:20px; height:290px;">
             <div style="margin:20px; position:relative; top:20px">
-                <img src="@item.Imgsrc" width="350" height="250">
+                <div class="img">
+                    @if (item.Image == null)
+                    {
+                        <img src="@item.Imgsrc" width="350" height="250">
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail" width="350" height="250"
+                             src="@Url.Action("GetImage", "Stations",
+                        new { item.id })" />
+                    }
+                </div>
             </div>
             <div style="position:relative; left:370px; top:-200px; font-size:20px; margin:20px">
                 <div>@Html.DisplayName("Назание старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
@@ -31,7 +42,7 @@
             <div style="width:150px; position:relative;  left:750px; top:-350px">
                 <a class="btn btn-info" style="width:250px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>
                 @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
-                <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-id="@item.id">Информация</a>
+                <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
                 @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
             </div>
         </div>

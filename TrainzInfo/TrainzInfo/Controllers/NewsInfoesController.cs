@@ -121,31 +121,47 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
         {
-            //try
-            //{
-            newsInfo.DateTime = DateTime.Now;
-            _context.NewsInfos.Add(newsInfo);
-            _context.SaveChanges();
-            FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
-            var str = "Writing DONE!!!";
-            for (int i = 0; i < str.ToString().Length; i++)
+            int countstart = _context.NewsInfos.ToList().Count();
+            try
             {
-                byte[] array = Encoding.Default.GetBytes(str.ToString());
-                fileStreamLog.Write(array, 0, array.Length);
+                newsInfo.DateTime = DateTime.Now;
+                _context.NewsInfos.Add(newsInfo);
+                _context.SaveChanges();
+                int countend = _context.NewsInfos.ToList().Count();
+                if (countstart == countend)
+                {
+                    FileStream fileStream = new FileStream(@"WorkError.log", FileMode.Append);
+                    var str1 = "DontCreate!!!";
+                    for (int i = 0; i < str1.ToString().Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(str1.ToString());
+                        fileStream.Write(array, 0, array.Length);
+                        fileStream.Close();
+                    }
+                    _context.NewsInfos.Add(newsInfo);
+                    _context.SaveChanges();
+                    return View();
+                }
+                FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
+                var str = "Writing DONE!!!";
+                for (int i = 0; i < str.ToString().Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(str.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+                return RedirectToAction(nameof(Index));
             }
-            fileStreamLog.Close();
-            return RedirectToAction(nameof(Index));
-            //    }
-            //        catch(exception exp)
-            //        {
-            //            filestream filestreamlog = new filestream(@"exceptionlog.log", filemode.append);
-            //            for (int i = 0; i<exp.tostring().length; i++)
-            //            {
-            //                byte[] array = encoding.default.getbytes(exp.tostring());
-            //    filestreamlog.write(array, 0, array.length);
-            //            }
-            //trace.writeline(exp.tostring());
-            //        }
+            catch (Exception exp)
+            {
+                FileStream filestreamlog = new FileStream(@"Exceptionlog.log", FileMode.Append);
+                for (int i = 0; i < exp.ToString().Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(exp.ToString());
+                    filestreamlog.Write(array, 0, array.Length);
+                }
+                Trace.WriteLine(exp.ToString());
+            }
             TempData["NewsName"] = newsInfo.NameNews;
             return View();
         }

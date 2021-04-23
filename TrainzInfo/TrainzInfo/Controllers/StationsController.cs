@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -95,6 +97,65 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    station.ImageMimeTypeOfData = uploads.ContentType;
+                    station.Image = p1;
+                    _context.Stations.Update(station);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(IndexAll));
+                }
+
+            return RedirectToAction(nameof(IndexAll));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            Stations stations;
+            if (id == null)
+            {
+                string stationName = TempData["StationName"] as string;
+                if (stationName == null)
+                {
+                    return NotFound();
+                }
+                stations = _context.Stations.Where(x => x.Name == stationName).FirstOrDefault();
+            }
+
+            stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
+            if (stations == null)
+            {
+                return NotFound();
+            }
+            return View(stations);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            Stations station = _context.Stations
+                .FirstOrDefault(g => g.id == id);
+
+            if (station != null)
+            {
+                var file = File(station.Image, station.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
         // POST: Stations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

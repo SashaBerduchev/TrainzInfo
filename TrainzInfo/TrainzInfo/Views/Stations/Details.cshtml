@@ -16,7 +16,18 @@
             <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(model => model.Railway)</div>
             <div>@Html.DisplayName("Область: ") @Html.DisplayFor(model => model.Oblast)</div>
         </div>
-        <div style="position:relative; top:-70px; margin:20px;"><img src="@Model.Imgsrc" width="400" height="300"></div>
+        <div style="position:relative; top:-70px; margin:20px;">
+            @if (Model.Image == null)
+            {
+                <img src="@Model.Imgsrc" width="350" height="350">
+            }
+            else
+            {
+                <img class="img-thumbnail" width="350" height="350"
+                     src="@Url.Action("GetImage", "Stations",
+                        new { Model.id })" />
+            }
+        </div>
         <div>
             <div style="font-size:17px; width:650px; position:relative; left:450px; top:-280px;"><p>@ViewBag.baseinfo</p></div>
             <div style="font-size:17px; position:relative; top:-280px; margin:20px; width:700px"><p>@ViewBag.allinfo</p></div>
@@ -42,7 +53,7 @@
         {
             @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
             {
-
+                <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
                 <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать общую информацию</a>
                 <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Добавить информацию о станции</a>
                 <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-name="@Model.Name">Редактировать общую информацию</a>

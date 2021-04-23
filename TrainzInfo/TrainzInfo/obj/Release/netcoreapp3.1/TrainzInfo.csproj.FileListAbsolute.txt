@@ -2238,3 +2238,4 @@ C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInf
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
+C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Stations\AddImageForm.cshtml.g.cs

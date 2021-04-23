@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\TrainzInfo",
+    "\\TrainzInfo\\TrainzInfo",
+    "\\TrainzInfo\\TrainzInfo\\Controllers"
   ],
+  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Controllers\\NewsInfoesController.cs",
   "PreviewInSolutionExplorer": false
 }

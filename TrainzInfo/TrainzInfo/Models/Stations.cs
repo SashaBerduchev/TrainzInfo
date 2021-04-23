@@ -22,6 +22,8 @@ namespace TrainzInfo.Models
         public string DopImgSrc { get; set; }
         public string DopImgSrcSec { get; set; }
         public string DopImgSrcThd { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 
 }
