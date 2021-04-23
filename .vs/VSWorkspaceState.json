@@ -3,8 +3,14 @@
     "",
     "\\TrainzInfo",
     "\\TrainzInfo\\TrainzInfo",
-    "\\TrainzInfo\\TrainzInfo\\Controllers"
+    "\\TrainzInfo\\TrainzInfo\\Migrations",
+    "\\TrainzInfo\\TrainzInfo\\Models",
+    "\\TrainzInfo\\TrainzInfo\\Views",
+    "\\TrainzInfo\\TrainzInfo\\Views\\Home",
+    "\\TrainzInfo\\TrainzInfo\\Views\\NewsInfoes",
+    "\\TrainzInfo\\TrainzInfo\\Views\\StationInfoes",
+    "\\TrainzInfo\\TrainzInfo\\Views\\Stations"
   ],
-  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Controllers\\NewsInfoesController.cs",
+  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Views\\Stations\\Details.cshtml",
   "PreviewInSolutionExplorer": false
 }

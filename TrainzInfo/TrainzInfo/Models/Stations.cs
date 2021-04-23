@@ -17,7 +17,6 @@ namespace TrainzInfo.Models
         public string Railway { get; set; }
         [Required]
         public string Oblast { get; set; }
-        [Required]
         public string Imgsrc { get; set; }
         public string DopImgSrc { get; set; }
         public string DopImgSrcSec { get; set; }
