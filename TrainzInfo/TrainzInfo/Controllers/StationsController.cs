@@ -167,7 +167,7 @@ namespace TrainzInfo.Controllers
             {
                 _context.Add(stations);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAll));
             }
             return View(stations);
         }

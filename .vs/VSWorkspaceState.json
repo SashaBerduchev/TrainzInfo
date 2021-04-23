@@ -11,6 +11,6 @@
     "\\TrainzInfo\\TrainzInfo\\Views\\StationInfoes",
     "\\TrainzInfo\\TrainzInfo\\Views\\Stations"
   ],
-  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Views\\Stations\\Details.cshtml",
+  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Views\\Stations\\Create.cshtml",
   "PreviewInSolutionExplorer": false
 }
