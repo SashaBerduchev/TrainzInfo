@@ -3,7 +3,7 @@
     "",
     "\\TrainzInfo",
     "\\TrainzInfo\\TrainzInfo",
-    "\\TrainzInfo\\TrainzInfo\\Migrations",
+    "\\TrainzInfo\\TrainzInfo\\Controllers",
     "\\TrainzInfo\\TrainzInfo\\Models",
     "\\TrainzInfo\\TrainzInfo\\Views",
     "\\TrainzInfo\\TrainzInfo\\Views\\Home",
@@ -11,6 +11,6 @@
     "\\TrainzInfo\\TrainzInfo\\Views\\StationInfoes",
     "\\TrainzInfo\\TrainzInfo\\Views\\Stations"
   ],
-  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Views\\Stations\\Create.cshtml",
+  "SelectedNode": "\\TrainzInfo\\TrainzInfo\\Views\\Stations\\AddImageForm.cshtml",
   "PreviewInSolutionExplorer": false
 }

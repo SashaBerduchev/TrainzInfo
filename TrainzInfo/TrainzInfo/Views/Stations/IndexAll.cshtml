@@ -5,7 +5,12 @@
 }
 
 <h1> Все станции</h1>
-
+<form method="get">
+    <div class="form-inline">
+        @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Отобразить" class="btn btn-info" />
+    </div>
+</form>
 <p>
     @if (ViewBag.user != null)
     {

@@ -43,13 +43,22 @@ namespace TrainzInfo.Controllers
             return View(stations);
         }
 
-        public async Task<IActionResult> IndexAll()
+        public async Task<IActionResult> IndexAll(string? NameStation)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
+            }
+            List<string> stationslist = new List<string>();
+            stationslist.Add("");
+            stationslist.AddRange(await _context.Stations.Select(x => x.Name).ToListAsync());
+            SelectList stations = new SelectList(stationslist);
+            ViewBag.stations = stations;
+            if (NameStation != null && NameStation != "")
+            {
+                return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
             }
             return View(await _context.Stations.ToListAsync());
         }
