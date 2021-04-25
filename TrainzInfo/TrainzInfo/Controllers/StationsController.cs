@@ -60,7 +60,7 @@ namespace TrainzInfo.Controllers
             {
                 return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
             }
-            return View(await _context.Stations.ToListAsync());
+            return View(await _context.Stations.OrderBy(x=>x.Name).ToListAsync());
         }
 
         public async Task<List<Stations>> IndexAction()
