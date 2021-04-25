@@ -2239,3 +2239,7 @@ C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInf
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
 C:\Users\Администратор\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Stations\AddImageForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\NewsInfoes\AddImageForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Stations\AddImageForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\AddAvatarForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\Done.cshtml.g.cs

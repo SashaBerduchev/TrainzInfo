@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table" style="background-color:aliceblue">
     <thead>
         <tr>
             <th>
@@ -56,9 +56,23 @@
                 @Html.DisplayFor(modelItem => item.IpAddress)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="img">
+                    @if (item.Image == null)
+                    {
+                        <p>Нет картинки</p>
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail" width="350" height="350"
+                             src="@Url.Action("GetImage", "Users",
+                            new { item.Id })" />
+                    }
+                </div>
+            </td>
+            <td>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> 
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Информация</a> 
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
             </td>
         </tr>
 }

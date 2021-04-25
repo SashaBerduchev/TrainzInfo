@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,66 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
         }
 
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    Users users = await _context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    users.ImageMimeTypeOfData = uploads.ContentType;
+                    users.Image = p1;
+                    _context.User.Update(users);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Done));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddAvatarForm(int? id)
+        {
+            Users users;
+            if (id == null)
+            {
+                string userName = TempData["UserName"] as string;
+                if (userName == null)
+                {
+                    return NotFound();
+                }
+                users = _context.User.Where(x => x.Name == userName).FirstOrDefault();
+            }
+
+            users = _context.User.Where(x => x.Id == id).FirstOrDefault();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            return View(users);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            Users users = _context.User
+                .FirstOrDefault(g => g.Id == id);
+
+            if (users != null)
+            {
+                var file = File(users.Image, users.ImageMimeTypeOfData);
+                return file;
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
         // GET: Users
         public async Task<IActionResult> Index()
         {
@@ -98,6 +159,17 @@ namespace TrainzInfo.Controllers
             }
         }
 
+        public async Task<IActionResult> Done()
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            return View();
+        }
+
         public async Task<IActionResult> Entering()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -123,11 +195,17 @@ namespace TrainzInfo.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
-
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             var users = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
@@ -202,6 +280,13 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             var users = await _context.User.FindAsync(id);
             if (users == null)
             {
@@ -227,9 +312,11 @@ namespace TrainzInfo.Controllers
 
             try
             {
+                Users user = _context.User.Where(x => x.Id == users.Id).FirstOrDefault();
+                users.Password = user.Password;
                 _context.Update(users);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Done));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -261,7 +348,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            return View(users);
+            return RedirectToAction(nameof(Done));
         }
 
         public async Task<IActionResult> Exit(int? id)

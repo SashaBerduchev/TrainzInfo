@@ -21,5 +21,7 @@ namespace TrainzInfo.Models
         public string Status { get; set; }
         public string IpAddress { get; set; }
         public string Role { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

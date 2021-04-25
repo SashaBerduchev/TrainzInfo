@@ -840,6 +840,9 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
 
                     b.ToTable("Stations");
@@ -1123,6 +1126,12 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
