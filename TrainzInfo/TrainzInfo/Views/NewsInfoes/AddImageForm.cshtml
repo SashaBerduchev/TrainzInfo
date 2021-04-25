@@ -7,7 +7,7 @@
 @model TrainzInfo.Models.Stations
 
 <form asp-controller="NewsInfoes" asp-action="AddImage" asp-controller="Home" method="post" enctype="multipart/form-data">
-    <input asp-for="id" class="control-labell"></input>
+    <input asp-for="id" readonly class="control-labell"></input>
     <input type="file" name="uploads" /><br>
     <input type="submit" value="Загрузить"  class="btn btn-primary" />
 </form>
