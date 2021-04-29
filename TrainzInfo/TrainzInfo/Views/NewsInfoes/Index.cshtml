@@ -54,6 +54,7 @@
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>
             <td>
+                <a class="btn btn-outline-info" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Добавить картинку</a>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>

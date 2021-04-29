@@ -76,15 +76,19 @@ namespace TrainzInfo.Controllers
             NewsInfo news;
             if (id == null)
             {
-                string infoName = TempData["NewsName"] as string;
-                if (infoName == null)
+                string infoNameId = TempData["NewsId"] as string;
+                if (infoNameId == null)
                 {
                     return NotFound();
                 }
-                news = _context.NewsInfos.Where(x => x.NameNews == infoName).FirstOrDefault();
+                news = _context.NewsInfos.Where(x => x.id == Convert.ToInt32(infoNameId)).FirstOrDefault();
+            }
+            else
+            {
+                news = _context.NewsInfos.Where(x => x.id == id).FirstOrDefault();
             }
 
-            news = _context.NewsInfos.Where(x => x.id == id).FirstOrDefault();
+            
             if (news == null)
             {
                 return NotFound();
@@ -111,10 +115,9 @@ namespace TrainzInfo.Controllers
                     news.Image = p1;
                     _context.NewsInfos.Update(news);
                     _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return View();
                 }
-
-            return RedirectToAction(nameof(Index));
+            return View();
         }
 
         [HttpPost()]
@@ -140,7 +143,8 @@ namespace TrainzInfo.Controllers
                     }
                     _context.NewsInfos.Add(newsInfo);
                     _context.SaveChanges();
-                    return View();
+                    
+                    return RedirectToAction(nameof(AddImageForm));
                 }
                 FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
                 var str = "Writing DONE!!!";
@@ -150,6 +154,7 @@ namespace TrainzInfo.Controllers
                     fileStreamLog.Write(array, 0, array.Length);
                 }
                 fileStreamLog.Close();
+                TempData["NewsId"] = newsInfo.id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception exp)
