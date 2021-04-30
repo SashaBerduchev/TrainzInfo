@@ -76,7 +76,7 @@ namespace TrainzInfo.Controllers
             NewsInfo news;
             if (id == null)
             {
-                string infoNameId = TempData["NewsId"] as string;
+                var infoNameId = TempData.Values.First();
                 if (infoNameId == null)
                 {
                     return NotFound();
@@ -154,8 +154,9 @@ namespace TrainzInfo.Controllers
                     fileStreamLog.Write(array, 0, array.Length);
                 }
                 fileStreamLog.Close();
-                TempData["NewsId"] = newsInfo.id;
-                return RedirectToAction(nameof(Index));
+                NewsInfo news = _context.NewsInfos.Where(x => x.NameNews == newsInfo.NameNews).FirstOrDefault();
+                TempData["NewsId"] = news.id;
+                return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
             {
