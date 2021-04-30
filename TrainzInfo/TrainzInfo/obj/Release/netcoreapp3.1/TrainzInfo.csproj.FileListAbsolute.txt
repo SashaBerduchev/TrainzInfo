@@ -2489,3 +2489,4 @@ F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.Razo
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.RazorTargetAssemblyInfo.cs
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\NewsInfoes\AddImage.cshtml.g.cs
