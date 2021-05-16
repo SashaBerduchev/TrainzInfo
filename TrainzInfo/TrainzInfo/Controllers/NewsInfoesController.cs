@@ -112,7 +112,7 @@ namespace TrainzInfo.Controllers
                         p1 = ms1.ToArray();
                     }
                     news.ImageMimeTypeOfData = uploads.ContentType;
-                    news.Image = p1;
+                    news.NewsImage = p1;
                     _context.NewsInfos.Update(news);
                     _context.SaveChangesAsync();
                     return View();
@@ -179,7 +179,7 @@ namespace TrainzInfo.Controllers
 
             if (news != null)
             {
-                var file = File(news.Image, news.ImageMimeTypeOfData);
+                var file = File(news.NewsImage, news.ImageMimeTypeOfData);
                 return file;
             }
             else

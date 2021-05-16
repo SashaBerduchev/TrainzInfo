@@ -16,7 +16,7 @@ namespace TrainzInfo.Models
         public string NewsInfoAll { get; set; }
         public DateTime DateTime { get; set; }
         public string Imgsrc { get; set; }
-        public byte[] Image { get; set; }
+        public byte[] NewsImage { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public string user { get; set; }
         

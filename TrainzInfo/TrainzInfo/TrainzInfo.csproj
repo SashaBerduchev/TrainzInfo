@@ -12,6 +12,8 @@
     <Compile Remove="Migrations\20210422134348_NewsInfoImage2.Designer.cs" />
     <Compile Remove="Migrations\20210422134606_NewsInfoImage.cs" />
     <Compile Remove="Migrations\20210422134606_NewsInfoImage.Designer.cs" />
+    <Compile Remove="Migrations\20210516170643_prod.cs" />
+    <Compile Remove="Migrations\20210516170643_prod.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

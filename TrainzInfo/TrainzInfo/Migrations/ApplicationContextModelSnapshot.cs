@@ -642,9 +642,6 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("ImageMimeTypeOfData")
                         .HasColumnType("nvarchar(max)");
 
@@ -654,6 +651,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NameNews")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("NewsImage")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("NewsInfoAll")
                         .HasColumnType("nvarchar(max)");
