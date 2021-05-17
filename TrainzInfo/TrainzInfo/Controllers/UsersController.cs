@@ -70,6 +70,28 @@ namespace TrainzInfo.Controllers
             return View(users);
         }
 
+        public IActionResult ChangeRole(int? id)
+        {
+            Users users;
+            users = _context.User.Where(x => x.Id == id).FirstOrDefault();
+            if (users == null)
+            {
+                return NotFound();
+            }
+            SelectList selectLists = new SelectList( _context.Roles.Select(x => x.NameRole).ToList());
+            ViewBag.roles = selectLists;
+            return View(users);
+        }
+
+        public async Task<IActionResult> Change(int? id, string Role)
+        {
+
+            Users users = await _context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
+            users.Role = Role;
+            _context.User.Update(users);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
         public FileContentResult GetImage(int id)
         {
             Users users = _context.User
@@ -314,6 +336,7 @@ namespace TrainzInfo.Controllers
             {
                 Users user = _context.User.Where(x => x.Id == users.Id).FirstOrDefault();
                 users.Password = user.Password;
+                users.Role = user.Role;
                 _context.Update(users);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Done));
