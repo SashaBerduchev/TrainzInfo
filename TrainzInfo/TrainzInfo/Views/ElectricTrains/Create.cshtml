@@ -88,11 +88,6 @@
                 @Html.DropDownList("PlaceKvr", ViewBag.plants as SelectList)
                 <span asp-validation-for=PlaceKvr class="text-danger"></span>
             </div>
-            <div class="form-group">
-                @Html.DisplayName("картинка(ссылка на файл)")
-                <input asp-for="Imgsrc" class="form-control" />
-                <span asp-validation-for="Imgsrc" class="text-danger"></span>
-            </div>
             <div>
                 <a class="btn btn-info" target="_blank" asp-controller="Plants" asp-action="Create">Добавить завод</a>
             </div>
