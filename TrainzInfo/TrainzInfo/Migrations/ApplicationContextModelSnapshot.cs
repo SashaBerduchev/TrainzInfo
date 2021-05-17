@@ -373,7 +373,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Imgsrc")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastKvr")

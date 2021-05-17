@@ -29,7 +29,7 @@
                 @*<input asp-for="Addres" class="form-control" />*@
                 @Html.DropDownList("Addres", ViewBag.citys as SelectList) 
                 <span asp-validation-for="Addres" class="text-danger"></span>
-                <a class="btn btn-info" asp-controller="Ciies" asp-action="Create">Добавить населенный пункт</a>
+                <a class="btn btn-info" asp-controller="Cities" asp-action="Create">Добавить населенный пункт</a>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
