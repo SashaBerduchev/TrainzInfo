@@ -28,17 +28,35 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains
         public async Task<IActionResult> Index()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             return View(await _context.Electrics.ToListAsync());
         }
 
         public async Task<List<ElectricTrain>> IndexAction()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             List<ElectricTrain> electrics = await _context.Electrics.ToListAsync();
             return electrics;
         }
         [HttpPost]
         public async void CreateAction([FromBody] string data)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             ElectricTrain electric = JsonConvert.DeserializeObject<ElectricTrain>(data);
             _context.Add(electric);
             await _context.SaveChangesAsync();
@@ -46,6 +64,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -67,6 +91,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Create
         public IActionResult Create()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
             SelectList depots = new SelectList(_context.Depots.OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
@@ -85,6 +115,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (userlog != null && userlog.Status == "true")
+            {
+                ViewBag.user = userlog;
+            }
             try
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
@@ -119,6 +155,12 @@ namespace TrainzInfo.Controllers
 
         private async void SendMessage(Users users)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             try
             {
                 MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email );
@@ -146,6 +188,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -175,6 +223,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (userlog != null && userlog.Status == "true")
+            {
+                ViewBag.user = userlog;
+            }
             if (id != electricTrain.id)
             {
                 return NotFound();
@@ -212,6 +266,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -232,6 +292,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             var electricTrain = await _context.Electrics.FindAsync(id);
             _context.Electrics.Remove(electricTrain);
             await _context.SaveChangesAsync();
