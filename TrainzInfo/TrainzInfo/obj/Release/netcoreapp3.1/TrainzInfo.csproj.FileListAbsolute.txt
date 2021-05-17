@@ -2640,3 +2640,4 @@ F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\runtimes\win\li
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.Views.pdb
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.csproj.CopyComplete
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Users\ChangeRole.cshtml.g.cs

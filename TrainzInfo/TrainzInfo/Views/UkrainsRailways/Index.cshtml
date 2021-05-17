@@ -10,17 +10,23 @@
 @*<p>
         <a asp-action="Create">Create New</a>
     </p>*@
-
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <a asp-action="Create">Create New</a>
+    }
+}
 <div style="background-color:aliceblue">
     @foreach (var item in Model)
     {
-    <div style="width:600px">
-        <a class="btn btn-info" style="width:1050px; margin:10px;" asp-action="Details" asp-route-id="@item.id">
-            <div>
-                @Html.DisplayFor(modelItem => item.Name)
-            </div>
-        </a>
-    </div>
+        <div style="width:600px">
+            <a class="btn btn-info" style="width:1050px; margin:10px;" asp-action="Details" asp-route-id="@item.id">
+                <div>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </div>
+            </a>
+        </div>
     }
 </div>
 <img src="https://www.imbf.org/karty/images/karta-zheleznyh-dorog-ukrainy-hq.jpg" width="900" height="700">
@@ -28,6 +34,7 @@
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
+
     td {
         background: #6a5eff; /* Цвет фона */
         position: center;
