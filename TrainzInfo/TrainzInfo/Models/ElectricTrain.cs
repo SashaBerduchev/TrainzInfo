@@ -19,7 +19,6 @@ namespace TrainzInfo.Models
         public string VagonsCountP { get; set; }
         [Required]
         public int MaxSpeed { get; set; }
-        public string Imgsrc { get; set; }
         [Required]
         public string DepotTrain { get; set; }
         public string DepotCity { get; set; }
@@ -27,5 +26,7 @@ namespace TrainzInfo.Models
         public DateTime Created { get; set; }
         public string Plant { get; set; }
         public string PlaceKvr{ get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

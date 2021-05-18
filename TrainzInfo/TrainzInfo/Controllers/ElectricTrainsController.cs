@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -82,8 +83,12 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             var train = _context.SuburbanTrainsInfos.Where(x => x.id == electricTrain.id).FirstOrDefault();
-            ViewBag.baseinfo = train.BaseInfo.ToString();
-            ViewBag.allinfo = train.AllInfo.ToString();
+            if(train != null)
+            {
+                ViewBag.baseinfo = train.BaseInfo.ToString();
+                ViewBag.allinfo = train.AllInfo.ToString();
+
+            }
 
             return View(electricTrain);
         }
@@ -129,7 +134,8 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 SendMessage(user);
-                return RedirectToAction(nameof(Index));
+                TempData["Train"] = electricTrain.id;
+                return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
             {
@@ -182,6 +188,68 @@ namespace TrainzInfo.Controllers
                     fileStreamLog.Write(array, 0, array.Length);
                 }
                 fileStreamLog.Close();
+            }
+        }
+
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    ElectricTrain train = await _context.Electrics.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    train.ImageMimeTypeOfData = uploads.ContentType;
+                    train.Image = p1;
+                    _context.Electrics.Update(train);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            ElectricTrain train;
+            if (id == null)
+            {
+                int trainsid = Convert.ToInt32(TempData["Train"]);
+                if (trainsid == null)
+                {
+                    return NotFound();
+                }
+                train = _context.Electrics.Where(x => x.id == trainsid).FirstOrDefault();
+                return View(train);
+            }
+
+            train = _context.Electrics.Where(x => x.id == id).FirstOrDefault();
+            if (train == null)
+            {
+                return NotFound();
+            }
+            return View(train);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            ElectricTrain train = _context.Electrics
+                .FirstOrDefault(g => g.id == id);
+
+            if (train != null)
+            {
+                var file = File(train.Image, train.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -240,7 +308,17 @@ namespace TrainzInfo.Controllers
             {
                 var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
-                _context.Update(electricTrain);
+                ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
+                train.Name = electricTrain.Name;
+                train.VagonsCountP = electricTrain.VagonsCountP;
+                train.MaxSpeed = electricTrain.MaxSpeed;
+                train.DepotCity = electricTrain.DepotCity;
+                train.DepotTrain = electricTrain.DepotTrain;
+                train.LastKvr = electricTrain.LastKvr;
+                train.Created = electricTrain.Created;
+                train.Plant = electricTrain.Plant;
+                train.PlaceKvr = electricTrain.PlaceKvr;
+                _context.Update(train);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 SendMessage(user);

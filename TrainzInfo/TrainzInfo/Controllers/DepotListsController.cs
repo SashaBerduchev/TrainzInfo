@@ -63,7 +63,11 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
+            if (uzname == null)
+            {
+                List<DepotList> depotsfull = await _context.Depots.ToListAsync();
+                return View(depotsfull);
+            }
             List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailways == uzname).ToListAsync();
             ViewBag.Filia = uzname;
             return View(depots);
