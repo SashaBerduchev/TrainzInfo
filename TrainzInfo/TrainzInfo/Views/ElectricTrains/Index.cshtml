@@ -8,9 +8,16 @@
 <head>
     <link rel="stylesheet" href="">
 </head>
+
 <p>
-    <a class="btn btn-outline-info" asp-action="Create">Создать</a>
-    
+    @if (ViewBag.user != null)
+    {
+        @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Create">Добавить</a>
+
+        }
+    }
 </p>
 <div>
     @foreach (var item in Model)

@@ -180,6 +180,8 @@ namespace TrainzInfo.Controllers
             if (news != null)
             {
                 var file = File(news.NewsImage, news.ImageMimeTypeOfData);
+                Trace.WriteLine(news.NewsImage +  " + " + news.ImageMimeTypeOfData.ToString());
+                Trace.WriteLine(file);
                 return file;
             }
             else

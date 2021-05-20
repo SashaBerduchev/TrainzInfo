@@ -39,15 +39,33 @@
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.ALlPowerP)
             </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayName("Депо")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Depot)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayName("Пользователь")
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User)
+            </dd>
             <dd class="col-sm-10">
                 @*@Html.DisplayFor(model => model.ALlPowerP)*@
-                <img src="@Model.LocomotiveImg" width="900" height="600">
+                <div class="img">
+
+                    <img class="img-thumbnail" width="350" height="250"
+                         src="@Url.Action("GetImage", "Electic_locomotive",
+                        new { Model.id })" />
+
+                </div>
             </dd>
         </dl>
         <div style="position:relative; left:650px; top:-700px;">
             @if (ViewBag.user != null)
             {
-                if (ViewBag.user.Role == "Publisher" || ViewBag.user == "Superadmin" || ViewBag.user == "Admin")
+                if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                 {
                     <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редактировать инфу об электровозе @Model.Seria</a>
                 }

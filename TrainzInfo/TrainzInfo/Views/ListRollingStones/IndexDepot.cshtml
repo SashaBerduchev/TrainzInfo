@@ -1,70 +1,39 @@
 ﻿@model IEnumerable<TrainzInfo.Models.ListRollingStone>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Подвиждной состав";
 }
 
 <h1>Список локомотивов</h1>
 <h2>@Html.DisplayName(ViewBag.Depo)</h2>
-<p>
-    <a class="btn btn-info" asp-action="Create">Добавить</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Depot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Depot)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Country)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.City)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <img src="@item.Photo" width="180" height="120">
-                </td>
-                <td>
-                    <a class="btn btn-outline-success" asp-action="EditLocomotive" asp-route-id="@item.id">Редактировать</a> |
-                    <a class="btn btn-outline-info" asp-action="Details" asp-route-idlocname="@item.Name">Подробно</a> 
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-idlocname="@item.Name">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@*<p>
+        <a class="btn btn-info" asp-action="Create">Добавить</a>
+    </p>*@
+<div>
+    @foreach (var item in ViewBag.locomotives as List<Electic_locomotive>)
+    {
+        <div class="img">
+
+            <img class="img-thumbnail" width="350" height="250"
+                 src="@Url.Action("GetImage", "Electic_locomotive",
+                        new { item.id })" />
+
+        </div>
+        <div>@Html.DisplayName(item.Seria)</div>
+        <div>@Html.DisplayName(item.Number)</div>
+        <div>@Html.DisplayName(item.Speed.ToString())</div>
+        <div>@Html.DisplayName(item.Depot)</div>
+    }
+    @*<a class="btn btn-outline-success" asp-action="EditLocomotive" asp-route-id="@item.id">Редактировать</a> |
+        <a class="btn btn-outline-info" asp-action="Details" asp-route-idlocname="@item.Name">Подробно</a>
+        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-idlocname="@item.Name">Delete</a>*@
+
+</div>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
+
     td {
         background: #fff; /* Цвет фона */
         padding: 5px; /* Поля в ячейках */

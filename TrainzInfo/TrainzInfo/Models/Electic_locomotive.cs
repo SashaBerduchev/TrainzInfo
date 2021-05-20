@@ -11,6 +11,7 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string User { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Number { get; set; }
         [Required]
@@ -21,6 +22,8 @@ namespace TrainzInfo.Models
         public int ALlPowerP { get; set; }
         [Required]
         public string Seria { get; set; }
-        public string LocomotiveImg { get; set; }
+        public string Depot { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

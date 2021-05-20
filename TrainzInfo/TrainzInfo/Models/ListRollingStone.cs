@@ -19,6 +19,7 @@ namespace TrainzInfo.Models
         public string City { get; set; }
         [Required]
         public string Status { get; set; }
-        public string Photo { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

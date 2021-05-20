@@ -49,9 +49,6 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <img src="@item.Photo" width="180" height="120">
-            </td>
-            <td>
                 <a asp-action="EditLocomotive" asp-route-id="@item.id">Edit</a> |
                 <a asp-action="Details" asp-route-idlocname="@item.Name">Details</a> |
                 <a asp-action="Delete" asp-route-idlocname="@item.Name">Delete</a>
