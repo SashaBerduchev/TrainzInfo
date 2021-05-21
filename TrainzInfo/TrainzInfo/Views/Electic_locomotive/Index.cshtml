@@ -11,9 +11,14 @@
     }
 </style>
 <p>
-    <a class="btn btn-info" target="_blank" asp-action="Create">Добавить электровоз</a>
-
-
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-info" target="_blank" asp-action="Create">Добавить локомотив</a>
+        }
+    }
+    
 </p>
 
 <form method="get">
