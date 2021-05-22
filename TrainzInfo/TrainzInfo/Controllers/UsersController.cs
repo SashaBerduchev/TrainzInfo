@@ -335,9 +335,8 @@ namespace TrainzInfo.Controllers
             try
             {
                 Users user = _context.User.Where(x => x.Id == users.Id).FirstOrDefault();
-                users.Password = user.Password;
-                users.Role = user.Role;
-                _context.Update(users);
+                user.Role = users.Role;
+                _context.Update(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Done));
             }

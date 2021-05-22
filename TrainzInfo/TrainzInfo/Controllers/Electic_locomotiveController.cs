@@ -292,15 +292,39 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            
             var electic_locomotive = await _context.Electic_Locomotives
                 .FirstOrDefaultAsync(m => m.id == id);
             if (electic_locomotive == null)
             {
                 return NotFound();
             }
+            //id name
 
-            return View(electic_locomotive);
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string name = "";
+            int userid = 0;
+            if (user != null && user.Status == "true")
+            {
+                name = user.Name;
+                userid = user.Id;
+            }
+
+           if(userid == electic_locomotive.UserId  && user.Name == electic_locomotive.User)
+            {
+                return View(electic_locomotive);
+            }
+           else
+            {
+                return RedirectToAction(nameof(DeleteDenied));
+            }
+
+        }
+
+        public IActionResult DeleteDenied()
+        {
+            return View();
         }
 
         // POST: Electic_locomotive/Delete/5
