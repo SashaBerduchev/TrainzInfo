@@ -7,9 +7,6 @@
 <h1>Добавить  </h1>
 
 <hr />
-<div>
-    <a class="btn btn-outline-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Create">Добавить серию поездов</a>
-</div>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -20,6 +17,16 @@
             <div class="form-group">
                 @Html.DisplayName("Название")
                 @Html.DropDownList("Name", ViewBag.models as SelectList)
+
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <div>
+                            <a class="btn btn-outline-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Create">Добавить серию поездов</a>
+                        </div>
+                    }
+                }
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,7 +41,16 @@
             </div>
             <div class="form-group">
                 @Html.DisplayName("Депо приписки")
-                @Html.DropDownList("DepotTrain", ViewBag.depots as SelectList)
+                @Html.DropDownList("DepotTrain", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <div>
+                            <a class="btn btn-outline-info" target="_blank" asp-controller="DepotLists" asp-action="Create">Добавить название предприятия</a>
+                        </div>
+                    }
+                }
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,7 +65,16 @@
             </div>
             <div class="form-group">
                 @Html.DisplayName("Завод постройки");
-                @Html.DropDownList("Plant", ViewBag.plants as SelectList)
+                @Html.DropDownList("Plant", ViewBag.plants as SelectList, htmlAttributes: new { @class = "form-control" })
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <div>
+                            <a class="btn btn-outline-info" target="_blank" asp-controller="Plants" asp-action="Create">Добавить название предприятия</a>
+                        </div>
+                    }
+                }
                 <span asp-validation-for=Plant class="text-danger"></span>
             </div>
 
@@ -62,11 +87,6 @@
                 @Html.DisplayName("Завод проводивший КВР");
                 @Html.DropDownList("PlaceKvr", ViewBag.plants as SelectList)
                 <span asp-validation-for=PlaceKvr class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DisplayName("картинка(ссылка на файл)")
-                <input asp-for="Imgsrc" class="form-control" />
-                <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
             <div>
                 <a class="btn btn-info" target="_blank" asp-controller="Plants" asp-action="Create">Добавить завод</a>

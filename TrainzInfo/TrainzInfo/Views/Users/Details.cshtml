@@ -33,6 +33,13 @@
         <a class="btn btn-info" style="margin:10px; width:220px" asp-action="AddAvatarForm" asp-route-id="@Model.Id">Добавить аватар</a>
 
     </div>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-success" asp-action="Index" >Пользователи</a>
+        }
+    }
 </div>
 
 <style>

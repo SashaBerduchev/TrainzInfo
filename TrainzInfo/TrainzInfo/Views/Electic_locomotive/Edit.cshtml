@@ -16,9 +16,6 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-inline">
-                @Html.DropDownList("User", ViewBag.users as SelectList, htmlAttributes: new { @class = "form-control" })
-            </div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
                 @Html.DisplayName("Название");
@@ -44,11 +41,6 @@
                 @Html.DisplayName("Общая мощность");
                 <input asp-for="ALlPowerP" class="form-control" />
                 <span asp-validation-for="ALlPowerP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DisplayName("Фото");
-                <input asp-for="LocomotiveImg" class="form-control" />
-                <span asp-validation-for="LocomotiveImg" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

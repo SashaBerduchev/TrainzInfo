@@ -24,15 +24,16 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones
         public async Task<IActionResult> Index(string? idlocname)
         {
-            
-            return View(await _context.ListRollingStones.Where(x=>x.Name == idlocname).ToListAsync());
+            ViewBag.locomotives = await _context.ListRollingStones.Where(x => x.Name == idlocname).ToListAsync();
+            return View();
         }
 
         public async Task<IActionResult> IndexDepot(string? depotname)
         {
             ViewBag.Depo = depotname;
-            List<ListRollingStone> rollingStones = await _context.ListRollingStones.Where(x => x.Depot == depotname).ToListAsync();
-            return View("IndexDepot", rollingStones);
+            List<Electic_locomotive> rollingStones = await _context.Electic_Locomotives.Where(x => x.Depot == depotname).ToListAsync();
+            ViewBag.locomotives = rollingStones;
+            return View("IndexDepot");
         }
 
         // GET: ListRollingStones/Details/5
@@ -90,9 +91,10 @@ namespace TrainzInfo.Controllers
         {
             listRollingStone.Country = "Украина";
             Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
-            if(listRollingStone.Photo == null)
+            if(listRollingStone.Image == null)
             {
-                listRollingStone.Photo = electic_Locomotive.LocomotiveImg;
+                listRollingStone.Image = electic_Locomotive.Image;
+                listRollingStone.ImageMimeTypeOfData = electic_Locomotive.ImageMimeTypeOfData;
             }
              _context.Add(listRollingStone);
              await _context.SaveChangesAsync();
@@ -205,10 +207,6 @@ namespace TrainzInfo.Controllers
                 {
                     Trace.WriteLine("POST " + this + listRollingStone);
                     Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
-                    if (listRollingStone.Photo == null)
-                    {
-                        listRollingStone.Photo = electic_Locomotive.LocomotiveImg;
-                    }
                     _context.Update(listRollingStone);
                     await _context.SaveChangesAsync();
                 }

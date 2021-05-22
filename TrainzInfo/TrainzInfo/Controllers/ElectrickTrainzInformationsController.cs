@@ -37,13 +37,13 @@ namespace TrainzInfo.Controllers
                 .FirstOrDefaultAsync(m => m.Name == name);
             if (electrickTrainzInformation == null)
             {
-                string imgstc = _context.Electrics.Where(x => x.Name == name).Select(x => x.Imgsrc).FirstOrDefault();
+                //string imgstc = _context.Electrics.Where(x => x.Name == name).Select(x => x.Imgsrc).FirstOrDefault();
                 ElectrickTrainzInformation electrickTrainzInformation1 = new ElectrickTrainzInformation
                 {
                    
                     Name = name,
-                    AllInformation = "",
-                    Imgsrc = imgstc
+                    AllInformation = ""
+                    //Imgsrc = imgstc
                 };
                 _context.ElectrickTrainzInformation.Add(electrickTrainzInformation1);
                 await _context.SaveChangesAsync();

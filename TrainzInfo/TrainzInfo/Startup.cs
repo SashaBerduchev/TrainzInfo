@@ -35,10 +35,7 @@ namespace TrainzInfo
             }else if(DEBUG_MODE == false)
             {
 
-                //connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
-                connection = Configuration.GetConnectionString("WebConnection");
-
-                //connection = Configuration.GetConnectionString("TrainzInfoHostConnection");
+                connection = Configuration.GetConnectionString("WebProd");
                 trace = ("server connection good!!" + connection);
 
             }
@@ -53,9 +50,7 @@ namespace TrainzInfo
             }
 
             fileStreamLog.Close();
-            services.AddDbContext<ApplicationContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("TrainzInfoContext")));
-
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

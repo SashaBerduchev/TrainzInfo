@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -46,9 +47,9 @@ namespace TrainzInfo.Controllers
             SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.seria = series;
 
-            if(Seria != null && Seria != "")
+            if (Seria != null && Seria != "")
             {
-                return View(await _context.Electic_Locomotives.Where(x=> x.Seria == Seria).ToListAsync());
+                return View(await _context.Electic_Locomotives.Where(x => x.Seria == Seria).ToListAsync());
             }
             return View(await _context.Electic_Locomotives.ToListAsync());
         }
@@ -73,21 +74,27 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            var base_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x=>x.Baseinfo).FirstOrDefault();
+            var base_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x => x.Baseinfo).FirstOrDefault();
             ViewBag.base_info = base_info;
             var all_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == electic_locomotive.Seria).Select(x => x.AllInfo).FirstOrDefault();
             ViewBag.allinfo = all_info;
             return View(electic_locomotive);
         }
 
-    // GET: Electic_locomotive/Create
-    public IActionResult Create()
+        // GET: Electic_locomotive/Create
+        public IActionResult Create()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
             SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.Seria = seria;
-            SelectList depo = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            SelectList depo = new SelectList(_context.Depots.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             ViewBag.Depo = depo;
             return View();
         }
@@ -97,31 +104,106 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,Depot,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
         {
-            if (ModelState.IsValid)
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string myuser = "";
+            int userId = 0;
+            if (user != null && user.Status == "true")
             {
-                Trace.WriteLine("POST: " +this + electic_locomotive);
-                _context.Add(electic_locomotive);
-                await _context.SaveChangesAsync();
-                Users user = await _context.User.Where(x => x.Name == electic_locomotive.User).FirstOrDefaultAsync();
-                SendMessage(user);
-                return RedirectToAction(nameof(Index));
+                myuser = user.Name;
+                userId = user.Id;
             }
+            Trace.WriteLine("POST: " + this + electic_locomotive);
+            electic_locomotive.User = myuser;
+            electic_locomotive.UserId = userId;
+            _context.Add(electic_locomotive);
+            await _context.SaveChangesAsync();
+            SendMessage(user);
+            int locid = _context.Electic_Locomotives.Where(x => x.Seria == electic_locomotive.Seria && x.Number == electic_locomotive.Number).Select(x => x.id).FirstOrDefault();
+            TempData["LocomotiveId"] = locid;
+            Trace.WriteLine(TempData);
+            return RedirectToAction(nameof(AddImageForm));
+
             Trace.WriteLine("RESPONSE: " + electic_locomotive);
             return View(electic_locomotive);
-            
+
+        }
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    Electic_locomotive locomotive = await _context.Electic_Locomotives.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    Trace.WriteLine(uploads.ContentType.ToString());
+                    Trace.WriteLine(p1);
+                    locomotive.ImageMimeTypeOfData = uploads.ContentType;
+                    locomotive.Image = p1;
+                    _context.Electic_Locomotives.Update(locomotive);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            Electic_locomotive locomotive;
+            if (id == null)
+            {
+                int locId = Convert.ToInt32(TempData["LocomotiveId"]);
+                if (locId == null)
+                {
+                    return NotFound();
+                }
+                locomotive = _context.Electic_Locomotives.Where(x => x.id == locId).FirstOrDefault();
+                return View(locomotive);
+            }
+
+            locomotive = _context.Electic_Locomotives.Where(x => x.id == id).FirstOrDefault();
+            if (locomotive == null)
+            {
+                return NotFound();
+            }
+            return View(locomotive);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            Electic_locomotive locomotive = _context.Electic_Locomotives
+                .FirstOrDefault(g => g.id == id);
+
+            if (locomotive != null)
+            {
+                var file = File(locomotive.Image, locomotive.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpPost]
-        public async void CreateAction ([FromBody] string data)
+        public async void CreateAction([FromBody] string data)
         {
             try
             {
                 List<Electic_locomotive> electic_Locomotive = JsonConvert.DeserializeObject<List<Electic_locomotive>>(data);
                 _context.AddRange(electic_Locomotive);
                 await _context.SaveChangesAsync();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
                 Console.WriteLine(e.Message);
@@ -143,7 +225,7 @@ namespace TrainzInfo.Controllers
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
             return View(electic_locomotive);
-            
+
         }
 
         // POST: Electic_locomotive/Edit/5
@@ -151,8 +233,17 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,  Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string name = "";
+            int userid = 0; 
+            if (user != null && user.Status == "true")
+            {
+                name = user.Name;
+                userid = user.Id;
+            }
             if (id != electic_locomotive.id)
             {
                 return NotFound();
@@ -163,9 +254,18 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     Trace.WriteLine("POST: " + electic_locomotive);
-                    _context.Update(electic_locomotive);
+                    Electic_locomotive _Locomotive = _context.Electic_Locomotives.Where(x => x.id == electic_locomotive.id).FirstOrDefault();
+                    _Locomotive.Seria = electic_locomotive.Seria;
+                    _Locomotive.Number = electic_locomotive.Number;
+                    _Locomotive.ALlPowerP = electic_locomotive.ALlPowerP;
+                    _Locomotive.Depot = electic_locomotive.Depot;
+                    _Locomotive.SectionCount = electic_locomotive.SectionCount;
+                    _Locomotive.Speed = electic_locomotive.Speed;
+                    _Locomotive.User = name;
+                    _Locomotive.UserId = userid;
+                    _context.Update(_Locomotive);
                     await _context.SaveChangesAsync();
-                    Users user = await _context.User.Where(x => x.Name == electic_locomotive.User).FirstOrDefaultAsync();
+                    
                     SendMessage(user);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -224,7 +324,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email);
-                m.Body = "Благодарим за редактирование публикации" + "  " +  users.Name;
+                m.Body = "Благодарим за редактирование публикации" + "  " + users.Name;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential("sashaberduchev", "SashaVinichuk");

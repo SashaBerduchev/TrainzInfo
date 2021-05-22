@@ -10,8 +10,12 @@
     <hr />
 
     <div style="background-color:aliceblue;">
-        <div style="margin:20px"><img src="@Model.Imgsrc" width="690" height="450"></div>
-        <div style="position:relative; left:740px; top:-420px; font-size:25px">
+        <div style="margin:20px">
+        <img class="img-thumbnail" width="450" height="450"
+                     src="@Url.Action("GetImage", "ElectricTrains",
+                        new { Model.id })" />
+        </div>
+        <div style="position:relative; left:540px; top:-270px; font-size:25px; background-color:lightblue; width:400px">
             <div>@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</div>
             <div>@Html.DisplayName("Колличество вагонов: ") @Html.DisplayName(Model.VagonsCountP)</div>
             <div>@Html.DisplayName("Максимальная скорость: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
@@ -28,8 +32,17 @@
         </div>
     </div>
     <div style="margin:20px;">
-        <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Изменить общую информацию о поезде</a>
-        <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать данные о поезде </a>
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
+                <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Изменить общую информацию о поезде</a>
+                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать данные о поезде </a>
+
+            }
+        }
+
     </div>
 </div>
 <div>

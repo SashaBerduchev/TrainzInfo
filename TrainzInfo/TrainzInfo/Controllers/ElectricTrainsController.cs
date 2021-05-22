@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -28,17 +29,35 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains
         public async Task<IActionResult> Index()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             return View(await _context.Electrics.ToListAsync());
         }
 
         public async Task<List<ElectricTrain>> IndexAction()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             List<ElectricTrain> electrics = await _context.Electrics.ToListAsync();
             return electrics;
         }
         [HttpPost]
         public async void CreateAction([FromBody] string data)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             ElectricTrain electric = JsonConvert.DeserializeObject<ElectricTrain>(data);
             _context.Add(electric);
             await _context.SaveChangesAsync();
@@ -46,6 +65,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -58,8 +83,12 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             var train = _context.SuburbanTrainsInfos.Where(x => x.id == electricTrain.id).FirstOrDefault();
-            ViewBag.baseinfo = train.BaseInfo.ToString();
-            ViewBag.allinfo = train.AllInfo.ToString();
+            if(train != null)
+            {
+                ViewBag.baseinfo = train.BaseInfo.ToString();
+                ViewBag.allinfo = train.AllInfo.ToString();
+
+            }
 
             return View(electricTrain);
         }
@@ -67,6 +96,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Create
         public IActionResult Create()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
             SelectList depots = new SelectList(_context.Depots.OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
@@ -85,6 +120,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (userlog != null && userlog.Status == "true")
+            {
+                ViewBag.user = userlog;
+            }
             try
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
@@ -93,7 +134,8 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 SendMessage(user);
-                return RedirectToAction(nameof(Index));
+                TempData["Train"] = electricTrain.id;
+                return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
             {
@@ -119,6 +161,12 @@ namespace TrainzInfo.Controllers
 
         private async void SendMessage(Users users)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             try
             {
                 MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email );
@@ -143,9 +191,77 @@ namespace TrainzInfo.Controllers
             }
         }
 
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    ElectricTrain train = await _context.Electrics.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    train.ImageMimeTypeOfData = uploads.ContentType;
+                    train.Image = p1;
+                    _context.Electrics.Update(train);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            ElectricTrain train;
+            if (id == null)
+            {
+                int trainsid = Convert.ToInt32(TempData["Train"]);
+                if (trainsid == null)
+                {
+                    return NotFound();
+                }
+                train = _context.Electrics.Where(x => x.id == trainsid).FirstOrDefault();
+                return View(train);
+            }
+
+            train = _context.Electrics.Where(x => x.id == id).FirstOrDefault();
+            if (train == null)
+            {
+                return NotFound();
+            }
+            return View(train);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            ElectricTrain train = _context.Electrics
+                .FirstOrDefault(g => g.id == id);
+
+            if (train != null)
+            {
+                var file = File(train.Image, train.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         // GET: ElectricTrains/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -175,6 +291,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (userlog != null && userlog.Status == "true")
+            {
+                ViewBag.user = userlog;
+            }
             if (id != electricTrain.id)
             {
                 return NotFound();
@@ -186,7 +308,17 @@ namespace TrainzInfo.Controllers
             {
                 var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
-                _context.Update(electricTrain);
+                ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
+                train.Name = electricTrain.Name;
+                train.VagonsCountP = electricTrain.VagonsCountP;
+                train.MaxSpeed = electricTrain.MaxSpeed;
+                train.DepotCity = electricTrain.DepotCity;
+                train.DepotTrain = electricTrain.DepotTrain;
+                train.LastKvr = electricTrain.LastKvr;
+                train.Created = electricTrain.Created;
+                train.Plant = electricTrain.Plant;
+                train.PlaceKvr = electricTrain.PlaceKvr;
+                _context.Update(train);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 SendMessage(user);
@@ -212,6 +344,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -232,6 +370,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             var electricTrain = await _context.Electrics.FindAsync(id);
             _context.Electrics.Remove(electricTrain);
             await _context.SaveChangesAsync();
