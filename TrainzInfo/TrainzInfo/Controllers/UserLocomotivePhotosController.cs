@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,12 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos
         public async Task<IActionResult> Index(string? name)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name).ToListAsync();
             return View(locomotivePhoto);
         }
@@ -45,6 +52,12 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -63,6 +76,16 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos/Create
         public IActionResult Create()
         {
+            string username = "";
+            int userid = 0;
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                username = user.Name;
+                userid = user.Id;
+            }
             List<string> locomotives = new List<string>();
             locomotives = _context.Electic_Locomotives.Select(x=>x.Seria + " - " + x.Number).ToList();
             locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
@@ -79,21 +102,29 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
         {
+            string username = "";
+            int userid = 0;
+            string email = "";
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                username = user.Name;
+                userid = user.Id;
+                email = user.Email;
+            }
             if (ModelState.IsValid)
             {
-                var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-                if (user != null && user.Status == "true")
-                {
-                    userLocomotivePhotos.UserName = user.Name;
-                    userLocomotivePhotos.UserSername = user.Name;
-                    userLocomotivePhotos.Email = user.Email;
-                }
+                userLocomotivePhotos.UserName = username;
+                userLocomotivePhotos.UserId = userid;
+                userLocomotivePhotos.UserId = userid;
                 userLocomotivePhotos.DateTime = DateTime.Now;
                 _context.Add(userLocomotivePhotos);
                 await _context.SaveChangesAsync();
                 SendMessage(userLocomotivePhotos);
-                return RedirectToAction(nameof(Index));
+                TempData["LocomotiveID"] = _context.UserLocomotivePhotos.Where(x => x.BaseInfo == userLocomotivePhotos.BaseInfo).Select(x => x.Id).FirstOrDefault();
+                return RedirectToAction(nameof(AddImageForm));
             }
             return View(userLocomotivePhotos);
         }
@@ -120,6 +151,67 @@ namespace TrainzInfo.Controllers
                     fileStreamLog.Write(array, 0, array.Length);
                 }
                 fileStreamLog.Close();
+            }
+        }
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    UserLocomotivePhotos userLocomotive = await _context.UserLocomotivePhotos.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    userLocomotive.ImageMimeTypeOfData = uploads.ContentType;
+                    userLocomotive.Image = p1;
+                    _context.UserLocomotivePhotos.Update(userLocomotive);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(IndexAll));
+                }
+
+            return RedirectToAction(nameof(IndexAll));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            UserLocomotivePhotos userLocomotive;
+            if (id == null)
+            {
+                int LocId = Convert.ToInt32( TempData["LocomotiveID"]);
+                if (LocId == null)
+                {
+                    return NotFound();
+                }
+                userLocomotive = _context.UserLocomotivePhotos.Where(x => x.Id == LocId).FirstOrDefault();
+                return View(userLocomotive);
+            }
+
+            userLocomotive = _context.UserLocomotivePhotos.Where(x => x.Id == id).FirstOrDefault();
+            if (userLocomotive == null)
+            {
+                return NotFound();
+            }
+            return View(userLocomotive);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            UserLocomotivePhotos userLocomotive = _context.UserLocomotivePhotos
+                .FirstOrDefault(g => g.Id == id);
+
+            if (userLocomotive != null)
+            {
+                var file = File(userLocomotive.Image, userLocomotive.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
             }
         }
 

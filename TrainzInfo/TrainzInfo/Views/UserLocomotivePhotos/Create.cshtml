@@ -29,24 +29,6 @@
                 }
             </div>
             <div class="form-group">
-                @Html.DisplayName("Имя");
-                @*<label asp-for="UserName" class="control-label"></label>*@
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DisplayName("Емаил");
-                @*<label asp-for="UserName" class="control-label"></label>*@
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DisplayName("Фамилия");
-                @*<label asp-for="UserSername" class="control-label"></label>*@
-                <input asp-for="UserSername" class="form-control" />
-                <span asp-validation-for="UserSername" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 @Html.DisplayName("Краткие сведенья");
                 @*<label asp-for="BaseInfo" class="control-label"></label>*@
                 <textarea asp-for="BaseInfo" class="form-control"></textarea>
@@ -57,12 +39,6 @@
                 @*<label asp-for="AllInfo" class="control-label"></label>*@
                 <textarea id="area" asp-for="AllInfo" class="form-control"></textarea>
                 <span asp-validation-for="AllInfo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DisplayName("Ссылка на фото");
-                @*<label asp-for="PhotoLink" class="control-label"></label>*@
-                <textarea id="input" asp-for="PhotoLink" class="form-control"></textarea>
-                <span asp-validation-for="PhotoLink" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />

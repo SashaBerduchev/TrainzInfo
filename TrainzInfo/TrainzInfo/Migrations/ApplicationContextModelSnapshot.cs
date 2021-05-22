@@ -1066,18 +1066,19 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameLocomotive")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhotoLink")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserSername")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
