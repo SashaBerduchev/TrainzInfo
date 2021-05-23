@@ -100,7 +100,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Create([Bind("Id,UserName,NameLocomotive,BaseInfo,AllInfo")] UserLocomotivePhotos userLocomotivePhotos)
         {
             string username = "";
             int userid = 0;
@@ -114,19 +114,17 @@ namespace TrainzInfo.Controllers
                 userid = user.Id;
                 email = user.Email;
             }
-            if (ModelState.IsValid)
-            {
-                userLocomotivePhotos.UserName = username;
-                userLocomotivePhotos.UserId = userid;
-                userLocomotivePhotos.UserId = userid;
-                userLocomotivePhotos.DateTime = DateTime.Now;
-                _context.Add(userLocomotivePhotos);
-                await _context.SaveChangesAsync();
-                SendMessage(userLocomotivePhotos);
-                TempData["LocomotiveID"] = _context.UserLocomotivePhotos.Where(x => x.BaseInfo == userLocomotivePhotos.BaseInfo).Select(x => x.Id).FirstOrDefault();
-                return RedirectToAction(nameof(AddImageForm));
-            }
-            return View(userLocomotivePhotos);
+            userLocomotivePhotos.UserName = username;
+            userLocomotivePhotos.UserId = userid;
+            userLocomotivePhotos.Email = email;
+            userLocomotivePhotos.DateTime = DateTime.Now;
+            _context.Add(userLocomotivePhotos);
+            await _context.SaveChangesAsync();
+            SendMessage(userLocomotivePhotos);
+            UserLocomotivePhotos userLocomotiveAdded = _context.UserLocomotivePhotos.ToList().LastOrDefault();
+            TempData["LocomotiveID"] = userLocomotiveAdded.Id;
+            return RedirectToAction(nameof(AddImageForm));
+            
         }
 
         private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
@@ -236,7 +234,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,NameLocomotive,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,NameLocomotive,BaseInfo,AllInfo")] UserLocomotivePhotos userLocomotivePhotos)
         {
             if (id != userLocomotivePhotos.Id)
             {

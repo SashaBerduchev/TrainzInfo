@@ -38,28 +38,35 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
+            <tr>
 
-            <td>
-                <img class="img-thumbnail" width="350" height="250"
-                     src="@Url.Action("GetImage", "UserLocomotivePhotos",
+                <td>
+                    <img class="img-thumbnail" width="350" height="250"
+                         src="@Url.Action("GetImage", "UserLocomotivePhotos",
                         new { item.Id })" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NameLocomotive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BaseInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AllInfo)
-            </td>
-            <td>
-                <a class="btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a class="btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a class="btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameLocomotive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BaseInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllInfo)
+                </td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Информация</a>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
+                        {
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редактировать</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        }
+                    }
+                </td>
+
+            </tr>
         }
     </tbody>
 </table>
