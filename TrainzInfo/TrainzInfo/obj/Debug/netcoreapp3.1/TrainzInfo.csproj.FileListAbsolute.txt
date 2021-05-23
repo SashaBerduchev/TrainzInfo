@@ -3051,3 +3051,6 @@ D:\TrainzInfo-master\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.cs
 D:\TrainzInfo-master\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\staticwebassets\TrainzInfo.StaticWebAssets.Manifest.cache
 D:\TrainzInfo-master\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\staticwebassets\TrainzInfo.StaticWebAssets.xml
 D:\TrainzInfo-master\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserLocomotivePhotos\AddImageForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\DeleteDenied.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserLocomotivePhotos\AddImageForm.cshtml.g.cs
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserLocomotivePhotos\EditDenied.cshtml.g.cs
