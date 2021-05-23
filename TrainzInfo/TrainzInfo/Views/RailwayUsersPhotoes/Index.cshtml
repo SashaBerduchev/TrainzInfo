@@ -1,0 +1,46 @@
+﻿@model IEnumerable<TrainzInfo.Models.RailwayUsersPhoto>
+
+@{
+    ViewData["Title"] = "UserPhoto";
+}
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</head>
+<body>
+    <p>
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+            {
+                <a class="btn btn-dark" asp-action="Create">Добавить</a>
+            }
+        }
+    </p>
+
+    @foreach (var item in Model)
+    {
+        <div>
+            <img class="img-thumbnail" width="350" height="350"
+                 src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+                        new { item.id })" />
+        </div>
+        <div><p>Автор: </p></div>
+        <div><p>Участок: </p></div>
+        <div><p>Автор: </p></div>
+        <div><p>Информация о фото</p></div>
+        <div>
+            <a class="btn btn-info" asp-action="Details">Подробно</a>
+        </div>
+    }
+</body>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

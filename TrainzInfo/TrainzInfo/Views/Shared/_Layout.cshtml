@@ -19,7 +19,8 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" >
             <div class="container" style="        position: inherit; left: -100px;">
-                <img src="http://pro100news.info/wp-content/uploads/%D0%BE%D0%BE-300x197.png" , width="380" height="130"/>
+                <img class="img-thumbnail" width="200" height="200"
+                     src="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})" />
                 <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
