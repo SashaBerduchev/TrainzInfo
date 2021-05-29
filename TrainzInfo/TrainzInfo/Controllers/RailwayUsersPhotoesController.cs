@@ -64,6 +64,14 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+
+
+            List<string> stationslist = new List<string>();
+            stationslist.Add("");
+            stationslist = _context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList();
+            SelectList stations = new SelectList(stationslist);
+            ViewBag.stations = stations;
+
             return View();
         }
 
@@ -74,11 +82,20 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,NameUser,UserId,CityFrom,CitytTo,Information,Image,ImageType")] RailwayUsersPhoto railwayUsersPhoto)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
 
             if (ModelState.IsValid)
             {
+                railwayUsersPhoto.UserId = user.Id;
+                railwayUsersPhoto.NameUser = user.Name;
                 _context.Add(railwayUsersPhoto);
                 await _context.SaveChangesAsync();
+                TempData["PhotoID"] = _context.RailwayUsersPhotos.Select(x=>x.id).LastOrDefault();
                 return RedirectToAction(nameof(Index));
             }
             return View(railwayUsersPhoto);

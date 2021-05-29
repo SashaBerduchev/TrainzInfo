@@ -9,7 +9,7 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         public string NameUser { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string CityFrom { get; set; }
         public string CitytTo { get; set; }
         public string Information { get; set; }
