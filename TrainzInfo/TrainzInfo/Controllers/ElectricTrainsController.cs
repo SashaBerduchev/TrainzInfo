@@ -122,6 +122,8 @@ namespace TrainzInfo.Controllers
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string username = userlog.Name;
+            int userid = userlog.Id;
             if (userlog != null && userlog.Status == "true")
             {
                 ViewBag.user = userlog;
@@ -130,10 +132,12 @@ namespace TrainzInfo.Controllers
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depo;
+                electricTrain.User = username;
+                electricTrain.UserId = userid;
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
-                SendMessage(user);
+                //SendMessage(user);
                 TempData["Train"] = electricTrain.id;
                 return RedirectToAction(nameof(AddImageForm));
             }

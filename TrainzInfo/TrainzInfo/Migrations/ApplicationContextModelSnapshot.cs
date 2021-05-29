@@ -411,6 +411,9 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("VagonsCountP")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
