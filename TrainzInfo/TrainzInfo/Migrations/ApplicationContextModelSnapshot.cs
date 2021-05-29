@@ -819,8 +819,8 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NameUser")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
