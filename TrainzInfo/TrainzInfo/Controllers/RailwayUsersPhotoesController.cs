@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +70,7 @@ namespace TrainzInfo.Controllers
 
             List<string> stationslist = new List<string>();
             stationslist.Add("");
-            stationslist = _context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList();
+            stationslist.AddRange(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             SelectList stations = new SelectList(stationslist);
             ViewBag.stations = stations;
 
@@ -95,10 +97,71 @@ namespace TrainzInfo.Controllers
                 railwayUsersPhoto.NameUser = user.Name;
                 _context.Add(railwayUsersPhoto);
                 await _context.SaveChangesAsync();
-                TempData["PhotoID"] = _context.RailwayUsersPhotos.Select(x=>x.id).LastOrDefault();
-                return RedirectToAction(nameof(Index));
+                TempData["PhotoID"] = _context.RailwayUsersPhotos.Select(x=>x.id).ToList().Last();
+                return RedirectToAction(nameof(AddImageForm));
             }
             return View(railwayUsersPhoto);
+        }
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    RailwayUsersPhoto railway = await _context.RailwayUsersPhotos.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    railway.ImageType = uploads.ContentType;
+                    railway.Image = p1;
+                    _context.RailwayUsersPhotos.Update(railway);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            RailwayUsersPhoto railway;
+            if (id == null)
+            {
+                int photoid = Convert.ToInt32(TempData["PhotoID"]);
+                if (photoid == 0)
+                {
+                    return NotFound();
+                }
+                railway = _context.RailwayUsersPhotos.Where(x => x.id == photoid).FirstOrDefault();
+                return View(railway);
+            }
+
+            railway = _context.RailwayUsersPhotos.Where(x => x.id == id).FirstOrDefault();
+            if (railway == null)
+            {
+                return NotFound();
+            }
+            return View(railway);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            RailwayUsersPhoto railway = _context.RailwayUsersPhotos
+                .FirstOrDefault(g => g.id == id);
+
+            if (railway != null)
+            {
+                var file = File(railway.Image, railway.ImageType);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // GET: RailwayUsersPhotoes/Edit/5

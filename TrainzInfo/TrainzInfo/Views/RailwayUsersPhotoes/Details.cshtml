@@ -1,14 +1,18 @@
 ﻿@model TrainzInfo.Models.RailwayUsersPhoto
 
 @{
-    Layout = null;
+    ViewData["Title"] = "UserPhotoDetails";
 }
 
-<!DOCTYPE html>
 
-<html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta property="og:url" content="http://trainzinfo.org.ua/RailwayUsersPhotoes/Details +@Model.id">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="@Url.Action("GetImage", "RailwayUsersPhotoes", new { Model.id })">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:site_name" content="trainzinfo" />
+    <meta property="og:title" content="TrainzInfo">
+    <meta property="og:description" content="Железнодорожный сайт">
     <title>Details</title>
 </head>
 <body>
@@ -47,18 +51,11 @@
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.Information)
             </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Image)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Image)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageType)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ImageType)
-            </dd>
+            <div>
+                <img class="img-thumbnail" width="350" height="350"
+                     src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+                        new { Model.id })" />
+            </div>
         </dl>
     </div>
     <div>

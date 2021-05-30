@@ -25,17 +25,34 @@
 
     @foreach (var item in Model)
     {
-        <div>
-            <img class="img-thumbnail" width="350" height="350"
-                 src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+        <div style="margin:10px; padding:10px; background-color:aliceblue">
+            <div>
+                <img class="img-thumbnail" width="350" height="350"
+                     src="@Url.Action("GetImage", "RailwayUsersPhotoes",
                         new { item.id })" />
-        </div>
-        <div><p>Автор: </p></div>
-        <div><p>Участок: </p></div>
-        <div><p>Автор: </p></div>
-        <div><p>Информация о фото</p></div>
-        <div>
-            <a class="btn btn-info" asp-action="Details">Подробно</a>
+            </div>
+            <div style="font-size:20px"><p>Автор: </p><p>@item.NameUser</p></div>
+            @if (item.CitytTo == "")
+            {
+            <div style="font-size:20px"><p>Станция: </p><p>@item.CityFrom</p></div>
+            }
+            else
+            {
+            <div style="font-size:20px"><p>Участок: </p><p>@item.CityFrom - @item.CitytTo</p></div>
+            }
+
+            <div style="font-size:20px"><p>Информация о фото</p><p>@item.Information</p></div>
+            <div>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a>
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                    }
+                }
+
+            </div>
         </div>
     }
 </body>
