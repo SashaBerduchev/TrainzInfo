@@ -46,7 +46,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            return View(await _context.Electrics.Where(x => x.IsProof == false.ToString()).ToListAsync());
+            return View(await _context.Electrics.Where(x => x.IsProof == false.ToString() || x.IsProof == null).ToListAsync());
         }
         public async Task<IActionResult> Allow(int? id)
         {

@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword />
     <_PublishTargetUrl>ftp://91.238.103.67\trainzinfo.org.ua\wwwroot</_PublishTargetUrl>
-    <History>True|2021-06-10T14:33:37.3396137Z;False|2021-06-10T17:29:44.4050756+03:00;</History>
+    <History>True|2021-06-10T18:34:01.7789932Z;True|2021-06-10T17:33:37.3396137+03:00;False|2021-06-10T17:29:44.4050756+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -402,28 +402,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 17:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>06/10/2021 17:32:06</publishTime>
+      <publishTime>06/10/2021 21:32:06</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>06/10/2021 17:31:17</publishTime>
+      <publishTime>06/10/2021 21:25:47</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>06/10/2021 17:31:17</publishTime>
+      <publishTime>06/10/2021 21:25:47</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>06/10/2021 17:31:17</publishTime>
+      <publishTime>06/10/2021 21:25:47</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>06/10/2021 17:25:47</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>06/10/2021 17:31:26</publishTime>
+      <publishTime>06/10/2021 21:29:16</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>06/10/2021 17:31:26</publishTime>
+      <publishTime>06/10/2021 21:29:16</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>06/10/2021 17:32:07</publishTime>
+      <publishTime>06/10/2021 21:32:09</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>04/29/2021 07:39:33</publishTime>
