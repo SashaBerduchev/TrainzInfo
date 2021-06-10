@@ -3489,3 +3489,6 @@ D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.csproj.
 D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
+F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\AddImageForm.cshtml.g.cs
+F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\IndexNotModered.cshtml.g.cs
+F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\PreModered.cshtml.g.cs

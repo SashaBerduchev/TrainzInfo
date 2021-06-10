@@ -816,6 +816,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Information")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IsProof")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameUser")
                         .HasColumnType("nvarchar(max)");
 

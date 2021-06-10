@@ -21,6 +21,10 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> IndexNotModered()
+        {
+            return View(await _context.RailwayUsersPhotos.Where(x => x.IsProof == false.ToString()).ToListAsync());
+        }
         // GET: RailwayUsersPhotoes
         public async Task<IActionResult> Index()
         {
@@ -30,7 +34,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            return View(await _context.RailwayUsersPhotos.ToListAsync());
+            return View(await _context.RailwayUsersPhotos.Where(x=>x.IsProof == true.ToString()).ToListAsync());
         }
 
         // GET: RailwayUsersPhotoes/Details/5
@@ -57,6 +61,15 @@ namespace TrainzInfo.Controllers
             return View(railwayUsersPhoto);
         }
 
+        public async Task<IActionResult> Allow(int? id)
+        {
+            RailwayUsersPhoto railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.id == id).FirstOrDefaultAsync();
+            railwayUsersPhoto.IsProof = true.ToString();
+            _context.RailwayUsersPhotos.Update(railwayUsersPhoto);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IndexNotModered));
+
+        }
         // GET: RailwayUsersPhotoes/Create
         public IActionResult Create()
         {
@@ -95,6 +108,7 @@ namespace TrainzInfo.Controllers
             {
                 railwayUsersPhoto.UserId = user.Id;
                 railwayUsersPhoto.NameUser = user.Name;
+                railwayUsersPhoto.IsProof = false.ToString();
                 _context.Add(railwayUsersPhoto);
                 await _context.SaveChangesAsync();
                 TempData["PhotoID"] = _context.RailwayUsersPhotos.Select(x=>x.id).ToList().Last();
@@ -120,10 +134,15 @@ namespace TrainzInfo.Controllers
                     railway.Image = p1;
                     _context.RailwayUsersPhotos.Update(railway);
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(PreModered));
                 }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult PreModered()
+        {
+            return View();
         }
 
         public IActionResult AddImageForm(int? id)

@@ -9123,19 +9123,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Саша\\.nuget\\packages\\": {}
+    "C:\\Users\\sasha\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+      "projectUniqueName": "F:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
       "projectName": "TrainzInfo",
-      "projectPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
-      "packagesPath": "C:\\Users\\Саша\\.nuget\\packages\\",
-      "outputPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+      "projectPath": "F:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+      "packagesPath": "C:\\Users\\sasha\\.nuget\\packages\\",
+      "outputPath": "F:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Саша\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\sasha\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9214,7 +9214,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
