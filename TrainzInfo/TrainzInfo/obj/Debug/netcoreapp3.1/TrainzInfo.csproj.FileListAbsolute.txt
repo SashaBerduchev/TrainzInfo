@@ -3501,3 +3501,5 @@ D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.genruntim
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\AddImageForm.cshtml.g.cs
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\PreModered.cshtml.g.cs
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\IndexNotModered.cshtml.g.cs
+F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\InModered.cshtml.g.cs
+F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Home\ModerationView.cshtml.g.cs

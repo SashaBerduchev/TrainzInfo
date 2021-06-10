@@ -387,6 +387,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("ImageMimeTypeOfData")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IsProof")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastKvr")
                         .HasColumnType("datetime2");
 

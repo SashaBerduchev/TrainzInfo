@@ -35,7 +35,33 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            return View(await _context.Electrics.ToListAsync());
+            return View(await _context.Electrics.Where(x=>x.IsProof == true.ToString()).ToListAsync());
+        }
+        public async Task<IActionResult> IndexNotModered()
+        {
+            var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddress)).FirstOrDefault();
+            if(user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
+            return View(await _context.Electrics.Where(x => x.IsProof == false.ToString()).ToListAsync());
+        }
+        public async Task<IActionResult> Allow(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var FoundModerationElement = await _context.Electrics.Where(x => x.id == id).FirstOrDefaultAsync();
+            FoundModerationElement.IsProof = true.ToString();
+            _context.Electrics.Update(FoundModerationElement);
+            await  _context.SaveChangesAsync();
+            
+
+            return RedirectToAction(nameof(IndexNotModered));
         }
 
         public async Task<List<ElectricTrain>> IndexAction()
@@ -134,6 +160,7 @@ namespace TrainzInfo.Controllers
                 electricTrain.DepotCity = depo;
                 electricTrain.User = username;
                 electricTrain.UserId = userid;
+                electricTrain.IsProof = false.ToString();
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
@@ -213,10 +240,15 @@ namespace TrainzInfo.Controllers
                     train.Image = p1;
                     _context.Electrics.Update(train);
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(InModered));
                 }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult InModered()
+        {
+            return View();
         }
 
         public IActionResult AddImageForm(int? id)

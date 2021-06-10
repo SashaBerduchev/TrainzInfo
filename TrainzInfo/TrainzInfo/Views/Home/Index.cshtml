@@ -50,7 +50,7 @@
             <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
             <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="MainImages" asp-action="Index">Основные картинки сайта</a>
             <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-            <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="RailwayUsersPhotoes" asp-action="IndexNotModered">Премодерация</a>
+            <a class="btn btn-info" style="margin:10px; width:400px;" asp-action="ModerationView">Премодерация</a>
         }
         else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
         {
