@@ -1,69 +1,43 @@
 ﻿@model TrainzInfo.Models.RailwayUsersPhoto
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Редактировать раздел";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
 <body>
 
-    <h4>RailwayUsersPhoto</h4>
+    <h4>@ViewBag.user.Name</h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="id" />
+
+                <h2>Выбрать перегон или станцию</h2>
                 <div class="form-group">
-                    <label asp-for="NameUser" class="control-label"></label>
-                    <input asp-for="NameUser" class="form-control" />
-                    <span asp-validation-for="NameUser" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="UserId" class="control-label"></label>
-                    <input asp-for="UserId" class="form-control" />
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="CityFrom" class="control-label"></label>
-                    <input asp-for="CityFrom" class="form-control" />
+                    @Html.DisplayName("Выбрать начальную станцию или станцию на которой сдлано фото")
+                    @Html.DropDownList("CityFrom", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
                     <span asp-validation-for="CityFrom" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CitytTo" class="control-label"></label>
-                    <input asp-for="CitytTo" class="form-control" />
+                    @Html.DisplayName("Конечная станция перегона")
+                    @Html.DropDownList("CitytTo", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
                     <span asp-validation-for="CitytTo" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Information" class="control-label"></label>
-                    <input asp-for="Information" class="form-control" />
+                    @Html.DisplayName("Общая информация")
+                    <textarea style="width:700px; height:400px" asp-for="Information" class="form-control"></textarea>
                     <span asp-validation-for="Information" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Image" class="control-label"></label>
-                    <input asp-for="Image" class="form-control" />
-                    <span asp-validation-for="Image" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ImageType" class="control-label"></label>
-                    <input asp-for="ImageType" class="form-control" />
-                    <span asp-validation-for="ImageType" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Сохранить" class="btn btn-primary" />
                 </div>
             </form>
         </div>
     </div>
 
     <div>
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
     </div>
 
     <style>
@@ -72,4 +46,3 @@
         }
     </style>
 </body>
-</html>

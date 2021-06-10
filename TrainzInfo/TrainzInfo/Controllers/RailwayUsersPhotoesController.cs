@@ -167,10 +167,22 @@ namespace TrainzInfo.Controllers
         // GET: RailwayUsersPhotoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
-            } 
+            }
+
+            List<string> stationslist = new List<string>();
+            stationslist.Add("");
+            stationslist.AddRange(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+            SelectList stations = new SelectList(stationslist);
+            ViewBag.stations = stations;
 
             var railwayUsersPhoto = await _context.RailwayUsersPhotos.FindAsync(id);
             if (railwayUsersPhoto == null)
@@ -202,7 +214,11 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
-                    _context.Update(railwayUsersPhoto);
+                    RailwayUsersPhoto userPhoto = _context.RailwayUsersPhotos.Where(x => x.id == railwayUsersPhoto.id).FirstOrDefault();
+                    userPhoto.Information = railwayUsersPhoto.Information;
+                    userPhoto.CityFrom = railwayUsersPhoto.CityFrom;
+                    userPhoto.CitytTo = railwayUsersPhoto.CitytTo;
+                    _context.Update(userPhoto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.RailwayUsersPhoto
 
 @{
-    ViewData["Title"] = "UserPhotoDetails";
+    ViewData["Title"] = "Инфоррмация о фото";
 }
 
 
@@ -18,49 +18,40 @@
 <body>
 
     <div>
-        <h4>RailwayUsersPhoto</h4>
+        <h4><a asp-controller="Users" asp-action="Details" asp-route-id="@Model.UserId">@Model.NameUser</a></h4>
         <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.NameUser)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.NameUser)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.UserId)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.UserId)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CityFrom)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CityFrom)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CitytTo)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CitytTo)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Information)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Information)
-            </dd>
-            <div>
-                <img class="img-thumbnail" width="350" height="350"
-                     src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+        <div style="background-color:aliceblue">
+            @if (Model.CitytTo == null || Model.CitytTo == "")
+            {
+                <div class="row" style="font-size:20px; position:relative; left:15px"><b>Станция: </b><p>@Model.CityFrom</p></div>
+            }
+            else
+            {
+                <div class="row" style="font-size: 20px; position:relative; left: 15px"><b>Участок: </b><p>@Model.CityFrom - @Model.CitytTo</p></div>
+            }
+            <b>Информация: </b>
+            <p>@Model.Information</p>
+        </div>
+        <div>
+            <img class="img-thumbnail" width="350" height="350"
+                 src="@Url.Action("GetImage", "RailwayUsersPhotoes",
                         new { Model.id })" />
-            </div>
-        </dl>
+        </div>
     </div>
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+            {
+                if (ViewBag.user.Id == Model.UserId)
+                {
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
+                }
+
+            }
+        }
+
+        <a class="btn btn-info" asp-action="Index">Вернутся</a>
     </div>
     <style>
         body {
