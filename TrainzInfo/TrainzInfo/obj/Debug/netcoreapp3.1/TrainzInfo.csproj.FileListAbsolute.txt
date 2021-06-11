@@ -3503,3 +3503,9 @@ F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Railw
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\IndexNotModered.cshtml.g.cs
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\InModered.cshtml.g.cs
 F:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Home\ModerationView.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\IndexNotModered.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\ElectricTrains\InModered.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Home\ModerationView.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\IndexNotModered.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\RailwayUsersPhotoes\PreModered.cshtml.g.cs
+D:\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserTrainzPhotoes\AddImageForm.cshtml.g.cs

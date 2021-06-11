@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.UserTrainzPhoto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редактировать";
 }
 
 <h1>Edit</h1>
@@ -13,16 +13,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Marshrute" class="control-label"></label>
                 <input asp-for="Marshrute" class="form-control" />
@@ -37,11 +27,6 @@
                 <label asp-for="BaseInfo" class="control-label"></label>
                 <input asp-for="BaseInfo" class="form-control" />
                 <span asp-validation-for="BaseInfo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imgsrc" class="control-label"></label>
-                <input asp-for="Imgsrc" class="form-control" />
-                <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

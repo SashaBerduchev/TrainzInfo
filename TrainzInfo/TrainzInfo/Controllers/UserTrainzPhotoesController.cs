@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -60,9 +62,13 @@ namespace TrainzInfo.Controllers
         // GET: UserTrainzPhotoes/Create
         public IActionResult Create()
         {
-            List<string> users = _context.User.Select(x => x.Name).ToList();
-            SelectList selectLists = new SelectList(users);
-            ViewBag.User = selectLists;
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             return View();
         }
 
@@ -73,18 +79,32 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,UserName,Email,Marshrute,Type,BaseInfo,Imgsrc")] UserTrainzPhoto userTrainzPhoto)
         {
-            if(userTrainzPhoto.LocmotiveName == null)
+            string username = "";
+            int userid = 0;
+            var useremail = "";
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                username = user.Name;
+                userid = user.Id;
+                useremail = user.Email;
+            }
+
+            if (userTrainzPhoto.LocmotiveName == null)
             {
                 userTrainzPhoto.LocmotiveName = "";
             }
-            if (ModelState.IsValid)
-            {
-                string email = _context.User.Where(x => x.Name == userTrainzPhoto.UserName).FirstOrDefault().Email;
+            
+                string email = useremail;
                 userTrainzPhoto.Email = email;
                 userTrainzPhoto.DateTime = DateTime.Now;
+                userTrainzPhoto.UserName = username;
+                userTrainzPhoto.UserId = userid;
                 _context.Add(userTrainzPhoto);
                 await _context.SaveChangesAsync();
-
+                TempData["UserTrainId"] = _context.UserTrainzPhotos.ToList().Count();
                 try
                 {
                     MailMessage m = new MailMessage("sashaberduchev24@ukr.net", userTrainzPhoto.Email);
@@ -98,15 +118,83 @@ namespace TrainzInfo.Controllers
                 {
                     Trace.WriteLine(e.ToString());
                 }
-                
-                return RedirectToAction(nameof(IndexAll));
-            }
-            return View(userTrainzPhoto);
+                return RedirectToAction(nameof(AddImageForm));
+            
         }
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    UserTrainzPhoto userTrainz = await _context.UserTrainzPhotos.Where(x => x.id == id).FirstOrDefaultAsync();
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    Trace.WriteLine(uploads.ContentType.ToString());
+                    Trace.WriteLine(p1);
+                    userTrainz.ImageType = uploads.ContentType;
+                    userTrainz.Image = p1;
+                    _context.UserTrainzPhotos.Update(userTrainz);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddImageForm(int? id)
+        {
+            UserTrainzPhoto userTrainz;
+            if (id == null)
+            {
+                int traincId = Convert.ToInt32(TempData["UserTrainId"]);
+                if (traincId == null)
+                {
+                    return NotFound();
+                }
+                userTrainz = _context.UserTrainzPhotos.Where(x => x.id == traincId).FirstOrDefault();
+                return View(userTrainz);
+            }
+
+            userTrainz = _context.UserTrainzPhotos.Where(x => x.id == id).FirstOrDefault();
+            if (userTrainz == null)
+            {
+                return NotFound();
+            }
+            return View(userTrainz);
+        }
+
+        public FileContentResult GetImage(int id)
+        {
+            UserTrainzPhoto trainz = _context.UserTrainzPhotos
+                .FirstOrDefault(g => g.id == id);
+
+            if (trainz != null)
+            {
+                var file = File(trainz.Image, trainz.ImageType);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         // GET: UserTrainzPhotoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (id == null)
             {
                 return NotFound();
