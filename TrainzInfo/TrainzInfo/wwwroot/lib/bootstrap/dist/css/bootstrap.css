@@ -219,6 +219,78 @@ body {
     }
 }
 
+
+@media (min-width:1200px){
+    .station_info {
+        position: relative;
+        left: 420px;
+        top: -300px;
+        font-size: 20px;
+        margin: 20px
+    }
+}
+@media (min-width:900px) {
+    .station_info {
+        position: relative;
+        left: 420px;
+        top: -300px;
+        font-size: 20px;
+        margin: 20px
+    }
+}
+@media (min-width:768px) {
+    .station_info {
+        position: relative;
+        left: 370px;
+        top: -200px;
+        font-size: 20px;
+        margin: 20px
+    }
+}
+@media (min-width:576px) {
+    .station_info {
+        position: relative;
+        left: 70px;
+        top: 0px;
+        font-size: 20px;
+        margin: 20px
+    }
+}
+ 
+@media (min-width:1200px){
+    .station_btns {
+        width: 130px;
+        position: relative;
+        left: 550px;
+        top: -150px
+    }
+}
+
+@media (min-width:900px) {
+    .station_btns {
+        width: 130px;
+        position: relative;
+        left: 550px;
+        top: -150px
+    }
+}
+@media (min-width:768px) {
+    .station_btns {
+        width: 150px;
+        position: relative;
+        left: 5px;
+        top: -25px
+    }
+}
+@media (min-width:576px) {
+    .station_btns {
+        width: 150px;
+        position: relative;
+        left: 5px;
+        top: -25px
+    }
+}
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }

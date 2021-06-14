@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword />
     <_PublishTargetUrl>ftp://91.238.103.67\trainzinfo.org.ua\wwwroot</_PublishTargetUrl>
-    <History>True|2021-06-14T06:51:17.5547159Z;True|2021-06-10T21:34:01.7789932+03:00;True|2021-06-10T17:33:37.3396137+03:00;False|2021-06-10T17:29:44.4050756+03:00;</History>
+    <History>True|2021-06-14T09:04:30.7536613Z;False|2021-06-14T12:01:28.5095922+03:00;True|2021-06-14T11:43:15.3335954+03:00;True|2021-06-14T10:31:21.2477112+03:00;True|2021-06-14T09:51:17.5547159+03:00;True|2021-06-10T21:34:01.7789932+03:00;True|2021-06-10T17:33:37.3396137+03:00;False|2021-06-10T17:29:44.4050756+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -402,28 +402,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 20:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>06/14/2021 09:49:41</publishTime>
+      <publishTime>06/14/2021 12:02:59</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>06/14/2021 09:48:46</publishTime>
+      <publishTime>06/14/2021 12:02:32</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>06/14/2021 09:48:46</publishTime>
+      <publishTime>06/14/2021 12:02:32</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>06/14/2021 09:48:46</publishTime>
+      <publishTime>06/14/2021 12:02:32</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>06/14/2021 09:49:19</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>06/14/2021 09:49:14</publishTime>
+      <publishTime>06/14/2021 12:02:54</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>06/14/2021 09:49:14</publishTime>
+      <publishTime>06/14/2021 12:02:54</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>06/14/2021 09:49:45</publishTime>
+      <publishTime>06/14/2021 12:03:02</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>06/10/2021 12:13:03</publishTime>
@@ -462,7 +462,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/10/2021 12:13:03</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css">
-      <publishTime>06/14/2021 09:46:58</publishTime>
+      <publishTime>06/14/2021 11:59:30</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css.map">
       <publishTime>06/10/2021 12:13:03</publishTime>
