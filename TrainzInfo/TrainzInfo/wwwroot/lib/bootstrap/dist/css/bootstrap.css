@@ -63,6 +63,162 @@ body {
   background-color: #fff;
 }
 
+@media (min-width:1200px){
+    .main_text {
+        width: 500px;
+        left: 50px;
+        font-size: 25px;
+        margin: 50px
+    }
+}
+@media (min-width:900px) {
+    .main_text {
+        width: 500px;
+        left: 50px;
+        font-size: 25px;
+        margin: 50px
+    }
+}
+@media (min-width:768px) {
+    .main_text {
+        width: 300px;
+        left: -10px;
+        font-size: 25px;
+        margin: 20px
+    }
+}
+@media (min-width:576px) {
+    .main_text {
+        width: 500px;
+        left: 50px;
+        font-size: 25px;
+        margin: 50px
+    }
+}
+
+
+@media (min-width:1200px){
+    .namenews {
+        width: 950px;
+        font-size: 27px;
+        color: black;
+    }
+}
+@media (min-width:900px) {
+    .namenews {
+        width: 950px;
+        font-size: 27px;
+        color: black;
+    }
+}
+@media (min-width:768px) {
+    .namenews {
+        width: 450px;
+        font-size: 27px;
+        color: black;
+    }
+}
+@media (min-width:576px) {
+    .namenews {
+        width: 450px;
+        font-size: 27px;
+        color: black;
+    }
+}
+
+@media (min-width:1200px){
+    .btn_main_panel {
+        position: relative;
+        left: 560px;
+        padding: 20px;
+        top: -300px;
+        width: 250px
+    }
+}
+@media (min-width:768px) {
+    .btn_main_panel {
+        position: relative;
+        left: 560px;
+        padding: 20px;
+        top: -300px;
+        width: 250px
+    }
+}
+@media (min-width:990px) {
+    .btn_main_panel {
+        position: relative;
+        left: 460px;
+        padding: 20px;
+        top: -300px;
+        width: 250px
+    }
+}
+@media (min-width:576px) {
+    .btn_main_panel {
+        position: relative;
+        left: 160px;
+        padding: 20px;
+        top: -200px;
+        width: 250px
+    }
+}
+
+@media (min-width:1200px){
+    .maincardpage {
+        background-color: aliceblue;
+        left: 50px;
+        height: 440px;
+        width:100%;
+    }
+}
+
+@media (min-width:990px) {
+    .maincardpage {
+        background-color: aliceblue;
+        left: 50px;
+        height: 640px;
+        width: 100%;
+    }
+}
+@media (min-width:768px) {
+    .maincardpage {
+        background-color: aliceblue;
+        left: 50px;
+        height: 940px;
+        width: 400px;
+    }
+}
+@media (min-width:576px) {
+    .maincardpage {
+        background-color: aliceblue;
+        left: 50px;
+        height: 940px;
+        width: 400px;
+    }
+}
+
+@media (min-width:1200px){
+    .btn_news{
+        width:300px;
+    }
+}
+
+@media (min-width:900px) {
+    .btn_news {
+        width: 300px;
+    }
+}
+@media (min-width:768px) {
+    .btn_news {
+        width: 120px;
+    }
+}
+@media (min-width:576px) {
+    .btn_news {
+        width: 120px;
+    }
+}
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
