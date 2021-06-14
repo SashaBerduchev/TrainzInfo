@@ -291,6 +291,35 @@ body {
     }
 }
 
+@media (min-width:1200px){
+    .btn-filia {
+        width: 1050px;
+        margin: 10px;
+    }
+}
+@media (min-width:900px) {
+    .btn-filia {
+        position:center;
+        width: 1050px;
+        margin: 10px;
+    }
+}
+@media (min-width:768px) {
+    .btn-filia {
+        position: center;
+        width: 360px;
+        margin: 10px;
+    }
+}
+@media (min-width:576px) {
+    .btn-filia {
+        position: center;
+        width: 360px;
+        margin: 10px;
+    }
+
+}
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
