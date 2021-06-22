@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
+    "D:\\TrainzInfo-master\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
   },
   "projects": {
-    "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
+    "D:\\TrainzInfo-master\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "projectUniqueName": "D:\\TrainzInfo-master\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
         "projectName": "TrainzInfo",
-        "projectPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
-        "packagesPath": "C:\\Users\\Саша\\.nuget\\packages\\",
-        "outputPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+        "projectPath": "D:\\TrainzInfo-master\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "packagesPath": "C:\\Users\\RedlineAlexander\\.nuget\\packages\\",
+        "outputPath": "D:\\TrainzInfo-master\\TrainzInfo\\TrainzInfo\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Саша\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\RedlineAlexander\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +29,6 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -38,7 +40,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Microsoft.Bcl.AsyncInterfaces": {
               "target": "Package",
@@ -93,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.116\\RuntimeIdentifierGraph.json"
         }
       }
     }
