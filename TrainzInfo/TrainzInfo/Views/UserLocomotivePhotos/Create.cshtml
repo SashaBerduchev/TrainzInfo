@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.UserLocomotivePhotos
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавть ваше фото";
 }
 
 <h1>Создать</h1>
@@ -24,8 +24,14 @@
                 <span asp-validation-for="NameLocomotive" class="text-danger"></span>
                 @if (ViewBag.user != null)
                 {
-                    <a class="btn btn-info" asp-controller="DieselLocomoives" asp-action="Create">Добавить тепловоз</a>
-                    <a class="btn btn-info" asp-controller="Electic_Locomotive" asp-action="Create">Добавить электровоз</a>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+                        {
+                            <a class="btn btn-info" target="_blank" asp-controller="Electic_Locomotive" asp-action="Create">Добавить локомотив</a>
+                        }
+                    }
+
                 }
             </div>
             <div class="form-group">

@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.UserTrainzPhoto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Информация";
 }
 
 <h1>Details</h1>
@@ -39,12 +39,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.BaseInfo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Imgsrc)
-        </dt>
-        <dd class = "col-sm-10">
-            <img src="@Model.Imgsrc"/>
         </dd>
     </dl>
 </div>

@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.UserTrainzPhoto
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Создание";
 }
 
 <h1>Create</h1>
@@ -12,13 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @Html.DisplayName("Пользователь");
-                @Html.DropDownList("UserName", ViewBag.User as SelectList);
-            </div>
-            <div>
-                <a class="btn btn-outline-success" asp-controller="Users" asp-action="Create">Зарегистрироватся</a>
-            </div>
+            
             
             <div class="form-group">
                 <label asp-for="Marshrute" class="control-label"></label>
@@ -34,11 +28,6 @@
                 <label asp-for="BaseInfo" class="control-label"></label>
                 <input asp-for="BaseInfo" class="form-control" />
                 <span asp-validation-for="BaseInfo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imgsrc" class="control-label"></label>
-                <input asp-for="Imgsrc" class="form-control" />
-                <span asp-validation-for="Imgsrc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

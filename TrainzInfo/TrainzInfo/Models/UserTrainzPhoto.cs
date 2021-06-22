@@ -11,18 +11,18 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string UserName { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Email { get; set; }
         public DateTime DateTime { get; set;}
         public string LocmotiveName { get; set; }
-        [Required]
         public string Marshrute { get; set; }
         [Required]
         public string Type { get; set; }
         [Required]
         public string BaseInfo { get; set; }
-        [Required]
-        public string Imgsrc { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageType { get; set; }
 
     }
 }

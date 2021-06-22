@@ -5,11 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>Фон</title>
-    <style>
-        body {
-            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
-        }
-    </style>
+    
 </head>
 <div class="text-center">
 
@@ -17,23 +13,24 @@
 
     <h1 class="display-4">Добро пожаловать!</h1>
     @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-    <div class="maincard" style="background-color:aliceblue;  left:50px; height:440px">
+    <div class="maincardpage">
         <p>
-            <div style="width:500px; left:50px; font-size:25px; margin:50px">
+            <div class="main_text">
                 Сайт ТреинзИнфр посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
                 Здесь вы найдете много интересной информации о железнодорожном транспорте и новости с железной дороги и транспорта
             </div>
         </p>
 
 
-        <div class="btn_panel" style=" position: relative; left:560px; padding:20px; top:-300px; width:450px">
-            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>
-            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
+        <div class="btn_main_panel" >
+            @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>*@
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
             @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>*@
             @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>*@
-            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="ElectricTrains" asp-action="Index">Смотреть весь список электричек</a>
-            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="DizelTrainzLists" asp-action="IndexAll">Смотреть весь список дизель - поездов </a>
-            <a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Stations" asp-action="IndexAll">Смотреть весь список станций</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="ElectricTrains" asp-action="Index">Смотреть весь список электричек</a>
+            @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="DizelTrainzLists" asp-action="IndexAll">Смотреть весь список дизель - поездов </a>*@
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Stations" asp-action="IndexAll">Смотреть весь список станций</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="RailwayUsersPhotoes" asp-action="Index">Красивые фотографии от пользователей</a>
         </div>
     </div>
     
@@ -44,13 +41,17 @@
     <div style="left:50px">
         @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
         {
-        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Users" asp-action="Index">Пользователи</a>
-        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="Roles" asp-action="Index">Роли</a>
-        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
-        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-       } else if (ViewBag.user.Role != null &&  ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin"){
-        <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-       }
+            <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Пользователи</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Роли</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основные картинки сайта</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерация</a>
+        }
+        else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+        }
     </div>
 </div>
 }
@@ -84,20 +85,20 @@
                         @Html.DisplayFor(modelItem => info.DateTime.Date);
                     </div>
                     <div style="margin:20px">
-                        <div class="name" style="width: 950px; font-size:27px; color:black;">
+                        <div class="namenews" >
                             @Html.DisplayFor(modelItem => info.NameNews);
                         </div>
-                        <div class="name" style="width: 950px; font-size:27px; color:black;">
+                        <div class="namenews" >
                             @Html.DisplayFor(modelItem => info.BaseNewsInfo);
                         </div>
                     </div>
                     <div class="btn">
-                        <a id="btn" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                        <a class="btn btn-info btn_news" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
                         @if (ViewBag.user != null)
                         {
                             if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
                             {
-                                <a class="btn btn-outline-info" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Добавить картинку</a>
+                                <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Добавить картинку</a>
                             }
                         }
 
@@ -110,4 +111,9 @@
     
    
 </body>
-   
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+    
+</style> 

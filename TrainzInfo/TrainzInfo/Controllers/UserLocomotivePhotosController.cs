@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: UserLocomotivePhotos
-        public async Task<IActionResult> Index(string? name)
+        public async Task<IActionResult> Index(string? name, string? number)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -34,7 +34,8 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name).ToListAsync();
+            Trace.WriteLine(name + " - " + number);
+            List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name + " - " + number).ToListAsync();
             return View(locomotivePhoto);
         }
         public async Task<IActionResult> IndexAll()
@@ -100,7 +101,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,UserSername,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Create([Bind("Id,UserName,NameLocomotive,BaseInfo,AllInfo")] UserLocomotivePhotos userLocomotivePhotos)
         {
             string username = "";
             int userid = 0;
@@ -114,19 +115,17 @@ namespace TrainzInfo.Controllers
                 userid = user.Id;
                 email = user.Email;
             }
-            if (ModelState.IsValid)
-            {
-                userLocomotivePhotos.UserName = username;
-                userLocomotivePhotos.UserId = userid;
-                userLocomotivePhotos.UserId = userid;
-                userLocomotivePhotos.DateTime = DateTime.Now;
-                _context.Add(userLocomotivePhotos);
-                await _context.SaveChangesAsync();
-                SendMessage(userLocomotivePhotos);
-                TempData["LocomotiveID"] = _context.UserLocomotivePhotos.Where(x => x.BaseInfo == userLocomotivePhotos.BaseInfo).Select(x => x.Id).FirstOrDefault();
-                return RedirectToAction(nameof(AddImageForm));
-            }
-            return View(userLocomotivePhotos);
+            userLocomotivePhotos.UserName = username;
+            userLocomotivePhotos.UserId = userid;
+            userLocomotivePhotos.Email = email;
+            userLocomotivePhotos.DateTime = DateTime.Now;
+            _context.Add(userLocomotivePhotos);
+            await _context.SaveChangesAsync();
+            SendMessage(userLocomotivePhotos);
+            UserLocomotivePhotos userLocomotiveAdded = _context.UserLocomotivePhotos.ToList().LastOrDefault();
+            TempData["LocomotiveID"] = userLocomotiveAdded.Id;
+            return RedirectToAction(nameof(AddImageForm));
+            
         }
 
         private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
@@ -218,6 +217,16 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            int userid = 0;
+            string username = "";
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                username = user.Name;
+                userid = user.Id;
+            }
             if (id == null)
             {
                 return NotFound();
@@ -228,7 +237,20 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            return View(userLocomotivePhotos);
+            if(userLocomotivePhotos.UserName == username && userLocomotivePhotos.UserId == userid)
+            {
+                return View(userLocomotivePhotos);
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditDenied));
+            }
+            
+        }
+
+        private IActionResult EditDenied()
+        {
+            return View();
         }
 
         // POST: UserLocomotivePhotos/Edit/5
@@ -236,7 +258,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,UserSername,NameLocomotive,BaseInfo,Email,AllInfo,PhotoLink")] UserLocomotivePhotos userLocomotivePhotos)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,NameLocomotive,BaseInfo,AllInfo")] UserLocomotivePhotos userLocomotivePhotos)
         {
             if (id != userLocomotivePhotos.Id)
             {
@@ -270,6 +292,17 @@ namespace TrainzInfo.Controllers
         // GET: UserLocomotivePhotos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            int userid = 0;
+            string username = "";
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                username = user.Name;
+                userid = user.Id;
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -282,7 +315,18 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            return View(userLocomotivePhotos);
+            if (userLocomotivePhotos == null)
+            {
+                return NotFound();
+            }
+            if (userLocomotivePhotos.UserName == username && userLocomotivePhotos.UserId == userid)
+            {
+                return View(userLocomotivePhotos);
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditDenied));
+            }
         }
 
         // POST: UserLocomotivePhotos/Delete/5

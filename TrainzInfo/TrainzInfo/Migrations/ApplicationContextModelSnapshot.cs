@@ -15,7 +15,7 @@ namespace TrainzInfo.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -387,6 +387,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("ImageMimeTypeOfData")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IsProof")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastKvr")
                         .HasColumnType("datetime2");
 
@@ -410,6 +413,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("User")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("VagonsCountP")
                         .IsRequired()
@@ -611,6 +617,27 @@ namespace TrainzInfo.Migrations
                     b.ToTable("LocomotivesTypes");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.MainImages", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MainImages");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
                 {
                     b.Property<int>("Id")
@@ -768,6 +795,42 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("plants");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.RailwayUsersPhoto", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CityFrom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CitytTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Information")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsProof")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("RailwayUsersPhotos");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Role", b =>
@@ -1105,20 +1168,24 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Imgsrc")
-                        .IsRequired()
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LocmotiveName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marshrute")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()

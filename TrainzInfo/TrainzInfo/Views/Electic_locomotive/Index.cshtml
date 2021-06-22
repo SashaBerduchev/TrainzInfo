@@ -49,8 +49,7 @@
 
 
                 <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
-                @*<a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Seria">Смотреть перечень локомотивов @item.Seria - @item.Number</a>*@
-                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria">Фото пользователей</a>
+                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото пользователей</a>
                 @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")

@@ -35,7 +35,33 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            return View(await _context.Electrics.ToListAsync());
+            return View(await _context.Electrics.Where(x=>x.IsProof == true.ToString()).ToListAsync());
+        }
+        public async Task<IActionResult> IndexNotModered()
+        {
+            var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddress)).FirstOrDefault();
+            if(user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
+            return View(await _context.Electrics.Where(x => x.IsProof == false.ToString() || x.IsProof == null).ToListAsync());
+        }
+        public async Task<IActionResult> Allow(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var FoundModerationElement = await _context.Electrics.Where(x => x.id == id).FirstOrDefaultAsync();
+            FoundModerationElement.IsProof = true.ToString();
+            _context.Electrics.Update(FoundModerationElement);
+            await  _context.SaveChangesAsync();
+            
+
+            return RedirectToAction(nameof(IndexNotModered));
         }
 
         public async Task<List<ElectricTrain>> IndexAction()
@@ -122,6 +148,8 @@ namespace TrainzInfo.Controllers
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string username = userlog.Name;
+            int userid = userlog.Id;
             if (userlog != null && userlog.Status == "true")
             {
                 ViewBag.user = userlog;
@@ -130,10 +158,13 @@ namespace TrainzInfo.Controllers
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depo;
+                electricTrain.User = username;
+                electricTrain.UserId = userid;
+                electricTrain.IsProof = false.ToString();
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
-                SendMessage(user);
+                //SendMessage(user);
                 TempData["Train"] = electricTrain.id;
                 return RedirectToAction(nameof(AddImageForm));
             }
@@ -209,10 +240,15 @@ namespace TrainzInfo.Controllers
                     train.Image = p1;
                     _context.Electrics.Update(train);
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(InModered));
                 }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult InModered()
+        {
+            return View();
         }
 
         public IActionResult AddImageForm(int? id)

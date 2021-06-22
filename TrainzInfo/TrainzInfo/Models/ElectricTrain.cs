@@ -11,6 +11,7 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string User { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -28,5 +29,6 @@ namespace TrainzInfo.Models
         public string PlaceKvr{ get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
+        public string IsProof { get; set; }
     }
 }
