@@ -662,6 +662,31 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Metros");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.MetroStation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MetroID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MetroStations");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
                 {
                     b.Property<int>("Id")

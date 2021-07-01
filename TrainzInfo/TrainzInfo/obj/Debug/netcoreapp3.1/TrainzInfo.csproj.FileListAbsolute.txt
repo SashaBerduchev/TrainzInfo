@@ -3634,3 +3634,9 @@ C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreap
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Exit.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Users\Exiting.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\UserTrainzPhotoes\AddImageForm.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\Create.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\Delete.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\Details.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\Edit.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\Index.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroStations\AddImageForm.cshtml.g.cs
