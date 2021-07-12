@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword />
     <_PublishTargetUrl>ftp://91.238.103.67\trainzinfo.org.ua\wwwroot</_PublishTargetUrl>
-    <History>True|2021-07-12T18:47:59.1645267Z;True|2021-07-02T07:00:14.5053055+03:00;True|2021-07-01T23:25:58.8617108+03:00;False|2021-07-01T23:22:37.4394867+03:00;False|2021-07-01T23:09:25.8644052+03:00;False|2021-07-01T23:07:45.9429842+03:00;False|2021-07-01T23:06:59.0741265+03:00;</History>
+    <History>True|2021-07-12T19:02:30.3296876Z;True|2021-07-12T21:47:59.1645267+03:00;True|2021-07-02T07:00:14.5053055+03:00;True|2021-07-01T23:25:58.8617108+03:00;False|2021-07-01T23:22:37.4394867+03:00;False|2021-07-01T23:09:25.8644052+03:00;False|2021-07-01T23:07:45.9429842+03:00;False|2021-07-01T23:06:59.0741265+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -402,28 +402,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/12/2019 20:08:36</publishTime>
     </File>
     <File Include="TrainzInfo.deps.json">
-      <publishTime>07/12/2021 21:46:24</publishTime>
+      <publishTime>07/12/2021 22:01:04</publishTime>
     </File>
     <File Include="TrainzInfo.dll">
-      <publishTime>07/12/2021 21:45:57</publishTime>
+      <publishTime>07/12/2021 22:00:55</publishTime>
     </File>
     <File Include="TrainzInfo.exe">
-      <publishTime>07/12/2021 21:45:57</publishTime>
+      <publishTime>07/12/2021 22:00:55</publishTime>
     </File>
     <File Include="TrainzInfo.pdb">
-      <publishTime>07/12/2021 21:45:57</publishTime>
+      <publishTime>07/12/2021 22:00:55</publishTime>
     </File>
     <File Include="TrainzInfo.runtimeconfig.json">
       <publishTime>07/12/2021 21:46:14</publishTime>
     </File>
     <File Include="TrainzInfo.Views.dll">
-      <publishTime>07/12/2021 21:46:13</publishTime>
+      <publishTime>07/12/2021 22:01:03</publishTime>
     </File>
     <File Include="TrainzInfo.Views.pdb">
-      <publishTime>07/12/2021 21:46:13</publishTime>
+      <publishTime>07/12/2021 22:01:03</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>07/12/2021 21:46:24</publishTime>
+      <publishTime>07/12/2021 22:01:04</publishTime>
     </File>
     <File Include="wwwroot/css/Body.css">
       <publishTime>07/01/2021 12:50:16</publishTime>

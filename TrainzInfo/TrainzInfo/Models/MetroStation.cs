@@ -12,6 +12,8 @@ namespace TrainzInfo.Models
         [Required]
         public string Name { get; set; }
         public int MetroID { get; set; }
+        public string MetroLine { get; set; }
+        public int MetroLineId { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
     }

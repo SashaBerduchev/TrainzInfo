@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace TrainzInfo.Controllers
         public MetroStationsController(ApplicationContext context)
         {
             _context = context;
+            Trace.WriteLine(this);
         }
 
         //All Stations
@@ -28,9 +30,13 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: MetroStations
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(string? metro, string? line)
         {
-            return View(await _context.MetroStations.Where(x=>x.MetroID == id).ToListAsync());
+            int MetroId = _context.Metros.Where(x => x.Name == metro).Select(x => x.id).FirstOrDefault();
+            int MetroLineID = _context.MetroLines.Where(x => x.NameLine == line).Select(x => x.id).FirstOrDefault();
+            Trace.WriteLine(MetroId);
+            Trace.WriteLine(MetroLineID);
+            return View(await _context.MetroStations.Where(x=>x.MetroID == MetroId && x.MetroLineId == MetroLineID).ToListAsync());
         }
 
         // GET: MetroStations/Details/5
@@ -56,6 +62,8 @@ namespace TrainzInfo.Controllers
         {
             SelectList metrolist = new SelectList(_context.Metros.Select(x => x.Name).ToList());
             ViewBag.metrolist = metrolist;
+            SelectList metrolines = new SelectList(_context.MetroLines.Select(x => x.NameLine).ToList());
+            ViewBag.metrolines = metrolines;
             return View();
         }
 
@@ -64,12 +72,14 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Image,ImageMimeTypeOfData, MetroID")] MetroStation metroStation, string? MetroName)
+        public async Task<IActionResult> Create([Bind("id,Name,Image,ImageMimeTypeOfData, MetroID, MetroLine")] MetroStation metroStation, string? MetroName)
         {
             if (ModelState.IsValid)
             {
                 int metroid = _context.Metros.Where(x => x.Name == MetroName).Select(x => x.id).FirstOrDefault();
                 metroStation.MetroID = metroid;
+                int metrolineid = _context.Metros.Where(x => x.Name == MetroName).Select(x => x.id).FirstOrDefault();
+                metroStation.MetroLineId = metrolineid;
                 _context.Add(metroStation);
                 await _context.SaveChangesAsync();
                 TempData["StationName"] = metroStation.Name;
@@ -152,6 +162,11 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            SelectList metrolist = new SelectList(_context.Metros.Select(x => x.Name).ToList());
+            ViewBag.metrolist = metrolist;
+            SelectList metrolines = new SelectList(_context.MetroLines.Select(x => x.NameLine).ToList());
+            ViewBag.metrolines = metrolines;
+
             return View(metroStation);
         }
 
@@ -160,7 +175,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Image,ImageMimeTypeOfData,MetroID")] MetroStation metroStation)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Image,ImageMimeTypeOfData,MetroID, MetroLine")] MetroStation metroStation)
         {
             if (id != metroStation.id)
             {

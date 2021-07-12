@@ -41,6 +41,7 @@
                         new { Model.id })" />
         </dd>
     </dl>
+    <a class="btn btn-info" asp-controller="MetroStations" asp-action="Index" asp-route-metro="@Model.Metro" asp-route-line="@Model.NameLine">Станции</a>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |

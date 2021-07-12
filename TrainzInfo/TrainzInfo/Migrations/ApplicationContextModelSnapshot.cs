@@ -706,6 +706,12 @@ namespace TrainzInfo.Migrations
                     b.Property<int>("MetroID")
                         .HasColumnType("int");
 
+                    b.Property<string>("MetroLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MetroLineId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
