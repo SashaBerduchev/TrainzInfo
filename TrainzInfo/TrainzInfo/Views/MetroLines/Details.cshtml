@@ -1,20 +1,20 @@
 ﻿@model TrainzInfo.Models.MetroLines
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Линия метро";
 }
 
-<!DOCTYPE html>
+
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
+    
 </head>
 <body>
 
 <div>
-    <h4>MetroLines</h4>
+    <h4>@Model.NameLine</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -35,17 +35,10 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CountStation)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageMimeTypeOfData)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageMimeTypeOfData)
+        <dd>
+            <img class="img-thumbnail" width="750" height="650"
+                 src="@Url.Action("GetImage", "MetroLines",
+                        new { Model.id })" />
         </dd>
     </dl>
 </div>
@@ -55,3 +48,9 @@
 </div>
 </body>
 </html>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
