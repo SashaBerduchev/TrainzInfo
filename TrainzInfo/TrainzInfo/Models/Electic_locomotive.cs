@@ -18,7 +18,7 @@ namespace TrainzInfo.Models
         public int Speed { get; set; }
         [Required]
         public int SectionCount { get; set; }
-        public int ALlPowerP { get; set; }
+        public string ALlPowerP { get; set; }
         [Required]
         public string Seria { get; set; }
         public string Depot { get; set; }
