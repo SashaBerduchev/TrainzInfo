@@ -18,25 +18,38 @@
 </head>
 <body>
     <p>
-        <a class="btn btn-dark" asp-action="Create">Добавить</a>
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-dark" asp-action="Create">Добавить</a>
+            }
+        }
     </p>
     <div style="width:80%">
         @foreach (var item in Model)
         {
-            <div style="font-size:25px; margin:10px">
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">
-                    <p>@item.Metro</p>
-                    <p>@item.NameLine</p>
-                    <p>@item.CountStation</p>
-                    <img class="img-thumbnail" width="750" height="650"
-                         src="@Url.Action("GetImage", "MetroLines",
+        <div style="margin:10px">
+            <a style="font-size:25px;" class="btn btn-info" asp-action="Details" asp-route-id="@item.id">
+                <p>@item.Metro</p>
+                <p>@item.NameLine</p>
+                <p>@item.CountStation</p>
+                <img class="img-thumbnail" width="750" height="650"
+                     src="@Url.Action("GetImage", "MetroLines",
                         new { item.id })" />
 
-                </a>
-                <a class="btn btn-success" asp-action="AddImageForm" asp-route-id="@item.id">Добавить картинку</a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
-            </div>
+            </a>
+            @if (ViewBag.user != null)
+            {
+                @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+                {
+                    <a class="btn btn-success" asp-action="AddImageForm" asp-route-id="@item.id">Добавить картинку</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                }
             }
+
+        </div>
+        }
     </div>
 </body>
 </html>

@@ -26,6 +26,13 @@ namespace TrainzInfo.Controllers
         // GET: MetroLines
         public async Task<IActionResult> Index(string? Metro)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             return View(await _context.MetroLines.Where(x=>x.Metro == Metro).ToListAsync());
         }
 
@@ -50,6 +57,12 @@ namespace TrainzInfo.Controllers
         // GET: MetroLines/Create
         public IActionResult Create()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             SelectList metroes = new SelectList(_context.Metros.Select(x => x.Name).ToList());
             ViewBag.metro = metroes;
             Trace.WriteLine(metroes);
@@ -63,6 +76,12 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Metro,NameLine,CountStation,Image,ImageMimeTypeOfData")] MetroLines metroLines)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(metroLines);
@@ -102,6 +121,12 @@ namespace TrainzInfo.Controllers
 
         public IActionResult AddImageForm(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             MetroLines lines;
             if (id == null)
             {
@@ -150,6 +175,13 @@ namespace TrainzInfo.Controllers
         // GET: MetroLines/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -201,6 +233,13 @@ namespace TrainzInfo.Controllers
         // GET: MetroLines/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             if (id == null)
             {
                 return NotFound();

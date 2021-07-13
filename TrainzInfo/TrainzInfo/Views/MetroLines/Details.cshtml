@@ -16,21 +16,21 @@
 <div>
     <h4>@Model.NameLine</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Metro)
+    <dl class="row" style="font-size:25px;">
+        <dt class = "col-sm-2" >
+            @Html.DisplayName("Название метро")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Metro)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NameLine)
+        <dt class="col-sm-2">
+            @Html.DisplayName("Название линии")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NameLine)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CountStation)
+        <dt class="col-sm-2">
+            @Html.DisplayName("колличество станций")
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CountStation)
