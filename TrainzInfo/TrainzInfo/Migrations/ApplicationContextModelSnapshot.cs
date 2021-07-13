@@ -326,8 +326,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ALlPowerP")
-                        .HasColumnType("int");
+                    b.Property<string>("ALlPowerP")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Depot")
                         .HasColumnType("nvarchar(max)");
@@ -497,14 +497,17 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Baseinfo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Diesel")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Electric_Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Power")
-                        .HasColumnType("int");
+                    b.Property<string>("Power")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 

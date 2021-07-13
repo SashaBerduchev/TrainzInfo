@@ -40,6 +40,7 @@ namespace TrainzInfo.Controllers
                 Electrick_Lockomotive_Info electrick_Lockomotive_Info_add = new Electrick_Lockomotive_Info {
                     Name = electic_Locomotives.Seria,
                     Power = electic_Locomotives.ALlPowerP,
+                    Diesel = electic_Locomotives.DieselPower,
                     Electric_Type = "",
                     Baseinfo = "",
                     AllInfo = ""
