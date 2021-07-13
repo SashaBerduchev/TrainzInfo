@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
+    "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
+    "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "projectUniqueName": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
         "projectName": "TrainzInfo",
-        "projectPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
-        "packagesPath": "C:\\Users\\sasha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+        "projectPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "packagesPath": "C:\\Users\\Саша\\.nuget\\packages\\",
+        "outputPath": "D:\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\sasha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Саша\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
