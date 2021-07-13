@@ -36,7 +36,7 @@
         <div style="position:relative; left:780px; top:-380px; width:250px">
 
 
-            <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
+            @*<a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-idlocname="@item.Seria" asp-route-number="@item.Number">Детальная информация</a>*@
             <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото пользователей</a>
             @if (ViewBag.user != null)
             {

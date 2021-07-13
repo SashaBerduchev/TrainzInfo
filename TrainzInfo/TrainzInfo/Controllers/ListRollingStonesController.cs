@@ -37,15 +37,15 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ListRollingStones/Details/5
-        public async Task<IActionResult> Details(string? idlocname)
+        public async Task<IActionResult> Details(string? idlocname, string? number)
         {
             if (idlocname == null)
             {
                 return NotFound();
             }
 
-            var listRollingStone = await _context.ListRollingStones
-                .FirstOrDefaultAsync(m => m.Name == idlocname);
+            var listRollingStone = await _context.Electic_Locomotives
+                .FirstOrDefaultAsync(m => m.Seria == idlocname && m.Number == number);
             if (listRollingStone == null)
             {
                 return NotFound();

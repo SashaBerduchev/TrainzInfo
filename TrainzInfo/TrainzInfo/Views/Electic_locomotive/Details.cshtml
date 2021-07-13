@@ -11,7 +11,7 @@
     }
 </style>
 <div>
-    <h4>Электровоз</h4>
+    
     <hr />
     <div style="background-color:aliceblue">
         <dl class="">
@@ -37,7 +37,14 @@
                 @Html.DisplayName("Общая мощность")
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ALlPowerP)
+                @if (Model.ALlPowerP != null)
+                {
+                    <div> @Html.DisplayName(Model.ALlPowerP)</div>
+                }
+                else if (Model.DieselPower != null)
+                {
+                    <div> @Html.DisplayName(Model.DieselPower)</div>
+                }
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayName("Депо")
