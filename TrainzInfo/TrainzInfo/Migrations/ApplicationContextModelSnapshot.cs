@@ -332,6 +332,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Depot")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DieselPower")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 

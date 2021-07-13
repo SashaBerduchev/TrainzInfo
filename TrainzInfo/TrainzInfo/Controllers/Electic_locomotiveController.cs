@@ -104,7 +104,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,Depot,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Create([Bind("id,Name,Seria, Number, Speed,SectionCount,Depot,ALlPowerP, LocomotiveImg, DieselPower. User")] Electic_locomotive electic_locomotive)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -233,7 +233,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, User")] Electic_locomotive electic_locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, DieselPower,  User")] Electic_locomotive electic_locomotive)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
