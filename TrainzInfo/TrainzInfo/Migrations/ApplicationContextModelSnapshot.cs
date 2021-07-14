@@ -326,10 +326,13 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ALlPowerP")
-                        .HasColumnType("int");
+                    b.Property<string>("ALlPowerP")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Depot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DieselPower")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Image")
@@ -494,14 +497,17 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Baseinfo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Diesel")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Electric_Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Power")
-                        .HasColumnType("int");
+                    b.Property<string>("Power")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -660,6 +666,65 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Metros");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.MetroLines", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountStation")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Metro")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameLine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MetroLines");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.MetroStation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MetroID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetroLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MetroLineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MetroStations");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>

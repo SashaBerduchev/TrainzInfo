@@ -9,12 +9,20 @@
 </head>
 <body>
     <p>
-        <a class="btn btn-dark" asp-action="Create">Создать новую запись</a>
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-dark" asp-action="Create">Создать новую запись</a>
+            }
+        }
     </p>
-    @foreach (var item in Model)
-    {
-        <a class="btn btn-info" asp-controller="Metroes" asp-action="Details" asp-route-id="@item.id">@item.Name</a>
-    }
+    <div style="position:center">
+        @foreach (var item in Model)
+        {
+            <a class="btn btn-info" style="width:350px" asp-controller="Metroes" asp-action="Details" asp-route-id="@item.id">@item.Name</a>
+        }
+    </div>
 </body>
 
 <style>

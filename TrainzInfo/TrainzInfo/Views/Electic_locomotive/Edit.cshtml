@@ -38,9 +38,14 @@
                 <span asp-validation-for="SectionCount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Общая мощность");
+                @Html.DisplayName("Общая мощность ТЭД(указывать если электровоз)");
                 <input asp-for="ALlPowerP" class="form-control" />
                 <span asp-validation-for="ALlPowerP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Мощность дизеля(указывать если тепловоз)");
+                <input asp-for="DieselPower" class="form-control" />
+                <span asp-validation-for="DieselPower" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

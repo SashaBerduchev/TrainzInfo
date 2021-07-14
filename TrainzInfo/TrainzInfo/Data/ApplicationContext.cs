@@ -77,6 +77,8 @@ namespace TrainzInfo.Data
         public DbSet<RailwayUsersPhoto> RailwayUsersPhotos { get; set; }
         public DbSet<MainImages> MainImages { get; set; }
         public DbSet<Metro> Metros { get; set; }
+        public DbSet<MetroStation> MetroStations { get; set; }
+        public DbSet<MetroLines> MetroLines { get; set; }
 
     }
 

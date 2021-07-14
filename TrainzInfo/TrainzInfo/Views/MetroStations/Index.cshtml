@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TrainzInfo.Models.MetroStation>
+
+@{
+    ViewData["Title"] = "Метро станции";
+}
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        <a class="btn btn-dark" asp-action="Create">Добавить</a>
+    </p>
+    @foreach (var item in Model)
+    {
+        <div style="background-color:aliceblue">
+            <div>
+                <img class="img-thumbnail" width="350" height="250"
+                     src="@Url.Action("GetImage", "MetroStations",
+                        new { item.id })" />
+            </div>
+            <div>
+                <p>@item.Name</p>
+                <p>@item.MetroLine</p>
+            </div>
+        </div>
+    }
+
+</body>
+
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

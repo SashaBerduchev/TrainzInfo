@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TrainzInfo.Models.UkrainsRailways>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Филия";
 }
 
 <h1>Филии АТ Укрзализныця</h1>
@@ -20,8 +20,8 @@
 <div style="background-color:aliceblue">
     @foreach (var item in Model)
     {
-        <div  style="width:600px">
-            <a class="btn btn-info btn-filia" asp-action="Details" asp-route-id="@item.id">
+        <div  style="width:90%">
+            <a class="btn btn-info btn-filia" style="width:100%; margin:10px" asp-action="Details" asp-route-id="@item.id">
                 <div>
                     @Html.DisplayFor(modelItem => item.Name)
                 </div>
