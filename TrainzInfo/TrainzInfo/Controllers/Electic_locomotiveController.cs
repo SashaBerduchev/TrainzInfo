@@ -228,6 +228,8 @@ namespace TrainzInfo.Controllers
 
         }
 
+ 
+
         // POST: Electic_locomotive/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -285,6 +287,59 @@ namespace TrainzInfo.Controllers
             return View(electic_locomotive);
         }
 
+        public async Task<IActionResult> Copy(int? id)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var electic_locomotive = await _context.Electic_Locomotives.FindAsync(id);
+            if (electic_locomotive == null)
+            {
+                return NotFound();
+            }
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users;
+            return View(electic_locomotive);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopySubmit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, DieselPower,  User")] Electic_locomotive electic_locomotive)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string myuser = "";
+            int userId = 0;
+            if (user != null && user.Status == "true")
+            {
+                myuser = user.Name;
+                userId = user.Id;
+            }
+
+            Trace.WriteLine("POST: " + this + electic_locomotive);
+            electic_locomotive.User = myuser;
+            electic_locomotive.UserId = userId;
+            _context.Add(electic_locomotive);
+            await _context.SaveChangesAsync();
+            SendMessage(user);
+            int locid = _context.Electic_Locomotives.Where(x => x.Seria == electic_locomotive.Seria && x.Number == electic_locomotive.Number).Select(x => x.id).FirstOrDefault();
+            TempData["LocomotiveId"] = locid;
+            Trace.WriteLine(TempData);
+            return RedirectToAction(nameof(AddImageForm));
+
+            Trace.WriteLine("RESPONSE: " + electic_locomotive);
+            return View(electic_locomotive);
+        }
         // GET: Electic_locomotive/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

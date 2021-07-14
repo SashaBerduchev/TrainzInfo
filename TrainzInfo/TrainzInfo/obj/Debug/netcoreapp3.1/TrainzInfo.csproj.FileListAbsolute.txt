@@ -3647,3 +3647,4 @@ C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreap
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroLines\Details.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroLines\Edit.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\MetroLines\Index.cshtml.g.cs
+C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\Razor\Views\Electic_locomotive\Copy.cshtml.g.cs

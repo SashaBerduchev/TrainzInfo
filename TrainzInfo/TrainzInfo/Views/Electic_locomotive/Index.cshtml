@@ -65,6 +65,13 @@
                         <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
                     }
                 }
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-info" asp-action="Copy" asp-route-id="@item.id">Скопировать</a>
+                    }
+                }
             </div>
         </div>
     }
