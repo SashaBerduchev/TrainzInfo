@@ -32,7 +32,15 @@ namespace TrainzInfo.Controllers
         {
             ViewBag.Depo = depotname;
             List<Electic_locomotive> rollingStones = await _context.Electic_Locomotives.Where(x => x.Depot == depotname).ToListAsync();
-            ViewBag.locomotives = rollingStones;
+            List<ElectricTrain> rollingStonesTrains = await _context.Electrics.Where(x => x.DepotTrain == depotname).ToListAsync();
+            if (rollingStones != null && rollingStones.Count > 0)
+            {
+                ViewBag.locomotives = rollingStones;
+            }
+            else if(rollingStonesTrains != null && rollingStonesTrains.Count > 0)
+            {
+                ViewBag.trains = rollingStonesTrains;
+            }
             return View("IndexDepot");
         }
 
