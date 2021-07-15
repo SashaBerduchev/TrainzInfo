@@ -10,6 +10,13 @@
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
 </style>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+    }
+}
 <p>
     @if (ViewBag.user != null)
     {
@@ -18,7 +25,7 @@
             <a class="btn btn-info" asp-action="Create">Добавить локомотив</a>
         }
     }
-    
+
 </p>
 
 <form method="get">
