@@ -8,6 +8,13 @@
 <head>
     <link rel="stylesheet" href="">
 </head>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+    }
+}
 
 <p>
     @if (ViewBag.user != null)
