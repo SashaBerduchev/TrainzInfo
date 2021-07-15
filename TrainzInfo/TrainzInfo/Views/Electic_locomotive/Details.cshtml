@@ -11,32 +11,22 @@
     }
 </style>
 <div>
-    
+
     <hr />
+
     <div style="background-color:aliceblue">
-        <dl class="">
-            <dt class="col-sm-2">
-                @Html.DisplayName("Электровоз")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayName(Model.Seria + " - " + Model.Number)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayName("Скорость")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Speed)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayName("Количество секций")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SectionCount)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayName("Общая мощность")
-            </dt>
-            <dd class="col-sm-10">
+        <div class="img">
+
+            <img class="img-thumbnail" width="350" height="250"
+                 src="@Url.Action("GetImage", "Electic_locomotive",
+                        new { Model.id })" />
+        </div>
+        <div style="position:relative; left:540px; top:-200px; font-size:25px; background-color:lightblue; width:400px">
+            <div>@Html.DisplayName("Электровоз: ") @Html.DisplayName(Model.Seria + " - " + Model.Number)</div>
+            <div>@Html.DisplayName("Скорость: ") @Html.DisplayName(Model.Speed.ToString())</div>
+            <div>@Html.DisplayName("Количество секций: ") @Html.DisplayName(Model.SectionCount.ToString())</div>
+            <div>
+                @Html.DisplayName("Общая мощность: ")
                 @if (Model.ALlPowerP != null)
                 {
                     <div> @Html.DisplayName(Model.ALlPowerP)</div>
@@ -45,49 +35,34 @@
                 {
                     <div> @Html.DisplayName(Model.DieselPower)</div>
                 }
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayName("Депо")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Depot)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayName("Пользователь")
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.User)
-            </dd>
-            <dd class="col-sm-10">
-                @*@Html.DisplayFor(model => model.ALlPowerP)*@
-                <div class="img">
+            </div>
 
-                    <img class="img-thumbnail" width="350" height="250"
-                         src="@Url.Action("GetImage", "Electic_locomotive",
-                        new { Model.id })" />
-
-                </div>
-            </dd>
-        </dl>
-        <div style="position:relative; left:650px; top:-700px;">
-            @if (ViewBag.user != null)
-            {
-                if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-                {
-                    <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редактировать инфу об электровозе @Model.Seria</a>
-                }
-            }
-
-        </div>
-        <div style="position:relative; left:250px; top:-780px; width:400px; font-size:20px;">
-            <p>@ViewBag.base_info</p>
-        </div>
-        <div style="position:relative; top:-150px">
-            <p>@ViewBag.allinfo</p>
+            <div>
+                @Html.DisplayName("Депо: ")  @Html.DisplayFor(model => model.Depot)
+                <a class="btn btn-success" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@Model.Depot">Перейти в депо</a>
+            </div>
+            <div>@Html.DisplayName("Пользователь: ") @Html.DisplayName(Model.User)</div>
         </div>
     </div>
+    <div style="position:relative; left:650px; top:-700px;">
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+            {
+                <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редактировать инфу об электровозе @Model.Seria</a>
+            }
+        }
+
+    </div>
+    <div style="position:relative; left:250px; top:-780px; width:400px; font-size:20px;">
+        <p>@ViewBag.base_info</p>
+    </div>
+    <div style="position:relative; top:-150px">
+        <p>@ViewBag.allinfo</p>
+    </div>
+</div>
 </div>
 @*<div>
-    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>*@
+        <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@
