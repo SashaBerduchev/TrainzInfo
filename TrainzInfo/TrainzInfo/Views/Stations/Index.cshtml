@@ -6,6 +6,13 @@
 
 <h1>Станции</h1>
 <h2>@Html.DisplayName(ViewBag.Filia)</h2>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+    }
+}
 <p>
     @if (ViewBag.user != null)
     {
@@ -19,34 +26,34 @@
 <div>
     @foreach (var item in Model)
     {
-    <div style="background-color:aliceblue; margin:20px; height:290px;">
-        <div style="margin:20px; position:relative; top:20px">
-            <div class="img">
-                @if (item.Image == null)
-                {
-                    <img src="@item.Imgsrc" width="350" height="250">
-                }
-                else
-                {
-                    <img class="img-thumbnail" width="350" height="250"
-                         src="@Url.Action("GetImage", "Stations",
+        <div style="background-color:aliceblue; margin:20px; height:290px;">
+            <div style="margin:20px; position:relative; top:20px">
+                <div class="img">
+                    @if (item.Image == null)
+                    {
+                        <img src="@item.Imgsrc" width="350" height="250">
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail" width="350" height="250"
+                             src="@Url.Action("GetImage", "Stations",
                         new { item.id })" />
-                }
+                    }
+                </div>
+            </div>
+            <div class="station_info">
+                <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
+                <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
+                <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
+                <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+            </div>
+            <div class="station_btns">
+                <a class="btn btn-info" style="width:250px; margin:20px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Рассписание по станции</a>
+                @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
+                <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
+                @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
             </div>
         </div>
-        <div class="station_info">
-            <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
-            <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
-            <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
-            <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
-        </div>
-        <div class="station_btns">
-            <a class="btn btn-info" style="width:250px; margin:20px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Рассписание по станции</a>
-            @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
-            <a class="btn btn-primary" style="width:250px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
-            @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
-        </div>
-    </div>
     }
 </div>
 

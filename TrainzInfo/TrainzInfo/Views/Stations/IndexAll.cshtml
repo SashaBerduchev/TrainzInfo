@@ -11,6 +11,13 @@
         <input type="submit" value="Отобразить" class="btn btn-info" />
     </div>
 </form>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+    }
+}
 <p>
     @if (ViewBag.user != null)
     {
