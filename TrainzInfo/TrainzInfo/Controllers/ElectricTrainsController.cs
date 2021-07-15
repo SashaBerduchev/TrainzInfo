@@ -130,10 +130,13 @@ namespace TrainzInfo.Controllers
             }
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
-            SelectList depots = new SelectList(_context.Depots.OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList depots = new SelectList(_context.Depots.Where(x=>x.Name.Contains("РПЧ")).OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
-            SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
-            ViewBag.plants = plants;
+            List<string> plants = new List<string>();
+            plants.Add("");
+            plants.AddRange(_context.plants.Select(x => x.Name).ToList());
+            SelectList plantslist = new SelectList(plants);
+            ViewBag.plants = plantslist;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
             ViewBag.models = models;
             return View();
@@ -165,7 +168,8 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 //SendMessage(user);
-                TempData["Train"] = electricTrain.id;
+                ElectricTrain train = _context.Electrics.Where(x=>x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.User == electricTrain.User).FirstOrDefault();
+                TempData["Train"] = train.id;
                 return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
@@ -277,16 +281,22 @@ namespace TrainzInfo.Controllers
         {
             ElectricTrain train = _context.Electrics
                 .FirstOrDefault(g => g.id == id);
-
-            if (train != null)
+            try
             {
-                var file = File(train.Image, train.ImageMimeTypeOfData);
-                return file;
-            }
-            else
+                if (train != null)
+                {
+                    var file = File(train.Image, train.ImageMimeTypeOfData);
+                    return file;
+                }
+                else
+                {
+                    return null;
+                }
+            }catch(Exception exp)
             {
-                return null;
+                Trace.WriteLine(exp.ToString());
             }
+            return null;
         }
 
         // GET: ElectricTrains/Edit/5

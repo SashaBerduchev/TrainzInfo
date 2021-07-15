@@ -22,23 +22,31 @@
 <div>
     @foreach (var item in Model)
     {
-    <div style="font-size:25px; height:370px; margin:20px; background-color:aliceblue">
-        <div style="margin:20px; position:relative; top:10px;">
-            <img class="img-thumbnail" width="350" height="350"
-                 src="@Url.Action("GetImage", "ElectricTrains",
+        <div style="font-size:25px; height:370px; margin:20px; background-color:aliceblue">
+            <div style="margin:20px; position:relative; top:10px;">
+                <img class="img-thumbnail" width="350" height="350"
+                     src="@Url.Action("GetImage", "ElectricTrains",
                         new { item.id })" />
+            </div>
+            <div style="position:relative; left:420px; top:-200px">
+                <div>@Html.DisplayName("Название: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
+                <div>@Html.DisplayName("Колчество вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div>
+                <div>@Html.DisplayName("Максимальная скорость: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
+                <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>
+                <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelitem => item.DepotCity)</div>
+            </div>
+            <div style="position:relative; left:800px; top:-400px">
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a>
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin")
+                    {
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                    }
+                }
+
+            </div>
         </div>
-        <div style="position:relative; left:420px; top:-200px">
-            <div>@Html.DisplayName("Название: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
-            <div>@Html.DisplayName("Колчество вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div>
-            <div>@Html.DisplayName("Максимальная скорость: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
-            <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>
-            <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelitem => item.DepotCity)</div>
-        </div>
-        <div style="position:relative; left:800px; top:-400px">
-            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a>
-        </div>
-    </div>
     }
 </div>
 
