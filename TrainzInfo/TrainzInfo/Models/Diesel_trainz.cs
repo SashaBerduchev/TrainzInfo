@@ -11,12 +11,11 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Number { get; set; }
         [Required]
         public int VagonCount { get; set; }
-        [Required]
-        public int Power { get; set; }
-        public string BaseInfo { get; set; }
-        public string AllInfo { get; set; }
+        public string Depo { get; set; }
+
         [Required]
         public string ImgSrc { get; set; }
     }

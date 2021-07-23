@@ -528,12 +528,6 @@ C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcore
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Details.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Edit.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Index.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Create.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Delete.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Details.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Edit.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Index.cshtml.g.cs
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\IndexAll.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Create.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Delete.cshtml.g.cs
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Details.cshtml.g.cs
@@ -3519,12 +3513,6 @@ C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcore
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Details.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Edit.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Index.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Create.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Delete.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Details.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Edit.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Index.cshtml.g.cs
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\IndexAll.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\AddImageForm.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\DeleteDenied.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\ElectricTrains\AddImageForm.cshtml.g.cs

@@ -17,7 +17,6 @@
     <div style="position:relative; left:350px; top: -150px; font-size:20px">
         <div>@Html.DisplayName("Название: ")  @Html.DisplayFor(modelItem => item.Name)</div>
         <div>@Html.DisplayName("Колличество вагонов: ")  @Html.DisplayFor(modelItem => item.VagonCount)</div>
-        <div>@Html.DisplayName("Мощность дизеля: ")  @Html.DisplayFor(modelItem => item.Power)</div>
         <div>@Html.DisplayName("Информация")  </div>
 
     </div>
@@ -27,7 +26,7 @@
         <a class="btn btn-info" style="width:220px; margin:10px" asp-controller="Diesel_trainz" asp-action="Details" asp-route-name="@item.Name">Информация о поезде</a>
         <a class="btn btn-danger" style="width:220px; margin:10px" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
     </div>
-    <div style="position:relative; top:-250px; left:20px">@Html.DisplayFor(modelItem => item.BaseInfo)</div>
+    
 </div>
 }
 
