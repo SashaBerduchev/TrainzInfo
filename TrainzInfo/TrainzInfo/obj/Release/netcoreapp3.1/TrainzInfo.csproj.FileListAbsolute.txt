@@ -2814,12 +2814,6 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Die
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Details.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Edit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselLocomotiveInfoes\Index.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Create.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Delete.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Details.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Edit.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\Index.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DieselTrainzLists\IndexAll.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Create.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Delete.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_trainz\Details.cshtml.g.cs
@@ -2830,12 +2824,6 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Die
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Details.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Edit.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Index.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Create.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Delete.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Details.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Edit.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\Index.cshtml.g.cs
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\DizelTrainzLists\IndexAll.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\AddImageForm.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\Create.cshtml.g.cs
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\Delete.cshtml.g.cs

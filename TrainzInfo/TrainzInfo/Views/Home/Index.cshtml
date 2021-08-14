@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>Фон</title>
-    
+
 </head>
 <div class="text-center">
 
@@ -34,27 +34,27 @@
             <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="RailwayUsersPhotoes" asp-action="Index">Красивые фотографии от пользователей</a>
         </div>
     </div>
-    
+
 </div>
 @if (ViewBag.user != null)
 {
-<div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:420px">
-    <div style="left:50px">
-        @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
-        {
-            <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Пользователи</a>
-            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Роли</a>
-            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
-            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основные картинки сайта</a>
-            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-            <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерация</a>
-        }
-        else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
-        {
-            <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-        }
+    <div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:420px">
+        <div style="left:50px">
+            @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Пользователи</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Роли</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основные картинки сайта</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерация</a>
+            }
+            else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+            }
+        </div>
     </div>
-</div>
 }
 <body>
     @*<div class="text-center">
@@ -86,10 +86,10 @@
                         @Html.DisplayFor(modelItem => info.DateTime.Date);
                     </div>
                     <div style="margin:20px">
-                        <div class="namenews" >
+                        <div class="namenews">
                             @Html.DisplayFor(modelItem => info.NameNews);
                         </div>
-                        <div class="namenews" >
+                        <div class="namenews">
                             @Html.DisplayFor(modelItem => info.BaseNewsInfo);
                         </div>
                     </div>
@@ -108,13 +108,46 @@
             }
         }
     </div>
-        
-    
-   
+
+    <div style="position:relative; left:-310px; top:-14900px">
+        @foreach (var locomotives in ViewBag.locomotives as List<Electic_locomotive>)
+        {
+        <div style="margin:25px; width:270px; background-color:aliceblue; height:350px">
+            <div style="position:relative; left:20px; top:20px;">
+                <div class="img">
+                    <img class="img-thumbnail" width="220" height="120"
+                         src="@Url.Action("GetImage", "Electic_locomotive",
+                        new { locomotives.id })" />
+                </div>
+            </div>
+            <div style="position:relative; left:20px; top:15px; font-size:15px">
+                <div>@Html.DisplayName("Название - ") @Html.DisplayFor(modelItem => locomotives.Seria)</div>
+                <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => locomotives.Number)</div>
+                <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => locomotives.Speed)</div>
+                @if (locomotives.ALlPowerP != null)
+                {
+                    <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => locomotives.ALlPowerP)</div>
+                }
+                else if (locomotives.DieselPower != null)
+                {
+                    <div>@Html.DisplayName("Мощность дизеля - ") @Html.DisplayFor(modelItem => locomotives.DieselPower)</div>
+                }
+            </div>
+            @*<div style="position:relative; left:780px; top:-380px; width:250px">
+
+
+                <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@locomotives.id">Детальная информация</a>
+                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@locomotives.Seria" asp-route-number="@locomotives.Number">Фото пользователей</a>
+            </div>*@
+        </div>
+        }
+    </div>
+
+
+
 </body>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
-    
 </style> 
