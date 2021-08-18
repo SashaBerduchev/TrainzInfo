@@ -64,7 +64,7 @@
             </p>
         </div>*@
 
-    <div class="infocont" style=" position:relative;  top:20px">
+    <div class="infocont" style=" position:relative; left:150px; top:20px; width:700px">
         @foreach (NewsInfo info in Model)
         {
             if (info.NameNews != "")
@@ -109,10 +109,10 @@
         }
     </div>
 
-    <div style="position:relative; left:-310px; top:-14900px">
+    <div style="position:relative; left:-150px; top:-15700px">
         @foreach (var locomotives in ViewBag.locomotives as List<Electic_locomotive>)
         {
-        <div style="margin:25px; width:270px; background-color:aliceblue; height:350px">
+        <div style="margin:25px; width:260px; background-color:aliceblue; height:350px">
             <div style="position:relative; left:20px; top:20px;">
                 <div class="img">
                     <img class="img-thumbnail" width="220" height="120"

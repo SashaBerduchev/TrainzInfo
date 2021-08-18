@@ -51,7 +51,7 @@ namespace TrainzInfo.Controllers
                 _context.IpAdresses.Update(ipaddreslocal);
                 await _context.SaveChangesAsync();
             }
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).Take(29).ToListAsync();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
