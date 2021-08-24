@@ -58,8 +58,10 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            List<Electic_locomotive> Electic_locomotive = _context.Electic_Locomotives.Take(15).ToList();
+            List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.Take(20).ToListAsync();
             ViewBag.locomotives = Electic_locomotive;
+            List<Stations> stations = await _context.Stations.Take(20).ToListAsync();
+            ViewBag.stations = stations;
             return View(newsInfo);
         }
 

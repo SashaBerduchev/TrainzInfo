@@ -112,34 +112,68 @@
     <div style="position: relative; left: -150px; top: -15100px; width: 260px;">
         @foreach (var locomotives in ViewBag.locomotives as List<Electic_locomotive>)
         {
-        <div style="margin:25px; width:260px; background-color:aliceblue; height:350px">
-            <div style="position:relative; left:20px; top:20px;">
-                <div class="img">
-                    <img class="img-thumbnail" width="220" height="120"
-                         src="@Url.Action("GetImage", "Electic_locomotive",
+            <div style="margin:25px; width:260px; background-color:aliceblue; height:350px">
+                <div style="position:relative; left:20px; top:20px;">
+                    <div class="img">
+                        <img class="img-thumbnail" width="220" height="120"
+                             src="@Url.Action("GetImage", "Electic_locomotive",
                         new { locomotives.id })" />
+                    </div>
                 </div>
-            </div>
-            <div style="position:relative; left:20px; top:15px; font-size:15px">
-                <div>@Html.DisplayName("Название - ") @Html.DisplayFor(modelItem => locomotives.Seria)</div>
-                <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => locomotives.Number)</div>
-                <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => locomotives.Speed)</div>
-                @if (locomotives.ALlPowerP != null)
-                {
-                    <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => locomotives.ALlPowerP)</div>
-                }
-                else if (locomotives.DieselPower != null)
-                {
-                    <div>@Html.DisplayName("Мощность дизеля - ") @Html.DisplayFor(modelItem => locomotives.DieselPower)</div>
-                }
-            </div>
-            @*<div style="position:relative; left:780px; top:-380px; width:250px">
+                <div style="position:relative; left:20px; top:15px; font-size:15px">
+                    <div>@Html.DisplayName("Название - ") @Html.DisplayFor(modelItem => locomotives.Seria)</div>
+                    <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => locomotives.Number)</div>
+                    <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => locomotives.Speed)</div>
+                    @if (locomotives.ALlPowerP != null)
+                    {
+                        <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => locomotives.ALlPowerP)</div>
+                    }
+                    else if (locomotives.DieselPower != null)
+                    {
+                        <div>@Html.DisplayName("Мощность дизеля - ") @Html.DisplayFor(modelItem => locomotives.DieselPower)</div>
+                    }
+                </div>
+                @*<div style="position:relative; left:780px; top:-380px; width:250px">
 
 
-                <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@locomotives.id">Детальная информация</a>
-                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@locomotives.Seria" asp-route-number="@locomotives.Number">Фото пользователей</a>
-            </div>*@
-        </div>
+                        <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@locomotives.id">Детальная информация</a>
+                        <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@locomotives.Seria" asp-route-number="@locomotives.Number">Фото пользователей</a>
+                    </div>*@
+            </div>
+        }
+    </div>
+
+    <div style="position: relative; left: 950px; top: -22610px; width: 260px;">
+        @foreach (var item in ViewBag.stations as List<Stations>)
+        {
+            <div style="background-color:aliceblue; margin:20px; height:620px; width:250px">
+                <div style="margin:20px; position:relative; top:20px">
+                    <div class="img">
+                        @if (item.Image == null)
+                        {
+                            <img src="@item.Imgsrc" width="350" height="250">
+                        }
+                        else
+                        {
+                            <img class="img-thumbnail" width="350" height="250"
+                                 src="@Url.Action("GetImage", "Stations",
+                        new { item.id })" />
+                        }
+                    </div>
+                </div>
+                <div class="station_info">
+                    <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
+                    <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
+                    <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+                </div>
+                <!--<div class="station_btns">
+                    <a class="btn btn-info" style="width:190px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>-->
+                    @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
+                    <!--<a class="btn btn-primary" style="width:190px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>-->
+                    @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+                <!--</div>-->
+            </div>
         }
     </div>
 
