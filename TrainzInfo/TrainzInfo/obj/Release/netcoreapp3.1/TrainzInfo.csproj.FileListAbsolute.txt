@@ -4053,3 +4053,4 @@ C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp
 C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.GeneratedMSBuildEditorConfig.editorconfig

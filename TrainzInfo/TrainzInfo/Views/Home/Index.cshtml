@@ -146,7 +146,7 @@
     <div style="position: relative; left: 950px; top: -22610px; width: 260px;">
         @foreach (var item in ViewBag.stations as List<Stations>)
         {
-            <div style="background-color:aliceblue; margin:20px; height:620px; width:250px">
+            <div style="background-color: aliceblue; margin: 25px; height: 620px; width: 250px; height: 350px">
                 <div style="margin:20px; position:relative; top:20px">
                     <div class="img">
                         @if (item.Image == null)
@@ -161,7 +161,7 @@
                         }
                     </div>
                 </div>
-                <div class="station_info">
+                <div class="station_info" style="margin:20px">
                     <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
                     <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
                     <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
