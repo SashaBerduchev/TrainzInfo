@@ -172,6 +172,8 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
+        
+
         public FileContentResult GetImage(int id)
         {
             NewsInfo news = _context.NewsInfos
@@ -180,9 +182,10 @@ namespace TrainzInfo.Controllers
             if (news != null)
             {
                 var file = File(news.NewsImage, news.ImageMimeTypeOfData);
-                Trace.WriteLine(news.NewsImage +  " + " + news.ImageMimeTypeOfData.ToString());
+                Trace.WriteLine(news.NewsImage + " + " + news.ImageMimeTypeOfData.ToString());
                 Trace.WriteLine(file);
                 return file;
+
             }
             else
             {

@@ -9,7 +9,6 @@ namespace TrainzInfo.Models
     public class Electic_locomotive
     {
         public int id { get; set; }
-        [Required]
         public string User { get; set; }
         public int UserId { get; set; }
         [Required]

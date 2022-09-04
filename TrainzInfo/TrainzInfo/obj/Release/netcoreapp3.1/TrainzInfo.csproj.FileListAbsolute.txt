@@ -659,7 +659,6 @@ C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcore
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.Views.pdb
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.csproj.CopyComplete
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\staticwebassets\TrainzInfo.StaticWebAssets.Manifest.cache
-C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\staticwebassets\TrainzInfo.StaticWebAssets.xml
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.dll
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
@@ -3495,7 +3494,6 @@ C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcore
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.csproj.AssemblyReference.cache
-C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\scopedcss\bundle\TrainzInfo.styles.css
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Create.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Delete.cshtml.g.cs
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Diesel_train_info\Details.cshtml.g.cs
@@ -4054,3 +4052,18 @@ C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp
 C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\U2\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\TrainzInfo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\EPPlus.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\EPPlus.Interfaces.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\EPPlus.System.Drawing.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\System.Text.Encoding.CodePages.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Text.Encoding.CodePages.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\netcoreapp3.1\Razor\Views\Electic_locomotive\AddNewsView.cshtml.g.cs

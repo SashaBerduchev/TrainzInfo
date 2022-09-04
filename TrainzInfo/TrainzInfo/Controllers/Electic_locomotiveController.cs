@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -27,6 +28,58 @@ namespace TrainzInfo.Controllers
             _context = context;
             Trace.WriteLine(this);
 
+        }
+        public IActionResult AddNewsView()
+        {
+            return View(nameof(AddNewsView));
+        }
+        public async Task<IActionResult> AddNews(IFormFile uploads)
+        {
+            //var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //Users user = _context.Users.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            //if (user != null && user.Status == "true")
+            //{
+            //    ViewBag.user = user;
+            //}
+            if (uploads != null)
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
+                    try
+                    {
+                        using (var package = new ExcelPackage(memoryStream))
+                        {
+                            var worksheet = package.Workbook.Worksheets.First(); // Tip: To access the first worksheet, try index 1, not 0
+                            Trace.WriteLine(worksheet);
+                            var rowCount = worksheet.Dimension?.Rows;
+                            var colCount = worksheet.Dimension?.Columns;
+                            List<NewsInfo> tireses = new List<NewsInfo>();
+                            for (int row = 1; row < rowCount.Value; row++)
+                            {
+                                var articul = worksheet.Cells[row, 4].Value;
+                                var brend = worksheet.Cells[row, 5].Value;
+                            }
+                        }
+                    }
+                    catch (Exception exp)
+                    {
+                        Trace.WriteLine(exp.ToString());
+                        FileStream fileStream = new FileStream(@"ErrorWriteExcel.log", FileMode.Append);
+                        for (int i = 0; i < exp.ToString().Length; i++)
+                        {
+                            byte[] array = Encoding.Default.GetBytes(exp.ToString());
+                            fileStream.Write(array, 0, array.Length);
+
+                        }
+                        fileStream.Close();
+                        TempData["alertMessage"] = "Exception";
+                    }
+
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<List<Electic_locomotive>> IndexAction()
