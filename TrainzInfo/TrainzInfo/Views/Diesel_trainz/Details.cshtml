@@ -1,0 +1,39 @@
+﻿@model TrainzInfo.Models.Diesel_trainz
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <div style="background-color:aliceblue">
+        <div style="margin:20px">
+            <img src="@Model.ImgSrc" width="380" height="270">
+        </div>
+        <div style="position:relative; left:450px; top:-250px">
+            <div style="font-size:25px">@Html.DisplayName("Название: ") @Html.DisplayName(Model.Name)</div>
+            <div style="font-size:25px">@Html.DisplayName("Колличество вагонов: ") @Html.DisplayName(Model.VagonCount.ToString())</div>
+            
+            <div>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
+
+        }
+    }
+</div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

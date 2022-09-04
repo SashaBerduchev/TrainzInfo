@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+п»ї
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Text;
 using TrainzInfo.Data;
-using TrainzInfo.Models;
 
 namespace TrainzInfo
 {
     public class Startup
     {
-        public bool DEBUG_MODE = false;
+        public bool DEBUG_MODE = true;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,16 +27,30 @@ namespace TrainzInfo
         {
             //services.AddControllersWithViews();
             string connection = "";
-            // получаем строку подключения из файла конфигурации
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            string trace = "";
             if (DEBUG_MODE == true) {
                 connection = Configuration.GetConnectionString("DefaultConnection");
+                trace = "test connection good";
             }else if(DEBUG_MODE == false)
             {
-                connection = Configuration.GetConnectionString("WebConnection");
+
+                connection = Configuration.GetConnectionString("WebProd");
+                trace = ("server connection good!!" + connection);
+
             }
-            // добавляем контекст MobileContext в качестве сервиса в приложение
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ MobileContext пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
+            FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
+            for (int i = 0; i < trace.Length; i++)
+            {
+                byte[] array = Encoding.Default.GetBytes(trace.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
+            }
+
+            fileStreamLog.Close();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

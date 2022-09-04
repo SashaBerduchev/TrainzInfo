@@ -6,6 +6,15 @@
 
 <h1>Новости</h1>
 
+<head>
+    <meta charset="utf-8">
+    <title>Фон</title>
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</head>
 <p>
     <a asp-action="Create">Создать новую новость</a>
 </p>
@@ -45,6 +54,7 @@
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>
             <td>
+                <a class="btn btn-outline-info" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@item.id">Добавить картинку</a>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>

@@ -1,4 +1,6 @@
-﻿@model TrainzInfo.Models.NewsInfo
+﻿
+@model TrainzInfo.Models.NewsInfo
+
 
 @{
     ViewData["Title"] = "Create";
@@ -12,37 +14,61 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NameNews" class="control-label"></label>
-                <input asp-for="NameNews" width=140 height=150 class="form-control" />
+                @Html.DisplayName("Название")
+                <input id="NameNews" asp-for="NameNews" width=140 height=150 class="form-control" />
                 <span asp-validation-for="NameNews" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BaseNewsInfo" class="control-label"></label>
-                <input asp-for="BaseNewsInfo" class="form-control" />
+                @Html.DisplayName("Краткое содержание новости")
+                <textarea id="BaseNews" asp-for="BaseNewsInfo" class="form-control"></textarea>
                 <span asp-validation-for="BaseNewsInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label   asp-for="NewsInfoAll" class="control-label"></label>
-                <input width="450" height="600" asp-for="NewsInfoAll" class="form-control" />
+                @Html.DisplayName("Полная новость")
+                <textarea id="NewsInfoAll" asp-for="NewsInfoAll" class="form-control"></textarea>
                 <span asp-validation-for="NewsInfoAll" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DateTime" class="control-label"></label>
-                <input asp-for="DateTime" class="form-control" />
-                <span asp-validation-for=@DateTime.Now class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imgsrc" class="control-label"></label>
-                <input width="600" asp-for="Imgsrc" class="form-control" />
-                <span asp-validation-for="Imgsrc" class="text-danger"></span>
-            </div>
+            @*<div class="form-group">
+                    <label asp-for="DateTime" class="control-label"></label>
+                    <input asp-for="DateTime" class="form-control" />
+                    <span asp-validation-for=@DateTime.Now class="text-danger"></span>
+                </div>*@
+        
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<style>
+    #BaseNews {
+        width: 800px;
+        height: 500px;
+    }
+</style>
+<style>
+    #NameNews {
+        width: 700px;
+        height: 50px;
+    }
+</style>
+<style>
+    #NewsInfoAll {
+        width: 800px;
+        height: 700px;
+    }
+</style>
+<style>
+    #News {
+        width: 600px;
+        height: 100px;
+    }
+</style>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

@@ -11,7 +11,6 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string Name { get; set; }
-        public string Number { get; set; }
         [Required]
         public string Depot { get; set; }
         [Required]
@@ -20,7 +19,7 @@ namespace TrainzInfo.Models
         public string City { get; set; }
         [Required]
         public string Status { get; set; }
-        [Required]
-        public string Photo { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

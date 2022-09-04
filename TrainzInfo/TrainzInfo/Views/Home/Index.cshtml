@@ -1,77 +1,188 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "TrainzInfo";
 }
 
+<head>
+    <meta charset="utf-8">
+    <title>Фон</title>
 
+</head>
 <div class="text-center">
+
+
+
     <h1 class="display-4">Добро пожаловать!</h1>
     @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-    <p>
-        <big>
-            Данный сайт посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
-            Здесь вы найдете много интересной информации о железнодорожном транспорте и новости
-        </big>
-    </p>
-    <a class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+    <div class="maincardpage">
+        <p>
+            <div class="main_text">
+                Сайт ТреинзИнфo посвящается любителям железнодорожного транспорта, любителям поездов, электричек, электовозов и тепловозов.
+                Здесь вы найдете много интересной информации о железнодорожном транспорте и новости с железной дороги и транспорта
+            </div>
+        </p>
 
+
+        <div class="btn_main_panel">
+            @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="UserLocomotivePhotos" asp-action="IndexAll">Фото локомотивов от пользователей</a>*@
+            <a class="btn btn-info btn_news" style="width:180px" asp-area="" asp-controller="Electic_locomotive" asp-action="Index">Локомотивы</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="UserTrainzPhotoes" asp-action="IndexAll">Фото поездов от пользователей</a>
+            @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>*@
+            @*<a class="btn btn-info" style="margin:10px; width:500px;" asp-controller="DieselLocomoives" asp-action="Index">Смотреть весь список тепловозов</a>*@
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="ElectricTrains" asp-action="Index">Электропоезда</a>
+            @*<a class="btn btn-info" style="margin:10px;" asp-controller="Diesel_trainz" asp-action="Index"> Дизель - поезда </a>*@
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Stations" asp-action="IndexAll">Станции</a>
+            <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="RailwayUsersPhotoes" asp-action="Index">Красивые фотографии от пользователей</a>
+            <a class="btn btn-info" asp-action="CopyNews">CopyNews</a>
+        </div>
+    </div>
 
 </div>
-<body>
-    <div class="text-center">
-        <p>
-
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/%D0%A7%D0%A18-082%2C_%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%2C_%D0%9A%D0%B8%D0%B5%D0%B2%2C_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D1%8F_%D0%9A%D0%B8%D0%B5%D0%B2-%D0%9F%D0%B0%D1%81%D1%81%D0%B0%D0%B6%D0%B8%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%28Trainpix_207464%29.jpg" width="900" height="650" alt="Железная дорога" title="Электровоз ЧС8" />
-        </p>
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                
-                <th>
-                    @Html.DisplayName("Картинка")
-                </th>
-                <th>
-                    @Html.DisplayName("Название")
-                </th>
-                <th>
-                    @Html.DisplayName("Общее")
-                </th>
-                <th>
-                    @Html.DisplayName("Дата")
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (NewsInfo item in Model)
+@if (ViewBag.user != null)
+{
+    <div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:420px">
+        <div style="left:50px">
+            @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
             {
-                if (item.NameNews != "")
-                {
-                <tr>
-
-                    <td>
-                        <img src="@item.Imgsrc" width="170" height="100" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NameNews)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BaseNewsInfo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateTime)
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@item.id">Смотреть полную статью</a>
-                        @*<a asp-action="Details" asp-route-id="@item.id">Детальная информация</a>*@
-                        @*<a asp-action="Delete" asp-route-id="@item.id">Удалить</a>*@
-                        <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@item.id">Delete</a>
-
-                    </td>
-                </tr>
-                }
+                <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Пользователи</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Роли</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основные картинки сайта</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерация</a>
             }
-        </tbody>
-    </table>
+            else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
+            }
+        </div>
+    </div>
+}
+<body>
+    @*<div class="text-center">
+            <p>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/%D0%A7%D0%A18-082%2C_%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0%2C_%D0%9A%D0%B8%D0%B5%D0%B2%2C_%D1%81%D1%82%D0%B0%D0%BD%D1%86%D0%B8%D1%8F_%D0%9A%D0%B8%D0%B5%D0%B2-%D0%9F%D0%B0%D1%81%D1%81%D0%B0%D0%B6%D0%B8%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%28Trainpix_207464%29.jpg" width="900" height="600" alt="Железная дорога" title="Электровоз ЧС8" />
+            </p>
+        </div>*@
+
+    <div class="infocont" style=" position:relative; left:150px; top:20px; width:800px">
+        @foreach (NewsInfo info in Model)
+        {
+            if (info.NameNews != "")
+            {
+                <div class="basecont" style="background-color:azure; margin:20px">
+                    <div class="img">
+                        @if (info.NewsImage == null)
+                        {
+                            <img src="@info.Imgsrc" width="350" height="350">
+                        }
+                        else
+                        {
+                            <img class="img-thumbnail" width="350" height="350"
+                                 src="@Url.Action("GetImage", "NewsInfoes",
+                        new { info.id })" />
+                        }
+                    </div>
+                    <div class="Data" style="color:black; margin:10px">
+                        @Html.DisplayFor(modelItem => info.DateTime.Date);
+                    </div>
+                    <div style="margin:20px">
+                        <div class="namenews">
+                            @Html.DisplayFor(modelItem => info.NameNews);
+                        </div>
+                        <div class="namenews">
+                            @Html.DisplayFor(modelItem => info.BaseNewsInfo);
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <a class="btn btn-info btn_news" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Смотреть полную статью</a>
+                        @if (ViewBag.user != null)
+                        {
+                            if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+                            {
+                                <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Добавить картинку</a>
+                            }
+                        }
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div style="position: relative; left: -150px; top: -15100px; width: 260px;">
+        @foreach (var locomotives in ViewBag.locomotives as List<Electic_locomotive>)
+        {
+            <div style="margin:25px; width:260px; background-color:aliceblue; height:350px">
+                <div style="position:relative; left:20px; top:20px;">
+                    <div class="img">
+                        <img class="img-thumbnail" width="220" height="120"
+                             src="@Url.Action("GetImage", "Electic_locomotive",
+                        new { locomotives.id })" />
+                    </div>
+                </div>
+                <div style="position:relative; left:20px; top:15px; font-size:15px">
+                    <div>@Html.DisplayName("Название - ") @Html.DisplayFor(modelItem => locomotives.Seria)</div>
+                    <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => locomotives.Number)</div>
+                    <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => locomotives.Speed)</div>
+                    @if (locomotives.ALlPowerP != null)
+                    {
+                        <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => locomotives.ALlPowerP)</div>
+                    }
+                    else if (locomotives.DieselPower != null)
+                    {
+                        <div>@Html.DisplayName("Мощность дизеля - ") @Html.DisplayFor(modelItem => locomotives.DieselPower)</div>
+                    }
+                </div>
+                @*<div style="position:relative; left:780px; top:-380px; width:250px">
+
+
+                        <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@locomotives.id">Детальная информация</a>
+                        <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@locomotives.Seria" asp-route-number="@locomotives.Number">Фото пользователей</a>
+                    </div>*@
+            </div>
+        }
+    </div>
+
+    <div style="position: relative; left: 950px; top: -22610px; width: 260px;">
+        @foreach (var item in ViewBag.stations as List<Stations>)
+        {
+            <div style="background-color: aliceblue; margin: 25px; height: 620px; width: 250px; height: 350px">
+                <div style="margin:20px; position:relative; top:20px">
+                    <div class="img">
+                        @if (item.Image == null)
+                        {
+                            <img src="@item.Imgsrc" width="350" height="250">
+                        }
+                        else
+                        {
+                            <img class="img-thumbnail" width="350" height="250"
+                                 src="@Url.Action("GetImage", "Stations",
+                        new { item.id })" />
+                        }
+                    </div>
+                </div>
+                <div class="station_info" style="margin:20px">
+                    <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
+                    <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
+                    <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+                </div>
+                <!--<div class="station_btns">
+                    <a class="btn btn-info" style="width:190px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>-->
+                    @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
+                    <!--<a class="btn btn-primary" style="width:190px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>-->
+                    @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+                <!--</div>-->
+            </div>
+        }
+    </div>
+
+
+
 </body>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style> 

@@ -1,0 +1,66 @@
+﻿@model TrainzInfo.Models.Train
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4" style="background-color:aliceblue">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
+            <div class="form-group">
+                @Html.DisplayName("Номер");
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="StationFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Начальная станция");
+                @Html.DropDownList("StationFrom", ViewBag.city as SelectList, htmlAttributes: new { @class = "form-control" })
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-dark" asp-controller="Stations" asp-action="Create">Добавить станцию</a>
+                    }
+                }
+                <span asp-validation-for="StationFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Конечная станция ");
+                @Html.DropDownList("StationTo", ViewBag.city as SelectList)
+                <span asp-validation-for="StationTo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Типо поезда");
+                @Html.DropDownList("Type", ViewBag.type as SelectList)
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-dark" asp-controller="TypeOfPassTrains" asp-action="Create">Добавить тип</a>
+                    }
+                }
+
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Имя поезда если существует");
+                <input asp-for="NameOfTrain" class="form-control" />
+                <span asp-validation-for="NameOfTrain" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Добавить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

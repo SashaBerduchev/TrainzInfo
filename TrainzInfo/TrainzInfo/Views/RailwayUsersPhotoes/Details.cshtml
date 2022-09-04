@@ -1,0 +1,62 @@
+﻿@model TrainzInfo.Models.RailwayUsersPhoto
+
+@{
+    ViewData["Title"] = "Инфоррмация о фото";
+}
+
+
+<head>
+    <meta property="og:url" content="http://trainzinfo.org.ua/RailwayUsersPhotoes/Details +@Model.id">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="@Url.Action("GetImage", "RailwayUsersPhotoes", new { Model.id })">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:site_name" content="trainzinfo" />
+    <meta property="og:title" content="TrainzInfo">
+    <meta property="og:description" content="Железнодорожный сайт">
+    <title>Details</title>
+</head>
+<body>
+
+    <div>
+        <h4><a asp-controller="Users" asp-action="Details" asp-route-id="@Model.UserId">@Model.NameUser</a></h4>
+        <hr />
+        <div style="background-color:aliceblue">
+            @if (Model.CitytTo == null || Model.CitytTo == "")
+            {
+                <div class="row" style="font-size:20px; position:relative; left:15px"><b>Станция: </b><p>@Model.CityFrom</p></div>
+            }
+            else
+            {
+                <div class="row" style="font-size: 20px; position:relative; left: 15px"><b>Участок: </b><p>@Model.CityFrom - @Model.CitytTo</p></div>
+            }
+            <b>Информация: </b>
+            <p>@Model.Information</p>
+        </div>
+        <div>
+            <img class="img-thumbnail" width="350" height="350"
+                 src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+                        new { Model.id })" />
+        </div>
+    </div>
+    <div>
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+            {
+                if (ViewBag.user.Id == Model.UserId)
+                {
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редактировать</a>
+                }
+
+            }
+        }
+
+        <a class="btn btn-info" asp-action="Index">Вернутся</a>
+    </div>
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</body>
+</html>

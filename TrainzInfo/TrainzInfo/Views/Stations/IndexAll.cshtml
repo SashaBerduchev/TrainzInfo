@@ -1,0 +1,78 @@
+﻿@model IEnumerable<TrainzInfo.Models.Stations>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1> Все станции</h1>
+<form method="get">
+    <div class="form-inline">
+        @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Отобразить" class="btn btn-info" />
+    </div>
+</form>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+    }
+}
+<p>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-dark" asp-action="Create">Добавить</a>
+        }
+    }
+</p>
+<div>
+    @foreach (var item in Model)
+    {
+        <div style="background-color:aliceblue; margin:20px; height:420px;">
+            <div style="margin:20px; position:relative; top:20px">
+                <div class="img">
+                    @if (item.Image == null)
+                    {
+                        <img src="@item.Imgsrc" width="350" height="250">
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail" width="350" height="250"
+                             src="@Url.Action("GetImage", "Stations",
+                        new { item.id })" />
+                    }
+                </div>
+            </div>
+            <div class="station_info">
+                <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
+                <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
+                <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
+                <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+            </div>
+            <div class="station_btns">
+                <a class="btn btn-info" style="width:190px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>
+                @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
+                <a class="btn btn-primary" style="width:190px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
+                @*<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+            </div>
+        </div>
+    }
+</div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

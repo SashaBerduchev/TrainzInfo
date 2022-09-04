@@ -33,13 +33,14 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Electic_locomotive electic_Locomotives = await _context.Electic_Locomotives.Where(x => x.id == idloc).FirstOrDefaultAsync();
-            var electrick_Lockomotive_Info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_Locomotives.Name).FirstOrDefault();
+            var electrick_Lockomotive_Info = _context.Electrick_Lockomotive_Infos.Where(m => m.Name == electic_Locomotives.Seria).FirstOrDefault();
                 
             if (electrick_Lockomotive_Info == null)
             {
                 Electrick_Lockomotive_Info electrick_Lockomotive_Info_add = new Electrick_Lockomotive_Info {
-                    Name = electic_Locomotives.Name,
+                    Name = electic_Locomotives.Seria,
                     Power = electic_Locomotives.ALlPowerP,
+                    Diesel = electic_Locomotives.DieselPower,
                     Electric_Type = "",
                     Baseinfo = "",
                     AllInfo = ""
@@ -47,14 +48,18 @@ namespace TrainzInfo.Controllers
                 _context.Add(electrick_Lockomotive_Info_add);
                 await _context.SaveChangesAsync();
             }
-            var electrick_Lockomotive_Info_result = await _context.Electrick_Lockomotive_Infos
-                .FirstOrDefaultAsync(m => m.Name == electic_Locomotives.Name);
-            return View(electrick_Lockomotive_Info_result);
+           
+
+            var base_info = _context.locomotiveBaseInfos.Where(x => x.Name == electic_Locomotives.Seria).Select(x => x.BaseInfo).ToList().FirstOrDefault();
+            ViewBag.base_info = base_info;
+            return View(electrick_Lockomotive_Info);
         }
 
         // GET: Electrick_Lockomotive_Info/Create
         public IActionResult Create()
         {
+            SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            ViewBag.seria = series;
             return View();
         }
 
@@ -67,6 +72,10 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(electrick_Lockomotive_Info.Name == null)
+                {
+                    return RedirectToAction(nameof(Create));
+                }
                 _context.Add(electrick_Lockomotive_Info);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -75,17 +84,17 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Electrick_Lockomotive_Info/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? idname)
         {
-            if (id == null)
+            if (idname == null && idname == "")
             {
                 return NotFound();
             }
 
-            var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos.FindAsync(id);
+            var electrick_Lockomotive_Info = await _context.Electrick_Lockomotive_Infos.Where(x => x.Name == idname).FirstOrDefaultAsync();
             if (electrick_Lockomotive_Info == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Create));
             }
             return View(electrick_Lockomotive_Info);
         }
@@ -108,6 +117,7 @@ namespace TrainzInfo.Controllers
                 {
                     _context.Update(electrick_Lockomotive_Info);
                     await _context.SaveChangesAsync();
+                    return View(electrick_Lockomotive_Info);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,9 +130,9 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details));
+                
             }
-            return View(electrick_Lockomotive_Info);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Electrick_Lockomotive_Info/Delete/5

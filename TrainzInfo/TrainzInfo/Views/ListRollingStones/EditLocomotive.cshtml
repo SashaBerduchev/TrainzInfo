@@ -3,7 +3,7 @@
     ViewData["Title"] = "EditLocomotive";
 }
 
-<h1>EditLocomotive</h1>
+<h1>@Model.Name</h1>
 
 <div class="row">
     <div class="col-md-4">
@@ -16,13 +16,8 @@
                 <span asp-validation-for=@Model.Name class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Depot" class="control-label"></label>
-                <input asp-for="Depot" class="form-control" />
+                @Html.DropDownList("Depot", ViewBag.depots as SelectList)
                 <span asp-validation-for="Depot" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -32,18 +27,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
+                @Html.DropDownList("City", ViewBag.citys as SelectList)
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                @Html.DropDownList("Status", ViewBag.status as SelectList)
                 <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
-                <input asp-for="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
             </div>
             <form asp-action="EditLocomotive">
                 <input type="hidden" asp-for="id" />

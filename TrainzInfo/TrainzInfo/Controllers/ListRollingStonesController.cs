@@ -24,19 +24,36 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones
         public async Task<IActionResult> Index(string? idlocname)
         {
-            return View(await _context.ListRollingStones.Where(x=>x.Name == idlocname).ToListAsync());
+            ViewBag.locomotives = await _context.ListRollingStones.Where(x => x.Name == idlocname).ToListAsync();
+            return View();
+        }
+
+        public async Task<IActionResult> IndexDepot(string? depotname)
+        {
+            ViewBag.Depo = depotname;
+            List<Electic_locomotive> rollingStones = await _context.Electic_Locomotives.Where(x => x.Depot == depotname).ToListAsync();
+            List<ElectricTrain> rollingStonesTrains = await _context.Electrics.Where(x => x.DepotTrain == depotname).ToListAsync();
+            if (rollingStones != null && rollingStones.Count > 0)
+            {
+                ViewBag.locomotives = rollingStones;
+            }
+            else if(rollingStonesTrains != null && rollingStonesTrains.Count > 0)
+            {
+                ViewBag.trains = rollingStonesTrains;
+            }
+            return View("IndexDepot");
         }
 
         // GET: ListRollingStones/Details/5
-        public async Task<IActionResult> Details(string? idlocname)
+        public async Task<IActionResult> Details(string? idlocname, string? number)
         {
             if (idlocname == null)
             {
                 return NotFound();
             }
 
-            var listRollingStone = await _context.ListRollingStones
-                .FirstOrDefaultAsync(m => m.Name == idlocname);
+            var listRollingStone = await _context.Electic_Locomotives
+                .FirstOrDefaultAsync(m => m.Seria == idlocname && m.Number == number);
             if (listRollingStone == null)
             {
                 return NotFound();
@@ -48,6 +65,28 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones/Create
         public IActionResult Create()
         {
+            List<string> liststone = _context.ListRollingStones.Select(x => x.Name).ToList();
+            SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
+            ViewBag.depots = selectListItems;
+            List<string> locomotives = _context.Electic_Locomotives.Select(x => x.Seria + " - " + x.Number).ToList();
+            locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
+            for (int i = 0; i < locomotives.Count; i++)
+            {
+                for (int j = 0; j < liststone.Count; j++)
+                {
+                    if(locomotives[i] == liststone[j])
+                    {
+                        locomotives.RemoveAt(i);
+                        i = 0;
+                    }
+                }
+            }
+            SelectList selectListsNameLocomotive = new SelectList(locomotives);
+            ViewBag.locomotives = selectListsNameLocomotive;
+            SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            ViewBag.citys = citys;
+            SelectList status = new SelectList(_context.Statuses.Select(x => x.Status_namr).ToList());
+            ViewBag.status = status;
             return View();
         }
 
@@ -58,12 +97,17 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
-            if (ModelState.IsValid)
+            listRollingStone.Country = "Украина";
+            Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
+            if(listRollingStone.Image == null)
             {
-                _context.Add(listRollingStone);
-                await _context.SaveChangesAsync();
+                listRollingStone.Image = electic_Locomotive.Image;
+                listRollingStone.ImageMimeTypeOfData = electic_Locomotive.ImageMimeTypeOfData;
             }
-            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
+             _context.Add(listRollingStone);
+             await _context.SaveChangesAsync();
+            
+            return View("IndexAll", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Edit/5
@@ -83,7 +127,6 @@ namespace TrainzInfo.Controllers
                     Name = electrick_Lockomotive.Name,
                     City = "",
                     Country = "",
-                    Number = "",
                     Depot = ""
                 };
                 Trace.WriteLine("POST " + this + listRollingStoneObj);
@@ -147,6 +190,13 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+          
+            SelectList depots = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
+            ViewBag.depots = depots;
+            SelectList citys = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            ViewBag.citys = citys;
+            SelectList status = new SelectList(_context.Statuses.Select(x => x.Status_namr).ToList());
+            ViewBag.status = status;
             return View(listRollingStone);
         }
 
@@ -164,6 +214,7 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     Trace.WriteLine("POST " + this + listRollingStone);
+                    Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
                     _context.Update(listRollingStone);
                     await _context.SaveChangesAsync();
                 }
@@ -180,7 +231,7 @@ namespace TrainzInfo.Controllers
                 }
             }
             Trace.WriteLine("RESPONSE " + this + listRollingStone);
-            return View("Index", await _context.ListRollingStones.Where(x => x.Name == listRollingStone.Name).ToListAsync());
+            return View("IndexAll", await _context.ListRollingStones.ToListAsync());
         }
 
         // GET: ListRollingStones/Delete/5

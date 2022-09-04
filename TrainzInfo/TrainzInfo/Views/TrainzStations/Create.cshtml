@@ -1,0 +1,54 @@
+﻿@model TrainzInfo.Models.TrainzStations
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4" style="background-color:aliceblue">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.DisplayName("Номер")
+                @Html.DropDownList("NumberOFTrain", ViewBag.trainz as SelectList, htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Название станции")
+                @Html.DropDownList("NameStationStop", ViewBag.citys as SelectList, htmlAttributes: new { @class = "form-control" })
+                <span asp-validation-for="NameStationStop" class="text-danger"></span>
+                <a class="btn btn-dark"target="_blank" asp-controller="Stations" asp-action="Create">Добавить станцию</a>
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-dark" asp-controller="Stations" asp-action="Create">Добавить станцию</a>
+                    }
+                }
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Время прибытия")
+                <input asp-for="TimeOfArrive" class="form-control" />
+                <span asp-validation-for="TimeOfArrive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Время отправления")
+                <input asp-for="TimeOfDepet" class="form-control" />
+                <span asp-validation-for="TimeOfDepet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<div>
+    @*<a asp-action="Index">Back to List</a>*@
+</div>
+

@@ -17,12 +17,6 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayName("Номер")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayName("Депо приписки")
         </dt>
         <dd class="col-sm-10">
@@ -46,12 +40,14 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Status)
         </dd>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Photo)
-        </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-idlocname="@Model.Name">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

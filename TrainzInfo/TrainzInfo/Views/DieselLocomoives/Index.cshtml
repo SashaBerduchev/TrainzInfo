@@ -50,8 +50,25 @@
                 <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.id">Детальная информация</a>
                 <a class="btn btn-outline-primary" asp-controller="ListRollingStones" asp-action="Index" asp-route-idlocname="@item.Name">Смотреть перечень локомотивов @item.Name</a>
                 <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <a class="btn btn-outline-success" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Name">Фото пользователей</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<style type="text/css">
+    td {
+        background: #fff; /* Цвет фона */
+        padding: 5px; /* Поля в ячейках */
+        opacity: 0.8; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width 700;
+        color: black;
+        text-decoration: solid;
+    }
+</style>
