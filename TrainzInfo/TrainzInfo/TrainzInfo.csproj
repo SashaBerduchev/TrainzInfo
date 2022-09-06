@@ -6,17 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20210419192814_update-database.cs" />
-    <Compile Remove="Migrations\20210419192814_update-database.Designer.cs" />
-    <Compile Remove="Migrations\20210422134348_NewsInfoImage2.cs" />
-    <Compile Remove="Migrations\20210422134348_NewsInfoImage2.Designer.cs" />
-    <Compile Remove="Migrations\20210422134606_NewsInfoImage.cs" />
-    <Compile Remove="Migrations\20210422134606_NewsInfoImage.Designer.cs" />
-    <Compile Remove="Migrations\20210516170643_prod.cs" />
-    <Compile Remove="Migrations\20210516170643_prod.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.0.7" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.13" />
@@ -27,6 +16,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.21.61" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.70" />
     <PackageReference Include="System.Private.ServiceModel" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
   </ItemGroup>

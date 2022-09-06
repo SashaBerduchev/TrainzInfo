@@ -15,6 +15,7 @@ namespace TrainzInfo
     public class Startup
     {
         public bool DEBUG_MODE = true;
+        public bool ORACLE_USE = true;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,8 +31,17 @@ namespace TrainzInfo
             // �������� ������ ����������� �� ����� ������������
             string trace = "";
             if (DEBUG_MODE == true) {
-                connection = Configuration.GetConnectionString("DefaultConnection");
-                trace = "test connection good";
+                if (ORACLE_USE == true)
+                {
+                    connection = Configuration.GetConnectionString("DefaultConnectionOracle");
+                    trace = "test connection good";
+                }
+                else
+                {
+                    connection = Configuration.GetConnectionString("DefaultConnection");
+                    trace = "test connection good";
+                }
+                
             }else if(DEBUG_MODE == false)
             {
 
@@ -40,8 +50,16 @@ namespace TrainzInfo
 
             }
             // ��������� �������� MobileContext � �������� ������� � ����������
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-            services.AddControllersWithViews();
+            if(ORACLE_USE == false)
+            {
+                services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+                services.AddControllersWithViews();
+            }
+            else {
+                services.AddDbContext<ApplicationContext>(options => options.UseOracle(connection));
+                services.AddControllersWithViews();
+            }
+            
             FileStream fileStreamLog = new FileStream(@"Trace.log", FileMode.Append);
             for (int i = 0; i < trace.Length; i++)
             {

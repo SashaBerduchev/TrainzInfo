@@ -110,36 +110,36 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var useragent = Request.Headers;
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
-            if (ipaddres == null || ipaddres == "")
-            {
-                IpAdresses ipAdresses = new IpAdresses
-                {
-                    IpAddres = remoteIpAddres,
-                    Date = DateTime.Now
-                };
-                _context.IpAdresses.Add(ipAdresses);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                IpAdresses ipaddreslocal = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
-                ipaddreslocal.Date = DateTime.Now;
-                _context.IpAdresses.Update(ipaddreslocal);
-                await _context.SaveChangesAsync();
-            }
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+            //var useragent = Request.Headers;
+            //var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
+            //if (ipaddres == null || ipaddres == "")
+            //{
+            //    IpAdresses ipAdresses = new IpAdresses
+            //    {
+            //        IpAddres = remoteIpAddres,
+            //        Date = DateTime.Now
+            //    };
+            //    _context.IpAdresses.Add(ipAdresses);
+            //    await _context.SaveChangesAsync();
+            //}
+            //else
+            //{
+            //    IpAdresses ipaddreslocal = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
+            //    ipaddreslocal.Date = DateTime.Now;
+            //    _context.IpAdresses.Update(ipaddreslocal);
+            //    await _context.SaveChangesAsync();
+            //}
+            List<NewsInfo> newsInfo = await _context.NewsInfos.ToListAsync();
+            //Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            //if (user != null && user.Status == "true")
+            //{
+            //    ViewBag.user = user;
+            //}
 
-            List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.Take(20).ToListAsync();
+            List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.ToListAsync();
             ViewBag.locomotives = Electic_locomotive;
-            List<Stations> stations = await _context.Stations.Take(20).ToListAsync();
+            List<Stations> stations = await _context.Stations.ToListAsync();
             ViewBag.stations = stations;
             return View(newsInfo);
         }

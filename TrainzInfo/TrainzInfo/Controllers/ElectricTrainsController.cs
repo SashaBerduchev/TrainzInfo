@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -242,6 +243,23 @@ namespace TrainzInfo.Controllers
                     }
                     train.ImageMimeTypeOfData = uploads.ContentType;
                     train.Image = p1;
+                    using (MemoryStream ms = new MemoryStream(train.Image, 0, train.Image.Length))
+                    {
+                        using (Image img = Image.FromStream(ms))
+                        {
+                            int h = 250;
+                            int w = 300;
+
+                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            {
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    train.Image = ms2.ToArray();
+                                }
+                            }
+                        }
+                    }
                     _context.Electrics.Update(train);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(InModered));

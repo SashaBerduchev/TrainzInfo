@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -111,8 +112,26 @@ namespace TrainzInfo.Controllers
                         fs1.CopyTo(ms1);
                         p1 = ms1.ToArray();
                     }
+
                     news.ImageMimeTypeOfData = uploads.ContentType;
                     news.NewsImage = p1;
+                    using (MemoryStream ms = new MemoryStream(news.NewsImage, 0, news.NewsImage.Length))
+                    {
+                        using (Image img = Image.FromStream(ms))
+                        {
+                            int h = 250;
+                            int w = 300;
+
+                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            {
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    news.NewsImage = ms2.ToArray();
+                                }
+                            }
+                        }
+                    }
                     _context.NewsInfos.Update(news);
                     _context.SaveChangesAsync();
                     return View();

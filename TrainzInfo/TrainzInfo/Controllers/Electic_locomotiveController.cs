@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -201,6 +202,23 @@ namespace TrainzInfo.Controllers
                     Trace.WriteLine(p1);
                     locomotive.ImageMimeTypeOfData = uploads.ContentType;
                     locomotive.Image = p1;
+                    using (MemoryStream ms = new MemoryStream(locomotive.Image, 0, locomotive.Image.Length))
+                    {
+                        using (Image img = Image.FromStream(ms))
+                        {
+                            int h = 250;
+                            int w = 300;
+
+                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            {
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    locomotive.Image = ms2.ToArray();
+                                }
+                            }
+                        }
+                    }
                     _context.Electic_Locomotives.Update(locomotive);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));

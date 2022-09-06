@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Oracle.EntityFrameworkCore.Metadata;
 using TrainzInfo.Data;
 
 namespace TrainzInfo.Migrations
@@ -15,34 +15,34 @@ namespace TrainzInfo.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.15")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "3.1.23")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             modelBuilder.Entity("TrainzInfo.Models.CargoCarrieges", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CargoType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("CargoWeight")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("CarriegeType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("MaxSpeed")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -53,20 +53,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Info")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -77,12 +77,12 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -93,19 +93,19 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("IsUpdate")
-                        .HasColumnType("bit");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Link")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Version")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -116,19 +116,19 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Addres")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("UkrainsRailways")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -139,25 +139,25 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("DiseslPower")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("MaxSpeed")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("SectionCount")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -168,27 +168,27 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Baseinfo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Diesel_Type")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("Power")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -199,26 +199,26 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("BaseInfo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("Power")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -229,25 +229,25 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Depo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("ImgSrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("VagonCount")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -258,44 +258,43 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ALlPowerP")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Depot")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("DieselPower")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Number")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("SectionCount")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Seria")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("Speed")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -306,57 +305,57 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("DepotCity")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("DepotTrain")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("IsProof")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("LastKvr")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int>("MaxSpeed")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("PlaceKvr")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Plant")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("VagonsCountP")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -367,27 +366,27 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Depo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("NumberTrain")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -398,20 +397,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInformation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -422,26 +421,26 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Baseinfo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Diesel")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Electric_Type")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Power")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -452,14 +451,14 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("IpAddres")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -470,34 +469,34 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Depot")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -508,16 +507,16 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -528,12 +527,12 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Seria")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -544,12 +543,12 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("id");
@@ -561,17 +560,17 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -582,20 +581,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Information")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Photo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -606,24 +605,24 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CountStation")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Metro")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("NameLine")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -634,27 +633,27 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("MetroID")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("MetroLine")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("MetroLineId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -665,27 +664,27 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("NVARCHAR2(10)")
                         .HasMaxLength(10);
 
                     b.Property<int>("NewsID")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -696,34 +695,34 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseNewsInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("NameNews")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("NewsImage")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("NewsInfoAll")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("user")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -734,16 +733,16 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("OblCenter")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -754,16 +753,16 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Info")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -774,27 +773,27 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Calss")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("CountPlace")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ImgsrcInside")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("ImgsrcOutside")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("PlaceType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -805,15 +804,15 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Adress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -824,32 +823,32 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CityFrom")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("CitytTo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Information")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("IsProof")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("NameUser")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -860,15 +859,15 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("NameRole")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Rules")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("Id");
 
@@ -879,20 +878,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("BaseInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -903,45 +902,45 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("DopImgSrc")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("DopImgSrcSec")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("DopImgSrcThd")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Imgsrc")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Oblast")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Railway")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("id");
 
@@ -952,28 +951,28 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ImgTrain")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Station")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("TimeOfArrive")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<DateTime>("TimeOfDepet")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int>("TrainInfo")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("UzFilia")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -984,12 +983,12 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Status_namr")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1000,20 +999,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("BaseInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1024,26 +1023,26 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("NameOfTrain")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("Number")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("StationFrom")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("StationTo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1054,21 +1053,21 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("NameStationStop")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("NumberOFTrain")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("TimeOfArrive")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<DateTime>("TimeOfDepet")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.HasKey("id");
 
@@ -1079,11 +1078,11 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("Id");
 
@@ -1094,12 +1093,12 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1110,20 +1109,20 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Information")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Photo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1134,39 +1133,39 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("BaseInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("NameLocomotive")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("Id");
 
@@ -1177,42 +1176,42 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BaseInfo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("LocmotiveName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Marshrute")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("id");
 
@@ -1223,39 +1222,39 @@ namespace TrainzInfo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)")
+                        .HasAnnotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Age")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("NVARCHAR2(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("CLOB");
 
                     b.HasKey("Id");
 
