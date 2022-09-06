@@ -16,6 +16,7 @@
                 @Html.DisplayName("Серия(пример ДС3, ЧС4)");
                 <div class="form-inline">
                     @Html.DropDownList("Seria", ViewBag.Seria as SelectList, htmlAttributes: new { @class = "form-control" })
+                    <a class="btn btn-info" asp-controller="Locomotive_series" asp-action="Create">Додати Серію локомотиву</a>
                 </div>
                 <span asp-validation-for="Seria" class="text-danger"></span>
             </div>
