@@ -148,7 +148,7 @@ namespace TrainzInfo.Controllers
             ViewBag.users = users;
             SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
             ViewBag.Seria = seria;
-            SelectList depo = new SelectList(_context.Depots.Where(x=>x.Name.Contains("ТЧ")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
+            SelectList depo = new SelectList(_context.Depots.Select(x => x.Name).ToList());
             ViewBag.Depo = depo;
             return View();
         }
