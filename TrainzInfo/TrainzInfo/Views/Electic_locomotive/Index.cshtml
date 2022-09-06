@@ -21,11 +21,13 @@
     }
 }
 <p>
+    <a class="btn btn-info" asp-action="Create">Добавить локомотив</a>
+
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
-            <a class="btn btn-info" asp-action="Create">Добавить локомотив</a>
+            
         }
     }
 

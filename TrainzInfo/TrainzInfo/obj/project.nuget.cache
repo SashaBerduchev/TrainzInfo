@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xUO5m90T8EDUPm/6QU0MP87qjCUlA0ezXKQGfZlQbfnVEj9PG7LQYrEn/qZOAC546dn3vcOulatNdmVr39pzWQ==",
+  "dgSpecHash": "DsEqcSSRlWqGJix8Yah59YwaGFxlLvZSZ9DIa524clnboquQJ+AzT3KIoQv4any585B4+PEvzBhi9VzYOVV7eg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\sasha\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+  "projectFilePath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sasha\\.nuget\\packages\\epplus\\6.0.7\\epplus.6.0.7.nupkg.sha512",
     "C:\\Users\\sasha\\.nuget\\packages\\epplus.interfaces\\6.0.0\\epplus.interfaces.6.0.0.nupkg.sha512",
