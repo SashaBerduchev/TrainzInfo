@@ -395,6 +395,7 @@ namespace TrainzInfo.Controllers
         {
             var users = await _context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
             users.Status = "false";
+            users.IpAddress = "";
             _context.User.Update(users);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Exiting));

@@ -130,6 +130,12 @@ namespace TrainzInfo.Controllers
                 _context.IpAdresses.Update(ipaddreslocal);
                 await _context.SaveChangesAsync();
             }
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             List<NewsInfo> newsInfo = await _context.NewsInfos.ToListAsync();
             //Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             //if (user != null && user.Status == "true")

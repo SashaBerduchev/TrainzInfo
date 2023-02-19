@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta property="og:url" content="http://trainzinfo.com.ua">
+    <meta property="og:url" content="https://trainzinfo.com.ua">
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="http://pro100news.info/wp-content/uploads/%D0%BE%D0%BE-300x197.png">
+    <meta property="og:image" content="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:site_name" content="trainzinfo" />
     <meta property="og:title" content="TrainzInfo">
@@ -15,9 +15,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
-    <link rel="shortcut icon" href="GetImage.png" type="image/png">
-
-    <link rel="shortcut icon" href="/images/оо-300x197.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/image/оо-300x197.ico" type="image/x-icon">
 
 </head>
 <body>
@@ -97,8 +95,8 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/StartJS.js"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/StartJS.js"></script>*@
     @RenderSection("Scripts", required: false)
 
 </body>

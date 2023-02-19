@@ -24,7 +24,7 @@
         </div>
         <div style="font-size:30px">
             <div>@Html.DisplayName("Возраст: ") @Html.DisplayName(Model.Age.ToString())</div>
-            <div>@Html.DisplayName("Почта: ") @Html.DisplayName(Model.Email)</div>
+            <div>@Html.DisplayName("Пошта: ") @Html.DisplayName(Model.Email)</div>
             <div>@Html.DisplayName("Роль: ") @Html.DisplayName(Model.Role)</div>
         </div>
     </div>
@@ -37,7 +37,8 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-success" asp-action="Index" >Пользователи</a>
+                    <a class="btn btn-success" asp-controller="MainImages" asp-action="Index" >Основні зображення</a>
+                    <a class="btn btn-success" asp-action="Index" >Користувачі</a>
         }
     }
 </div>
