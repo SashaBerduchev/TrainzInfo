@@ -4581,7 +4581,6 @@ C:\Users\Alexander\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netco
 C:\Users\Alexander\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.dll
 C:\Users\Alexander\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.pdb
 C:\Users\Alexander\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Debug\netcoreapp3.1\TrainzInfo.genruntimeconfig.cache
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\TrainzInfo.StaticWebAssets.xml
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\EPPlus.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\EPPlus.Interfaces.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\bin\Debug\netcoreapp3.1\EPPlus.System.Drawing.dll
