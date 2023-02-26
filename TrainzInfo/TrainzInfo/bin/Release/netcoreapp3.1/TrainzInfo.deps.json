@@ -18,7 +18,7 @@
       "NETCOREAPP3_1_OR_GREATER"
     ],
     "languageVersion": "8.0",
-    "platform": "",
+    "platform": "x64",
     "allowUnsafe": false,
     "warningsAsErrors": false,
     "optimize": true,

@@ -14,7 +14,7 @@ namespace TrainzInfo
 {
     public class Startup
     {
-        public bool DEBUG_MODE = false;
+        public bool DEBUG_MODE = true;
         public bool ORACLE_USE = false;
         public Startup(IConfiguration configuration)
         {
