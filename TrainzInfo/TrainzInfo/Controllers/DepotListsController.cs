@@ -73,6 +73,46 @@ namespace TrainzInfo.Controllers
             return View(depots);
         }
 
+        public async Task<IActionResult> UpdateForce()
+        {
+            List<DepotList> depots = await _context.Depots.ToListAsync();
+            Trace.WriteLine(depots);
+            foreach(DepotList depot in depots)
+            {
+                if(depot.UkrainsRailways == "Приднепровская железная дорога")
+                {
+                    depot.UkrainsRailways = "Придніпровська залізниця";
+                    _context.Depots.Update(depot);
+                    _context.SaveChangesAsync();
+                }
+                if (depot.UkrainsRailways == "Одесская железная дорога")
+                {
+                    depot.UkrainsRailways = "Одеська залізниця";
+                    _context.Depots.Update(depot);
+                    _context.SaveChangesAsync();
+                }
+                if (depot.UkrainsRailways == "Донецкая железная дорога")
+                {
+                    depot.UkrainsRailways = "Донецька залізниця";
+                    _context.Depots.Update(depot);
+                    _context.SaveChangesAsync();
+                }
+
+                if (depot.UkrainsRailways == "Южная железная дорога")
+                {
+                    depot.UkrainsRailways = "Слобідська залізниця";
+                    _context.Depots.Update(depot);
+                    _context.SaveChangesAsync();
+                }
+                if (depot.UkrainsRailways == "Львовская железная дорога")
+                {
+                    depot.UkrainsRailways = "Львівська залізниця";
+                    _context.Depots.Update(depot);
+                    _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
         public void IndexActionResult()
         {
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x=>x.Name).ToList());
