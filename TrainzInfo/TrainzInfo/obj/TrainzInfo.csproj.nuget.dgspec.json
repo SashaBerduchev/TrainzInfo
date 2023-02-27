@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
+    "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
+    "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "projectUniqueName": "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
         "projectName": "TrainzInfo",
-        "projectPath": "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+        "projectPath": "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
         "packagesPath": "C:\\Users\\Alexander\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
+        "outputPath": "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

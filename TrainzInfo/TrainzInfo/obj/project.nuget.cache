@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fhJwahZxwFJw5Nl+WAwhV+d/qxmy7ahZptSyenBtKBIpoQM43/ENljnE8AKRRIP5cAdQCl/2R2ov6XhdIdjHWg==",
+  "dgSpecHash": "btsF32W36ZeuTjf5lteaLwNxgvISUr6roooRu+XlYe93O5iiHFFW+yyfpd43qBFls3rmxnkTThX9DFljUtw77g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alexander\\Source\\Repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+  "projectFilePath": "C:\\Users\\Alexander\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alexander\\.nuget\\packages\\epplus\\6.0.7\\epplus.6.0.7.nupkg.sha512",
     "C:\\Users\\Alexander\\.nuget\\packages\\epplus.interfaces\\6.0.0\\epplus.interfaces.6.0.0.nupkg.sha512",
