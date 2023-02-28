@@ -43,6 +43,56 @@ namespace TrainzInfo.Controllers
             return View(stations);
         }
 
+        public async Task<IActionResult> UpdateForce()
+        {
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            foreach (var item in stations)
+            {
+                if(item.Railway == "Юго-Западная железная дорога")
+                {
+                    item.Railway = "Київська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Одесская железная дорога")
+                {
+                    item.Railway = "Одеська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Одесская железная дорога")
+                {
+                    item.Railway = "Одеська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Львовская железная дорога")
+                {
+                    item.Railway = "Львівська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Южная железная дорога")
+                {
+                    item.Railway = "Слобідська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Донецкая железная дорога")
+                {
+                    item.Railway = "Донецька залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                if (item.Railway == "Приднепровская железная дорога")
+                {
+                    item.Railway = "Придніпровська залізниця";
+                    _context.Stations.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(IndexAll));
+        }
         public async Task<IActionResult> IndexAll(string? NameStation)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
