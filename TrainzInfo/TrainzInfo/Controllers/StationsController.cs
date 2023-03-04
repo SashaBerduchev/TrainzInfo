@@ -289,7 +289,8 @@ namespace TrainzInfo.Controllers
 
             try
             {
-                Stations stationfinddb = await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync();
+                Stations stationfinddb = await _context.Stations.Where(x => x.id == stations.id).FirstOrDefaultAsync();
+                
                 stations.Name = stations.City;
                 stationfinddb.Name = stations.Name;
                 stationfinddb.City = stations.City;
