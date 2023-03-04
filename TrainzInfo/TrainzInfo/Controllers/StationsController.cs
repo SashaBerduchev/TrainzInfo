@@ -266,7 +266,19 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            SelectList city = new SelectList(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+            List<string> stationsdb = await _context.Stations.Select(x => x.Name).ToListAsync();
+            List<string> citys = await _context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
+            for (int i = 0; i < stationsdb.Count; i++)
+            {
+                for (int j = 0; j < citys.Count; j++)
+                {
+                    if (citys[j] == stationsdb[i])
+                    {
+                        citys.RemoveAt(j);
+                    }
+                }
+            }
+            SelectList city = new SelectList(citys);
             SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.city = city;
