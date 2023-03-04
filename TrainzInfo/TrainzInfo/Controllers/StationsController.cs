@@ -292,8 +292,9 @@ namespace TrainzInfo.Controllers
                 Stations stationfinddb = await _context.Stations.Where(x => x.id == stations.id).FirstOrDefaultAsync();
                 
                 stations.Name = stations.City;
-                stationfinddb.Name = stations.Name;
+                stationfinddb.Name = stations.City;
                 stationfinddb.City = stations.City;
+                stationfinddb.Oblast = stations.Oblast;
                 _context.Update(stationfinddb);
                 await _context.SaveChangesAsync();
             }
