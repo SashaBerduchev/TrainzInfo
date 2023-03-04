@@ -31,7 +31,7 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Stations
-        public async Task<IActionResult> Index(string? filialsName)
+        public async Task<IActionResult> Index(string? filialsName, string? NameStation)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -41,6 +41,16 @@ namespace TrainzInfo.Controllers
             }
             List<Stations> stations = await _context.Stations.Where(x => x.Railway == filialsName).ToListAsync();
             ViewBag.Filia = filialsName;
+
+            List<string> stationslist = new List<string>();
+            stationslist.Add("");
+            stationslist.AddRange(await _context.Stations.Select(x => x.Name).ToListAsync());
+            SelectList stationsSelect = new SelectList(stationslist);
+            ViewBag.stations = stationsSelect;
+            if (NameStation != null && NameStation != "")
+            {
+                return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
+            }
             return View(stations);
         }
 
