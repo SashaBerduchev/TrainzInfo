@@ -18,7 +18,7 @@
             else
             {
                 <img class="img-thumbnail" width="350" height="350"
-                     src="@Url.Action("GetImage", "Users",
+                 src="@Url.Action("GetImage", "Users",
              new { Model.Id })" />
             }
         </div>
@@ -37,8 +37,10 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-                    <a class="btn btn-success" asp-controller="MainImages" asp-action="Index" >Основні зображення</a>
-                    <a class="btn btn-success" asp-action="Index" >Користувачі</a>
+            <a class="btn btn-success" asp-controller="MainImages" asp-action="Index">Основні зображення</a>
+            <a class="btn btn-success" asp-action="Index">Користувачі</a>
+            <a class="btn btn-success" asp-controller="Cities" asp-action="Index">Міста</a>
+            <a class="btn btn-success" asp-controller="Oblasts" asp-action="Index">Області</a>
         }
     }
 </div>

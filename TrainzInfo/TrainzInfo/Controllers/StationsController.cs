@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace TrainzInfo.Controllers
             List<Stations> stations = await _context.Stations.ToListAsync();
             foreach (var item in stations)
             {
-                if(item.Railway == "Юго-Западная железная дорога")
+                if (item.Railway == "Юго-Западная железная дорога")
                 {
                     item.Railway = "Київська залізниця";
                     _context.Stations.Update(item);
@@ -110,7 +111,7 @@ namespace TrainzInfo.Controllers
             {
                 return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
             }
-            return View(await _context.Stations.OrderBy(x=>x.Name).ToListAsync());
+            return View(await _context.Stations.OrderBy(x => x.Name).ToListAsync());
         }
 
         public async Task<List<Stations>> IndexAction()
@@ -132,9 +133,9 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            
-            ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.BaseInfo).FirstOrDefault();
-            ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x=>x.AllInfo).FirstOrDefault();
+
+            ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.BaseInfo).FirstOrDefault();
+            ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.AllInfo).FirstOrDefault();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
@@ -149,18 +150,18 @@ namespace TrainzInfo.Controllers
         {
             List<string> citys = _context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList();
             List<string> stations = _context.Stations.Select(x => x.Name).ToList();
-            for(int i=0; i< stations.Count; i++)
+            for (int i = 0; i < stations.Count; i++)
             {
-                for(int j=0; j< citys.Count; j++)
+                for (int j = 0; j < citys.Count; j++)
                 {
-                    if(citys[j] == stations[i])
+                    if (citys[j] == stations[i])
                     {
                         citys.RemoveAt(j);
                     }
                 }
             }
             SelectList city = new SelectList(citys);
-            SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.city = city;
             ViewBag.oblast = oblast;
@@ -240,14 +241,16 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            if (ModelState.IsValid)
-            {
-                stations.UserId = user.Id;
-                _context.Add(stations);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexAll));
-            }
-            return View(stations);
+
+            stations.UserId = user.Id;
+            stations.Name = stations.City.ToString();
+            Trace.WriteLine(stations);
+            Trace.WriteLine(stations.Name);
+            _context.Add(stations);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(IndexAll));
+
+            //return View(stations);
         }
 
         // GET: Stations/Edit/5
@@ -263,7 +266,7 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            SelectList city = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            SelectList city = new SelectList(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             SelectList oblast = new SelectList(_context.Oblasts.Select(x => x.Name).ToList());
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
             ViewBag.city = city;
@@ -284,27 +287,29 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(stations);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StationsExists(stations.id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                Stations stationfinddb = await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync();
+                stations.Name = stations.City;
+                stationfinddb.Name = stations.Name;
+                stationfinddb.City = stations.City;
+                _context.Update(stationfinddb);
+                await _context.SaveChangesAsync();
             }
-            return View(stations);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StationsExists(stations.id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(IndexAll));
+
+            //return View(stations);
         }
 
         // GET: Stations/Delete/5
@@ -333,7 +338,7 @@ namespace TrainzInfo.Controllers
             var stations = await _context.Stations.FindAsync(id);
             _context.Stations.Remove(stations);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexAll));
         }
 
         private bool StationsExists(int id)

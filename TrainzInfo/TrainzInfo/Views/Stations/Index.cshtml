@@ -18,7 +18,7 @@
     {
         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
-            <a class="btn btn-dark" asp-action="Create">Добавить</a>
+            <a class="btn btn-dark" asp-action="Create">Додати</a>
             <a class="btn btn-dark" asp-action="UpdateForce">Виправити назви</a>
         }
     }
@@ -27,7 +27,7 @@
 <div>
     @foreach (var item in Model)
     {
-        <div style="background-color:aliceblue; margin:20px; height:310px;">
+        <div style="background-color:aliceblue; margin:20px; height:370px;">
             <div style="margin:20px; position:relative; top:20px">
                 <div class="img">
                     @if (item.Image == null)
@@ -48,7 +48,7 @@
                 <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
                 <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
             </div>
-            <div style="position:relative;top:-180px">
+            <div style="position:relative;top:-140px">
                 <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>
                 
                 <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@item.Name">Інформація</a>
@@ -58,7 +58,7 @@
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
                         <a class="btn btn-success" style="width:250px; margin:5px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
-                        <a class="btn btn-danger margin:5px;" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        <a class="btn btn-danger margin:5px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                     }
                 }
             </div>

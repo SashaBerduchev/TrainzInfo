@@ -177,8 +177,13 @@ namespace TrainzInfo.Controllers
             }
             if (ModelState.IsValid)
             {
-                _context.Add(city);
-                await _context.SaveChangesAsync();
+                List<City> cityexist = await _context.Cities.ToListAsync();
+                City citydb = cityexist.Where(x => x.Name == city.Name).FirstOrDefault();
+                if ( city == null)
+                {
+                    _context.Add(city);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(city);

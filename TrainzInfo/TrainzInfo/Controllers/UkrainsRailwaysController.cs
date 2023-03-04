@@ -52,6 +52,13 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
             var ukrainsRailways = await _context.UkrainsRailways
                 .FirstOrDefaultAsync(m => m.id == id);
             if (ukrainsRailways == null)
