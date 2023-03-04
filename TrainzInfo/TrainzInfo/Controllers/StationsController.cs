@@ -158,7 +158,9 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Create
         public IActionResult Create()
         {
-            List<string> citys = _context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList();
+            List<string> citys = new List<string>();
+            citys.Add("");
+             citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             List<string> stations = _context.Stations.Select(x => x.Name).ToList();
             //for (int i = 0; i < stations.Count; i++)
             //{
@@ -171,8 +173,14 @@ namespace TrainzInfo.Controllers
             //    }
             //}
             SelectList city = new SelectList(citys);
-            SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
+            List<string> oblasts = new List<string>();
+            oblasts.Add("");
+            oblasts.AddRange(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+            SelectList oblast = new SelectList(oblasts);
+            List<string> fillias = new List<string>();
+            fillias.Add("");
+            fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
+            SelectList uz = new SelectList(fillias);
             ViewBag.city = city;
             ViewBag.oblast = oblast;
             ViewBag.uz = uz;
