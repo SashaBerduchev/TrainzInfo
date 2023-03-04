@@ -22,9 +22,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <img class="img-thumbnail" width="200" height="200"
-                     src="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})" />
-                <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">TrainzInfo</a>
+                <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="img-thumbnail" width="200" height="200"
+                         src="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})" />
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -36,8 +37,8 @@
                             @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>*@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
-                            <a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
+                            <a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
                             @if (ViewBag.user != null)
                             {

@@ -133,6 +133,7 @@ namespace TrainzInfo.Controllers
                     else
                     {
                         user.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                        user.Status = "true";
                         _context.User.Update(user);
                         await _context.SaveChangesAsync();
                         return (RedirectToAction(nameof(Entering)));

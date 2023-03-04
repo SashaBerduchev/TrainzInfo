@@ -223,8 +223,8 @@ body {
 @media (min-width:1200px){
     .station_info {
         position: relative;
-        left: 420px;
-        top: -300px;
+        left: 0px;
+        top: 0px;
         font-size: 20px;
         margin: 20px
     }
@@ -232,8 +232,8 @@ body {
 @media (min-width:900px) {
     .station_info {
         position: relative;
-        left: 420px;
-        top: -300px;
+        left: 0px;
+        top: 0px;
         font-size: 20px;
         margin: 20px
     }

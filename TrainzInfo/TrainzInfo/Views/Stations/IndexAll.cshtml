@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TrainzInfo.Models.Stations>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Всі cтанції";
 }
 
-<h1> Все станции</h1>
+<h1> Всі cтанції</h1>
 <form method="get">
     <div class="form-inline">
         @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
@@ -46,13 +46,13 @@
                     }
                 </div>
             </div>
-            <div class="station_info">
+            <div style="position:relative; left:400px; top:-230px; font-size:25px">
                 <div>@Html.DisplayName("Название старнции: ") @Html.DisplayFor(modelItem => item.Name)</div>
                 <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
                 <div>@Html.DisplayName("Город: ") @Html.DisplayFor(modelItem => item.City)</div>
                 <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(modelItem => item.Railway)</div>
             </div>
-            <div class="station_btns">
+            <div style="position:relative;">
                 <a class="btn btn-info" style="width:190px; margin:20px" asp-controller="StationsShadules" asp-action="Index">Рассписание по станции</a>
                 @*<a class="btn btn-success" style="width:250px; margin:20px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>*@
                 <a class="btn btn-primary" style="width:190px; margin:20px;" asp-action="Details" asp-route-name="@item.Name">Информация</a>
