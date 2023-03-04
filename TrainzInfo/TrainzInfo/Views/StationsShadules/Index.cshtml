@@ -7,26 +7,19 @@
 
 
 <p>
-    @if (ViewBag.user != null)
+    @*@if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
             <a class="btn btn-primary" asp-action="Create">Добавить</a>
         }
-    }
-
+    }*@
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayName("Номер")
-            </th>
-            <th>
-                @Html.DisplayName("Станция")
-            </th>
-            <th>
-                @Html.DisplayName("Филия")
             </th>
             <th>
                 @Html.DisplayName("Время прибытия")

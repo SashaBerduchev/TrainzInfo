@@ -8,6 +8,7 @@
 <div>
     <a class="btn btn-info" asp-controller="DepotLists" asp-action="Index" asp-route-uzname="@Model.Name">Список депо</a>
     <a class="btn btn-success" asp-controller="Stations" asp-action="Index" asp-route-filialsName="@Model.Name">Список всіх станцій</a>
+    <a class="btn btn-success" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin")
