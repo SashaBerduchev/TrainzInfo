@@ -10,7 +10,14 @@
 
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a asp-action="Create">Create New</a>
+        }
+    }
+    
 </p>
 <table class="table">
     <thead>
@@ -40,10 +47,10 @@
                 @Html.DisplayFor(modelItem => item.NumberTrain)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Arrival)
+                @Html.DisplayFor(modelItem => item.Arrival.TimeOfDay)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Departure)
+                @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |

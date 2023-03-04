@@ -23,6 +23,12 @@ namespace TrainzInfo.Controllers
         // GET: Trains
         public async Task<IActionResult> Index()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             return View(await _context.Trains.ToListAsync());
         }
 

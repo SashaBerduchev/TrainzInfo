@@ -1,13 +1,20 @@
 ﻿@model IEnumerable<TrainzInfo.Models.Train>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Поїзди";
 }
 
-<h1>Index</h1>
+<h1>Призначені поїзди</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a asp-action="Create">Create New</a>
+        }
+    }
+    
 </p>
 <table class="table">
     <thead>
@@ -44,10 +51,16 @@
                     @Html.DisplayFor(modelItem => item.NameOfTrain)
                 </td>
                 <td>
-                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Create">Додати розклад поїзда</a>
-                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Дивитися розклад поїзда</a>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin")
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.id">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        }
+                    }
                 </td>
             </tr>
         }

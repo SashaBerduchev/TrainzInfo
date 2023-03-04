@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,9 +21,28 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: TrainsShadules
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? train)
         {
-            return View(await _context.TrainsShadule.ToListAsync());
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            string number = "";
+            if (TempData["TrainNumber"] != null)
+            {
+                 number = TempData["TrainNumber"].ToString();
+                if (number == "")
+                {
+                    number = train;
+                }
+            }
+            if(number == "")
+            {
+                number = train;
+            }
+            return View(await _context.TrainsShadule.Where(x=>x.NumberTrain == number).ToListAsync());
         }
 
         // GET: TrainsShadules/Details/5
@@ -65,6 +85,7 @@ namespace TrainzInfo.Controllers
             {
                 _context.Add(trainsShadule);
                 await _context.SaveChangesAsync();
+                TempData["TrainNumber"] = trainsShadule.NumberTrain;
                 return RedirectToAction(nameof(Index));
             }
             return View(trainsShadule);
