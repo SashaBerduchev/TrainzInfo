@@ -29,6 +29,8 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+
+            ViewBag.shadule = await _context.TrainsShadule.OrderBy(x=>x.Departure).Where(x=>x.NameStation == station).ToListAsync();
             return View(await _context.StationsShadules.Where(x=>x.Station == station).ToListAsync());
         }
         public async Task<List<StationsShadule>> IndexAction()

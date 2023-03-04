@@ -1,0 +1,48 @@
+﻿@model TrainzInfo.Models.TrainsShadule
+
+@{
+    ViewData["Title"] = "створити розклад поїздів";
+}
+
+
+
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+
+
+    <h4>TrainsShadule</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    @Html.DisplayName("Назва станції");
+                    @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+                    <span asp-validation-for="NameStation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.DisplayName("Номер поїзда");
+                    @Html.DropDownList("NumberTrain", ViewBag.train as SelectList, htmlAttributes: new { @class = "form-control" })
+                    <span asp-validation-for="NumberTrain" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.DisplayName("Прибуття");
+                    <input asp-for="Arrival" class="form-control" />
+                    <span asp-validation-for="Arrival" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.DisplayName("Відправлення");
+                    <input asp-for="Departure" class="form-control" />
+                    <span asp-validation-for="Departure" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>

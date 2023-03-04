@@ -160,16 +160,16 @@ namespace TrainzInfo.Controllers
         {
             List<string> citys = _context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList();
             List<string> stations = _context.Stations.Select(x => x.Name).ToList();
-            for (int i = 0; i < stations.Count; i++)
-            {
-                for (int j = 0; j < citys.Count; j++)
-                {
-                    if (citys[j] == stations[i])
-                    {
-                        citys.RemoveAt(j);
-                    }
-                }
-            }
+            //for (int i = 0; i < stations.Count; i++)
+            //{
+            //    for (int j = 0; j < citys.Count; j++)
+            //    {
+            //        if (citys[j] == stations[i])
+            //        {
+            //            citys.RemoveAt(j);
+            //        }
+            //    }
+            //}
             SelectList city = new SelectList(citys);
             SelectList oblast = new SelectList(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x => x.Name).ToList());
@@ -253,7 +253,6 @@ namespace TrainzInfo.Controllers
             }
 
             stations.UserId = user.Id;
-            stations.Name = stations.City.ToString();
             Trace.WriteLine(stations);
             Trace.WriteLine(stations.Name);
             _context.Add(stations);

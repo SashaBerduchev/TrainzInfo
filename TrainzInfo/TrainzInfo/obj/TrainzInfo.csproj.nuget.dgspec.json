@@ -55,7 +55,7 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.15, )"
+              "version": "[3.1.32, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
@@ -65,7 +65,7 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.15, )"
+              "version": "[3.1.32, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
@@ -74,14 +74,6 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
-            },
-            "Oracle.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[3.21.61, )"
-            },
-            "Oracle.ManagedDataAccess.Core": {
-              "target": "Package",
-              "version": "[3.21.70, )"
             },
             "System.Private.ServiceModel": {
               "target": "Package",
