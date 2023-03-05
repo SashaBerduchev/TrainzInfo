@@ -7,13 +7,13 @@
 <h1>@Model.Name</h1>
 
 <div>
-    <h4>Информация</h4>
+    <h4>Інформація</h4>
     <hr />
 
     <div style="background-color:aliceblue;">
         <div style="margin:20px; position:relative; left:430px; top:40px; font-size:20px">
-            <div>@Html.DisplayName("Город: ") @Html.DisplayFor(model => model.City)</div>
-            <div>@Html.DisplayName("Филия: ") @Html.DisplayFor(model => model.Railway)</div>
+            <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(model => model.City)</div>
+            <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(model => model.Railway)</div>
             <div>@Html.DisplayName("Область: ") @Html.DisplayFor(model => model.Oblast)</div>
         </div>
         <div style="position:relative; top:-70px; margin:20px;">
@@ -23,8 +23,8 @@
             }
             else
             {
-                <img class="img-thumbnail" width="350" height="350"
-                     src="@Url.Action("GetImage", "ElectricTrains",
+                <img class="img-thumbnail" width="350" height="250"
+                 src="@Url.Action("GetImage", "Stations",
                         new { Model.id })" />
             }
         </div>
