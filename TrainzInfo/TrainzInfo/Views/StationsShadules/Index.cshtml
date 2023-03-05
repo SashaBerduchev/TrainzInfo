@@ -35,7 +35,7 @@
         {
             <tr>
                 <td>
-                    <a asp-controller="Trains" asp-action="Details" asp-route-number="@item.NumberTrain">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
+                    <a asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.NumberTrain.ToString()">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NumberTrain)
@@ -47,6 +47,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
                 </td>
+                
                 <!--<td>
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |-->
                     @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
