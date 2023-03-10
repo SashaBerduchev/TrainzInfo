@@ -109,7 +109,7 @@ namespace TrainzInfo.Controllers
             }
         }
 
-        public async Task<List<City>> IndexAction()
+        public async Task<List<City>> GetCitiesAction()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();

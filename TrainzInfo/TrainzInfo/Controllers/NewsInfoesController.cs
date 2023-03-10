@@ -30,7 +30,7 @@ namespace TrainzInfo.Controllers
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
             return View(newsInfo);
         }
-        public async Task<List<NewsInfo>> IndexAction()
+        public async Task<List<NewsInfo>> GetNewsAction()
         {
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
             return newsInfo;
@@ -222,7 +222,7 @@ namespace TrainzInfo.Controllers
                 pars.DateTime = DateTime.Now;
                 _context.Add(pars);
                 Trace.WriteLine(pars);
-                await _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
             }
             catch (Exception exp)
             {
