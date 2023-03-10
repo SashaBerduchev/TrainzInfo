@@ -46,6 +46,11 @@
                 </div>
             </div>
         }
+
+        <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">Розклад по станції</a>
+
+        <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@Model.Name">Інформація</a>
+
     </div>
 
     <div>
