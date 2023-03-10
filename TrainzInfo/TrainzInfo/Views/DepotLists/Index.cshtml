@@ -22,13 +22,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Название")
+                @Html.DisplayName("Назва")
             </th>
             <th>
-                @Html.DisplayName("Филия")
+                @Html.DisplayName("Філія")
             </th>
             <th>
-                @Html.DisplayName("Станция")
+                @Html.DisplayName("Станція")
             </th>
             <th></th>
         </tr>
@@ -53,7 +53,7 @@
                          <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
                      }
                  }
-                <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список подвижного состава</a>
+                <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список рухомого складу</a>
                 @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
                 @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
             </td>

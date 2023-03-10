@@ -24,12 +24,24 @@ namespace TrainzInfo.Controllers
         // GET: ListRollingStones
         public async Task<IActionResult> Index(string? idlocname)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             ViewBag.locomotives = await _context.ListRollingStones.Where(x => x.Name == idlocname).ToListAsync();
             return View();
         }
 
         public async Task<IActionResult> IndexDepot(string? depotname)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             ViewBag.Depo = depotname;
             List<Electic_locomotive> rollingStones = await _context.Electic_Locomotives.Where(x => x.Depot == depotname).ToListAsync();
             List<ElectricTrain> rollingStonesTrains = await _context.Electrics.Where(x => x.DepotTrain == depotname).ToListAsync();

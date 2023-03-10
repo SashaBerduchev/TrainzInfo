@@ -20,19 +20,21 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Number)
+                @Html.DisplayName("Номер")
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StationFrom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StationTo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NameOfTrain)
+                @Html.DisplayName("Выдправлення")
+            </th>                
+            <th>                 
+                @Html.DisplayName("Прибуття")
+            </th>                
+            <th>                 
+                @Html.DisplayName("Відправлення")
+            </th>                
+            <th>                 
+                @Html.DisplayName("Типо поїзда")
+            </th>                
+            <th>                 
+                @Html.DisplayName("Назва")
             </th>
             <th></th>
         </tr>
@@ -41,6 +43,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StationFrom)
                 </td>
