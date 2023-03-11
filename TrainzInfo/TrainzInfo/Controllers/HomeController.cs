@@ -136,7 +136,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            List<NewsInfo> newsInfo = await _context.NewsInfos.ToListAsync();
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x=>x.DateTime).ToListAsync();
             //Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             //if (user != null && user.Status == "true")
             //{

@@ -27,12 +27,12 @@ namespace TrainzInfo.Controllers
         // GET: NewsInfoes
         public async Task<IActionResult> Index()
         {
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderBy(x => x.DateTime).ToListAsync();
             return View(newsInfo);
         }
         public async Task<List<NewsInfo>> GetNewsAction()
         {
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x => x.DateTime).ToListAsync();
+            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderBy(x => x.DateTime).ToListAsync();
             return newsInfo;
         }
 
