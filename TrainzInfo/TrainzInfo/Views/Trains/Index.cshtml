@@ -11,7 +11,7 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a asp-action="Create">Create New</a>
+            <a class="btn btn-info" asp-action="Create">Create New</a>
         }
     }
     
@@ -21,8 +21,6 @@
         <tr>
             <th>
                 @Html.DisplayName("Номер")
-            </th>
-                @Html.DisplayName("Выдправлення")
             </th>                
             <th>                 
                 @Html.DisplayName("Прибуття")
