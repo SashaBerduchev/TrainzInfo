@@ -59,7 +59,7 @@
                     @Html.DisplayFor(modelItem => item.NameOfTrain)
                 </td>
                 <td>
-                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Дивитися розклад поїзда</a>
+                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Розклад поїзда</a>
                     @if (ViewBag.user != null)
                     {
                         if (ViewBag.user.Role == "Superadmin")

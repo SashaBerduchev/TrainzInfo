@@ -42,7 +42,8 @@ namespace TrainzInfo.Controllers
             {
                 number = train;
             }
-            return View(await _context.TrainsShadule.Where(x=>x.NumberTrain == number).ToListAsync());
+            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == number).ToListAsync();
+            return View(shadule);
         }
 
         // GET: TrainsShadules/Details/5

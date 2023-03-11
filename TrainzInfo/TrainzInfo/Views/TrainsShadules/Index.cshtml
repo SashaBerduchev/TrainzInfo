@@ -14,7 +14,7 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a asp-action="Create">Create New</a>
+            <a class="btn btn-info" asp-action="Create">Додати зупинку</a>
         }
     }
     
@@ -23,16 +23,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NameStation)
+                @Html.DisplayName("Назва");
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumberTrain)
+                @Html.DisplayName("Номер поъзда");
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Arrival)
+                @Html.DisplayName("Час прибуття");
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Departure)
+                @Html.DisplayName("Час выдправлення");
             </th>
             <th></th>
         </tr>
@@ -53,9 +53,16 @@
                 @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin")
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.id">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        }
+                    }
+                
             </td>
         </tr>
 }
