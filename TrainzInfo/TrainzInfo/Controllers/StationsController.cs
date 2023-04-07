@@ -31,7 +31,7 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Stations
-        public async Task<IActionResult> Index(string? filialsName, string? NameStation)
+        public async Task<IActionResult> Index(string? filialsName, string? NameStation, string? Oblast)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -44,12 +44,21 @@ namespace TrainzInfo.Controllers
 
             List<string> stationslist = new List<string>();
             stationslist.Add("");
-            stationslist.AddRange(await _context.Stations.Select(x => x.Name).ToListAsync());
+            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
             SelectList stationsSelect = new SelectList(stationslist);
             ViewBag.stations = stationsSelect;
+            List<string> strings = new List<string>();
+            strings.Add("");
+            strings.AddRange(await _context.Stations.Select(x => x.Oblast).Distinct().ToListAsync());
+            SelectList oblasts = new SelectList(strings);
+            ViewBag.oblast = oblasts;
             if (NameStation != null && NameStation != "")
             {
                 return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
+            }
+            if (Oblast != null && Oblast != "")
+            {
+                return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
             }
             return View(stations);
         }
@@ -61,7 +70,7 @@ namespace TrainzInfo.Controllers
             {
                 if (item.Railway == "Юго-Западная железная дорога")
                 {
-                    item.Railway = "Київська залізниця";
+                    item.Railway = "Центральна залізниця";
                     _context.Stations.Update(item);
                     await _context.SaveChangesAsync();
                 }
@@ -104,7 +113,7 @@ namespace TrainzInfo.Controllers
             }
             return RedirectToAction(nameof(IndexAll));
         }
-        public async Task<IActionResult> IndexAll(string? NameStation)
+        public async Task<IActionResult> IndexAll(string? NameStation, string? Oblast)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -114,12 +123,21 @@ namespace TrainzInfo.Controllers
             }
             List<string> stationslist = new List<string>();
             stationslist.Add("");
-            stationslist.AddRange(await _context.Stations.Select(x => x.Name).ToListAsync());
-            SelectList stations = new SelectList(stationslist);
-            ViewBag.stations = stations;
+            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
+            SelectList stationsSelect = new SelectList(stationslist);
+            ViewBag.stations = stationsSelect;
+            List<string> strings = new List<string>();
+            strings.Add("");
+            strings.AddRange(await _context.Stations.Select(x => x.Oblast).Distinct().ToListAsync());
+            SelectList oblasts = new SelectList(strings);
+            ViewBag.oblast = oblasts;
             if (NameStation != null && NameStation != "")
             {
                 return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
+            }
+            if (Oblast != null && Oblast != "")
+            {
+                return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
             }
             return View(await _context.Stations.OrderBy(x => x.Name).ToListAsync());
         }
