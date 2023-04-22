@@ -57,7 +57,7 @@ namespace TrainzInfo.Controllers
                                 if(name == null)
                                 {
                                     break;
-                                }
+                                } 
                                 trainaddshad.NameStation = name.ToString();
                                 trainaddshad.NumberTrain = number.ToString();
                                 trainaddshad.Arrival = timearrive;
