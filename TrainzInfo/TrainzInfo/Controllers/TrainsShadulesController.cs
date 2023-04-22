@@ -43,8 +43,17 @@ namespace TrainzInfo.Controllers
                 number = train;
             }
             List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == number).ToListAsync();
-            Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train)).FirstOrDefaultAsync();
-            ViewBag.traininfo = trains;
+            if(train == null)
+            {
+                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(number)).FirstOrDefaultAsync();
+                ViewBag.traininfo = trains;
+            }
+            else
+            {
+                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train)).FirstOrDefaultAsync();
+                ViewBag.traininfo = trains;
+            }
+            
             return View(shadule);
         }
 
