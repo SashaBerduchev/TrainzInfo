@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -20,6 +24,61 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+        public IActionResult AddStationExcel()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> AddExcel(IFormFile uploads)
+        {
+            if (uploads != null)
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
+                    try
+                    {
+                        using (var package = new ExcelPackage(memoryStream))
+                        {
+                            var worksheet = package.Workbook.Worksheets.First(); // Tip: To access the first worksheet, try index 1, not 0
+                            Trace.WriteLine(worksheet);
+                            var rowCount = worksheet.Dimension?.Rows;
+                            var colCount = worksheet.Dimension?.Columns;
+                            List<TrainsShadule> stations = new List<TrainsShadule>();
+                            for (int row = 1; row <= rowCount.Value; row++)
+                            {
+                                TrainsShadule trainaddshad = new TrainsShadule();
+                                var name = worksheet.Cells[row, 1].Value;
+                                var number = worksheet.Cells[row, 2].Value;
+                                DateTime timearrive = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 3].Value));
+                                DateTime timedep = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 4].Value));
+                                
+                                trainaddshad.NameStation = name.ToString();
+                                trainaddshad.NumberTrain = number.ToString();
+                                trainaddshad.Arrival = timearrive;
+                                trainaddshad.Departure = timedep;
+
+                                stations.Add(trainaddshad);
+                            }
+                            TempData["TrainNumber"] = stations[0].NumberTrain;
+                            await _context.TrainsShadule.AddRangeAsync(stations);
+                            await _context.SaveChangesAsync();
+
+                        }
+                        TempData["alertMessage"] = "Done";
+                    }
+                    catch (Exception exp)
+                    {
+                        Trace.WriteLine(exp);
+                        TempData["alertMessage"] = "Exception";
+                    }
+                }
+            }
+            return RedirectToAction(nameof(Index)); 
+        }
+
+
         // GET: TrainsShadules
         public async Task<IActionResult> Index(string? train)
         {
@@ -32,18 +91,18 @@ namespace TrainzInfo.Controllers
             string number = "";
             if (TempData["TrainNumber"] != null)
             {
-                 number = TempData["TrainNumber"].ToString();
+                number = TempData["TrainNumber"].ToString();
                 if (number == "")
                 {
                     number = train;
                 }
             }
-            if(number == "")
+            if (number == "")
             {
                 number = train;
             }
             List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == number).ToListAsync();
-            if(train == null)
+            if (train == null)
             {
                 Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(number)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
@@ -53,7 +112,7 @@ namespace TrainzInfo.Controllers
                 Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
-            
+
             return View(shadule);
         }
 
