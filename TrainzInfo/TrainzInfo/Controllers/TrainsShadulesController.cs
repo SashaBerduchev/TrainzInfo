@@ -43,6 +43,8 @@ namespace TrainzInfo.Controllers
                 number = train;
             }
             List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == number).ToListAsync();
+            Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train)).FirstOrDefaultAsync();
+            ViewBag.traininfo = trains;
             return View(shadule);
         }
 
@@ -65,13 +67,21 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: TrainsShadules/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int? numbertr)
         {
             SelectList station = new SelectList(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name));
             ViewBag.stations = station;
             SelectList train = new SelectList(_context.Trains.OrderBy(x => x.Number).Select(x => x.Number));
             ViewBag.train = train;
-
+            if (numbertr != 0)
+            {
+                List<int> numb = new List<int>();
+                Train trainsearch = await _context.Trains.Where(x => x.Number == numbertr).FirstOrDefaultAsync();
+                numb.Add(trainsearch.Number);
+                SelectList selecttrain = new SelectList(numb);
+                ViewBag.traincreate = selecttrain;
+            }
+            ViewBag.datastandart = DateTime.Now;
             return View();
         }
 

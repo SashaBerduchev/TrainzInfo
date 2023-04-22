@@ -14,11 +14,13 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-info" asp-action="Create">Додати зупинку</a>
+            <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
         }
     }
     
 </p>
+<H2>Поїзд номер - "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
+
 <table class="table">
     <thead>
         <tr>
