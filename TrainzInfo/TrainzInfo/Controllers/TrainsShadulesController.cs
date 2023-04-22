@@ -54,6 +54,10 @@ namespace TrainzInfo.Controllers
                                 DateTime timearrive = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 3].Value));
                                 DateTime timedep = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 4].Value));
                                 
+                                if(name == null)
+                                {
+                                    break;
+                                }
                                 trainaddshad.NameStation = name.ToString();
                                 trainaddshad.NumberTrain = number.ToString();
                                 trainaddshad.Arrival = timearrive;
@@ -71,6 +75,7 @@ namespace TrainzInfo.Controllers
                     catch (Exception exp)
                     {
                         Trace.WriteLine(exp);
+                        TempData["TrainNumber"] = "0";
                         TempData["alertMessage"] = "Exception";
                     }
                 }
