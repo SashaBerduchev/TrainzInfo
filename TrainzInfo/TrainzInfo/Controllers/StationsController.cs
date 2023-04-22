@@ -262,8 +262,8 @@ namespace TrainzInfo.Controllers
                 {
                     using (Image img = Image.FromStream(ms))
                     {
-                        int h = 250;
-                        int w = 300;
+                        int h = 150;
+                        int w = 200;
 
                         using (Bitmap b = new Bitmap(img, new Size(w, h)))
                         {
