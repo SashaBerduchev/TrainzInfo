@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -20,6 +24,68 @@ namespace TrainzInfo.Controllers
             _context = context;
         }
 
+
+        public IActionResult AddTrainExcel()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> AddExcel(IFormFile uploads)
+        {
+            if (uploads != null)
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
+                    try
+                    {
+                        using (var package = new ExcelPackage(memoryStream))
+                        {
+                            var worksheet = package.Workbook.Worksheets.First(); // Tip: To access the first worksheet, try index 1, not 0
+                            Trace.WriteLine(worksheet);
+                            var rowCount = worksheet.Dimension?.Rows;
+                            var colCount = worksheet.Dimension?.Columns;
+                            List<Train> trainslist = new List<Train>();
+                            for (int row = 1; row <= rowCount.Value; row++)
+                            {
+                                Train train = new Train();
+                                int number = Convert.ToInt32(worksheet.Cells[row, 1].Value);
+                                var from = worksheet.Cells[row, 2].Value;
+                                var to = worksheet.Cells[row, 3].Value;
+                                var type = worksheet.Cells[row, 4].Value;
+                                var name = worksheet.Cells[row, 5].Value;
+
+                                train.Number = number;
+                                train.StationFrom = from.ToString();
+                                train.StationTo = to.ToString();
+                                train.Type = type.ToString();
+                                if (name != null)
+                                {
+                                    train.NameOfTrain = name.ToString();
+                                }
+                                
+
+                                trainslist.Add(train);
+                            }
+                            await _context.Trains.AddRangeAsync(trainslist);
+                            await _context.SaveChangesAsync();
+
+                        }
+                        TempData["alertMessage"] = "Done";
+                    }
+                    catch (Exception exp)
+                    {
+                        Trace.WriteLine(exp);
+                        TempData["alertMessage"] = "Exception";
+                    }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
         // GET: Trains
         public async Task<IActionResult> Index()
         {
@@ -29,7 +95,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            return View(await _context.Trains.ToListAsync());
+            return View(await _context.Trains.OrderBy(x=>x.Number).ToListAsync());
         }
 
         public async Task<List<Train>> IndexAction()
@@ -80,7 +146,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            SelectList city = new SelectList(_context.Stations.OrderBy(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList city = new SelectList(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             ViewBag.city = city;
             SelectList type = new SelectList(_context.TypeOfPassTrains.Select(x => x.Type).ToList());
             ViewBag.type = type;
@@ -97,9 +163,9 @@ namespace TrainzInfo.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(train);
-                await _context.SaveChangesAsync();;
+                await _context.SaveChangesAsync(); ;
                 return RedirectToAction(nameof(Index));
-                
+
             }
             return View(train);
         }

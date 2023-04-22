@@ -872,6 +872,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW5zU2hhZHVsZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Alexander/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Trains/AddTrainExcel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW5zXEFkZFRyYWluRXhjZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Alexander/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Trains/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW5zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
