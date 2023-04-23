@@ -53,8 +53,8 @@ namespace TrainzInfo.Controllers
                                 var number = worksheet.Cells[row, 2].Value;
                                 DateTime timearrive = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 3].Value));
                                 DateTime timedep = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 4].Value));
-                                
-                                if(name == null)
+                                var dist = worksheet.Cells[row, 5].Value;
+                                if (name == null)
                                 {
                                     break;
                                 } 
@@ -62,7 +62,10 @@ namespace TrainzInfo.Controllers
                                 trainaddshad.NumberTrain = number.ToString();
                                 trainaddshad.Arrival = timearrive;
                                 trainaddshad.Departure = timedep;
-
+                                if (dist != null)
+                                {
+                                    trainaddshad.Distance = dist.ToString();
+                                }
                                 stations.Add(trainaddshad);
                             }
                             TempData["TrainNumber"] = stations[0].NumberTrain;

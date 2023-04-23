@@ -14,24 +14,24 @@
             <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
         }
     }
-    
+
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayName("Номер")
-            </th>                
-            <th>                 
+            </th>
+            <th>
                 @Html.DisplayName("Прибуття")
-            </th>                
-            <th>                 
+            </th>
+            <th>
                 @Html.DisplayName("Відправлення")
-            </th>                
-            <th>                 
+            </th>
+            <th>
                 @Html.DisplayName("Типо поїзда")
-            </th>                
-            <th>                 
+            </th>
+            <th>
                 @Html.DisplayName("Назва")
             </th>
             <th></th>
@@ -42,19 +42,29 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Number)
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StationFrom)
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.StationFrom)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StationTo)
+                    <div style="font-size:20px; color:black">
+                        @Html.DisplayFor(modelItem => item.StationTo)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Type)
+                    <div style="font-size:20px; color:black">
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NameOfTrain)
+                    <div style="font-size:20px">
+                        @Html.DisplayFor(modelItem => item.NameOfTrain)
+                    </div>
                 </td>
                 <td>
                     <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Розклад поїзда</a>

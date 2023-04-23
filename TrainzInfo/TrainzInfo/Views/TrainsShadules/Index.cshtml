@@ -5,8 +5,8 @@
 }
 
 
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+<meta name="viewport" content="width=device-width" />
+<title>Index</title>
 
 
 <p>
@@ -17,7 +17,7 @@
             <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
         }
     }
-    
+
 </p>
 <H2>Поїзд номер - "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
 
@@ -36,25 +36,43 @@
             <th>
                 @Html.DisplayName("Час выдправлення");
             </th>
+            <th>
+                @Html.DisplayName("Відстань");
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div style="font-size:25px">
                     <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStation">@Html.DisplayFor(modelItem => item.NameStation)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberTrain)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Arrival.TimeOfDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
-            </td>
-            <td>
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.NumberTrain)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.Arrival.TimeOfDay)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px"; color:black>
+                        @Html.DisplayFor(modelItem => item.Distance)
+                    </div>
+                </td>
+
+                <td>
                     @if (ViewBag.user != null)
                     {
                         if (ViewBag.user.Role == "Superadmin")
@@ -64,10 +82,10 @@
                             <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
                         }
                     }
-                
-            </td>
-        </tr>
-}
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 @if (null != TempData["alertMessage"])

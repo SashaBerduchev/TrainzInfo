@@ -9,6 +9,7 @@ namespace TrainzInfo.Models
         public string NumberTrain { get; set; }
         public DateTime Arrival { get; set; }
         public DateTime Departure { get; set; }
+        public string Distance { get; set; }
 
     }
 }
