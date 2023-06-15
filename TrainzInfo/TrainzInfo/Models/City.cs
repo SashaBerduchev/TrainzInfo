@@ -11,5 +11,7 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Oblast { get; set; }
+        public string Region { get; set; }
     }
 }

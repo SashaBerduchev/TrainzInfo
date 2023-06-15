@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -24,6 +26,77 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(this);
         }
 
+        public IActionResult AddExcelView()
+        {
+            return View(nameof(AddExcelView));
+        }
+        public async Task<IActionResult> AddExcel(IFormFile uploads)
+        {
+            //var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //Users user = _context.Users.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            //if (user != null && user.Status == "true")
+            //{
+            //    ViewBag.user = user;
+            //}
+            if (uploads != null)
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
+                    try
+                    {
+                        using (var package = new ExcelPackage(memoryStream))
+                        {
+
+                            var worksheet = package.Workbook.Worksheets.First(); // Tip: To access the first worksheet, try index 1, not 0
+                            Trace.WriteLine(worksheet);
+                            var rowCount = worksheet.Dimension?.Rows;
+                            var colCount = worksheet.Dimension?.Columns;
+                            List<City> cities = new List<City>();
+                            for (int row = 1; row < rowCount.Value; row++)
+                            {
+                                City city = new City(); 
+                                var obl = worksheet.Cells[row, 1].Value;
+                                var reg = worksheet.Cells[row, 2].Value;
+                                var namecity = worksheet.Cells[row, 5].Value;
+                                if(namecity == null)
+                                {
+                                    break;
+                                }
+                                city.Name = namecity.ToString(); 
+                                if(reg == null)
+                                {
+                                    reg = "-";
+                                }
+                                city.Region = reg.ToString();
+                                city.Oblast = obl.ToString();
+                                cities.Add(city);
+                            }
+                            await _context.Cities.AddRangeAsync(cities);
+                            await _context.SaveChangesAsync();
+                            return View(nameof(Index));
+                        }
+                    }
+                    catch (Exception exp)
+                    {
+                        Trace.WriteLine(exp.ToString());
+                        FileStream fileStream = new FileStream(@"ErrorWriteExcel.log", FileMode.Append);
+                        for (int i = 0; i < exp.ToString().Length; i++)
+                        {
+                            byte[] array = Encoding.Default.GetBytes(exp.ToString());
+                            fileStream.Write(array, 0, array.Length);
+
+                        }
+                        fileStream.Close();
+                        TempData["alertMessage"] = "Exception";
+                    }
+
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Cities
         public async Task<IActionResult> Index()
         {
@@ -33,7 +106,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = userlog;
             }
-            return View(await _context.Cities.ToListAsync());
+            return View(await _context.Cities.OrderBy(x=>x.Oblast).ToListAsync());
         }
 
         [HttpPost]

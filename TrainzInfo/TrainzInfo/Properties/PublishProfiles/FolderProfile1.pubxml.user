@@ -3,4 +3,9 @@
 https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\sasha\OneDrive\Рабочий стол\WebSite</_PublishTargetUrl>
+    <History>True|2023-04-25T09:44:31.3113292Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>
