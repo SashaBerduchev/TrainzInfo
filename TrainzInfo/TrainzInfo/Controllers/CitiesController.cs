@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.ContentModel;
 using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
@@ -97,16 +98,45 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Cities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Update()
         {
+            List<City> cities = await _context.Cities.ToListAsync();
+            for (int i = 0; i<cities.Count; i++)
+            {
+                Stations stations = await _context.Stations.Where(x => x.City == cities[i].Name).FirstOrDefaultAsync();
+                if(stations != null)
+                {
+                    cities[i].IsStationExist = "true";
+                    _context.Cities.Update(cities[i]);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return View(nameof(Index));
+        }
+        // GET: Cities
+        public async Task<IActionResult> Index(string? oblast)
+        {
+            //_context.RemoveRange(_context.Cities);
+            //_context.SaveChanges();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            List<City> city = new List<City>();
             if (userlog != null && userlog.Status == "true")
             {
                 ViewBag.user = userlog;
             }
-            return View(await _context.Cities.OrderBy(x=>x.Oblast).ToListAsync());
+            if(oblast != null)
+            {
+                city = await _context.Cities.Where(x => x.Oblast == oblast).OrderBy(x => x.Oblast).ToListAsync();
+            }
+            else
+            {
+                city = await _context.Cities.OrderBy(x => x.Oblast).ToListAsync();
+                
+            }
+
+            ViewBag.obl = new SelectList(city.Select(x => x.Oblast).Distinct());
+            return View(city);
         }
 
         [HttpPost]
@@ -239,7 +269,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name")] City city)
+        public async Task<IActionResult> Create([Bind("id,Name, IsStationExist")] City city)
         {
 
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -283,7 +313,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name")] City city)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name, IsStationExist")] City city)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();

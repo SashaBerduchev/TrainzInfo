@@ -13,5 +13,6 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         public string Oblast { get; set; }
         public string Region { get; set; }
+        public string IsStationExist { get; set; }
     }
 }
