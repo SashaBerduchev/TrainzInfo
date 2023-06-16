@@ -206,6 +206,20 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
+        public async Task<IActionResult> DeleteStations()
+        {
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (stations[i].Image == null)
+                {
+                    _context.Stations.Remove(stations[i]);
+                    _context.SaveChanges();
+                }
+            }
+            return View(nameof(Index));
+        }
+
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
             if (id != null)

@@ -10,6 +10,7 @@
     <a asp-action="Create">Create New</a>
     <a asp-action="AddExcelView">Import</a>
     <a class="btn btn-info" asp-action="Update">Update</a>
+    <a class="btn btn-info" asp-action="CreateStation">Створити станцію</a>
 </p>
 <form method="get">
     <div class="form-inline">
@@ -53,6 +54,7 @@
                     @Html.DisplayFor(modelItem => item.IsStationExist)
                 </td>
                 <td>
+                    
                     <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.id">Delete</a>

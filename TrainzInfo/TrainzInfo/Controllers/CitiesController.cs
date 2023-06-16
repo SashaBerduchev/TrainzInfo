@@ -113,6 +113,40 @@ namespace TrainzInfo.Controllers
             }
             return View(nameof(Index));
         }
+
+        public async Task<IActionResult> CreateStation()
+        {
+            List<City> city = await _context.Cities.OrderBy(x => x.Oblast).ToListAsync();
+            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
+            ViewBag.filia = new SelectList(ukrainsRailways.Select(x=>x.Name));
+            ViewBag.obl = new SelectList(city.Select(x => x.Oblast).Distinct());
+            return View(nameof(CreateStation));
+        }
+
+        public async Task<IActionResult> CreateStationsDone(string? Olast, string? Filia )
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            
+            if (userlog != null && userlog.Status == "true")
+            {
+                ViewBag.user = userlog;
+            }
+            List<City> cities = await _context.Cities.Where(x => x.Oblast == Olast).ToListAsync();
+            List<Stations> stations = new List<Stations>();
+            for (int i = 0; i < cities.Count; i++)
+            {
+                Stations station = new Stations();
+                station.Oblast = Olast;
+                station.Name = cities[i].Name;
+                station.City = cities[i].Name;
+                station.Railway = Filia;                
+                stations.Add(station);
+            }
+            await _context.Stations.AddRangeAsync(stations);
+            await _context.SaveChangesAsync();
+            return View(nameof(Index));
+        }
         // GET: Cities
         public async Task<IActionResult> Index(string? oblast)
         {

@@ -7,11 +7,12 @@
 
 
 <p>
-    @*@if (ViewBag.user != null)
+   @* @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
             <a class="btn btn-primary" asp-action="Create">Добавить</a>
+            
         }
     }*@
 </p>
