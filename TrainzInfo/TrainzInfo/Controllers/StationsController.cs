@@ -45,7 +45,6 @@ namespace TrainzInfo.Controllers
 
             List<string> stationslist = new List<string>();
             stationslist.Add("");
-            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
             SelectList stationsSelect = new SelectList(stationslist);
             ViewBag.stations = stationsSelect;
             List<string> strings = new List<string>();
@@ -59,8 +58,10 @@ namespace TrainzInfo.Controllers
             }
             if (Oblast != null && Oblast != "")
             {
+                stationslist.AddRange(await _context.Stations.Where(x=>x.Oblast == Oblast).Select(x => x.Name).Distinct().ToListAsync());
                 return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
             }
+            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
             return View(stations);
         }
 
