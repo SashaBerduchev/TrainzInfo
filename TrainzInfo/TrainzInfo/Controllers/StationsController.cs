@@ -42,26 +42,26 @@ namespace TrainzInfo.Controllers
             }
             List<Stations> stations = await _context.Stations.Where(x => x.Railway == filialsName).ToListAsync();
             ViewBag.Filia = filialsName;
-
+            List<Stations> stationsFoWork = await _context.Stations.ToListAsync();
             List<string> stationslist = new List<string>();
             stationslist.Add("");
             SelectList stationsSelect = new SelectList(stationslist);
             ViewBag.stations = stationsSelect;
             List<string> strings = new List<string>();
             strings.Add("");
-            strings.AddRange(await _context.Stations.Select(x => x.Oblast).Distinct().ToListAsync());
+            strings.AddRange(stationsFoWork.Select(x => x.Oblast).Distinct().ToList());
             SelectList oblasts = new SelectList(strings);
             ViewBag.oblast = oblasts;
             if (NameStation != null && NameStation != "")
             {
-                return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
+                return View(stationsFoWork.Where(x => x.Name == NameStation).ToList());
             }
             if (Oblast != null && Oblast != "")
             {
-                stationslist.AddRange(await _context.Stations.Where(x=>x.Oblast == Oblast).Select(x => x.Name).Distinct().ToListAsync());
+                stationslist.AddRange(stationsFoWork.Where(x=>x.Oblast == Oblast).Select(x => x.Name).Distinct().ToList());
                 return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
             }
-            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
+            stationslist.AddRange(stationsFoWork.Select(x => x.Name).Distinct().ToList());
             return View(stations);
         }
 
@@ -123,25 +123,26 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            List<Stations> stationsFoWork = await _context.Stations.ToListAsync();
             List<string> stationslist = new List<string>();
             stationslist.Add("");
-            stationslist.AddRange(await _context.Stations.Select(x => x.Name).Distinct().ToListAsync());
+            stationslist.AddRange(stationsFoWork.Select(x => x.Name).Distinct().ToList());
             SelectList stationsSelect = new SelectList(stationslist);
             ViewBag.stations = stationsSelect;
             List<string> strings = new List<string>();
             strings.Add("");
-            strings.AddRange(await _context.Stations.Select(x => x.Oblast).Distinct().ToListAsync());
+            strings.AddRange(stationsFoWork.Select(x => x.Oblast).Distinct().ToList());
             SelectList oblasts = new SelectList(strings);
             ViewBag.oblast = oblasts;
             if (NameStation != null && NameStation != "")
             {
-                return View(await _context.Stations.Where(x => x.Name == NameStation).ToListAsync());
+                return View( stationsFoWork.Where(x => x.Name == NameStation).ToList());
             }
             if (Oblast != null && Oblast != "")
             {
-                return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
+                return View(stationsFoWork.Where(x => x.Oblast == Oblast).ToList());
             }
-            return View(await _context.Stations.OrderBy(x => x.Name).ToListAsync());
+            return View( stationsFoWork.OrderBy(x => x.Name).ToList());
         }
 
         public async Task<List<Stations>> IndexAction()
