@@ -70,7 +70,7 @@ namespace TrainzInfo.Controllers
             List<Stations> stations = await _context.Stations.ToListAsync();
             foreach (var item in stations)
             {
-                if (item.Railway == "Юго-Западная железная дорога")
+                if (item.Railway == "Київська залізниця")
                 {
                     item.Railway = "Центральна залізниця";
                     _context.Stations.Update(item);
@@ -94,9 +94,9 @@ namespace TrainzInfo.Controllers
                     _context.Stations.Update(item);
                     await _context.SaveChangesAsync();
                 }
-                if (item.Railway == "Южная железная дорога")
+                if (item.Railway == "Слобідська залізниця")
                 {
-                    item.Railway = "Слобідська залізниця";
+                    item.Railway = "Харківська залізниця";
                     _context.Stations.Update(item);
                     await _context.SaveChangesAsync();
                 }

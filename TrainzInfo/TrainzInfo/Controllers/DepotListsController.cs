@@ -79,7 +79,13 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(depots);
             foreach(DepotList depot in depots)
             {
-                if(depot.UkrainsRailways == "Приднепровская железная дорога")
+                if (depot.UkrainsRailways == "Київська залізниця")
+                {
+                    depot.UkrainsRailways = "Центральна залізниця";
+                    _context.Depots.Update(depot);
+                    await _context.SaveChangesAsync();
+                }
+                if (depot.UkrainsRailways == "Приднепровская железная дорога")
                 {
                     depot.UkrainsRailways = "Придніпровська залізниця";
                     _context.Depots.Update(depot);
@@ -98,9 +104,9 @@ namespace TrainzInfo.Controllers
                     _context.SaveChangesAsync();
                 }
 
-                if (depot.UkrainsRailways == "Южная железная дорога")
+                if (depot.UkrainsRailways == "Слобідська залізниця")
                 {
-                    depot.UkrainsRailways = "Слобідська залізниця";
+                    depot.UkrainsRailways = "Харківська залізниця";
                     _context.Depots.Update(depot);
                     _context.SaveChangesAsync();
                 }
