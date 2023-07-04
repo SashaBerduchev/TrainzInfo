@@ -133,7 +133,7 @@ namespace TrainzInfo.Controllers
                         }
                     }
                     _context.NewsInfos.Update(news);
-                    _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                     return View();
                 }
             return View();
