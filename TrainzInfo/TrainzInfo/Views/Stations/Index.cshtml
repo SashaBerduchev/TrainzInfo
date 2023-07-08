@@ -65,7 +65,7 @@
                 {
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
-                        <a class="btn btn-success" style="width:250px; margin:5px;" asp-action="Edit" asp-route-id="@item.id">Редактировать</a>
+                        <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@item.id">Дадати зображення</a>
                         <a class="btn btn-danger margin:5px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                     }
                 }

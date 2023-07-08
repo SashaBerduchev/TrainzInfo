@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.Stations
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Станція";
 }
 <meta property="og:image" content="@Url.Action("GetImage", "Stations",  new { Model.id })" />
 <h1>@Model.Name</h1>
@@ -58,10 +58,9 @@
         {
             @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
             {
-                <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
-                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редактировать общую информацию</a>
-                <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Добавить информацию о станции</a>
-                <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-name="@Model.Name">Редактировать общую информацию</a>
+                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
+                <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Додати інформацію</a>
+                <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-name="@Model.Name">Редагувати інформацію</a>
 
             }
         }
