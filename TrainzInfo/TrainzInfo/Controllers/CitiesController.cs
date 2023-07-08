@@ -110,7 +110,14 @@ namespace TrainzInfo.Controllers
                     _context.Cities.Update(cities[i]);
                     await _context.SaveChangesAsync();
                 }
+                if (cities[i].Oblast == "Дніпропетровська")
+                {
+                    cities[i].Oblast = "Дніпровська";
+                    _context.Cities.Update(cities[i]);
+                    await _context.SaveChangesAsync();
+                }
             }
+            
             return View(nameof(Index));
         }
 
