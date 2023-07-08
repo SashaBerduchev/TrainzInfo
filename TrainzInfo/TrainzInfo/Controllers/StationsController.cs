@@ -306,24 +306,6 @@ namespace TrainzInfo.Controllers
 
             if (station != null)
             {
-
-                using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
-                {
-                    using (Image img = Image.FromStream(ms))
-                    {
-                        int h = 150;
-                        int w = 200;
-
-                        using (Bitmap b = new Bitmap(img, new Size(w, h)))
-                        {
-                            using (MemoryStream ms2 = new MemoryStream())
-                            {
-                                b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                station.Image = ms2.ToArray();
-                            }
-                        }
-                    }
-                }
                 var file = File(station.Image, station.ImageMimeTypeOfData);
                 return file;
             }
