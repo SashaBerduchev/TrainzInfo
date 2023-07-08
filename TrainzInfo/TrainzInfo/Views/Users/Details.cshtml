@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.Users
 
 @{
-    ViewData["Title"] = "Пользователь";
+    ViewData["Title"] = "Користувач";
 }
 
 <h1>@Model.Name</h1>
@@ -13,17 +13,17 @@
         <div class="img">
             @if (Model.Image == null)
             {
-                <p>Нет картинки</p>
+                <p>Картинка відсутня</p>
             }
             else
             {
                 <img class="img-thumbnail" width="350" height="350"
-                 src="@Url.Action("GetImage", "Users",
+                     src="@Url.Action("GetImage", "Users",
              new { Model.Id })" />
             }
         </div>
         <div style="font-size:30px">
-            <div>@Html.DisplayName("Возраст: ") @Html.DisplayName(Model.Age.ToString())</div>
+            <div>@Html.DisplayName("Вік: ") @Html.DisplayName(Model.Age.ToString())</div>
             <div>@Html.DisplayName("Пошта: ") @Html.DisplayName(Model.Email)</div>
             <div>@Html.DisplayName("Роль: ") @Html.DisplayName(Model.Role)</div>
         </div>
@@ -44,6 +44,27 @@
         }
     }
 </div>
+@if (ViewBag.user != null)
+{
+    <div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:420px">
+        <div style="left:50px">
+            @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Користувачі</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Ролі</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основні зображення на сайті</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Створити новину</a>
+                <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерація</a>
+
+            }
+            else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Створити новину</a>
+            }
+        </div>
+    </div>
+}
 
 <style>
     body {

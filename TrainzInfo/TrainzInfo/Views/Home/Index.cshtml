@@ -38,29 +38,7 @@
 
 </div>
 
-@if (ViewBag.user != null)
-{
-    <div class="btn_panel" style=" background-color:aliceblue; position: relative; left:180px; top:20px; width:420px">
-        <div style="left:50px">
-            @if (ViewBag.user.Role != null && ViewBag.user.Role == "Superadmin")
-            {
-                <a class="btn btn-info btn_news" style="margin:10px" asp-controller="Users" asp-action="Index">Користувачі</a>
-                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="Roles" asp-action="Index">Ролі</a>
-                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="IpAdresses" asp-action="Index">IP</a>
-                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основні зображення на сайті</a>
-                <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Створити новину</a>
-                <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерація</a>
-            
-            }
-            else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
-            {
-                <a class="btn btn-info" style="margin:10px; width:400px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
-            }
-        </div>
-        <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>
 
-    </div>
-}
 <body>
     @*<div class="text-center">
             <p>

@@ -38,20 +38,20 @@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>*@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
-                            <a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>
+                            @*<a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>*@
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
                             @if (ViewBag.user != null)
                             {
                                 <div style="font-size:35px; color:cornflowerblue">
                                     <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">@Html.DisplayName(ViewBag.user.Name)</a>
                                 </div>
-                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Выйти</a>
+                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Вийти</a>
 
                             }
                             else
                             {
-                                <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вход</a>
-                                <a id="btn3" class="btn btn-outline-primary" style="width:120px" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
+                                <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вхід</a>
+                                <a id="btn3" class="btn btn-outline-primary" style="width:120px" asp-area="" asp-controller="Users" asp-action="Create">Реєстрація</a>
                             }
                             @*@if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
                                 {
