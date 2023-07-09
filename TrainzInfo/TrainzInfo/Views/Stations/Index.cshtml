@@ -27,27 +27,21 @@
 
 <form method="get">
     <div class="form-inline" style="position:relative; width:90%">
-        @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="hidden" name="filialsName" value="@ViewBag.Filia" />
         @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="text" name="NameStation" class="form-control"></input>
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>
 <div>
     @foreach (var item in Model)
     {
-        <div style="background-color:aliceblue; margin:20px; height:370px;">
+        <div style="background-color:aliceblue; margin:20px; height:430px;">
             <div style="margin:20px; position:relative; top:20px">
                 <div class="img">
-                    @if (item.Image == null)
-                    {
-                        <img src="@item.Imgsrc" width="350" height="250">
-                    }
-                    else
-                    {
-                        <img class="img-thumbnail" width="350" height="250"
-                             src="@Url.Action("GetImage", "Stations",
+                    <img class="img-thumbnail" width="350" height="250"
+                         src="@Url.Action("GetImage", "Stations",
                         new { item.id })" />
-                    }
                 </div>
             </div>
             <div style="position:relative; left:400px; top:-230px; font-size:25px">

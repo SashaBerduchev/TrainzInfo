@@ -18,7 +18,7 @@ namespace TrainzInfo.Controllers
     public class StationsController : Controller
     {
         private readonly ApplicationContext _context;
-
+        
         public StationsController(ApplicationContext context)
         {
             _context = context;
@@ -40,29 +40,48 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<Stations> stations = await _context.Stations.Where(x => x.Railway == filialsName).ToListAsync();
+            var stations = _context.Stations.Where(x => x.Railway == filialsName).AsEnumerable().Select(x => new { x.id, x.Oblast, x.Name, x.City, x.Railway });
             ViewBag.Filia = filialsName;
-            List<Stations> stationsFoWork = await _context.Stations.ToListAsync();
-            List<string> stationslist = new List<string>();
-            stationslist.Add("");
-            SelectList stationsSelect = new SelectList(stationslist);
-            ViewBag.stations = stationsSelect;
-            List<string> strings = new List<string>();
-            strings.Add("");
-            strings.AddRange(stationsFoWork.Select(x => x.Oblast).Distinct().ToList());
-            SelectList oblasts = new SelectList(strings);
+            List<Stations> _stationsif = new List<Stations>();
+            foreach (var item in stations)
+            {
+                Stations station = new Stations();
+                station.id = item.id;
+                station.Name = item.Name;
+                station.Oblast = item.Oblast;
+                station.City = item.City;
+                station.Railway = item.Railway;
+                _stationsif.Add(station);
+            }
+
+            //List<string> stationslist = new List<string>();
+            //stationslist.Add("");
+            //stationslist.AddRange(stationsFoWork.Select(x => x.Name).ToList());
+            //SelectList stationsSelect = new SelectList(stationslist);
+            //ViewBag.stations = stationsSelect;
+            List<string> obl = new List<string>();
+            obl.Add("");
+            obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
+            SelectList oblasts = new SelectList(obl);
             ViewBag.oblast = oblasts;
-            if (NameStation != null && NameStation != "")
+            if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
-                return View(stationsFoWork.Where(x => x.Name == NameStation).ToList());
+
+                return View(_stationsif.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
             }
-            if (Oblast != null && Oblast != "")
+            else if (Oblast != null && Oblast != "")
             {
-                stationslist.AddRange(stationsFoWork.Where(x=>x.Oblast == Oblast).Select(x => x.Name).Distinct().ToList());
-                return View(await _context.Stations.Where(x => x.Oblast == Oblast).ToListAsync());
+
+                return View(_stationsif.Where(x => x.Oblast == Oblast).ToList());
             }
-            stationslist.AddRange(stationsFoWork.Select(x => x.Name).Distinct().ToList());
-            return View(stations);
+            else if (NameStation != null && NameStation != "")
+            {
+
+                return View(_stationsif.Where(x => x.Name.Contains(NameStation)).ToList());
+            }
+            
+            return View(_stationsif.OrderBy(x => x.Name).ToList());
+
         }
 
         public async Task<IActionResult> UpdateForce()
@@ -123,336 +142,367 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<Stations> stationsFoWork = await _context.Stations.ToListAsync();
-            List<string> stationslist = new List<string>();
-            stationslist.Add("");
-            stationslist.AddRange(stationsFoWork.Select(x => x.Name).Distinct().ToList());
-            SelectList stationsSelect = new SelectList(stationslist);
-            ViewBag.stations = stationsSelect;
-            List<string> strings = new List<string>();
-            strings.Add("");
-            strings.AddRange(stationsFoWork.Select(x => x.Oblast).Distinct().ToList());
-            SelectList oblasts = new SelectList(strings);
-            ViewBag.oblast = oblasts;
-            if (NameStation != null && NameStation != "")
-            {
-                return View( stationsFoWork.Where(x => x.Name == NameStation).ToList());
-            }
-            if (Oblast != null && Oblast != "")
-            {
-                return View(stationsFoWork.Where(x => x.Oblast == Oblast).ToList());
-            }
-            return View( stationsFoWork.OrderBy(x => x.Name).ToList());
-        }
 
-        public async Task<List<Stations>> IndexAction()
-        {
-            List<Stations> stations = await _context.Stations.ToListAsync();
-            return stations;
-        }
-        // GET: Stations/Details/5
-        public async Task<IActionResult> Details(string? name)
-        {
-            if (name == null || name == "")
+            var stationsFoWork = _context.Stations.AsEnumerable().Select(x => new { x.id, x.Oblast, x.Name, x.City, x.Railway });
+            List<Stations> _stationsif = new List<Stations>();
+            foreach (var item in stationsFoWork)
             {
-                return NotFound();
+                Stations stations = new Stations();
+                stations.id = item.id;
+                stations.Name = item.Name;
+                stations.Oblast = item.Oblast;
+                stations.City = item.City;
+                stations.Railway = item.Railway;
+                _stationsif.Add(stations);
             }
 
-            var stations = await _context.Stations
-                .FirstOrDefaultAsync(m => m.Name == name);
-            if (stations == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.BaseInfo).FirstOrDefault();
-            ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.AllInfo).FirstOrDefault();
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            return View(stations);
-        }
-
-        // GET: Stations/Create
-        public IActionResult Create()
-        {
-            List<string> citys = new List<string>();
-            citys.Add("");
-             citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            List<string> stations = _context.Stations.Select(x => x.Name).ToList();
-            //for (int i = 0; i < stations.Count; i++)
-            //{
-            //    for (int j = 0; j < citys.Count; j++)
-            //    {
-            //        if (citys[j] == stations[i])
-            //        {
-            //            citys.RemoveAt(j);
-            //        }
-            //    }
-            //}
-            SelectList city = new SelectList(citys);
-            List<string> oblasts = new List<string>();
-            oblasts.Add("");
-            oblasts.AddRange(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            SelectList oblast = new SelectList(oblasts);
-            List<string> fillias = new List<string>();
-            fillias.Add("");
-            fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
-            SelectList uz = new SelectList(fillias);
-            ViewBag.city = city;
-            ViewBag.oblast = oblast;
-            ViewBag.uz = uz;
-            return View();
-        }
-
-        public async Task<IActionResult> DeleteStations()
-        {
-            List<Stations> stations = await _context.Stations.ToListAsync();
-            for (int i = 0; i < stations.Count; i++)
-            {
-                if (stations[i].Image == null)
+                //List<string> stationslist = new List<string>();
+                //stationslist.Add("");
+                //stationslist.AddRange(stationsFoWork.Select(x => x.Name).ToList());
+                //SelectList stationsSelect = new SelectList(stationslist);
+                //ViewBag.stations = stationsSelect;
+                List<string> obl = new List<string>();
+                obl.Add("");
+                obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
+                SelectList oblasts = new SelectList(obl);
+                ViewBag.oblast = oblasts;
+                if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
                 {
-                    _context.Stations.Remove(stations[i]);
-                    _context.SaveChanges();
-                }
-            }
-            return View(nameof(Index));
-        }
 
-        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
-        {
-            if (id != null)
-                if (uploads != null)
+                    return View(_stationsif.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
+                }
+                else if (Oblast != null && Oblast != "")
                 {
-                    Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
-                    byte[] p1 = null;
-                    using (var fs1 = uploads.OpenReadStream())
-                    using (var ms1 = new MemoryStream())
-                    {
-                        fs1.CopyTo(ms1);
-                        p1 = ms1.ToArray();
-                    }
-                    station.ImageMimeTypeOfData = uploads.ContentType;
-                    station.Image = p1;
-                    _context.Stations.Update(station);
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(IndexAll));
+
+                    return View(_stationsif.Where(x => x.Oblast == Oblast).ToList());
                 }
+                else if (NameStation != null && NameStation != "")
+                {
 
-            return RedirectToAction(nameof(IndexAll));
-        }
+                    return View(_stationsif.Where(x => x.Name.Contains(NameStation)).ToList());
+                }
+                List<Stations> stationsall = new List<Stations>();
+                foreach (var item in stationsFoWork)
+                {
+                    Stations stations = new Stations();
+                    stations.id = item.id;
+                    stations.Name = item.Name;
+                    stations.Oblast = item.Oblast;
+                    stations.City = item.City;
+                    stations.Railway = item.Railway;
+                    stationsall.Add(stations);
+                }
+                return View(stationsall.OrderBy(x => x.Name).ToList());
+            }
 
-        public IActionResult AddImageForm(int? id)
-        {
-            Stations stations;
-            if (id == null)
+            public async Task<List<Stations>> IndexAction()
             {
-                string stationName = TempData["StationName"] as string;
-                if (stationName == null)
+                List<Stations> stations = await _context.Stations.ToListAsync();
+                return stations;
+            }
+            // GET: Stations/Details/5
+            public async Task<IActionResult> Details(string? name)
+            {
+                if (name == null || name == "")
                 {
                     return NotFound();
                 }
-                stations = _context.Stations.Where(x => x.Name == stationName).FirstOrDefault();
-            }
 
-            stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
-            if (stations == null)
-            {
-                return NotFound();
-            }
-            return View(stations);
-        }
-
-        public FileContentResult GetImage(int id)
-        {
-            Stations station = _context.Stations
-                .FirstOrDefault(g => g.id == id);
-
-            if (station != null)
-            {
-                
-                using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
+                var stations = await _context.Stations
+                    .FirstOrDefaultAsync(m => m.Name == name);
+                if (stations == null)
                 {
-                    using (Image img = Image.FromStream(ms))
-                    {
-                        int h = 450;
-                        int w = 500;
+                    return NotFound();
+                }
 
-                        using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.BaseInfo).FirstOrDefault();
+                ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.AllInfo).FirstOrDefault();
+                var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+                if (user != null && user.Status == "true")
+                {
+                    ViewBag.user = user;
+                }
+                return View(stations);
+            }
+
+            // GET: Stations/Create
+            public IActionResult Create()
+            {
+                List<string> citys = new List<string>();
+                citys.Add("");
+                citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                List<string> stations = _context.Stations.Select(x => x.Name).ToList();
+                //for (int i = 0; i < stations.Count; i++)
+                //{
+                //    for (int j = 0; j < citys.Count; j++)
+                //    {
+                //        if (citys[j] == stations[i])
+                //        {
+                //            citys.RemoveAt(j);
+                //        }
+                //    }
+                //}
+                SelectList city = new SelectList(citys);
+                List<string> oblasts = new List<string>();
+                oblasts.Add("");
+                oblasts.AddRange(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                SelectList oblast = new SelectList(oblasts);
+                List<string> fillias = new List<string>();
+                fillias.Add("");
+                fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
+                SelectList uz = new SelectList(fillias);
+                ViewBag.city = city;
+                ViewBag.oblast = oblast;
+                ViewBag.uz = uz;
+                return View();
+            }
+
+            public async Task<IActionResult> DeleteStations()
+            {
+                List<Stations> stations = await _context.Stations.ToListAsync();
+                for (int i = 0; i < stations.Count; i++)
+                {
+                    if (stations[i].Image == null)
+                    {
+                        _context.Stations.Remove(stations[i]);
+                        _context.SaveChanges();
+                    }
+                }
+                return View(nameof(Index));
+            }
+
+            public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+            {
+                if (id != null)
+                    if (uploads != null)
+                    {
+                        Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
+                        byte[] p1 = null;
+                        using (var fs1 = uploads.OpenReadStream())
+                        using (var ms1 = new MemoryStream())
                         {
-                            using (MemoryStream ms2 = new MemoryStream())
+                            fs1.CopyTo(ms1);
+                            p1 = ms1.ToArray();
+                        }
+                        station.ImageMimeTypeOfData = uploads.ContentType;
+                        station.Image = p1;
+                        _context.Stations.Update(station);
+                        _context.SaveChanges();
+                        return RedirectToAction(nameof(IndexAll));
+                    }
+
+                return RedirectToAction(nameof(IndexAll));
+            }
+
+            public IActionResult AddImageForm(int? id)
+            {
+                Stations stations;
+                if (id == null)
+                {
+                    string stationName = TempData["StationName"] as string;
+                    if (stationName == null)
+                    {
+                        return NotFound();
+                    }
+                    stations = _context.Stations.Where(x => x.Name == stationName).FirstOrDefault();
+                }
+
+                stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
+                if (stations == null)
+                {
+                    return NotFound();
+                }
+                return View(stations);
+            }
+
+            public FileContentResult GetImage(int id)
+            {
+                Stations station = _context.Stations
+                    .FirstOrDefault(g => g.id == id);
+
+                if (station != null)
+                {
+
+                    using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
+                    {
+                        using (Image img = Image.FromStream(ms))
+                        {
+                            int h = 450;
+                            int w = 500;
+
+                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
                             {
-                                b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                station.Image = ms2.ToArray();
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    station.Image = ms2.ToArray();
+                                }
                             }
                         }
                     }
-                }
-                var file = File(station.Image, station.ImageMimeTypeOfData);
-                return file;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        public FileContentResult GetImageDetails(int id)
-        {
-            Stations station = _context.Stations
-                .FirstOrDefault(g => g.id == id);
-
-            if (station != null)
-            {
-                var file = File(station.Image, station.ImageMimeTypeOfData);
-                return file;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        // POST: Stations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
-        {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-
-            stations.UserId = user.Id;
-            Trace.WriteLine(stations);
-            Trace.WriteLine(stations.Name);
-            _context.Add(stations);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(IndexAll));
-
-            //return View(stations);
-        }
-
-        // GET: Stations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stations = await _context.Stations.FindAsync(id);
-            if (stations == null)
-            {
-                return NotFound();
-            }
-            List<string> citys = new List<string>();
-            citys.Add("");
-            citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            //List<string> stations = _context.Stations.Select(x => x.Name).ToList();
-            //for (int i = 0; i < stations.Count; i++)
-            //{
-            //    for (int j = 0; j < citys.Count; j++)
-            //    {
-            //        if (citys[j] == stations[i])
-            //        {
-            //            citys.RemoveAt(j);
-            //        }
-            //    }
-            //}
-            SelectList city = new SelectList(citys);
-            List<string> oblasts = new List<string>();
-            oblasts.Add("");
-            oblasts.AddRange(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            SelectList oblast = new SelectList(oblasts);
-            List<string> fillias = new List<string>();
-            fillias.Add("");
-            fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
-            SelectList uz = new SelectList(fillias);
-            ViewBag.city = city;
-            ViewBag.oblast = oblast;
-            ViewBag.uz = uz;
-            ViewBag.city = city;
-            ViewBag.oblast = oblast;
-            ViewBag.uz = uz;
-            return View(stations);
-        }
-
-        // POST: Stations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
-        {
-            if (id != stations.id)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                Stations stationfinddb = await _context.Stations.Where(x => x.id == stations.id).FirstOrDefaultAsync();
-                
-                stationfinddb.Name = stations.Name;
-                stationfinddb.City = stations.City;
-                stationfinddb.Oblast = stations.Oblast;
-                _context.Update(stationfinddb);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StationsExists(stations.id))
-                {
-                    return NotFound();
+                    var file = File(station.Image, station.ImageMimeTypeOfData);
+                    return file;
                 }
                 else
                 {
-                    throw;
+                    return null;
                 }
             }
-            return RedirectToAction(nameof(IndexAll));
-
-            //return View(stations);
-        }
-
-        // GET: Stations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            public FileContentResult GetImageDetails(int id)
             {
-                return NotFound();
+                Stations station = _context.Stations
+                    .FirstOrDefault(g => g.id == id);
+
+                if (station != null)
+                {
+                    var file = File(station.Image, station.ImageMimeTypeOfData);
+                    return file;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            // POST: Stations/Create
+            // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+            // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Create([Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
+            {
+                var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+                if (user != null && user.Status == "true")
+                {
+                    ViewBag.user = user;
+                }
+
+                stations.UserId = user.Id;
+                Trace.WriteLine(stations);
+                Trace.WriteLine(stations.Name);
+                _context.Add(stations);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(IndexAll));
+
+                //return View(stations);
             }
 
-            var stations = await _context.Stations
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (stations == null)
+            // GET: Stations/Edit/5
+            public async Task<IActionResult> Edit(int? id)
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var stations = await _context.Stations.FindAsync(id);
+                if (stations == null)
+                {
+                    return NotFound();
+                }
+                List<string> citys = new List<string>();
+                citys.Add("");
+                citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                //List<string> stations = _context.Stations.Select(x => x.Name).ToList();
+                //for (int i = 0; i < stations.Count; i++)
+                //{
+                //    for (int j = 0; j < citys.Count; j++)
+                //    {
+                //        if (citys[j] == stations[i])
+                //        {
+                //            citys.RemoveAt(j);
+                //        }
+                //    }
+                //}
+                SelectList city = new SelectList(citys);
+                List<string> oblasts = new List<string>();
+                oblasts.Add("");
+                oblasts.AddRange(_context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToList());
+                SelectList oblast = new SelectList(oblasts);
+                List<string> fillias = new List<string>();
+                fillias.Add("");
+                fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
+                SelectList uz = new SelectList(fillias);
+                ViewBag.city = city;
+                ViewBag.oblast = oblast;
+                ViewBag.uz = uz;
+                ViewBag.city = city;
+                ViewBag.oblast = oblast;
+                ViewBag.uz = uz;
+                return View(stations);
             }
 
-            return View(stations);
-        }
+            // POST: Stations/Edit/5
+            // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+            // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Edit(int id, [Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
+            {
+                if (id != stations.id)
+                {
+                    return NotFound();
+                }
 
-        // POST: Stations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var stations = await _context.Stations.FindAsync(id);
-            _context.Stations.Remove(stations);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(IndexAll));
-        }
+                try
+                {
+                    Stations stationfinddb = await _context.Stations.Where(x => x.id == stations.id).FirstOrDefaultAsync();
 
-        private bool StationsExists(int id)
-        {
-            return _context.Stations.Any(e => e.id == id);
+                    stationfinddb.Name = stations.Name;
+                    stationfinddb.City = stations.City;
+                    stationfinddb.Oblast = stations.Oblast;
+                    _context.Update(stationfinddb);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StationsExists(stations.id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(IndexAll));
+
+                //return View(stations);
+            }
+
+            // GET: Stations/Delete/5
+            public async Task<IActionResult> Delete(int? id)
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var stations = await _context.Stations
+                    .FirstOrDefaultAsync(m => m.id == id);
+                if (stations == null)
+                {
+                    return NotFound();
+                }
+
+                return View(stations);
+            }
+
+            // POST: Stations/Delete/5
+            [HttpPost, ActionName("Delete")]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> DeleteConfirmed(int id)
+            {
+                var stations = await _context.Stations.FindAsync(id);
+                _context.Stations.Remove(stations);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(IndexAll));
+            }
+
+            private bool StationsExists(int id)
+            {
+                return _context.Stations.Any(e => e.id == id);
+            }
         }
     }
-}
