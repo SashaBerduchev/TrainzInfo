@@ -246,6 +246,10 @@ namespace TrainzInfo.Controllers
             return View("IndexAll", await _context.ListRollingStones.ToListAsync());
         }
 
+        public async Task<IActionResult> IndexAll()
+        {
+            return View(await _context.ListRollingStones.ToListAsync());
+        }
         // GET: ListRollingStones/Delete/5
         public async Task<IActionResult> Delete(string? idlocname)
         {

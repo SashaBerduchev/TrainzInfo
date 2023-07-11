@@ -15,7 +15,7 @@
                 @Html.DropDownList("NumberOFTrain", ViewBag.trainz as SelectList, htmlAttributes: new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.DisplayName("Название станции")
+                @Html.DisplayName("Назва станции")
                 @Html.DropDownList("NameStationStop", ViewBag.citys as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="NameStationStop" class="text-danger"></span>
                 <a class="btn btn-dark"target="_blank" asp-controller="Stations" asp-action="Create">Добавить станцию</a>
