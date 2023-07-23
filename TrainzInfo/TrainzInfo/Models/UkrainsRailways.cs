@@ -13,7 +13,8 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public string Information { get; set; }
-        [Required]
         public string Photo { get; set; }
+        public byte[] Image { get; set; }
+        public string ImageMimeTypeOfData { get; set; }
     }
 }

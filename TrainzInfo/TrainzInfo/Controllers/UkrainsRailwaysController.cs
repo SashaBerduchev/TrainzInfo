@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,62 @@ namespace TrainzInfo.Controllers
             }
             return View(await _context.UkrainsRailways.ToListAsync());
         }
+
+
+        public async Task<IActionResult> AddImageForm(string? name)
+        {
+            UkrainsRailways railways;
+            if (name != null)
+            {
+                railways = await _context.UkrainsRailways.Where(x=>x.Name == name).FirstOrDefaultAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
+            return View(railways);
+        }
+
+        public FileContentResult GetImageDetails(int id)
+        {
+            UkrainsRailways railways = _context.UkrainsRailways
+                .FirstOrDefault(g => g.id == id);
+
+            if (railways != null)
+            {
+                var file = File(railways.Image, railways.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        {
+            if (id != null)
+                if (uploads != null)
+                {
+                    UkrainsRailways railways = await _context.UkrainsRailways.Where(x => x.id == id).FirstOrDefaultAsync();
+
+                    byte[] p1 = null;
+                    using (var fs1 = uploads.OpenReadStream())
+                    using (var ms1 = new MemoryStream())
+                    {
+                        fs1.CopyTo(ms1);
+                        p1 = ms1.ToArray();
+                    }
+                    railways.ImageMimeTypeOfData = uploads.ContentType;
+                    railways.Image = p1;
+                   
+                    _context.UkrainsRailways.Update(railways);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            return RedirectToAction(nameof(Index));
+        }
+
 
         public async Task<List<UkrainsRailways>> IndexAction()
         {
