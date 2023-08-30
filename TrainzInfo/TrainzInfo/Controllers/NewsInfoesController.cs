@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -162,7 +164,6 @@ namespace TrainzInfo.Controllers
                     }
                     _context.NewsInfos.Add(newsInfo);
                     _context.SaveChanges();
-                    
                     return RedirectToAction(nameof(AddImageForm));
                 }
                 FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
@@ -175,6 +176,7 @@ namespace TrainzInfo.Controllers
                 fileStreamLog.Close();
                 NewsInfo news = _context.NewsInfos.Where(x => x.NameNews == newsInfo.NameNews).FirstOrDefault();
                 TempData["NewsId"] = news.id;
+                SendMessage(newsInfo);
                 return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
@@ -191,7 +193,37 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
-        
+        private void SendMessage(NewsInfo news)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            try
+            {
+                MailMessage m = new MailMessage("dataset@trainzinfo.com.ua", user.Email);
+                m.Body = user.Name + "Новина: " + news.NameNews + " опублікована, Дякуємо вам!!!";
+                SmtpClient smtp = new SmtpClient("trainzinfo.com.ua", 587);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential("dataset", "fkbtgpjiscylneduo6av");
+                smtp.EnableSsl = true;
+                smtp.Send(m);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
+                string expstr = exp.ToString();
+                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                for (int i = 0; i < expstr.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+            }
+        }
 
         public FileContentResult GetImage(int id)
         {
