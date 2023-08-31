@@ -207,7 +207,7 @@ namespace TrainzInfo.Controllers
                 m.Body = user.Name + "Новина: " + news.NameNews + " опублікована, Дякуємо вам!!!";
                 SmtpClient smtp = new SmtpClient("trainzinfo.com.ua", 587);
                 smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("dataset", "fkbtgpjiscylneduo6av");
+                smtp.Credentials = new NetworkCredential("dataset@trainzinfo.com.ua", "kbnswj7zcqoegayhrliv");
                 smtp.EnableSsl = true;
                 smtp.Send(m);
             }
@@ -215,7 +215,7 @@ namespace TrainzInfo.Controllers
             {
                 Trace.WriteLine(exp.ToString());
                 string expstr = exp.ToString();
-                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
+                FileStream fileStreamLog = new FileStream(@"MailSend.log", FileMode.Append);
                 for (int i = 0; i < expstr.Length; i++)
                 {
                     byte[] array = Encoding.Default.GetBytes(expstr.ToString());
