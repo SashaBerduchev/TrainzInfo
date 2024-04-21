@@ -39,6 +39,7 @@
                             @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
                             <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
                             <a id="btn" class="btn btn-primary text-white" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
+                            <a id="btn" class="btn btn-primary text-white" asp-controller="UkrainsRailways" asp-action="RollingStoneInfo">Рухомий склад</a>
                             @*<a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>*@
                             @*<a id="btn1" class="btn btn-info" asp-controller="NewsInfoes" asp-action="Create">Создать новость</a>*@
                             @if (ViewBag.user != null)
@@ -105,7 +106,7 @@
 </html>
 <style>
     #btn {
-        width: 260px;
+        width: 240px;
         height: 40px;
         margin: 7px;
     }

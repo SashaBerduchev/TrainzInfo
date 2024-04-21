@@ -634,7 +634,6 @@ D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\staticwebassets.pack.j
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\staticwebassets.build.json
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\staticwebassets.development.json
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\scopedcss\bundle\TrainzInfo.styles.css
-D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.csproj.CopyComplete
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\refint\TrainzInfo.dll
 D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.pdb
@@ -961,3 +960,5 @@ C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.pdb
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.genruntimeconfig.cache
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\ref\TrainzInfo.dll
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.sourcelink.json
+D:\C#\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net7.0\TrainzInfo.csproj.Up2Date
