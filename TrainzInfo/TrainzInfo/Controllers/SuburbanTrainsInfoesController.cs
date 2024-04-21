@@ -66,14 +66,14 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: SuburbanTrainsInfoes/Edit/5
-        public async Task<IActionResult> Edit(string? name)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (name == null && name == "")
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x=>x.Model == name).FirstOrDefaultAsync();
+            var suburbanTrainsInfo = await _context.SuburbanTrainsInfos.FirstOrDefaultAsync(x=>x.id == id);
             if (suburbanTrainsInfo == null)
             {
                 return NotFound();

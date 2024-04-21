@@ -119,7 +119,7 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            var train = _context.SuburbanTrainsInfos.Where(x => x.id == electricTrain.id).FirstOrDefault();
+            var train = _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefault();
             if(train != null)
             {
                 ViewBag.baseinfo = train.BaseInfo.ToString();
