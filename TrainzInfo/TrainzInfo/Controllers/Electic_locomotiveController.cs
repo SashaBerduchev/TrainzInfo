@@ -89,7 +89,7 @@ namespace TrainzInfo.Controllers
             return Electic_locomotive;
         }
         // GET: Electic_locomotive
-        public async Task<IActionResult> Index(string Seria)
+        public async Task<IActionResult> Index(string Seria, string Depot)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -97,15 +97,53 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
-            SelectList series = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            List<string> serieses = new List<string>();
+            serieses.Add("");
+            serieses.AddRange(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            List<string> depotslist = new List<string>();
+            depotslist.Add("");
+            depotslist.AddRange(_context.Electic_Locomotives.Select(x => x.Depot).ToList().Distinct());
+            SelectList series = new SelectList(serieses);
             ViewBag.seria = series;
-
+            SelectList depot = new SelectList(depotslist);
+            ViewBag.depot = depot;
             if (Seria != null && Seria != "")
             {
                 return View(await _context.Electic_Locomotives.Where(x => x.Seria == Seria).ToListAsync());
             }
+            if (Depot != null && Depot != "")
+            {
+                return View(await _context.Electic_Locomotives.Where(x => x.Depot == Depot).ToListAsync());
+            }
             return View(await _context.Electic_Locomotives.ToListAsync());
+        }
+
+        public async Task<IActionResult> MakeChange()
+        {
+            List<Electic_locomotive> Electic_locomotive = await _context.Electic_Locomotives.ToListAsync();
+            
+            for (int i = 0; i < Electic_locomotive.Count; i++)
+            {
+                if (Electic_locomotive[i].Depot == "ТЧ-1 Киев-Пассажирский")
+                {
+                    Electic_locomotive[i].Depot = "ТЧ-1 Київ-Пас";
+                }
+                else if (Electic_locomotive[i].Depot == "ТЧ-8 Николаев")
+                {
+                    Electic_locomotive[i].Depot = "ТЧ-8 Миколаїв";
+                }
+                else if (Electic_locomotive[i].Depot == "ТЧ-3 Казатин")
+                {
+                    Electic_locomotive[i].Depot = "ТЧ-3 Козятин";
+                }
+                else if (Electic_locomotive[i].Depot == "ТЧ-2 Котовск")
+                {
+                    Electic_locomotive[i].Depot = "ТЧ-2 Подільськ";
+                }
+            }
+            _context.Electic_Locomotives.UpdateRange(Electic_locomotive);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
         // GET: Electic_locomotive/Details/5
         public async Task<IActionResult> Details(int? id)
