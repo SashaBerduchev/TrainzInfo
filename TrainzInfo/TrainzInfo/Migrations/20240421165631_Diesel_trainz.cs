@@ -5,24 +5,24 @@
 namespace TrainzInfo.Migrations
 {
     /// <inheritdoc />
-    public partial class Diesel_trainz_Depot : Migration
+    public partial class Diesel_trainz : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Depo",
+            migrationBuilder.AddColumn<string>(
+                name: "Depot",
                 table: "Diesel_Trinzs",
-                newName: "Depot");
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
+            migrationBuilder.DropColumn(
                 name: "Depot",
-                table: "Diesel_Trinzs",
-                newName: "Depo");
+                table: "Diesel_Trinzs");
         }
     }
 }

@@ -12,8 +12,8 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240421155811_Diesel_trainz_Depot")]
-    partial class Diesel_trainz_Depot
+    [Migration("20240421165631_Diesel_trainz")]
+    partial class Diesel_trainz
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

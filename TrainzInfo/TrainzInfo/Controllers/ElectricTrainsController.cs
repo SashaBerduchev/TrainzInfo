@@ -28,7 +28,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ElectricTrains
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string Name, string Depot)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -36,6 +36,16 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            List<string> name = new List<string>();
+            List<string> depot = new List<string>();
+            name.Add("");
+            depot.Add("");
+            List<string> names = await _context.Electrics.Select(x => x.Name).ToListAsync();
+            name.AddRange(names.Distinct());
+            List<string> depots = await _context.Electrics.Select(x => x.DepotCity).ToListAsync();
+            depot.AddRange(depots.Distinct());
+            ViewBag.name = new SelectList(name);
+            ViewBag.depot = new SelectList(depot);
             return View(await _context.Electrics.Where(x=>x.IsProof == true.ToString()).ToListAsync());
         }
         public async Task<IActionResult> IndexNotModered()

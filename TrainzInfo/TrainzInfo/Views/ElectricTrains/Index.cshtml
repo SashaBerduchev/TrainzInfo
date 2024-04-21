@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TrainzInfo.Models.ElectricTrain>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Електропоїзди";
 }
 
-<h1>Электрички</h1>
+<h1>Електропоїзди</h1>
 <head>
     <link rel="stylesheet" href="">
 </head>
@@ -12,7 +12,7 @@
 {
     if (ViewBag.user.Role == "Superadmin")
     {
-        <b>Колличество записей: @Model.Count().ToString()</b>
+        <b>Кількість записів: @Model.Count().ToString()</b>
     }
 }
 
@@ -21,11 +21,20 @@
     {
         @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Create">Добавить</a>
+            <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Create">Створити електропоїзд</a>
+            <a class="btn btn-info" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі електропоїздів</a>
 
         }
     }
 </p>
+
+<form method="get">
+    <div class="form-inline">
+        @Html.DropDownList("Name", ViewBag.name as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Depot", ViewBag.depot as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Отобразить" class="btn btn-info" />
+    </div>
+</form>
 <div>
     @foreach (var item in Model)
     {
@@ -37,18 +46,21 @@
             </div>
             <div style="position:relative; left:420px; top:-200px">
                 <div>@Html.DisplayName("Назва: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
-                <div>@Html.DisplayName("Колчество вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div>
-                <div>@Html.DisplayName("Максимальная скорость: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
+    @*             <div>@Html.DisplayName("Кількість вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div> *@
+                <div>@Html.DisplayName("Максимальна швидкість: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
                 <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>
                 <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.DepotCity)</div>
             </div>
-            <div style="position:relative; left:800px; top:-400px">
+
+            <div style="position:relative; left:800px; top:-300px; width:150px">
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Подробно</a>
                 @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin")
                     {
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                     }
                 }
 
