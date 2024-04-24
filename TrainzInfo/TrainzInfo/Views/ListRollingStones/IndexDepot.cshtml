@@ -44,7 +44,7 @@
                     {
                         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                         {
-                            <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="Edit" asp-route-idlocname="@item.id">Редагувати @item.Seria - @item.Number</a>
+                            <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="Edit" asp-route-idlocname="@item.Seria">Редагувати @item.Seria - @item.Number</a>
                             <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                         }
                     }

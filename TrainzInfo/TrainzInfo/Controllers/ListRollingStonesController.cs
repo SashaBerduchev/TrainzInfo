@@ -133,7 +133,7 @@ namespace TrainzInfo.Controllers
             ListRollingStone listRollingStone = await _context.ListRollingStones.Where(x => x.Name == idlocname).FirstOrDefaultAsync();
             if (listRollingStone == null)
             {
-                var electrick_Lockomotive = await _context.Electrick_Lockomotive_Infos.Where(x => x.Name == idlocname).FirstOrDefaultAsync();
+                var electrick_Lockomotive = await _context.Electrick_Lockomotive_Infos.Where(x=>x.Name == idlocname).FirstOrDefaultAsync();
                 ListRollingStone listRollingStoneObj = new ListRollingStone
                 {
                     Name = electrick_Lockomotive.Name,
