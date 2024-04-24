@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TrainzInfo.Models.ListRollingStone>
 
 @{
-    ViewData["Title"] = "Подвиждной состав";
+    ViewData["Title"] = "Рухомий склад";
 }
 
-<h1>Список подвижного состава</h1>
+<h1>Список рухомого складу</h1>
 <h2>@Html.DisplayName(ViewBag.Depo)</h2>
 @*<p>
         <a class="btn btn-info" asp-action="Create">Добавить</a>
@@ -25,27 +25,27 @@
                 <div style="position:relative; left:410px; top:-180px; font-size:25px">
                     <div>@Html.DisplayName("Назва - ") @Html.DisplayFor(modelItem => item.Seria)</div>
                     <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => item.Number)</div>
-                    <div>@Html.DisplayName("Скорость - ") @Html.DisplayFor(modelItem => item.Speed)</div>
+                    <div>@Html.DisplayName("Швидкість - ") @Html.DisplayFor(modelItem => item.Speed)</div>
                     @if (item.ALlPowerP != null)
                     {
-                        <div>@Html.DisplayName("Общая мощность ТЭД - ") @Html.DisplayFor(modelItem => item.ALlPowerP)</div>
+                        <div>@Html.DisplayName("Загальна потужність ТЕД - ") @Html.DisplayFor(modelItem => item.ALlPowerP)</div>
                     }
                     else if (item.DieselPower != null)
                     {
-                        <div>@Html.DisplayName("Мощность дизеля - ") @Html.DisplayFor(modelItem => item.DieselPower)</div>
+                        <div>@Html.DisplayName("Потужність дизеля - ") @Html.DisplayFor(modelItem => item.DieselPower)</div>
                     }
                 </div>
                 <div style="position:relative; left:780px; top:-380px; width:250px">
 
 
                     @*<a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-idlocname="@item.Seria" asp-route-number="@item.Number">Детальная информация</a>*@
-                    <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото пользователей</a>
+                    <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото користувачів</a>
                     @if (ViewBag.user != null)
                     {
                         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                         {
-                            <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="Edit" asp-route-id="@item.id">Редактировать @item.Seria - @item.Number</a>
-                            <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                            <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="Edit" asp-route-idlocname="@item.id">Редагувати @item.Seria - @item.Number</a>
+                            <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                         }
                     }
                 </div>

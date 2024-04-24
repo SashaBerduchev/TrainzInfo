@@ -20,6 +20,10 @@
         <b>Кількість записів: @Model.Count().ToString()</b>
         <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
         <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
+        <form asp-controller="Electic_locomotive" asp-action="AddNews" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploads" /><br>
+            <input type="submit" value="Зберегти" class="btn btn-primary" />
+        </form>
     }
 }
 <p>
@@ -43,10 +47,7 @@
     </div>
 </form>
 
-<form asp-controller="Electic_locomotive" asp-action="AddNews" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploads" /><br>
-    <input type="submit" value="Зберегти" class="btn btn-primary" />
-</form>
+
 
 <div class="maininfo" style="position:absolute">
     @foreach (var item in Model)

@@ -22,11 +22,11 @@
                         new { Model.id })" />
         </div>
         <div style="position:relative; left:540px; top:-200px; font-size:25px; background-color:lightblue; width:400px">
-            <div>@Html.DisplayName("Электровоз: ") @Html.DisplayName(Model.Seria + " - " + Model.Number)</div>
-            <div>@Html.DisplayName("Скорость: ") @Html.DisplayName(Model.Speed.ToString())</div>
-            <div>@Html.DisplayName("Количество секций: ") @Html.DisplayName(Model.SectionCount.ToString())</div>
+            <div>@Html.DisplayName("Електровоз: ") @Html.DisplayName(Model.Seria + " - " + Model.Number)</div>
+            <div>@Html.DisplayName("Макимальна швидкість: ") @Html.DisplayName(Model.Speed.ToString())</div>
+            <div>@Html.DisplayName("Кількість секцій: ") @Html.DisplayName(Model.SectionCount.ToString())</div>
             <div>
-                @Html.DisplayName("Общая мощность: ")
+                @Html.DisplayName("Загальна потужність: ")
                 @if (Model.ALlPowerP != null)
                 {
                     <div> @Html.DisplayName(Model.ALlPowerP)</div>
