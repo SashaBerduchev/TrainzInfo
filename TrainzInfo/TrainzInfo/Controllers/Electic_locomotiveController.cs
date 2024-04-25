@@ -294,8 +294,17 @@ namespace TrainzInfo.Controllers
 
             if (locomotive != null)
             {
-                var file = File(locomotive.Image, locomotive.ImageMimeTypeOfData);
-                return file;
+                try
+                {
+                    var file = File(locomotive.Image, locomotive.ImageMimeTypeOfData);
+                    return file;
+
+                }catch (Exception exp)
+                {
+                    Trace.WriteLine(exp.Message);
+                    return null;
+                }
+                
             }
             else
             {
