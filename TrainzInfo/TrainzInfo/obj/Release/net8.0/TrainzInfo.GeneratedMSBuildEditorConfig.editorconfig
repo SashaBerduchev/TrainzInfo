@@ -214,42 +214,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/AddImageForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXEFkZEltYWdlRm9ybS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/AddNewsView.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXEFkZE5ld3NWaWV3LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Copy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXENvcHkuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/DeleteDenied.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXERlbGV0ZURlbmllZC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electic_locomotive/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RpY19sb2NvbW90aXZlXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectrickTrainsLists/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrVHJhaW5zTGlzdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -444,6 +408,30 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/AddImageForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxBZGRJbWFnZUZvcm0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive_series/Create.cshtml]

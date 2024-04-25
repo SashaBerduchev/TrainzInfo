@@ -265,6 +265,7 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Depo = new SelectList(_context.Depots.OrderByDescending(x => x.Name).Select(x => x.Name));
             return View(locomotive);
         }
 
