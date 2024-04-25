@@ -52,7 +52,7 @@
             {
                 if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                 {
-                    <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редактировать инфу об электровозе @Model.Seria</a>
+                    <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редагувати додаткову інформацію @Model.Seria</a>
                 }
             }
 
@@ -69,7 +69,8 @@
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a asp-action="Edit" asp-route-id="@Model.id">Edit</a>
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редагуати</a>
+            <a class="btn btn-success" asp-action="AddImageForm" asp-route-id="@Model.id">Додати зображення</a>
             
         }
     }
