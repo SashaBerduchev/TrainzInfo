@@ -43,7 +43,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             ViewBag.Depo = depotname;
-            List<Electic_locomotive> rollingStones = await _context.Electic_Locomotives.Where(x => x.Depot == depotname).ToListAsync();
+            List<Locomotive> rollingStones = await _context.Locomotives.Where(x => x.Depot == depotname).ToListAsync();
             List<ElectricTrain> rollingStonesTrains = await _context.Electrics.Where(x => x.DepotTrain == depotname).ToListAsync();
             if (rollingStones != null && rollingStones.Count > 0)
             {
@@ -64,7 +64,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var listRollingStone = await _context.Electic_Locomotives
+            var listRollingStone = await _context.Locomotives
                 .FirstOrDefaultAsync(m => m.Seria == idlocname && m.Number == number);
             if (listRollingStone == null)
             {
@@ -80,7 +80,7 @@ namespace TrainzInfo.Controllers
             List<string> liststone = _context.ListRollingStones.Select(x => x.Name).ToList();
             SelectList selectListItems = new SelectList(_context.Depots.Select(x=>x.Name).ToList());
             ViewBag.depots = selectListItems;
-            List<string> locomotives = _context.Electic_Locomotives.Select(x => x.Seria + " - " + x.Number).ToList();
+            List<string> locomotives = _context.Locomotives.Select(x => x.Seria + " - " + x.Number).ToList();
             locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
             for (int i = 0; i < locomotives.Count; i++)
             {
@@ -110,11 +110,11 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,Name,Number,Depot,Country,City,Status,Photo")] ListRollingStone listRollingStone)
         {
             listRollingStone.Country = "Украина";
-            Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
+            Locomotive locomotives = _context.Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
             if(listRollingStone.Image == null)
             {
-                listRollingStone.Image = electic_Locomotive.Image;
-                listRollingStone.ImageMimeTypeOfData = electic_Locomotive.ImageMimeTypeOfData;
+                listRollingStone.Image = locomotives.Image;
+                listRollingStone.ImageMimeTypeOfData = locomotives.ImageMimeTypeOfData;
             }
              _context.Add(listRollingStone);
              await _context.SaveChangesAsync();
@@ -226,7 +226,7 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     Trace.WriteLine("POST " + this + listRollingStone);
-                    Electic_locomotive electic_Locomotive = _context.Electic_Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
+                    Locomotive Locomotives = _context.Locomotives.Where(x => x.Seria + " - " + x.Number == listRollingStone.Name).FirstOrDefault();
                     _context.Update(listRollingStone);
                     await _context.SaveChangesAsync();
                 }

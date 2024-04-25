@@ -17,7 +17,7 @@
                 @*<input asp-for="Name" class="form-control" />*@
                 @Html.DropDownList("Name", ViewBag.locomotives as SelectList, htmlAttributes: new { @class = "form-control" })
                 <div style="position:relative; left:150px; width:300px;">
-                    <a class="btn btn-info" target="_blank" style=" width:200px" asp-controller="Electic_locomotive" asp-action="Create">Добавить локомотив</a>
+                    <a class="btn btn-info" target="_blank" style=" width:200px" asp-controller="Locomotives" asp-action="Create">Додати локомотив</a>
                 </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>

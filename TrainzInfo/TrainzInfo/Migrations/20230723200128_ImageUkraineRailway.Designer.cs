@@ -278,7 +278,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Diesel_Trinzs");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Electic_locomotive", b =>
+            modelBuilder.Entity("TrainzInfo.Models.Locomotives", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -323,7 +323,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Electic_Locomotives");
+                    b.ToTable("Locomotivess");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>

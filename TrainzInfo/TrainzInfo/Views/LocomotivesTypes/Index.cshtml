@@ -31,7 +31,7 @@
         <a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
                     @if (item.Type == "Электровоз")
                     {
-                        <a class="btn btn-info" asp-controller="Electic_locomotive" asp-action="Index">Смотреть весь список электровозов</a>
+                        <a class="btn btn-info" asp-controller="Locomotives" asp-action="Index">Смотреть весь список электровозов</a>
                     }
                     else if (item.Type == "Тепловоз")
                     {

@@ -12,13 +12,13 @@
 <div>
     @if (ViewBag.locomotives != null)
     {
-        @foreach (var item in ViewBag.locomotives as List<Electic_locomotive>)
+        @foreach (var item in ViewBag.locomotives as List<Locomotive>)
         {
             <div style="margin:25px; width:1100px; background-color:aliceblue; height:300px">
                 <div style="position:relative; left:20px; top:20px;">
                     <div class="img">
                         <img class="img-thumbnail" width="350" height="250"
-                             src="@Url.Action("GetImage", "Electic_locomotive",
+                             src="@Url.Action("GetImage", "Locomotives",
                         new { item.id })" />
                     </div>
                 </div>

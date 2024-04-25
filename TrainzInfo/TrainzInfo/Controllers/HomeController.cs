@@ -49,27 +49,27 @@ namespace TrainzInfo.Controllers
             }
             await _context.AddRangeAsync(newsInfos);
 
-            List<Electic_locomotive> electic_Locomotives = await _context.Electic_Locomotives.ToListAsync();
+            List<Locomotive> Locomotivess = await _context.Locomotives.ToListAsync();
             List<ElectricTrain> electics = await _context.Electrics.ToListAsync();
             List<Locomotive_series> series = await _context.Locomotive_Series.ToListAsync();
 
-            List<Electic_locomotive> _Locomotives = new List<Electic_locomotive>();
+            List<Locomotive> _Locomotives = new List<Locomotive>();
             List<ElectricTrain> electricTrains = new List<ElectricTrain>();
             List<Locomotive_series> locomotive_Series = new List<Locomotive_series>();
-            for (int i = 0; i < electic_Locomotives.Count; i++)
+            for (int i = 0; i < Locomotivess.Count; i++)
             {
-                Electic_locomotive locomotive = new Electic_locomotive();
-                locomotive.Seria = electic_Locomotives[i].Seria;
-                locomotive.Depot = electic_Locomotives[i].Depot;
-                locomotive.SectionCount = electic_Locomotives[i].SectionCount;
-                locomotive.Number = electic_Locomotives[i].Number;
-                locomotive.Image = electic_Locomotives[i].Image;
-                locomotive.ImageMimeTypeOfData = electic_Locomotives[i].ImageMimeTypeOfData;
-                locomotive.ALlPowerP = electic_Locomotives[i].ALlPowerP;
-                locomotive.DieselPower = electic_Locomotives[i].DieselPower;
-                locomotive.Speed = electic_Locomotives[i].Speed;
-                locomotive.User = electic_Locomotives[i].User;
-                locomotive.UserId = electic_Locomotives[i].UserId;
+                Locomotive locomotive = new Locomotive();
+                locomotive.Seria = Locomotivess[i].Seria;
+                locomotive.Depot = Locomotivess[i].Depot;
+                locomotive.SectionCount = Locomotivess[i].SectionCount;
+                locomotive.Number = Locomotivess[i].Number;
+                locomotive.Image = Locomotivess[i].Image;
+                locomotive.ImageMimeTypeOfData = Locomotivess[i].ImageMimeTypeOfData;
+                locomotive.ALlPowerP = Locomotivess[i].ALlPowerP;
+                locomotive.DieselPower = Locomotivess[i].DieselPower;
+                locomotive.Speed = Locomotivess[i].Speed;
+                locomotive.User = Locomotivess[i].User;
+                locomotive.UserId = Locomotivess[i].UserId;
                 _Locomotives.Add(locomotive);
             }
 

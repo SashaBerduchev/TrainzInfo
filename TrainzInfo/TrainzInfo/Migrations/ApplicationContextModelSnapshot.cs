@@ -275,54 +275,6 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Diesel_Trinzs");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Electic_locomotive", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("ALlPowerP")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Depot")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DieselPower")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SectionCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Seria")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Speed")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Electic_Locomotives");
-                });
-
             modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
                 {
                     b.Property<int>("id")
@@ -531,6 +483,54 @@ namespace TrainzInfo.Migrations
                     b.ToTable("ListRollingStones");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("ALlPowerP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Depot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DieselPower")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SectionCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Seria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Locomotives");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.LocomotiveBaseInfo", b =>
                 {
                     b.Property<int>("id")
@@ -567,6 +567,54 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Locomotive_Series");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Locomotives", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("ALlPowerP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Depot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DieselPower")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SectionCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Seria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Locomotivess");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.LocomotivesType", b =>

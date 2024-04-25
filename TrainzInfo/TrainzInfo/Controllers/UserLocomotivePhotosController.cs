@@ -88,7 +88,7 @@ namespace TrainzInfo.Controllers
                 userid = user.Id;
             }
             List<string> locomotives = new List<string>();
-            locomotives = _context.Electic_Locomotives.Select(x=>x.Seria + " - " + x.Number).ToList();
+            locomotives = _context.Locomotives.Select(x=>x.Seria + " - " + x.Number).ToList();
             locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
             SelectList selectLists = new SelectList(locomotives);
             ViewBag.locomotives = selectLists;
