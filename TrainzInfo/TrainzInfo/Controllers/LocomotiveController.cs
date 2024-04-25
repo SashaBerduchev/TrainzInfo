@@ -162,6 +162,59 @@ namespace TrainzInfo.Controllers
 
         }
 
+        public async Task<IActionResult> Copy(int? id)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var locomotives = await _context.Locomotives.FindAsync(id);
+            if (locomotives == null)
+            {
+                return NotFound();
+            }
+            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
+            ViewBag.users = users;
+            return View(locomotives);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopySubmit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, DieselPower,  User")] Locomotive locomotives)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            string myuser = "";
+            int userId = 0;
+            if (user != null && user.Status == "true")
+            {
+                myuser = user.Name;
+                userId = user.Id;
+            }
+
+            Trace.WriteLine("POST: " + this + locomotives);
+            locomotives.User = myuser;
+            locomotives.UserId = userId;
+            _context.Add(locomotives);
+            await _context.SaveChangesAsync();
+            //SendMessage(user);
+            int locid = _context.Locomotives.Where(x => x.Seria == locomotives.Seria && x.Number == locomotives.Number).Select(x => x.id).FirstOrDefault();
+            TempData["LocomotiveId"] = locid;
+            Trace.WriteLine(TempData);
+            return RedirectToAction(nameof(AddImageForm));
+
+        }
+
+
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
             if (id != null)
