@@ -40,34 +40,35 @@
     <tbody>
         @foreach (var item in Model)
         {
+            
             <tr>
                 <td>
-                    <div style="font-size:20px"; color:black>
+                    <div style="font-size:22px; color:black" >
                         @Html.DisplayFor(modelItem => item.Number)
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:20px"; color:black>
+                    <div style="font-size:22px; color:black" >
                         @Html.DisplayFor(modelItem => item.StationFrom)
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:20px; color:black">
+                    <div style="font-size:22px; color:black">
                         @Html.DisplayFor(modelItem => item.StationTo)
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:20px; color:black">
+                    <div style="font-size:22px; color:black; width: 120px">
                         @Html.DisplayFor(modelItem => item.Type)
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:20px">
+                    <div style="font-size:22px">
                         @Html.DisplayFor(modelItem => item.NameOfTrain)
                     </div>
                 </td>
                 <td>
-                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Розклад поїзда</a>
+                    <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.Number.ToString()">Розклад поїзда</a>
                     @if (ViewBag.user != null)
                     {
                         if (ViewBag.user.Role == "Superadmin")

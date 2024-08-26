@@ -70,7 +70,6 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
             return View(listRollingStone);
         }
 

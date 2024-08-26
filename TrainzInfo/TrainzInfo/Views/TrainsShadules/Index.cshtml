@@ -19,25 +19,22 @@
     }
 
 </p>
-<H2>Поїзд номер - "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
+<H2 style="font-weight:bold">Поїзд номер "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Назва");
+                @Html.DisplayName("Назва")
             </th>
             <th>
-                @Html.DisplayName("Номер поїзда");
+                @Html.DisplayName("Час прибуття")
             </th>
             <th>
-                @Html.DisplayName("Час прибуття");
+                @Html.DisplayName("Час відправлення")
             </th>
             <th>
-                @Html.DisplayName("Час выдправлення");
-            </th>
-            <th>
-                @Html.DisplayName("Відстань");
+                @Html.DisplayName("Відстань")
             </th>
             <th></th>
         </tr>
@@ -48,12 +45,7 @@
             <tr>
                 <td>
                     <div style="font-size:25px">
-                    <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStation">@Html.DisplayFor(modelItem => item.NameStation)</a>
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:20px"; color:black>
-                        @Html.DisplayFor(modelItem => item.NumberTrain)
+                        <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStation">@Html.DisplayFor(modelItem => item.NameStation)</a>
                     </div>
                 </td>
                 <td>
@@ -102,12 +94,20 @@
 <style type="text/css">
     td {
         background-color: aliceblue; /* Цвет фона */
-        position: center;
+        position: relative;
         padding: 5px; /* Поля в ячейках */
         opacity: 1.9; /* Полупрозрачность таблицы */
         filter: alpha(Opacity=50); /* Для IE */
         width: 700px;
         color: cornflowerblue;
         text-decoration: solid;
+    }
+    tr{
+        display: table-row;
+        vertical-align: inherit;
+        unicode-bidi: isolate;
+        border-color: inherit;
+        margin: 25px;
+        padding: 15px;
     }
 </style>

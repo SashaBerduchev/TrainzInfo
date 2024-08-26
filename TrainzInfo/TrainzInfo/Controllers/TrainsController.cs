@@ -95,7 +95,9 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            return View(await _context.Trains.OrderBy(x=>x.Number).ToListAsync());
+
+            List<Train> trains = await _context.Trains.OrderBy(x => x.Number).ToListAsync();
+            return View(trains);
         }
 
         public async Task<List<Train>> IndexAction()

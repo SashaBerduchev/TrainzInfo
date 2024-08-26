@@ -65,7 +65,7 @@ namespace TrainzInfo.Controllers
             }
             catch (Exception exp)
             {
-                return View(exp);
+                return View(exp.ToString());
             }
             GlobalID = -1;
             return View(cargoCarriegesInfo_result);
