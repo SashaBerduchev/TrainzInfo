@@ -55,7 +55,7 @@ namespace TrainzInfo.Controllers
             }
         }
         // GET: DepotLists
-        public async Task<IActionResult> Index(string? uzname)
+        public async Task<IActionResult> Index(int? uzname)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -68,8 +68,9 @@ namespace TrainzInfo.Controllers
                 List<DepotList> depotsfull = await _context.Depots.ToListAsync();
                 return View(depotsfull);
             }
-            List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailways == uzname).ToListAsync();
-            ViewBag.Filia = uzname;
+            List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailway.id == uzname).ToListAsync();
+            UkrainsRailways ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).FirstOrDefaultAsync();
+            ViewBag.Filia = ukrains.Name;
             return View(depots);
         }
 
@@ -79,43 +80,8 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(depots);
             foreach(DepotList depot in depots)
             {
-                if (depot.UkrainsRailways == "Київська залізниця")
-                {
-                    depot.UkrainsRailways = "Центральна залізниця";
-                    _context.Depots.Update(depot);
-                    await _context.SaveChangesAsync();
-                }
-                if (depot.UkrainsRailways == "Приднепровская железная дорога")
-                {
-                    depot.UkrainsRailways = "Придніпровська залізниця";
-                    _context.Depots.Update(depot);
-                    _context.SaveChangesAsync();
-                }
-                if (depot.UkrainsRailways == "Одесская железная дорога")
-                {
-                    depot.UkrainsRailways = "Одеська залізниця";
-                    _context.Depots.Update(depot);
-                    _context.SaveChangesAsync();
-                }
-                if (depot.UkrainsRailways == "Донецкая железная дорога")
-                {
-                    depot.UkrainsRailways = "Донецька залізниця";
-                    _context.Depots.Update(depot);
-                    _context.SaveChangesAsync();
-                }
-
-                if (depot.UkrainsRailways == "Слобідська залізниця")
-                {
-                    depot.UkrainsRailways = "Харківська залізниця";
-                    _context.Depots.Update(depot);
-                    _context.SaveChangesAsync();
-                }
-                if (depot.UkrainsRailways == "Львовская железная дорога")
-                {
-                    depot.UkrainsRailways = "Львівська залізниця";
-                    _context.Depots.Update(depot);
-                    _context.SaveChangesAsync();
-                }
+                depot.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name == depot.UkrainsRailways).FirstOrDefaultAsync();
+                await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
@@ -160,6 +126,7 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                depotList.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name.Contains(depotList.UkrainsRailways)).FirstOrDefaultAsync();
                 _context.Add(depotList);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -203,6 +170,7 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    depotList.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name.Contains(depotList.UkrainsRailways)).FirstOrDefaultAsync();
                     _context.Update(depotList);
                     await _context.SaveChangesAsync();
                 }
