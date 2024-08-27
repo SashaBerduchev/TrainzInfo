@@ -29,18 +29,15 @@
         </div>
     </div>
     <div style="position:absolute; left:1150px; top:250px; width:200px">
-        <a class="btn btn-info" style="margin:10px; width:220px" asp-action="Edit" asp-route-id="@Model.Id">Редактировать данные</a>
-        <a class="btn btn-info" style="margin:10px; width:220px" asp-action="AddAvatarForm" asp-route-id="@Model.Id">Добавить аватар</a>
+        <a class="btn btn-info" style="margin:10px; width:220px" asp-action="Edit" asp-route-id="@Model.Id">Редагувати дані</a>
+        <a class="btn btn-info" style="margin:10px; width:220px" asp-action="AddAvatarForm" asp-route-id="@Model.Id">Додати аватар</a>
 
     </div>
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-success" asp-controller="MainImages" asp-action="Index">Основні зображення</a>
-            <a class="btn btn-success" asp-action="Index">Користувачі</a>
-            <a class="btn btn-success" asp-controller="Cities" asp-action="Index">Міста</a>
-            <a class="btn btn-success" asp-controller="Oblasts" asp-action="Index">Області</a>
+            
         }
     }
 </div>
@@ -56,6 +53,10 @@
                 <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="MainImages" asp-action="Index">Основні зображення на сайті</a>
                 <a class="btn btn-info btn_news" style="margin:10px;" asp-controller="NewsInfoes" asp-action="Create">Створити новину</a>
                 <a class="btn btn-info btn_news" style="margin:10px;" asp-action="ModerationView">Премодерація</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="MainImages" asp-action="Index">Основні зображення</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-action="Index">Користувачі</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Cities" asp-action="Index">Міста</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Oblasts" asp-action="Index">Області</a>
 
             }
             else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
