@@ -20,5 +20,6 @@ namespace TrainzInfo.Models
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public string DieselPower { get; set; }
+        public DepotList DepotList { get; set; }
     }
 }

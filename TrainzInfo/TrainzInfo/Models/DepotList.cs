@@ -16,5 +16,6 @@ namespace TrainzInfo.Models
         public string Addres { get; set; }
 
         public UkrainsRailways UkrainsRailway { get; set; }
+        public ICollection<Locomotive> Locomotives { get; set; }
     }
 }
