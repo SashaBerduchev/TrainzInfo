@@ -88,7 +88,7 @@ namespace TrainzInfo.Controllers
 
 
         // GET: TrainsShadules
-        public async Task<IActionResult> Index(string? train)
+        public async Task<IActionResult> Index(TrainsShadule trainshadule)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -102,28 +102,41 @@ namespace TrainzInfo.Controllers
                 number = TempData["TrainNumber"].ToString();
                 if (number == "")
                 {
-                    number = train;
+                    number = trainshadule.NumberTrain;
                 }
             }
             if (number == "")
             {
-                number = train;
+                number = trainshadule.NumberTrain;
             }
-            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == number).ToListAsync();
-            if (train == null)
+            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == trainshadule.NumberTrain).ToListAsync();
+            if (trainshadule == null)
             {
                 Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(number)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
             else
             {
-                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train)).FirstOrDefaultAsync();
+                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainshadule.NumberTrain)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
 
             return View(shadule);
         }
 
+        public async Task<IActionResult> UpdateInfo()
+        {
+            List<TrainsShadule> trainsShadules = await _context.TrainsShadule.ToListAsync();
+            List<TrainsShadule> trains = new List<TrainsShadule>();
+            foreach (var item in trainsShadules)
+            {
+                item.Train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(item.NumberTrain)).FirstOrDefaultAsync();
+                trains.Add(item);
+            }
+            _context.TrainsShadule.UpdateRange(trains);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         // GET: TrainsShadules/Details/5
         public async Task<IActionResult> Details(int? id)
         {

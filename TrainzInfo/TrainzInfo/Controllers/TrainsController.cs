@@ -95,7 +95,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
+            List<TrainsShadule> trainsShadules = await _context.TrainsShadule.ToListAsync();
             List<Train> trains = await _context.Trains.OrderBy(x => x.Number).ToListAsync();
             return View(trains);
         }

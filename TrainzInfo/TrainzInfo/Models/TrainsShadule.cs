@@ -12,6 +12,7 @@ namespace TrainzInfo.Models
         public DateTime Departure { get; set; }
         public string Distance { get; set; }
         public ICollection<Stations> Stations { get; set; }
+        public Train Train { get; set; }
 
     }
 }

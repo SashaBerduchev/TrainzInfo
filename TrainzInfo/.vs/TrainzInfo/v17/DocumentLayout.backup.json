@@ -1,21 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\C#\\TrainzInfo\\TrainzInfo\\",
+  "WorkspaceRootPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\stationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\stationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\locomotive\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\locomotive\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -25,8 +21,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 498,
-          "SelectedChildIndex": 4,
+          "DockedHeight": 512,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,60 +33,65 @@
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\appsettings.json",
-              "RelativeDocumentMoniker": "TrainzInfo\\appsettings.json",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\appsettings.json",
-              "RelativeToolTip": "TrainzInfo\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-09-07T10:34:53.596Z",
-              "EditorCaption": ""
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CitiesController.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\CitiesController.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs*",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\CitiesController.cs*",
-              "ViewState": "AgIAAKgAAAAAAAAAAAAgwL8AAABIAAAAAAAAAA==",
+              "Title": "LocomotiveController.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs*",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\LocomotiveController.cs*",
+              "ViewState": "AgIAADUAAAAAAAAAAAAIwEAAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T10:08:57.264Z",
+              "WhenOpened": "2024-09-07T15:42:01.111Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "StationsController.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\StationsController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\StationsController.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\StationsController.cs",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\StationsController.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAuwC0AAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T07:05:58.066Z",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Index.cshtml*",
+              "RelativeToolTip": "TrainzInfo\\Views\\Locomotive\\Index.cshtml*",
+              "ViewState": "AgIAABcAAAAAAAAAAAAEwCQAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-07T15:40:22.934Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Startup.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeToolTip": "TrainzInfo\\Startup.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-25T11:59:02.174Z",
+              "WhenOpened": "2024-04-21T14:55:55.145Z",
               "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 244,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3822e751-eb69-4b0e-b301-595a9e4c74d5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             }
           ]
         }

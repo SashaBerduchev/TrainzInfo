@@ -17,5 +17,6 @@ namespace TrainzInfo.Models
 
         public UkrainsRailways UkrainsRailway { get; set; }
         public ICollection<Locomotive> Locomotives { get; set; }
+        public ICollection<ListRollingStone> ListRollingStones { get; set; }
     }
 }

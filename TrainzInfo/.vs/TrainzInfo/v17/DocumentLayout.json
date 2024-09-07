@@ -7,23 +7,12 @@
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\cities\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\cities\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sasha\\AppData\\Local\\SourceServer\\09353c632bd282109ee5e71f70c5622d849831be5a48b1048d6ef4a551fe674a\\src\\Mvc\\Mvc.ViewFeatures\\src\\ExpressionMetadataProvider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\models\\locomotive.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\models\\locomotive.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\models\\trainsshadule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\models\\trainsshadule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\locomotive\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\locomotive\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -33,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 512,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,66 +35,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Cities\\Index.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Cities\\Index.cshtml",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Cities\\Index.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\Cities\\Index.cshtml",
-              "ViewState": "AQIAACQAAAAAAAAAAAAAAC0AAAAVAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-07T12:23:05.521Z",
+              "Title": "LocomotiveController.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\LocomotiveController.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAIwD4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-07T15:42:01.111Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "CitiesController.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\CitiesController.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\CitiesController.cs",
-              "ViewState": "AQIAAKkAAAAAAAAAAAAnwMAAAAAoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T12:21:41.304Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ExpressionMetadataProvider.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\AppData\\Local\\SourceServer\\09353c632bd282109ee5e71f70c5622d849831be5a48b1048d6ef4a551fe674a\\src\\Mvc\\Mvc.ViewFeatures\\src\\ExpressionMetadataProvider.cs",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\SourceServer\\09353c632bd282109ee5e71f70c5622d849831be5a48b1048d6ef4a551fe674a\\src\\Mvc\\Mvc.ViewFeatures\\src\\ExpressionMetadataProvider.cs",
-              "ToolTip": "C:\\Users\\sasha\\AppData\\Local\\SourceServer\\09353c632bd282109ee5e71f70c5622d849831be5a48b1048d6ef4a551fe674a\\src\\Mvc\\Mvc.ViewFeatures\\src\\ExpressionMetadataProvider.cs",
-              "RelativeToolTip": "..\\..\\..\\..\\AppData\\Local\\SourceServer\\09353c632bd282109ee5e71f70c5622d849831be5a48b1048d6ef4a551fe674a\\src\\Mvc\\Mvc.ViewFeatures\\src\\ExpressionMetadataProvider.cs",
-              "ViewState": "AQIAAEkAAAAAAAAAAAAQwFYAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T12:15:15.148Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Locomotive.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Locomotive.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Models\\Locomotive.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Locomotive.cs",
-              "RelativeToolTip": "TrainzInfo\\Models\\Locomotive.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABQAAAA1AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T11:17:57.705Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "TrainsShadule.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\TrainsShadule.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Models\\TrainsShadule.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\TrainsShadule.cs",
-              "RelativeToolTip": "TrainzInfo\\Models\\TrainsShadule.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T11:08:38.051Z",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "RelativeToolTip": "TrainzInfo\\Views\\Locomotive\\Index.cshtml",
+              "ViewState": "AgIAACMAAAAAAAAAAAAEwCkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-07T15:40:22.934Z",
               "EditorCaption": ""
             },
             {
@@ -114,9 +64,9 @@
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
-              "RelativeToolTip": "TrainzInfo\\Startup.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAABAAAAAmAAAA",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs*",
+              "RelativeToolTip": "TrainzInfo\\Startup.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-21T14:55:55.145Z",
               "EditorCaption": ""

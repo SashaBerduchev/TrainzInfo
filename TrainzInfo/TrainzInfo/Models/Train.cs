@@ -18,5 +18,7 @@ namespace TrainzInfo.Models
         [Required]
         public string Type { get; set; }
         public string NameOfTrain { get; set; }
+        public ICollection<TrainsShadule> TrainsShadules { get; set; }
+
     }
 }

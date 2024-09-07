@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240907135837_ListRollingStone")]
+    partial class ListRollingStone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1176,12 +1179,7 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NumberTrain")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Trainid")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
-
-                    b.HasIndex("Trainid");
 
                     b.ToTable("TrainsShadule");
                 });
@@ -1488,15 +1486,6 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.Train", "Train")
-                        .WithMany("TrainsShadules")
-                        .HasForeignKey("Trainid");
-
-                    b.Navigation("Train");
-                });
-
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
                 {
                     b.Navigation("ListRollingStones");
@@ -1516,11 +1505,6 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Cities");
 
                     b.Navigation("Stations");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
-                {
-                    b.Navigation("TrainsShadules");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>

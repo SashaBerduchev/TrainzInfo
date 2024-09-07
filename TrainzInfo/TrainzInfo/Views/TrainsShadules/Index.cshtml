@@ -15,6 +15,7 @@
         if (ViewBag.user.Role == "Superadmin")
         {
             <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
+            <a class="btn btn-dark" asp-action="UpdateInfo" asp-route-numbertr="@ViewBag.traininfo.Number">Оновити дані</a>
         }
     }
 

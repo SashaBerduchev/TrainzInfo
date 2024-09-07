@@ -16,5 +16,7 @@ namespace TrainzInfo.Models
         public string IsStationExist { get; set; }
         public ICollection<Stations> Stations { get; set; }
         public Oblast Oblasts  { get; set; }
+        public ICollection<ListRollingStone> ListRollingStones { get; set; }
+
     }
 }

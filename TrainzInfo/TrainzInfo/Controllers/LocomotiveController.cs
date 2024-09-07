@@ -58,7 +58,8 @@ namespace TrainzInfo.Controllers
 
                 return View(locomotiveresult);
             }
-            ViewBag.depot = await _context.Depots.ToListAsync();
+            List<DepotList> depots = await _context.Depots.ToListAsync();
+            ViewBag.depot = new SelectList(depots.Select(x => x.Name));
             return View(locomotives);
         }
         public async Task<IActionResult> MakeChange()
