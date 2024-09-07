@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TrainzInfo.Models
 {
@@ -10,6 +11,7 @@ namespace TrainzInfo.Models
         public DateTime Arrival { get; set; }
         public DateTime Departure { get; set; }
         public string Distance { get; set; }
+        public ICollection<Stations> Stations { get; set; }
 
     }
 }

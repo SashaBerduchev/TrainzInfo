@@ -27,6 +27,7 @@ namespace TrainzInfo.Models
         public UkrainsRailways UkrainsRailways { get; set; }
         public Oblast Oblasts { get; set; }
         public City Citys { get; set; }
+        public ICollection<TrainsShadule> TrainsShadules { get; set; }
     }
 
 }
