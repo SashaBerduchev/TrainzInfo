@@ -38,46 +38,35 @@ namespace TrainzInfo.Controllers
             }
             List<string> serieses = new List<string>();
             serieses.Add("");
-            serieses.AddRange(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            serieses.AddRange(await _context.Locomotive_Series.Select(x => x.Seria).ToListAsync());
             List<string> depotslist = new List<string>();
             depotslist.Add("");
             depotslist.AddRange(_context.Locomotives.Select(x => x.Depot).ToList().Distinct());
             SelectList series = new SelectList(serieses);
             ViewBag.seria = series;
             SelectList depot = new SelectList(depotslist);
-            ViewBag.depot = depot;
+
+            List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
             if (Seria != null && Seria != "")
-            {
-                return View(await _context.Locomotives.Where(x => x.Seria == Seria).ToListAsync());
+            { 
+                List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
+                return View(locomotiveresult);
             }
             if (Depot != null && Depot != "")
             {
-                return View(await _context.Locomotives.Where(x => x.Depot == Depot).ToListAsync());
+                List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
+
+                return View(locomotiveresult);
             }
-            return View(await _context.Locomotives.ToListAsync());
+            ViewBag.depot = await _context.Depots.ToListAsync();
+            return View(locomotives);
         }
         public async Task<IActionResult> MakeChange()
         {
             List<Locomotive> Locomotives = await _context.Locomotives.ToListAsync();
-
-            for (int i = 0; i < Locomotives.Count; i++)
+            foreach (var item in Locomotives)
             {
-                if (Locomotives[i].Depot == "ТЧ-1 Киев-Пассажирский")
-                {
-                    Locomotives[i].Depot = "ТЧ-1 Київ-Пас";
-                }
-                else if (Locomotives[i].Depot == "ТЧ-8 Николаев")
-                {
-                    Locomotives[i].Depot = "ТЧ-8 Миколаїв";
-                }
-                else if (Locomotives[i].Depot == "ТЧ-3 Казатин")
-                {
-                    Locomotives[i].Depot = "ТЧ-3 Козятин";
-                }
-                else if (Locomotives[i].Depot == "ТЧ-2 Котовск")
-                {
-                    Locomotives[i].Depot = "ТЧ-2 Подільськ";
-                }
+                item.DepotList = await _context.Depots.Where(x => x.Name == item.Depot).FirstOrDefaultAsync();
             }
             _context.Locomotives.UpdateRange(Locomotives);
             await _context.SaveChangesAsync();

@@ -190,6 +190,7 @@ namespace TrainzInfo.Controllers
             }
 
             ViewBag.obl = new SelectList(city.Select(x => x.Oblast).Distinct());
+            List<Oblast> oblasts = await _context.Oblasts.ToListAsync();
             return View(city);
         }
 

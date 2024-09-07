@@ -42,6 +42,7 @@ namespace TrainzInfo.Controllers
             }
             List<Stations> stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault()).OrderBy(x => x.Name).ToListAsync();
             ViewBag.Filia = filialsName;
+            
             List<string> obl = new List<string>();
             obl.Add("");
             obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
@@ -62,7 +63,9 @@ namespace TrainzInfo.Controllers
 
                 return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
             }
-
+            List<City> cities = await _context.Cities.ToListAsync();
+            List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
+            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             return View(stations);
 
         }
