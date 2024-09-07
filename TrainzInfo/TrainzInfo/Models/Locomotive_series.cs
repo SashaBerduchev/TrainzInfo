@@ -11,5 +11,6 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         [Required]
         public string Seria { get; set; }
+        public ICollection<Locomotive> Locomotives { get; set; } 
     }
 }

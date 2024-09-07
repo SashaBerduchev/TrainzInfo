@@ -21,5 +21,6 @@ namespace TrainzInfo.Models
         public string ImageMimeTypeOfData { get; set; }
         public string DieselPower { get; set; }
         public DepotList DepotList { get; set; }
+        public Locomotive_series Locomotive_Series { get; set; }
     }
 }

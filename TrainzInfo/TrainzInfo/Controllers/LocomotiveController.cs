@@ -27,6 +27,20 @@ namespace TrainzInfo.Controllers
         {
             return View(nameof(AddNewsView));
         }
+
+        public async Task<IActionResult> UpdateInfo()
+        {
+            List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
+            List<Locomotive> locomotivesupdate = new List<Locomotive>();
+            foreach (var item in locomotives)
+            {
+                item.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == item.Seria).FirstOrDefaultAsync();
+                locomotivesupdate.Add(item);
+            }
+            _context.Locomotives.UpdateRange(locomotivesupdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         // GET: Locomotive
         public async Task<IActionResult> Index(string Seria, string Depot)
         {
@@ -59,7 +73,9 @@ namespace TrainzInfo.Controllers
                 return View(locomotiveresult);
             }
             List<DepotList> depots = await _context.Depots.ToListAsync();
+            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
             ViewBag.depot = new SelectList(depots.Select(x => x.Name));
+            ViewBag.series = new SelectList(locomotive_Series.Select(x => x.Seria));
             return View(locomotives);
         }
         public async Task<IActionResult> MakeChange()
