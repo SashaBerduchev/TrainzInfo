@@ -24,6 +24,9 @@ namespace TrainzInfo.Models
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public int UserId { get; set; }
+        public UkrainsRailways UkrainsRailways { get; set; }
+        public Oblast Oblasts { get; set; }
+        public City Citys { get; set; }
     }
 
 }

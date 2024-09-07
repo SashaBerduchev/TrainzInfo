@@ -31,6 +31,20 @@ namespace TrainzInfo.Controllers
         {
             return View(nameof(AddExcelView));
         }
+
+        public async Task<IActionResult> UpdateInfo()
+        {
+            List<City> cities = await _context.Cities.ToListAsync();
+            List<City> citiesupdate = new List<City>();
+            foreach (var item in cities)
+            {
+                item.Oblasts = await _context.Oblasts.Where(x=>x.Name == item.Oblast).FirstOrDefaultAsync();
+                citiesupdate.Add(item);
+            }
+            _context.Cities.UpdateRange(citiesupdate);
+            await _context.SaveChangesAsync();
+            return View(nameof(Index));
+        }
         public async Task<IActionResult> AddExcel(IFormFile uploads)
         {
             //var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -161,19 +175,18 @@ namespace TrainzInfo.Controllers
             //_context.SaveChanges();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            List<City> city = new List<City>();
+            List<City> city = await _context.Cities.ToListAsync();
             if (userlog != null && userlog.Status == "true")
             {
                 ViewBag.user = userlog;
             }
             if(oblast != null)
             {
-                city = await _context.Cities.Where(x => x.Oblast == oblast).OrderBy(x => x.Oblast).ToListAsync();
+                city = city.Where(x => x.Oblasts == _context.Oblasts.Where(x=>x.Name == oblast).FirstOrDefault()).OrderBy(x => x.Oblasts.Name).ToList();
             }
             else
             {
-                city = await _context.Cities.OrderBy(x => x.Oblast).ToListAsync();
-                
+                city =  city.OrderBy(x => x.Oblast).ToList();
             }
 
             ViewBag.obl = new SelectList(city.Select(x => x.Oblast).Distinct());

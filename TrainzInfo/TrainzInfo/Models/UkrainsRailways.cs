@@ -17,5 +17,6 @@ namespace TrainzInfo.Models
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public ICollection<DepotList> DepotLists { get; set; }
+        public ICollection<Stations> Stations { get; set; }
     }
 }

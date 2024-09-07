@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "D:\\C#\\TrainzInfo\\TrainzInfo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\views\\ukrainsrailways\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\ukrainsrailways\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\views\\cities\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\cities\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\views\\depotlists\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\depotlists\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\stationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\stationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\models\\ukrainsrailways.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\models\\ukrainsrailways.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\data\\applicationcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\data\\applicationcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|d:\\c#\\trainzinfo\\trainzinfo\\trainzinfo\\migrations\\20240827185300_ukrainsrailways_depotlist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\migrations\\20240827185300_ukrainsrailways_depotlist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 498,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,91 +46,65 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Index.cshtml*",
-              "RelativeToolTip": "TrainzInfo\\Views\\DepotLists\\Index.cshtml*",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACoAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-08-27T19:18:57.647Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\UkrainsRailways\\Details.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\UkrainsRailways\\Details.cshtml",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\UkrainsRailways\\Details.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\UkrainsRailways\\Details.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABSAAAAAAAAAA==",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Cities\\Index.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Cities\\Index.cshtml",
+              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Cities\\Index.cshtml*",
+              "RelativeToolTip": "TrainzInfo\\Views\\Cities\\Index.cshtml*",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAC8AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-08-27T19:07:55.239Z",
+              "WhenOpened": "2024-09-07T10:41:08.05Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "DepotListsController.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DepotListsController.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAiwDsAAABWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T18:58:23.216Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ApplicationContext.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Data\\ApplicationContext.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Data\\ApplicationContext.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Data\\ApplicationContext.cs",
-              "RelativeToolTip": "TrainzInfo\\Data\\ApplicationContext.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAywDkAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T18:55:43.41Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "20240827185300_UkrainsRailways_DepotList.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Migrations\\20240827185300_UkrainsRailways_DepotList.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Migrations\\20240827185300_UkrainsRailways_DepotList.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Migrations\\20240827185300_UkrainsRailways_DepotList.cs",
-              "RelativeToolTip": "TrainzInfo\\Migrations\\20240827185300_UkrainsRailways_DepotList.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T18:53:01.197Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "UkrainsRailways.cs",
-              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\UkrainsRailways.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Models\\UkrainsRailways.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\UkrainsRailways.cs",
-              "RelativeToolTip": "TrainzInfo\\Models\\UkrainsRailways.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-27T18:47:37.986Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\appsettings.json",
+              "RelativeDocumentMoniker": "TrainzInfo\\appsettings.json",
+              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\appsettings.json",
+              "RelativeToolTip": "TrainzInfo\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-07T10:34:53.596Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "CitiesController.cs",
+              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\CitiesController.cs",
+              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\CitiesController.cs*",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\CitiesController.cs*",
+              "ViewState": "AgIAAKgAAAAAAAAAAAAgwL8AAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-07T10:08:57.264Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StationsController.cs",
+              "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\StationsController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\StationsController.cs",
+              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\StationsController.cs",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\StationsController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAA8wC0AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-07T07:05:58.066Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Startup.cs",
               "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
               "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeToolTip": "TrainzInfo\\Startup.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-25T11:59:02.174Z",
               "EditorCaption": ""

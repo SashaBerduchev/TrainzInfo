@@ -13,5 +13,7 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public string OblCenter { get; set; }
+        public ICollection<Stations> Stations { get; set; }
+        public ICollection<City> Cities { get; set; }
     }
 }

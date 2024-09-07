@@ -21,6 +21,7 @@
         {
             <a class="btn btn-dark" asp-action="Create">Додати</a>
             <a class="btn btn-dark" asp-action="UpdateForce">Виправити назви</a>
+            <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
         }
     }
 </p>
@@ -46,9 +47,12 @@
             </div>
             <div style="position:relative; left:400px; top:-230px; font-size:25px">
                 <div>@Html.DisplayName("Назва станції: ") @Html.DisplayFor(modelItem => item.Name)</div>
-                <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblast)</div>
-                <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.City)</div>
-                <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelItem => item.Railway)</div>
+                @if (item.Oblasts != null)
+                {
+                    <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblasts.Name)</div>
+                    <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.Citys.Name)</div>
+                    <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelItem => item.UkrainsRailways.Name)</div>
+                }
             </div>
             <div style="position:relative;top:-140px">
                 <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>

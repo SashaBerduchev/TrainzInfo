@@ -11,6 +11,7 @@
     <a asp-action="AddExcelView">Import</a>
     <a class="btn btn-info" asp-action="Update">Update</a>
     <a class="btn btn-info" asp-action="CreateStation">Створити станцію</a>
+    <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
 </p>
 <form method="get">
     <div class="form-inline">
@@ -42,7 +43,9 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Oblast)
+                    @if(item.Oblasts !=null){
+                        @Html.DisplayFor(modelItem => item.Oblasts.Name)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Region)

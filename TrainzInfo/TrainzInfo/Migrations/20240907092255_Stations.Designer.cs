@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240907092255_Stations")]
+    partial class Stations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,15 +99,10 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Oblast")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Oblastsid")
-                        .HasColumnType("int");
-
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("Oblastsid");
 
                     b.ToTable("Cities");
                 });
@@ -1375,15 +1373,6 @@ namespace TrainzInfo.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.City", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.Oblast", "Oblasts")
-                        .WithMany("Cities")
-                        .HasForeignKey("Oblastsid");
-
-                    b.Navigation("Oblasts");
-                });
-
             modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
                 {
                     b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailway")
@@ -1421,8 +1410,6 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>
                 {
-                    b.Navigation("Cities");
-
                     b.Navigation("Stations");
                 });
 
