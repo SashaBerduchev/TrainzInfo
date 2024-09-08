@@ -26,46 +26,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\C#\TrainzInfo\TrainzInfo\TrainzInfo
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarriegesInfoes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNJbmZvZXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarriegesInfoes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNJbmZvZXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarriegesInfoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNJbmZvZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarriegesInfoes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNJbmZvZXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarriegesInfoes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNJbmZvZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarrieges/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarrieges/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarrieges/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarrieges/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/CargoCarrieges/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29DYXJyaWVnZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Cities/AddExcelView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0aWVzXEFkZEV4Y2VsVmlldy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -174,46 +134,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_trainz/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluelxDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_trainz/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluelxEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_trainz/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluelxEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_trainz/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluelxFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_trainz/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluelxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_train_info/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_train_info/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_train_info/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_train_info/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Diesel_train_info/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsX3RyYWluX2luZm9cSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectrickTrainsLists/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrVHJhaW5zTGlzdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -252,26 +172,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectrickTrainzInformations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrVHJhaW56SW5mb3JtYXRpb25zXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electrick_Lockomotive_Info/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrX0xvY2tvbW90aXZlX0luZm9cQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electrick_Lockomotive_Info/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrX0xvY2tvbW90aXZlX0luZm9cRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electrick_Lockomotive_Info/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrX0xvY2tvbW90aXZlX0luZm9cRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electrick_Lockomotive_Info/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrX0xvY2tvbW90aXZlX0luZm9cRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Electrick_Lockomotive_Info/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrX0xvY2tvbW90aXZlX0luZm9cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectricTrains/AddImageForm.cshtml]
@@ -336,38 +236,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/IpAdresses/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSXBBZHJlc3Nlc1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/EditLocomotive.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcRWRpdExvY29tb3RpdmUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/IndexAll.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcSW5kZXhBbGwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/ListRollingStones/IndexDepot.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdFJvbGxpbmdTdG9uZXNcSW5kZXhEZXBvdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotiveBaseInfoes/Create.cshtml]
@@ -816,26 +684,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Stations/IndexAll.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdGlvbnNcSW5kZXhBbGwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Status/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Status/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Status/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Status/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/Status/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/C\#/TrainzInfo/TrainzInfo/TrainzInfo/Views/SuburbanTrainsInfoes/Create.cshtml]
