@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\Locomotive\\Create.cshtml",
               "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Create.cshtml",
               "RelativeToolTip": "TrainzInfo\\Views\\Locomotive\\Create.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAABkAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAIBJwBkAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-09-08T15:48:45.01Z",
               "EditorCaption": ""
@@ -53,7 +53,7 @@
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\Locomotive\\Details.cshtml",
               "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Locomotive\\Details.cshtml",
               "RelativeToolTip": "TrainzInfo\\Views\\Locomotive\\Details.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAIBJwAoAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-09-08T15:27:59.915Z",
               "EditorCaption": ""
@@ -66,7 +66,7 @@
               "RelativeDocumentMoniker": "TrainzInfo\\Models\\Locomotive.cs",
               "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Locomotive.cs",
               "RelativeToolTip": "TrainzInfo\\Models\\Locomotive.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAMwBIAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAIAwwBIAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-08T14:53:27.343Z",
               "EditorCaption": ""
@@ -90,9 +90,9 @@
               "Title": "Startup.cs",
               "DocumentMoniker": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
-              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs*",
-              "RelativeToolTip": "TrainzInfo\\Startup.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
+              "ToolTip": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
+              "RelativeToolTip": "TrainzInfo\\Startup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-25T11:59:02.174Z",
               "EditorCaption": ""

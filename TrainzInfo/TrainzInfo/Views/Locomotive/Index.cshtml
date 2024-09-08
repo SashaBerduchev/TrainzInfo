@@ -66,13 +66,14 @@
                     if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
                         <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="edit" asp-route-id="@item.id">Редагувати @item.Seria - @item.Number</a>
-                        <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                     }
                 }
                 @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
+                        <a class="btn btn-outline-warning" style="width:250px; margin:10px;" asp-action="AddImageForm" asp-route-id="@item.id">Додати зображення</a>
+                        <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                         @* <a class="btn btn-info" asp-action="Copy" asp-route-id="@item.id">Копіювати</a> *@
                     }
                 }

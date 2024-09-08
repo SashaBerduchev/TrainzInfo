@@ -165,7 +165,6 @@ namespace TrainzInfo.Controllers
             if(locomotive_Series.Locomotives == null)
             {
                 locomotive_Series.Locomotives = new List<Locomotive>();
-                
             }
             locomotive_Series.Locomotives.Add(locomotive);
             _context.Add(locomotive);
@@ -336,7 +335,15 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Depo = new SelectList(_context.Depots.OrderByDescending(x => x.Name).Select(x => x.Name));
+            List<string> serieslist = new List<string>();
+            serieslist.Add("");
+            serieslist.AddRange(await _context.Locomotive_Series.Select(x => x.Seria).ToListAsync());
+            SelectList seria = new SelectList(serieslist);
+            ViewBag.Seria = seria;
+            List<string> depotLists = new List<string>();
+            depotLists.Add("");
+            depotLists.AddRange(await _context.Depots.OrderByDescending(x => x.Name).Select(x => x.Name).ToListAsync());
+            ViewBag.Depo = new SelectList(depotLists);
             return View(locomotive);
         }
 
@@ -345,7 +352,7 @@ namespace TrainzInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,User,Number,Speed,Seria,Depot")] Locomotive locomotive)
         {
             if (id != locomotive.id)
             {
@@ -356,7 +363,22 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
+                    locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Update(locomotive);
+                    Locomotive_series locomotiveSeries = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Locomotive_Series.Seria).FirstOrDefaultAsync();
+                    if (locomotiveSeries.Locomotives == null)
+                    {
+                        locomotiveSeries.Locomotives = new List<Locomotive>();
+                    }
+
+                    Locomotive locomotiveForAdd = locomotiveSeries.Locomotives
+                        .Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
+                    if (locomotiveForAdd == null)
+                    {
+                        locomotiveSeries.Locomotives.Add(locomotive);
+                        _context.Locomotive_Series.Update(locomotiveSeries);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
