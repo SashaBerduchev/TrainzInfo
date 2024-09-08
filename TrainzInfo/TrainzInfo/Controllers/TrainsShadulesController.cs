@@ -88,7 +88,7 @@ namespace TrainzInfo.Controllers
 
 
         // GET: TrainsShadules
-        public async Task<IActionResult> Index(TrainsShadule train)
+        public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -96,20 +96,23 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            Trace.WriteLine(id);
             string number = "";
+
+            Train train = await _context.Trains.Where(x=>x.id == id).FirstOrDefaultAsync();
             if (TempData["TrainNumber"] != null)
             {
                 number = TempData["TrainNumber"].ToString();
                 if (number == "")
                 {
-                    number = train.NumberTrain;
+                    number = train.Number.ToString();
                 }
             }
             if (number == "")
             {
-                number = train.NumberTrain;
+                number = train.Number.ToString();
             }
-            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == train.NumberTrain).ToListAsync();
+            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == train.Number.ToString()).ToListAsync();
             if (train == null)
             {
                 Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(number)).FirstOrDefaultAsync();
@@ -117,7 +120,7 @@ namespace TrainzInfo.Controllers
             }
             else
             {
-                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train.NumberTrain)).FirstOrDefaultAsync();
+                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train.Number)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
 
