@@ -12,6 +12,8 @@
         if (ViewBag.user.Role == "Superadmin")
         {
             <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
+            <a class="btn btn-dark" asp-controller="TrainsShadules" asp-action="UpdateInfo">Оновити дані</a>
+
         }
     }
 
