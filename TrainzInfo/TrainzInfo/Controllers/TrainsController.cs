@@ -64,7 +64,7 @@ namespace TrainzInfo.Controllers
                                 {
                                     train.NameOfTrain = name.ToString();
                                 }
-                                
+
 
                                 trainslist.Add(train);
                             }
@@ -84,7 +84,19 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        public async Task<IActionResult> UpdateInfo()
+        {
+            List<Train> trains = await _context.Trains.ToListAsync();
+            List<Train> trainsupdate = new List<Train>();
+            foreach (var item in trains)
+            {
+                item.TypeOfPassTrain = await _context.TypeOfPassTrains.Where(x => x.Type.Contains(item.Type)).FirstOrDefaultAsync();
+                trainsupdate.Add(item);
+            }
+            _context.Trains.UpdateRange(trainsupdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: Trains
         public async Task<IActionResult> Index()
@@ -97,7 +109,7 @@ namespace TrainzInfo.Controllers
             }
             List<TrainsShadule> trainsShadules = await _context.TrainsShadule.ToListAsync();
             List<Train> trains = await _context.Trains.OrderBy(x => x.Number).ToListAsync();
-            List<Train> trainsupdate = new List<Train>();
+            List<TypeOfPassTrain> typeOfPassTrain = await _context.TypeOfPassTrains.ToListAsync();
             return View(trains);
         }
 

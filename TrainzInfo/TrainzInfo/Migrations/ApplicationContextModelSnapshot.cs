@@ -1153,7 +1153,12 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TypeOfPassTrainid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("TypeOfPassTrainid");
 
                     b.ToTable("Trains");
                 });
@@ -1499,6 +1504,15 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.TypeOfPassTrain", "TypeOfPassTrain")
+                        .WithMany("Trains")
+                        .HasForeignKey("TypeOfPassTrainid");
+
+                    b.Navigation("TypeOfPassTrain");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
                 {
                     b.HasOne("TrainzInfo.Models.Train", "Train")
@@ -1537,6 +1551,11 @@ namespace TrainzInfo.Migrations
             modelBuilder.Entity("TrainzInfo.Models.Train", b =>
                 {
                     b.Navigation("TrainsShadules");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
+                {
+                    b.Navigation("Trains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
