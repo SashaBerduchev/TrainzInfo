@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rqcCdfpG1ec=",
+  "dgSpecHash": "Ky4nZ7gfnLQ=",
   "success": true,
-  "projectFilePath": "D:\\C#\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
+  "projectFilePath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\TrainzInfo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sasha\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\sasha\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
