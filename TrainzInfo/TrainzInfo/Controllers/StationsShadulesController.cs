@@ -29,9 +29,12 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
-            ViewBag.shadule = await _context.TrainsShadule.OrderBy(x=>x.Departure).Where(x=>x.NameStation == station).ToListAsync();
-            return View(await _context.StationsShadules.Where(x=>x.Station == station).ToListAsync());
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            List<Train> trains = await _context.Trains.ToListAsync();
+            List<UkrainsRailways> railways = await _context.UkrainsRailways.ToListAsync();
+            ViewBag.station = station;
+            List<StationsShadule> stationsShadule = await _context.StationsShadules.Where(x => x.Station == station).ToListAsync();
+            return View(stationsShadule);
         }
         public async Task<List<StationsShadule>> IndexAction()
         {

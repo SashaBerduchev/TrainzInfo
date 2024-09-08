@@ -28,6 +28,7 @@ namespace TrainzInfo.Models
         public Oblast Oblasts { get; set; }
         public City Citys { get; set; }
         public ICollection<TrainsShadule> TrainsShadules { get; set; }
+        public ICollection<StationsShadule> StationsShadules { get; set; }
     }
 
 }

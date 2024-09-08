@@ -5,6 +5,7 @@
 }
 
 
+<h1>Розклад по станції @ViewBag.station</h1>
 
 <p>
    @* @if (ViewBag.user != null)
@@ -32,21 +33,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in ViewBag.shadule as List<TrainsShadule>)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    <a asp-controller="TrainsShadules" asp-action="Index" asp-route-train="@item.NumberTrain.ToString()">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
+                    <a asp-controller="TrainsShadules" asp-action="Index" asp-route-trainid="@item.Train.id">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumberTrain)
-
+                    @Html.DisplayFor(modelItem => item.TimeOfArrive.TimeOfDay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Arrival.TimeOfDay)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
+                    @Html.DisplayFor(modelItem => item.TimeOfDepet.TimeOfDay)
                 </td>
                 
                 <!--<td>

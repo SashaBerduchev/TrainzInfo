@@ -48,6 +48,10 @@ namespace TrainzInfo.Controllers
             obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
             SelectList oblasts = new SelectList(obl);
             ViewBag.oblast = oblasts;
+
+            List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
+            List<City> cities = await _context.Cities.ToListAsync();
+            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
                 return View(stations.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
@@ -60,9 +64,6 @@ namespace TrainzInfo.Controllers
             {
                 return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
             }
-            List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
-            List<City> cities = await _context.Cities.ToListAsync();
-            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             return View(stations);
 
         }

@@ -16,7 +16,11 @@ namespace TrainzInfo.Models
         public DateTime TimeOfArrive { get; set; }
         public DateTime TimeOfDepet { get; set; }
         [Required]
-        public int TrainInfo { get; set; }
+        public int NumberTrain { get; set; }
         public string ImgTrain { get; set; }
+        public ICollection<TrainsShadule> TrainsShadules { get; set; }
+        public UkrainsRailways UkrainsRailways { get; set; }
+        public Train Train { get; set; }
+        public Stations Stations { get; set; }
     }
 }

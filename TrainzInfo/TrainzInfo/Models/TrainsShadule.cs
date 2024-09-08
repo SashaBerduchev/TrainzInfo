@@ -13,6 +13,6 @@ namespace TrainzInfo.Models
         public string Distance { get; set; }
         public ICollection<Stations> Stations { get; set; }
         public Train Train { get; set; }
-
+        public ICollection<StationsShadule> stationsShadules { get; set; }
     }
 }

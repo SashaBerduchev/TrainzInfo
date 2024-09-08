@@ -57,7 +57,7 @@ namespace TrainzInfo.Controllers
                                 if (name == null)
                                 {
                                     break;
-                                } 
+                                }
                                 trainaddshad.NameStation = name.ToString();
                                 trainaddshad.NumberTrain = number.ToString();
                                 trainaddshad.Arrival = timearrive;
@@ -83,7 +83,7 @@ namespace TrainzInfo.Controllers
                     }
                 }
             }
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -99,7 +99,7 @@ namespace TrainzInfo.Controllers
             Trace.WriteLine(id);
             string number = "";
 
-            Train train = await _context.Trains.Where(x=>x.id == id).FirstOrDefaultAsync();
+            Train train = await _context.Trains.Where(x => x.id == id).FirstOrDefaultAsync();
             if (TempData["TrainNumber"] != null)
             {
                 number = TempData["TrainNumber"].ToString();
@@ -137,6 +137,33 @@ namespace TrainzInfo.Controllers
                 trains.Add(item);
             }
             _context.TrainsShadule.UpdateRange(trains);
+            await _context.SaveChangesAsync();
+
+            List<StationsShadule> stationsShadules = new List<StationsShadule>();
+            List<UkrainsRailways> ukrainsRailways = new List<UkrainsRailways>();
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            for (int i = 0; i < trainsShadules.Count; i++)
+            {
+                TrainsShadule shadule = trainsShadules[i];
+
+                if (stations.Where(x => x.Name == shadule.NameStation).FirstOrDefault() != null)
+                {
+                    Trace.WriteLine(shadule.NameStation);
+                    StationsShadule stationsShadule = new StationsShadule();
+                    stationsShadule.NumberTrain = Convert.ToInt32(shadule.NumberTrain);
+                    stationsShadule.Station = shadule.NameStation;
+                    stationsShadule.Stations = await _context.Stations.Where(x => x.Name == stationsShadule.Station).FirstOrDefaultAsync();
+                    stationsShadule.UzFilia = stationsShadule.Stations.Railway;
+                    stationsShadule.UkrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stationsShadule.UzFilia).FirstOrDefaultAsync();
+                    stationsShadule.Train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(shadule.NumberTrain)).FirstOrDefaultAsync();
+                    stationsShadule.TimeOfArrive = shadule.Arrival;
+                    stationsShadule.TimeOfDepet = shadule.Departure;
+                    stationsShadule.TrainsShadules = trains;
+                    stationsShadules.Add(stationsShadule);
+                }
+
+            }
+            _context.StationsShadules.AddRange(stationsShadules);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
