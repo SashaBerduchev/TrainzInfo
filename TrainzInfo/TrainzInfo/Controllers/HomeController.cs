@@ -61,15 +61,11 @@ namespace TrainzInfo.Controllers
                 Locomotive locomotive = new Locomotive();
                 locomotive.Seria = Locomotivess[i].Seria;
                 locomotive.Depot = Locomotivess[i].Depot;
-                locomotive.SectionCount = Locomotivess[i].SectionCount;
                 locomotive.Number = Locomotivess[i].Number;
                 locomotive.Image = Locomotivess[i].Image;
                 locomotive.ImageMimeTypeOfData = Locomotivess[i].ImageMimeTypeOfData;
-                locomotive.ALlPowerP = Locomotivess[i].ALlPowerP;
-                locomotive.DieselPower = Locomotivess[i].DieselPower;
                 locomotive.Speed = Locomotivess[i].Speed;
                 locomotive.User = Locomotivess[i].User;
-                locomotive.UserId = Locomotivess[i].UserId;
                 _Locomotives.Add(locomotive);
             }
 

@@ -62,7 +62,7 @@ namespace TrainzInfo.Controllers
 
             List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
             if (Seria != null && Seria != "")
-            { 
+            {
                 List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
                 return View(locomotiveresult);
             }
@@ -115,27 +115,29 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            var base_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == Locomotives.Seria).Select(x => x.Baseinfo).FirstOrDefault();
-            ViewBag.base_info = base_info;
-            var all_info = _context.Electrick_Lockomotive_Infos.Where(x => x.Name == Locomotives.Seria).Select(x => x.AllInfo).FirstOrDefault();
-            ViewBag.allinfo = all_info;
+
             return View(Locomotives);
         }
 
         // GET: Locomotive/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
-            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
-            ViewBag.users = users;
-            SelectList seria = new SelectList(_context.Locomotive_Series.Select(x => x.Seria).ToList());
+            List<string> serieslist = new List<string>();
+            serieslist.Add("");
+            serieslist.AddRange(await _context.Locomotive_Series.Select(x => x.Seria).ToListAsync());
+            SelectList seria = new SelectList(serieslist);
             ViewBag.Seria = seria;
-            SelectList depo = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            List<string> depotlist = new List<string>();
+            depotlist.Add("");
+            depotlist.AddRange(await _context.Depots.Select(x => x.Name).ToListAsync());
+            SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             return View();
         }
@@ -145,7 +147,7 @@ namespace TrainzInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,User,UserId,Number,Speed,SectionCount,ALlPowerP,Seria,Depot,Image,ImageMimeTypeOfData,DieselPower")] Locomotive locomotive)
+        public async Task<IActionResult> Create([Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotive)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -157,8 +159,17 @@ namespace TrainzInfo.Controllers
                 userId = user.Id;
             }
             locomotive.User = myuser;
-            locomotive.UserId = userId;
+            locomotive.DepotList = await _context.Depots.Where(x=>x.Name == locomotive.Depot).FirstOrDefaultAsync();
+            locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
+            Locomotive_series locomotive_Series = locomotive.Locomotive_Series;
+            if(locomotive_Series.Locomotives == null)
+            {
+                locomotive_Series.Locomotives = new List<Locomotive>();
+                
+            }
+            locomotive_Series.Locomotives.Add(locomotive);
             _context.Add(locomotive);
+            _context.Locomotive_Series.Update(locomotive_Series);
             await _context.SaveChangesAsync();
             //SendMessage(user);
             int locid = _context.Locomotives.Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).Select(x => x.id).FirstOrDefault();
@@ -195,7 +206,7 @@ namespace TrainzInfo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CopySubmit(int id, [Bind("id,Name,Seria, Number,Depot, Speed,SectionCount,ALlPowerP, LocomotiveImg, DieselPower,  User")] Locomotive locomotives)
+        public async Task<IActionResult> CopySubmit(int id, [Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotives)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -209,7 +220,6 @@ namespace TrainzInfo.Controllers
 
             Trace.WriteLine("POST: " + this + locomotives);
             locomotives.User = myuser;
-            locomotives.UserId = userId;
             _context.Add(locomotives);
             await _context.SaveChangesAsync();
             //SendMessage(user);
@@ -255,6 +265,8 @@ namespace TrainzInfo.Controllers
                             }
                         }
                     }
+                    locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
+                    locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Locomotives.Update(locomotive);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));
@@ -333,7 +345,7 @@ namespace TrainzInfo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,User,UserId,Number,Speed,SectionCount,ALlPowerP,Seria,Depot,Image,ImageMimeTypeOfData,DieselPower")] Locomotive locomotive)
+        public async Task<IActionResult> Edit(int id, [Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotive)
         {
             if (id != locomotive.id)
             {

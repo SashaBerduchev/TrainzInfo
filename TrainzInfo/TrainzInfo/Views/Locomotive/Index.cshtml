@@ -11,12 +11,12 @@
     if (ViewBag.user.Role == "Superadmin")
     {
         <b>Кількість записів: @Model.Count().ToString()</b>
-        <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
+        @* <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
         <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
         <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
             <input type="file" name="uploads" /><br>
             <input type="submit" value="Зберегти" class="btn btn-primary" />
-        </form>
+        </form> *@
     }
 }
 
@@ -25,8 +25,8 @@
     {
         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
-            <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
-            <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
+            <a class="btn btn-info" asp-action="Create">Додати новий локомотив</a>
+            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
         }
     }
 
@@ -54,16 +54,9 @@
                 <div>@Html.DisplayName("Назва - ") @Html.DisplayFor(modelItem => item.Locomotive_Series.Seria)</div>
                 <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => item.Number)</div>
                 <div>@Html.DisplayName("Максимальна швидкість - ") @Html.DisplayFor(modelItem => item.Speed)</div>
-                @if (item.ALlPowerP != null)
-                {
-                    <div>@Html.DisplayName("Загальна потужність ТЕД - ") @Html.DisplayFor(modelItem => item.ALlPowerP)</div>
-                }
-                else if (item.DieselPower != null)
-                {
-                    <div>@Html.DisplayName("Потужність дизеля - ") @Html.DisplayFor(modelItem => item.DieselPower)</div>
-                }
+                
             </div>
-            <div style="position:relative; left:780px; top:-380px; width:250px">
+            <div style="position:relative; left:780px; top:-360px; width:250px">
 
 
                 <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальна інформаціія</a>
@@ -80,7 +73,7 @@
                 {
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
-                        <a class="btn btn-info" asp-action="Copy" asp-route-id="@item.id">Копіювати</a>
+                        @* <a class="btn btn-info" asp-action="Copy" asp-route-id="@item.id">Копіювати</a> *@
                     }
                 }
             </div>
