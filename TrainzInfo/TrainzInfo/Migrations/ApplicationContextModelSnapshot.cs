@@ -1183,7 +1183,12 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TypeOfPassTrainid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("TypeOfPassTrainid");
 
                     b.ToTable("Trains");
                 });
@@ -1544,6 +1549,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
                 {
                     b.HasOne("TrainzInfo.Models.Stations", "Stations")
@@ -1563,6 +1569,15 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Train");
 
                     b.Navigation("UkrainsRailways");
+=======
+            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.TypeOfPassTrain", "TypeOfPassTrain")
+                        .WithMany("Trains")
+                        .HasForeignKey("TypeOfPassTrainid");
+
+                    b.Navigation("TypeOfPassTrain");
+>>>>>>> 4302c7c10c83add875102e7f62efb04210f5681d
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
@@ -1610,6 +1625,11 @@ namespace TrainzInfo.Migrations
                     b.Navigation("StationsShadules");
 
                     b.Navigation("TrainsShadules");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
+                {
+                    b.Navigation("Trains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>

@@ -19,7 +19,11 @@ namespace TrainzInfo.Models
         public string Type { get; set; }
         public string NameOfTrain { get; set; }
         public ICollection<TrainsShadule> TrainsShadules { get; set; }
+<<<<<<< HEAD
         public ICollection<StationsShadule> StationsShadules { get; set; }
+=======
+        public TypeOfPassTrain TypeOfPassTrain { get; set; }
+>>>>>>> 4302c7c10c83add875102e7f62efb04210f5681d
 
     }
 }
