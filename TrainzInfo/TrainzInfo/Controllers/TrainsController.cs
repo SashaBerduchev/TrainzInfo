@@ -97,6 +97,17 @@ namespace TrainzInfo.Controllers
             }
             List<TrainsShadule> trainsShadules = await _context.TrainsShadule.ToListAsync();
             List<Train> trains = await _context.Trains.OrderBy(x => x.Number).ToListAsync();
+            List<Train> trainsupdate = new List<Train>();
+            //for (int i = 0; i < trains.Count; i++)
+            //{
+            //    for (int j = 0; j < trainsShadules.Count; j++)
+            //    {
+            //        if (trains[i].Number.ToString() == trainsShadules[j].NumberTrain)
+            //        {
+            //            trains[i].TrainsShadules = trainsShadules[j];
+            //        }
+            //    }
+            //}
             return View(trains);
         }
 

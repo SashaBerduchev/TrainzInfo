@@ -314,8 +314,13 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Cities/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            List<Oblast> oblasts = await _context.Oblasts.ToListAsync();
+            List<string> oblaststoshow = new List<string>();
+            oblaststoshow.Add("");
+            oblaststoshow.AddRange(oblasts.OrderBy(x=>x.Name).Select(x=>x.Name));
+            ViewBag.oblast = new SelectList(oblaststoshow);
             return View();
         }
 
@@ -324,7 +329,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name, IsStationExist")] City city)
+        public async Task<IActionResult> Create([Bind("id,Name, Oblast, Region, IsStationExist")] City city)
         {
 
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -339,7 +344,14 @@ namespace TrainzInfo.Controllers
                 City citydb = cityexist.Where(x => x.Name == city.Name).FirstOrDefault();
                 if ( citydb == null)
                 {
+                    city.Oblasts = await _context.Oblasts.Where(x=>x.Name.Contains(city.Oblast)).FirstOrDefaultAsync();
                     _context.Add(city);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    city.Oblasts = await _context.Oblasts.Where(x => x.Name.Contains(city.Oblast)).FirstOrDefaultAsync();
+                    _context.Cities.Update(city);
                     await _context.SaveChangesAsync();
                 }
                 return RedirectToAction(nameof(Index));

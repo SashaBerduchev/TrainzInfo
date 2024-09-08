@@ -50,21 +50,18 @@ namespace TrainzInfo.Controllers
             ViewBag.oblast = oblasts;
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
-
                 return View(stations.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
             }
             else if (Oblast != null && Oblast != "")
             {
-
                 return View(stations.Where(x => x.Oblast == Oblast).ToList());
             }
             else if (NameStation != null && NameStation != "")
             {
-
                 return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
             }
-            List<City> cities = await _context.Cities.ToListAsync();
             List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
+            List<City> cities = await _context.Cities.ToListAsync();
             List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             return View(stations);
 

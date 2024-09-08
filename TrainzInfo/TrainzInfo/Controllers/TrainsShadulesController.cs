@@ -88,7 +88,7 @@ namespace TrainzInfo.Controllers
 
 
         // GET: TrainsShadules
-        public async Task<IActionResult> Index(TrainsShadule trainshadule)
+        public async Task<IActionResult> Index(TrainsShadule train)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -102,22 +102,22 @@ namespace TrainzInfo.Controllers
                 number = TempData["TrainNumber"].ToString();
                 if (number == "")
                 {
-                    number = trainshadule.NumberTrain;
+                    number = train.NumberTrain;
                 }
             }
             if (number == "")
             {
-                number = trainshadule.NumberTrain;
+                number = train.NumberTrain;
             }
-            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == trainshadule.NumberTrain).ToListAsync();
-            if (trainshadule == null)
+            List<TrainsShadule> shadule = await _context.TrainsShadule.Where(x => x.NumberTrain == train.NumberTrain).ToListAsync();
+            if (train == null)
             {
                 Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(number)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
             else
             {
-                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainshadule.NumberTrain)).FirstOrDefaultAsync();
+                Train trains = await _context.Trains.Where(x => x.Number == Convert.ToInt32(train.NumberTrain)).FirstOrDefaultAsync();
                 ViewBag.traininfo = trains;
             }
 
