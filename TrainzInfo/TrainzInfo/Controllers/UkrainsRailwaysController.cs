@@ -40,6 +40,28 @@ namespace TrainzInfo.Controllers
             return View(await _context.UkrainsRailways.ToListAsync());
         }
 
+        public async Task<IActionResult> UpdateIndex()
+        {
+            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
+            List<UkrainsRailways> ukrainsUpdate = new List<UkrainsRailways>();
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            foreach (var item in ukrainsRailways)
+            {
+                if (user != null && user.Status == "true")
+                {
+                    item.Users = user;
+                }
+                ukrainsUpdate.Add(item);
+            }
+            _context.UkrainsRailways.UpdateRange(ukrainsUpdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
         public async Task<IActionResult> AddImageForm(string? name)
         {
@@ -144,6 +166,13 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,Name,Information,Photo")] UkrainsRailways ukrainsRailways)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+                ukrainsRailways.Users = user;
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(ukrainsRailways);

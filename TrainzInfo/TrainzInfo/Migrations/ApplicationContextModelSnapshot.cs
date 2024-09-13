@@ -1109,7 +1109,12 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("UkrainsRailways");
                 });
@@ -1409,6 +1414,15 @@ namespace TrainzInfo.Migrations
                         .HasForeignKey("Trainid");
 
                     b.Navigation("Train");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
