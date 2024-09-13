@@ -17,7 +17,7 @@
             </div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                @Html.DisplayName("Назва")
                 @Html.DropDownList("Name", ViewBag.models as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="Name" class="text-danger"></span>
                 <a class="btn btn-info" asp-asp-controller="SuburbanTrainsInfoes" asp-action="Create">Додати модель</a>
@@ -28,7 +28,7 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VagonsCountP" class="control-label"></label>
+                @Html.DisplayName("Кількість вагонів")
                 <input asp-for="VagonsCountP" class="form-control" />
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
@@ -39,34 +39,34 @@
             </div>
             <div class="form-group">
                 @Html.DisplayName("Депо приписки")
-                @Html.DropDownList("DepotTrain", ViewBag.depots as SelectList)
+                @Html.DropDownList("DepotTrain", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastKvr" class="control-label"></label>
+                @Html.DisplayName("Останній ремонт")
                 <input type="date" asp-for="LastKvr" class="form-control" />
                 <span asp-validation-for=LastKvr class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
+                @Html.DisplayName("Побудовано")
                 <input type="date" asp-for="Created" class="form-control" />
                 <span asp-validation-for=Created class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Plant" class="control-label"></label>
-                @Html.DropDownList("Plant", ViewBag.plants as SelectList)
+                @Html.DisplayName("Завод-виробник")
+                @Html.DropDownList("Plant", ViewBag.plants as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for=Plant class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PlaceKvr" class="control-label"></label>
-                @Html.DropDownList("PlaceKvr", ViewBag.plants as SelectList)
+                @Html.DisplayName("Завод який проводив ремонт")
+                @Html.DropDownList("PlaceKvr", ViewBag.plants as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for=PlaceKvr class="text-danger"></span>
             </div>
             <div>
-                <a class="btn btn-info" target="_blank" asp-controller="Plants" asp-action="Create">Добавить завод</a>
+                <a class="btn btn-info" target="_blank" asp-controller="Plants" asp-action="Create">Додати завод</a>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group" style="padding: 10px">
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
             </div>
 
         </form>

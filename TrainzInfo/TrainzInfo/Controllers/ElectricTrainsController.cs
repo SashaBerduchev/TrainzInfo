@@ -129,7 +129,8 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            List<DepotList> depots = await _context.Depots.ToListAsync();
+            List<City> cities = await _context.Cities.ToListAsync();
             var electricTrain = await _context.Electrics
                 .FirstOrDefaultAsync(m => m.id == id);
             if (electricTrain == null)
@@ -143,7 +144,6 @@ namespace TrainzInfo.Controllers
                 ViewBag.allinfo = train.AllInfo.ToString();
 
             }
-
             return View(electricTrain);
         }
 
@@ -368,7 +368,7 @@ namespace TrainzInfo.Controllers
 
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users; 
-            SelectList depots = new SelectList(_context.Depots.Select(x => x.Name).ToList());
+            SelectList depots = new SelectList(_context.Depots.Where(x=>x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;

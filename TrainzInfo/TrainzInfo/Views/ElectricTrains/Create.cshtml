@@ -35,7 +35,7 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Колличество вагонов")
+                @Html.DisplayName("Кількість вагонів")
                 <input asp-for="VagonsCountP" class="form-control" />
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
@@ -54,17 +54,17 @@
                 <span asp-validation-for="VagonsCountP" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Макимальная скорость")
+                @Html.DisplayName("Максимальна швидкість")
                 <input asp-for="MaxSpeed" class="form-control" />
                 <span asp-validation-for="MaxSpeed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Год создания");
+                @Html.DisplayName("Побудовано");
                 <input type="date" asp-for="Created" class="form-control" />
                 <span asp-validation-for=Created class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Завод постройки");
+                @Html.DisplayName("Завод-виробник");
                 @Html.DropDownList("Plant", ViewBag.plants as SelectList, htmlAttributes: new { @class = "form-control" })
                 @if (ViewBag.user != null)
                 {
@@ -79,12 +79,12 @@
             </div>
 
             <div class="form-group">
-                @Html.DisplayName("Последний КВР(год)");
+                @Html.DisplayName("Останній ремонт");
                 <input type="date" asp-for="LastKvr" class="form-control" />
                 <span asp-validation-for=LastKvr class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Завод проводивший КВР");
+                @Html.DisplayName("Завод який провів ремонт");
                 @Html.DropDownList("PlaceKvr", ViewBag.plants as SelectList)
                 <span asp-validation-for=PlaceKvr class="text-danger"></span>
             </div>
@@ -92,7 +92,7 @@
                 <a class="btn btn-info" target="_blank" asp-controller="Plants" asp-action="Create">Добавить завод</a>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
             </div>
         </form>
     </div>
