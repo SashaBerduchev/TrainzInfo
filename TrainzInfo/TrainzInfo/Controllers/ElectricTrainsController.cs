@@ -42,9 +42,9 @@ namespace TrainzInfo.Controllers
             depot.Add("");
             depot.Add("");
             List<DepotList> depotLists = await _context.Depots.ToListAsync();
-            depot.AddRange(depotLists.Select(x=>x.Name).Distinct());
+            depot.AddRange(depotLists.Select(x => x.Name).Distinct());
             List<City> city = await _context.Cities.ToListAsync();
-            cities.AddRange(city.Select(x=>x.Name).Distinct());
+            cities.AddRange(city.Select(x => x.Name).Distinct());
             ViewBag.depots = new SelectList(depot);
             ViewBag.cities = new SelectList(cities);
             List<ElectricTrain> electricks = await _context.Electrics.Where(x => x.IsProof == true.ToString()).ToListAsync();
@@ -55,11 +55,27 @@ namespace TrainzInfo.Controllers
         {
             List<ElectricTrain> elektricTrains = await _context.Electrics.ToListAsync();
             List<ElectricTrain> electricsNew = new List<ElectricTrain>();
+            List<DepotList> depotLists = await _context.Depots.ToListAsync();
+            List<City> cities = await _context.Cities.ToListAsync();
+            List<Plants> plants = await _context.plants.ToListAsync();
             foreach (var item in elektricTrains)
             {
-                item.DepotList = await _context.Depots.Where(x=>x.Name == item.DepotTrain).FirstOrDefaultAsync();
-                item.City = await _context.Cities.Where(x=>x.Name.Equals(item.DepotCity)).FirstOrDefaultAsync();
+                item.DepotList = depotLists.Where(x => x.Name == item.DepotTrain).FirstOrDefault();
+                item.City = cities.Where(x => x.Name.Equals(item.DepotCity)).FirstOrDefault();
+                Plants plant = plants.Where(x => x.Name.Equals(item.Plant)).FirstOrDefault();
+                if (plant.electricTrains == null)
+                {
+                    plant.electricTrains = new List<ElectricTrain>();
+                }
+                if (plant.electricTrains.Contains(item) == false)
+                {
+                    plant.electricTrains.Add(item);
+                    _context.plants.Update(plant);
+                    await _context.SaveChangesAsync();
+                }
+                item.Plants = plant;
                 electricsNew.Add(item);
+
             }
             _context.Electrics.UpdateRange(electricsNew);
             await _context.SaveChangesAsync();
@@ -69,7 +85,7 @@ namespace TrainzInfo.Controllers
         {
             var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddress)).FirstOrDefault();
-            if(user != null && user.Status == "true")
+            if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
@@ -86,8 +102,8 @@ namespace TrainzInfo.Controllers
             var FoundModerationElement = await _context.Electrics.Where(x => x.id == id).FirstOrDefaultAsync();
             FoundModerationElement.IsProof = true.ToString();
             _context.Electrics.Update(FoundModerationElement);
-            await  _context.SaveChangesAsync();
-            
+            await _context.SaveChangesAsync();
+
 
             return RedirectToAction(nameof(IndexNotModered));
         }
@@ -138,7 +154,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             var train = _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefault();
-            if(train != null)
+            if (train != null)
             {
                 ViewBag.baseinfo = train.BaseInfo.ToString();
                 ViewBag.allinfo = train.AllInfo.ToString();
@@ -158,7 +174,7 @@ namespace TrainzInfo.Controllers
             }
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
-            SelectList depots = new SelectList(_context.Depots.Where(x=>x.Name.Contains("РПЧ")).OrderByDescending(x=>x.Name).Select(x => x.Name).ToList());
+            SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).OrderByDescending(x => x.Name).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
             List<string> plants = new List<string>();
             plants.Add("");
@@ -198,7 +214,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
                 //SendMessage(user);
-                ElectricTrain train = _context.Electrics.Where(x=>x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.User == electricTrain.User).FirstOrDefault();
+                ElectricTrain train = _context.Electrics.Where(x => x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.User == electricTrain.User).FirstOrDefault();
                 TempData["Train"] = train.id;
                 return RedirectToAction(nameof(AddImageForm));
             }
@@ -234,7 +250,7 @@ namespace TrainzInfo.Controllers
             }
             try
             {
-                MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email );
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", users.Email);
                 m.Body = "Ваша публикация опубликована, Спасибо Вам";
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.UseDefaultCredentials = true;
@@ -249,7 +265,7 @@ namespace TrainzInfo.Controllers
                 FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
                 for (int i = 0; i < expstr.Length; i++)
                 {
-                    byte[] array = Encoding.Default.GetBytes(expstr.ToString() + " mail: " +  users.Email);
+                    byte[] array = Encoding.Default.GetBytes(expstr.ToString() + " mail: " + users.Email);
                     fileStreamLog.Write(array, 0, array.Length);
                 }
                 fileStreamLog.Close();
@@ -339,7 +355,8 @@ namespace TrainzInfo.Controllers
                 {
                     return null;
                 }
-            }catch(Exception exp)
+            }
+            catch (Exception exp)
             {
                 Trace.WriteLine(exp.ToString());
             }
@@ -367,8 +384,8 @@ namespace TrainzInfo.Controllers
             }
 
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
-            ViewBag.users = users; 
-            SelectList depots = new SelectList(_context.Depots.Where(x=>x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
+            ViewBag.users = users;
+            SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
             SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;

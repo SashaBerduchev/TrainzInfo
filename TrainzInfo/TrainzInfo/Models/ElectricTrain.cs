@@ -31,5 +31,6 @@ namespace TrainzInfo.Models
         public string IsProof { get; set; }
         public DepotList DepotList { get; set; }
         public City City { get; set; }
+        public Plants Plants { get; set; }
     }
 }
