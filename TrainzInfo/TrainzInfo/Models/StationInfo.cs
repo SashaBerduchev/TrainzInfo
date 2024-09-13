@@ -15,5 +15,6 @@ namespace TrainzInfo.Models
         public string BaseInfo { get; set; }
         [Required]
         public string AllInfo { get; set; }
+        public Stations Stations { get; set; }
     }
 }

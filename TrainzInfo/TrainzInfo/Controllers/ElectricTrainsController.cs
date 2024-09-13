@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Packaging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,11 +14,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -36,17 +37,33 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<string> name = new List<string>();
             List<string> depot = new List<string>();
-            name.Add("");
+            List<string> cities = new List<string>();
             depot.Add("");
-            List<string> names = await _context.Electrics.Select(x => x.Name).ToListAsync();
-            name.AddRange(names.Distinct());
-            List<string> depots = await _context.Electrics.Select(x => x.DepotCity).ToListAsync();
-            depot.AddRange(depots.Distinct());
-            ViewBag.name = new SelectList(name);
-            ViewBag.depot = new SelectList(depot);
-            return View(await _context.Electrics.Where(x=>x.IsProof == true.ToString()).ToListAsync());
+            depot.Add("");
+            List<DepotList> depotLists = await _context.Depots.ToListAsync();
+            depot.AddRange(depotLists.Select(x=>x.Name).Distinct());
+            List<City> city = await _context.Cities.ToListAsync();
+            cities.AddRange(city.Select(x=>x.Name).Distinct());
+            ViewBag.depots = new SelectList(depot);
+            ViewBag.cities = new SelectList(cities);
+            List<ElectricTrain> electricks = await _context.Electrics.Where(x => x.IsProof == true.ToString()).ToListAsync();
+            return View(electricks);
+        }
+
+        public async Task<IActionResult> UpdateIndex()
+        {
+            List<ElectricTrain> elektricTrains = await _context.Electrics.ToListAsync();
+            List<ElectricTrain> electricsNew = new List<ElectricTrain>();
+            foreach (var item in elektricTrains)
+            {
+                item.DepotList = await _context.Depots.Where(x=>x.Name == item.DepotTrain).FirstOrDefaultAsync();
+                item.City = await _context.Cities.Where(x=>x.Name.Equals(item.DepotCity)).FirstOrDefaultAsync();
+                electricsNew.Add(item);
+            }
+            _context.Electrics.UpdateRange(electricsNew);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> IndexNotModered()
         {
@@ -175,6 +192,8 @@ namespace TrainzInfo.Controllers
                 electricTrain.User = username;
                 electricTrain.UserId = userid;
                 electricTrain.IsProof = false.ToString();
+                electricTrain.DepotList = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
+                electricTrain.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
@@ -392,6 +411,8 @@ namespace TrainzInfo.Controllers
                 train.Created = electricTrain.Created;
                 train.Plant = electricTrain.Plant;
                 train.PlaceKvr = electricTrain.PlaceKvr;
+                train.DepotList = await _context.Depots.Where(x => x.Name == train.DepotTrain).FirstOrDefaultAsync();
+                train.City = await _context.Cities.Where(x => x.Name == train.DepotCity).FirstOrDefaultAsync();
                 _context.Update(train);
                 await _context.SaveChangesAsync();
                 Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();

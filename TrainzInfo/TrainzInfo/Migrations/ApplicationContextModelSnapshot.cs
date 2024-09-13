@@ -17,7 +17,7 @@ namespace TrainzInfo.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -206,11 +206,17 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("Cityid")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DepotCity")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DepotListid")
+                        .HasColumnType("int");
 
                     b.Property<string>("DepotTrain")
                         .IsRequired()
@@ -256,6 +262,10 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Cityid");
+
+                    b.HasIndex("DepotListid");
 
                     b.ToTable("Electrics");
                 });
@@ -788,7 +798,12 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Stationsid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("Stationsid");
 
                     b.ToTable("stationInfos");
                 });
@@ -922,11 +937,16 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ElectricTrainid")
+                        .HasColumnType("int");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("ElectricTrainid");
 
                     b.ToTable("SuburbanTrainsInfos");
                 });
@@ -1272,6 +1292,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailway");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.City", "City")
+                        .WithMany("ElectricTrains")
+                        .HasForeignKey("Cityid");
+
+                    b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
+                        .WithMany("ElectricTrains")
+                        .HasForeignKey("DepotListid");
+
+                    b.Navigation("City");
+
+                    b.Navigation("DepotList");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
                 {
                     b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
@@ -1285,6 +1320,15 @@ namespace TrainzInfo.Migrations
                     b.Navigation("DepotList");
 
                     b.Navigation("Locomotive_Series");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                        .WithMany()
+                        .HasForeignKey("Stationsid");
+
+                    b.Navigation("Stations");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
@@ -1329,6 +1373,15 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.ElectricTrain", "ElectricTrain")
+                        .WithMany()
+                        .HasForeignKey("ElectricTrainid");
+
+                    b.Navigation("ElectricTrain");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Train", b =>
                 {
                     b.HasOne("TrainzInfo.Models.TypeOfPassTrain", "TypeOfPassTrain")
@@ -1349,11 +1402,15 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
                 {
+                    b.Navigation("ElectricTrains");
+
                     b.Navigation("Stations");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
                 {
+                    b.Navigation("ElectricTrains");
+
                     b.Navigation("Locomotives");
                 });
 

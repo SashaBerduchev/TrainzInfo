@@ -61,6 +61,10 @@ namespace TrainzInfo.Controllers
             SelectList depot = new SelectList(depotslist);
 
             List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
+            List<DepotList> depots = await _context.Depots.ToListAsync();
+            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
+            ViewBag.depot = new SelectList(depots.Select(x => x.Name));
+            ViewBag.series = new SelectList(locomotive_Series.Select(x => x.Seria));
             if (Seria != null && Seria != "")
             {
                 List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
@@ -72,10 +76,6 @@ namespace TrainzInfo.Controllers
 
                 return View(locomotiveresult);
             }
-            List<DepotList> depots = await _context.Depots.ToListAsync();
-            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
-            ViewBag.depot = new SelectList(depots.Select(x => x.Name));
-            ViewBag.series = new SelectList(locomotive_Series.Select(x => x.Seria));
             return View(locomotives);
         }
         public async Task<IActionResult> MakeChange()

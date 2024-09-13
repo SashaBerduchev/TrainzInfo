@@ -23,15 +23,15 @@
         {
             <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Create">Створити електропоїзд</a>
             <a class="btn btn-info" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі електропоїздів</a>
-
+            <a class="btn btn-info" asp-action="UpdateIndex">Оновити дані</a>
         }
     }
 </p>
 
 <form method="get">
     <div class="form-inline">
-        @Html.DropDownList("Name", ViewBag.name as SelectList, htmlAttributes: new { @class = "form-control" })
-        @Html.DropDownList("Depot", ViewBag.depot as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Name", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Depot", ViewBag.cities as SelectList, htmlAttributes: new { @class = "form-control" })
         <input type="submit" value="Отобразить" class="btn btn-info" />
     </div>
 </form>
@@ -48,8 +48,8 @@
                 <div>@Html.DisplayName("Назва: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
     @*             <div>@Html.DisplayName("Кількість вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div> *@
                 <div>@Html.DisplayName("Максимальна швидкість: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
-                <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotTrain)</div>
-                <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.DepotCity)</div>
+                <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotList.Name)</div>
+                <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.City.Name)</div>
             </div>
 
             <div style="position:relative; left:800px; top:-300px; width:150px">
