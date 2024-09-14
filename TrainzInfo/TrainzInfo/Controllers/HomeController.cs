@@ -86,8 +86,7 @@ namespace TrainzInfo.Controllers
                 train.DepotCity = electics[i].DepotCity;
                 train.DepotTrain = electics[i].DepotTrain;
                 train.IsProof = electics[i].IsProof;
-                train.User = electics[i].User;
-                train.UserId = electics[i].UserId;
+                train.Users = userget;
                 train.Model = electics[i].Model;
                 train.LastKvr = electics[i].LastKvr;
                 train.Created = electics[i].Created;

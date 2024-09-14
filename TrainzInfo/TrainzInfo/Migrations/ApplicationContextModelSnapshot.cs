@@ -254,10 +254,10 @@ namespace TrainzInfo.Migrations
                     b.Property<int?>("Plantsid")
                         .HasColumnType("int");
 
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Trainsid")
+                        .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.Property<string>("VagonsCountP")
@@ -271,6 +271,10 @@ namespace TrainzInfo.Migrations
                     b.HasIndex("DepotListid");
 
                     b.HasIndex("Plantsid");
+
+                    b.HasIndex("Trainsid");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Electrics");
                 });
@@ -947,16 +951,11 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ElectricTrainid")
-                        .HasColumnType("int");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("ElectricTrainid");
 
                     b.ToTable("SuburbanTrainsInfos");
                 });
@@ -1318,11 +1317,23 @@ namespace TrainzInfo.Migrations
                         .WithMany("electricTrains")
                         .HasForeignKey("Plantsid");
 
+                    b.HasOne("TrainzInfo.Models.SuburbanTrainsInfo", "Trains")
+                        .WithMany("ElectricTrain")
+                        .HasForeignKey("Trainsid");
+
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
                     b.Navigation("City");
 
                     b.Navigation("DepotList");
 
                     b.Navigation("Plants");
+
+                    b.Navigation("Trains");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
@@ -1419,15 +1430,6 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.ElectricTrain", "ElectricTrain")
-                        .WithMany()
-                        .HasForeignKey("ElectricTrainid");
-
-                    b.Navigation("ElectricTrain");
-                });
-
             modelBuilder.Entity("TrainzInfo.Models.Train", b =>
                 {
                     b.HasOne("TrainzInfo.Models.TypeOfPassTrain", "TypeOfPassTrain")
@@ -1514,6 +1516,11 @@ namespace TrainzInfo.Migrations
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
                 {
                     b.Navigation("StationsShadules");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
+                {
+                    b.Navigation("ElectricTrain");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Train", b =>

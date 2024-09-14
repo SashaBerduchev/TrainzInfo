@@ -73,6 +73,7 @@ namespace TrainzInfo.Controllers
                     _context.plants.Update(plant);
                     await _context.SaveChangesAsync();
                 }
+                item.IsProof = true.ToString();
                 item.Plants = plant;
                 electricsNew.Add(item);
 
@@ -205,16 +206,25 @@ namespace TrainzInfo.Controllers
             {
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
                 electricTrain.DepotCity = depo;
-                electricTrain.User = username;
-                electricTrain.UserId = userid;
-                electricTrain.IsProof = false.ToString();
+                electricTrain.IsProof = true.ToString();
                 electricTrain.DepotList = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
                 electricTrain.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
+                if (userlog != null && userlog.Status == "true")
+                {
+                    electricTrain.Users = userlog;
+                }
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
-                Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
+                Users user = await _context.User.Where(x => x.Name == electricTrain.Users.Name).FirstOrDefaultAsync();
                 //SendMessage(user);
-                ElectricTrain train = _context.Electrics.Where(x => x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.User == electricTrain.User).FirstOrDefault();
+                SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
+                if (suburbanTrainsInfo.ElectricTrain == null)
+                {
+                    suburbanTrainsInfo.ElectricTrain = new List<ElectricTrain>();
+                }
+                suburbanTrainsInfo.ElectricTrain.Add(electricTrain);
+                await _context.SaveChangesAsync();
+                ElectricTrain train = _context.Electrics.Where(x => x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.Users == electricTrain.Users).FirstOrDefault();
                 TempData["Train"] = train.id;
                 return RedirectToAction(nameof(AddImageForm));
             }
@@ -420,6 +430,7 @@ namespace TrainzInfo.Controllers
                 electricTrain.DepotCity = depocity;
                 ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
                 train.Name = electricTrain.Name;
+                train.Model = electricTrain.Model;
                 train.VagonsCountP = electricTrain.VagonsCountP;
                 train.MaxSpeed = electricTrain.MaxSpeed;
                 train.DepotCity = electricTrain.DepotCity;
@@ -430,10 +441,20 @@ namespace TrainzInfo.Controllers
                 train.PlaceKvr = electricTrain.PlaceKvr;
                 train.DepotList = await _context.Depots.Where(x => x.Name == train.DepotTrain).FirstOrDefaultAsync();
                 train.City = await _context.Cities.Where(x => x.Name == train.DepotCity).FirstOrDefaultAsync();
+                if (userlog != null && userlog.Status == "true")
+                {
+                    train.Users = userlog;
+                }
                 _context.Update(train);
                 await _context.SaveChangesAsync();
-                Users user = await _context.User.Where(x => x.Name == electricTrain.User).FirstOrDefaultAsync();
-                SendMessage(user);
+                SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
+                if(suburbanTrainsInfo.ElectricTrain == null)
+                {
+                    suburbanTrainsInfo.ElectricTrain = new List<ElectricTrain>();
+                }
+                suburbanTrainsInfo.ElectricTrain.Add(train);
+                await _context.SaveChangesAsync();
+                SendMessage(userlog);
 
             }
             catch (DbUpdateConcurrencyException)

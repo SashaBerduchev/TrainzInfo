@@ -9,8 +9,6 @@ namespace TrainzInfo.Models
     public class ElectricTrain
     {
         public int id { get; set; }
-        public string User { get; set; }
-        public int UserId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -32,5 +30,7 @@ namespace TrainzInfo.Models
         public DepotList DepotList { get; set; }
         public City City { get; set; }
         public Plants Plants { get; set; }
+        public SuburbanTrainsInfo Trains { get; set; }
+        public Users Users { get; set; }    
     }
 }
