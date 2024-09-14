@@ -25,7 +25,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: UserTrainzPhotoes
-        public async Task<IActionResult> Index(string? name)
+        public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -33,13 +33,12 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
-            List<UserTrainzPhoto> locomotivePhoto = await _context.UserTrainzPhotos.Where(x => x.LocmotiveName == name).ToListAsync();
-            return View(locomotivePhoto);
+            List<UserTrainzPhoto> photo = await _context.UserTrainzPhotos.Where(x=>x.Stations.id == id ).ToListAsync();
+            return View(photo);
         }
         public async Task<IActionResult> IndexAll()
         {
-            return View( await _context.UserTrainzPhotos.OrderByDescending(x => x.DateTime).ToListAsync());
+            return View(await _context.UserTrainzPhotos.OrderByDescending(x => x.DateTime).ToListAsync());
         }
         // GET: UserTrainzPhotoes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -92,34 +91,27 @@ namespace TrainzInfo.Controllers
                 useremail = user.Email;
             }
 
-            if (userTrainzPhoto.LocmotiveName == null)
+            string email = useremail;
+            userTrainzPhoto.Email = email;
+            userTrainzPhoto.DateTime = DateTime.Now;
+            _context.Add(userTrainzPhoto);
+            await _context.SaveChangesAsync();
+            TempData["UserTrainId"] = _context.UserTrainzPhotos.ToList().Count();
+            try
             {
-                userTrainzPhoto.LocmotiveName = "";
+                MailMessage m = new MailMessage("sashaberduchev24@ukr.net", userTrainzPhoto.Email);
+                m.Body = userTrainzPhoto.Userid.Name + "Ваша публикация опубликована";
+                SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
+                smtp.Send(m);
             }
-            
-                string email = useremail;
-                userTrainzPhoto.Email = email;
-                userTrainzPhoto.DateTime = DateTime.Now;
-                userTrainzPhoto.UserName = username;
-                userTrainzPhoto.UserId = userid;
-                _context.Add(userTrainzPhoto);
-                await _context.SaveChangesAsync();
-                TempData["UserTrainId"] = _context.UserTrainzPhotos.ToList().Count();
-                try
-                {
-                    MailMessage m = new MailMessage("sashaberduchev24@ukr.net", userTrainzPhoto.Email);
-                    m.Body = userTrainzPhoto.UserName + "Ваша публикация опубликована";
-                    SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
-                    smtp.UseDefaultCredentials = true;
-                    smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
-                    smtp.Send(m);
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.ToString());
-                }
-                return RedirectToAction(nameof(AddImageForm));
-            
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+            }
+            return RedirectToAction(nameof(AddImageForm));
+
         }
 
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)

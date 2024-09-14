@@ -803,10 +803,15 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("StationInfoid")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Stationsid")
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("StationInfoid");
 
                     b.HasIndex("Stationsid");
 
@@ -1188,24 +1193,21 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LocmotiveName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Marshrute")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Stationsid")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UseridId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
+
+                    b.HasIndex("Stationsid");
+
+                    b.HasIndex("UseridId");
 
                     b.ToTable("UserTrainzPhotos");
                 });
@@ -1364,6 +1366,10 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
                 {
+                    b.HasOne("TrainzInfo.Models.StationInfo", null)
+                        .WithMany("StationsList")
+                        .HasForeignKey("StationInfoid");
+
                     b.HasOne("TrainzInfo.Models.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
@@ -1449,6 +1455,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.UserTrainzPhoto", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                        .WithMany()
+                        .HasForeignKey("Stationsid");
+
+                    b.HasOne("TrainzInfo.Models.Users", "Userid")
+                        .WithMany()
+                        .HasForeignKey("UseridId");
+
+                    b.Navigation("Stations");
+
+                    b.Navigation("Userid");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
                 {
                     b.Navigation("ElectricTrains");
@@ -1483,6 +1504,11 @@ namespace TrainzInfo.Migrations
             modelBuilder.Entity("TrainzInfo.Models.Plants", b =>
                 {
                     b.Navigation("electricTrains");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
+                {
+                    b.Navigation("StationsList");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
