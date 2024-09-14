@@ -60,7 +60,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             Trace.WriteLine("POST " + newsInfo);
-            ViewBag.count = _context.NewsComments.Where(x => x.NewsID == newsInfo.id).Count();
+            ViewBag.count = _context.NewsComments.Where(x => x.NewsInfo == newsInfo).Count();
             return View(newsInfo);
         }
 
@@ -141,42 +141,51 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UpdateNews()
+        {
+            List<NewsInfo> news = await _context.NewsInfos.ToListAsync();
+            List<NewsInfo> newsupdate = new List<NewsInfo>();
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            foreach (var item in news)
+            {
+                if (user != null && user.Status == "true")
+                {
+                    item.Users = user;
+                }
+                newsupdate.Add(item);
+            }
+            _context.NewsInfos.UpdateRange(newsupdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         [HttpPost()]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
         {
-            int countstart = _context.NewsInfos.ToList().Count();
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             try
             {
                 newsInfo.DateTime = DateTime.Now;
+                if (user != null && user.Status == "true")
+                {
+                    newsInfo.Users = user;
+                }
                 _context.NewsInfos.Add(newsInfo);
                 _context.SaveChanges();
-                int countend = _context.NewsInfos.ToList().Count();
-                if (countstart == countend)
-                {
-                    FileStream fileStream = new FileStream(@"WorkError.log", FileMode.Append);
-                    var str1 = "DontCreate!!!";
-                    for (int i = 0; i < str1.ToString().Length; i++)
-                    {
-                        byte[] array = Encoding.Default.GetBytes(str1.ToString());
-                        fileStream.Write(array, 0, array.Length);
-                        fileStream.Close();
-                    }
-                    _context.NewsInfos.Add(newsInfo);
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(AddImageForm));
-                }
-                FileStream fileStreamLog = new FileStream(@"WorkLog.log", FileMode.Append);
-                var str = "Writing DONE!!!";
-                for (int i = 0; i < str.ToString().Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(str.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
-                fileStreamLog.Close();
                 NewsInfo news = _context.NewsInfos.Where(x => x.NameNews == newsInfo.NameNews).FirstOrDefault();
                 TempData["NewsId"] = news.id;
-                SendMessage(newsInfo);
+                SendMessage(newsInfo.NameNews);
                 return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
@@ -193,7 +202,7 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
-        private void SendMessage(NewsInfo news)
+        private void SendMessage(string news)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -204,7 +213,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 MailMessage m = new MailMessage("dataset@trainzinfo.com.ua", user.Email);
-                m.Body = user.Name + "Новина: " + news.NameNews + " опублікована, Дякуємо вам!!!";
+                m.Body = user.Name + "Новина: " + news + " опублікована, Дякуємо вам!!!";
                 SmtpClient smtp = new SmtpClient("trainzinfo.com.ua", 587);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential("dataset@trainzinfo.com.ua", "kbnswj7zcqoegayhrliv");

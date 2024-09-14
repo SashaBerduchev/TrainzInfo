@@ -34,6 +34,14 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> CopyNews()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            Users userget = new Users();
+            if (user != null && user.Status == "true")
+            {
+                userget = user;
+                ViewBag.user = user;
+            }
             List<NewsInfo> news = await _context.NewsInfos.ToListAsync();
             List<NewsInfo> newsInfos = new List<NewsInfo>();
             for (int i = 0; i < news.Count; i++)
@@ -44,7 +52,7 @@ namespace TrainzInfo.Controllers
                 newsInfo.DateTime = news[i].DateTime;
                 newsInfo.Imgsrc = news[i].Imgsrc;
                 newsInfo.ImageMimeTypeOfData = news[i].ImageMimeTypeOfData;
-                newsInfo.user = news[i].user;
+                newsInfo.Users = userget;
                 newsInfos.Add(newsInfo);
             }
             await _context.AddRangeAsync(newsInfos);

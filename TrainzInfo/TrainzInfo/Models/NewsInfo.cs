@@ -18,7 +18,8 @@ namespace TrainzInfo.Models
         public string Imgsrc { get; set; }
         public byte[] NewsImage { get; set; }
         public string ImageMimeTypeOfData { get; set; }
-        public string user { get; set; }
+        public Users Users { get; set; }
+        public ICollection<NewsComments> NewsComments { get; set; }
         
     }
 }

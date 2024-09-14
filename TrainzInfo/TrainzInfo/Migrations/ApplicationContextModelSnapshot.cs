@@ -576,19 +576,17 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("NewsInfoid")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("NewsID")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NewsInfoid");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("NewsComments");
                 });
@@ -624,10 +622,12 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NewsInfoAll")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("user")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("NewsInfos");
                 });
@@ -1338,6 +1338,30 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Locomotive_Series");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.NewsInfo", "NewsInfo")
+                        .WithMany("NewsComments")
+                        .HasForeignKey("NewsInfoid");
+
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("NewsInfo");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
                 {
                     b.HasOne("TrainzInfo.Models.Stations", "Stations")
@@ -1442,6 +1466,11 @@ namespace TrainzInfo.Migrations
             modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
                 {
                     b.Navigation("Locomotives");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
+                {
+                    b.Navigation("NewsComments");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>

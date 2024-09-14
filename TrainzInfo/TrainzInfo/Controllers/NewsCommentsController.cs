@@ -27,7 +27,9 @@ namespace TrainzInfo.Controllers
         // GET: NewsComments
         public async Task<IActionResult> Index(int? idnews)
         {
-            List<NewsComments> Comments = await _context.NewsComments.Where(x => x.NewsID == idnews).ToListAsync();
+            List<NewsInfo> newsInfos = await _context.NewsInfos.ToListAsync();  
+            List<Users> users = await _context.User.ToListAsync();
+            List<NewsComments> Comments = await _context.NewsComments.Where(x => x.NewsInfo.id == idnews).ToListAsync();
             return View(Comments);
         }
 
@@ -50,9 +52,10 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: NewsComments/Create
-        public IActionResult Create(int? idnews)
+        public IActionResult Create(int? id)
         {
-            return View(idnews);
+            TempData["NewsId"] = id;
+            return View();
         }
 
         // POST: NewsComments/Create
@@ -60,11 +63,22 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NewsID,Name,Email,Comment,DateTime")] NewsComments newsComments)
+        public async Task<IActionResult> Create([Bind("Comment,DateTime")] NewsComments newsComments)
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             if (ModelState.IsValid)
             {
                 newsComments.DateTime = DateTime.Now;
+                newsComments.NewsInfo = await _context.NewsInfos.Where(x => x.id == Convert.ToInt32(TempData["NewsId"])).FirstOrDefaultAsync();
+                if (user != null && user.Status == "true")
+                {
+                    newsComments.Users = user;
+                }
                 _context.Add(newsComments);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -80,20 +94,17 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var newsComments = await _context.NewsComments.Where(x => x.NewsID == id).FirstOrDefaultAsync();
+            var newsComments = await _context.NewsComments.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (newsComments == null)
             {
                 NewsComments newsComments1 = new NewsComments
                 {
-                    NewsID = Convert.ToInt32(id),
                     Comment = "",
-                    DateTime = DateTime.Now,
-                    Email = "",
-                    Name = ""
+                    DateTime = DateTime.Now
                 };
                 _context.NewsComments.Add(newsComments1);
                 _context.SaveChanges();
-                var news =await _context.NewsComments.Where(x=>x.NewsID == id).FirstOrDefaultAsync();
+                var news =await _context.NewsComments.Where(x=>x.NewsInfo.id == id).FirstOrDefaultAsync();
                 return View(news);
             }
             return View(newsComments);
@@ -113,7 +124,6 @@ namespace TrainzInfo.Controllers
 
              try
              {
-                 newsComments.NewsID = id;
                  newsComments.DateTime = DateTime.Now;
                  _context.Add(newsComments);
                  await _context.SaveChangesAsync();
@@ -132,7 +142,7 @@ namespace TrainzInfo.Controllers
              }
              //return RedirectToAction(nameof(Index));
             
-            var comments = await _context.NewsComments.Where(x=>x.NewsID == newsComments.NewsID).ToListAsync();
+            var comments = await _context.NewsComments.Where(x=>x.Id == id).ToListAsync();
             return View("Index",comments);
         }
 
@@ -140,8 +150,8 @@ namespace TrainzInfo.Controllers
         {
             try
             {
-                MailMessage m = new MailMessage("sashaberduchev@gmail.com", newsComments.Email);
-                m.Body = newsComments.Name + " Ваша публикация опубликована, Спасибо Вам";
+                MailMessage m = new MailMessage("sashaberduchev@gmail.com", newsComments.Users.Email);
+                m.Body = newsComments.Users.Name + " Ваша публикация опубликована, Спасибо Вам";
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential("sashaberduchev", "SashaVinichuk");

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Details";
 }
 <h1 style="background-color:aliceblue">@Model.NameNews</h1>
+<h2 style="background-color:aliceblue">@Model.Users.Name</h2>
 <head>
     <meta charset="utf-8">
     <title>Фон</title>
@@ -54,8 +55,8 @@
     </div>
     @if (ViewBag.user != null)
     {
-        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Edit" asp-route-id="@Model.id">Комментировать</a>
-        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Комментарии + @Convert.ToString(ViewBag.count)</a>
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Create" asp-route-id="@Model.id">Коментувати</a>
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Коментарі + @Convert.ToString(ViewBag.count)</a>
     }
 
     @if (ViewBag.user != null)

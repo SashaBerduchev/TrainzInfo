@@ -1,10 +1,10 @@
 ﻿@model TrainzInfo.Models.NewsComments
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Створити коментар";
 }
 
-<h1>Созадать комментарий</h1>
+<h1>Створити коментар</h1>
 
 
 <hr />
@@ -13,39 +13,23 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                @*<label asp-for="NewsID" class="control-label"></label>
-                <label asp-for="NewsID" class="form-control" />
-                <span asp-validation-for="NewsID" class="text-danger"></span>*@
-                @Html.DisplayForModel();
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
+                @Html.DisplayName("Ваш коментар")
+                <textarea asp-for="Comment" class="form-control" ></textarea>
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="DateTime" class="control-label"></label>
-                <input asp-for="DateTime" class="form-control" />
-                <span asp-validation-for="DateTime" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @* <a asp-action="Index">Back to List</a> *@
 </div>
 
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
