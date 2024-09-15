@@ -211,6 +211,12 @@ namespace TrainzInfo.Migrations
                     b.Property<int?>("DepotListid")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NumberTrain")
                         .HasColumnType("nvarchar(max)");
 
