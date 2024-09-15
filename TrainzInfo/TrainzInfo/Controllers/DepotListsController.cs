@@ -90,7 +90,7 @@ namespace TrainzInfo.Controllers
         {
             SelectList uz = new SelectList(_context.UkrainsRailways.Select(x=>x.Name).ToList());
             ViewBag.UzRailways = uz;
-            SelectList cityes = new SelectList(_context.Cities.Select(x => x.Name).ToList());
+            SelectList cityes = new SelectList(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             ViewBag.citys = cityes;
         }
         // GET: DepotLists/Details/5
@@ -151,7 +151,7 @@ namespace TrainzInfo.Controllers
 
             SelectList uzlist = new SelectList(await _context.UkrainsRailways.Select(x => x.Name).ToListAsync());
             List<City> cities = await _context.Cities.ToListAsync();
-            SelectList citiesList = new SelectList(cities.Select(x=>x.Name).Distinct());
+            SelectList citiesList = new SelectList(cities.OrderBy(x => x.Name).Select(x=>x.Name).Distinct());
             ViewBag.Ukrrailways = uzlist;
             ViewBag.cities = citiesList;
 

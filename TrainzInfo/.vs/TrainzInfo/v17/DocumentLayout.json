@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -42,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 512,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,7 +58,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
+              "Title": "DepotListsController.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DepotListsController.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs*",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs*",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAawFwAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-15T17:43:45.442Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\ElectricTrains\\Create.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\ElectricTrains\\Create.cshtml",
@@ -62,12 +79,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\ElectricTrains\\Create.cshtml",
               "ViewState": "AgIAACEAAAAAAAAAAAAAACwAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T09:03:25.683Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T09:03:25.683Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Create.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\Create.cshtml",
@@ -75,12 +91,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\Create.cshtml",
               "ViewState": "AgIAABAAAAAAAAAAAAAkwCQAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T09:02:15.151Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T09:02:15.151Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Edit.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\Edit.cshtml",
@@ -88,12 +103,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\Edit.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T09:00:26.64Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T09:00:26.64Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Details.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\Details.cshtml",
@@ -101,12 +115,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\Details.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T09:00:14.392Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T09:00:14.392Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
@@ -114,12 +127,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
               "ViewState": "AgIAABIAAAAAAAAAAAAmwCgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T08:23:52.387Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T08:23:52.387Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "DieselTrainsController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DieselTrainsController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DieselTrainsController.cs",
@@ -127,12 +139,11 @@
               "RelativeToolTip": "TrainzInfo\\Controllers\\DieselTrainsController.cs",
               "ViewState": "AgIAAGIAAAAAAAAAAAAmwHUAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-15T08:19:59.605Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T08:19:59.605Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "DieselTrains.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\DieselTrains.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Models\\DieselTrains.cs",
@@ -140,17 +151,16 @@
               "RelativeToolTip": "TrainzInfo\\Models\\DieselTrains.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-15T08:25:06.325Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T08:25:06.325Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs*",
-              "RelativeToolTip": "TrainzInfo\\Startup.cs*",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
+              "RelativeToolTip": "TrainzInfo\\Startup.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-25T11:59:02.174Z",
