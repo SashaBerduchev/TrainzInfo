@@ -163,7 +163,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,UkrainsRailways,City")] DepotList depotList, string? City)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,UkrainsRailways,City")] DepotList depotList, string? City, string? Name)
         {
             if (id != depotList.id)
             {
@@ -176,7 +176,7 @@ namespace TrainzInfo.Controllers
                 {
                     depotList.City = await _context.Cities.Where(x => x.Name == City).FirstOrDefaultAsync();
                     depotList.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name.Contains(depotList.UkrainsRailways)).FirstOrDefaultAsync();
-                    _context.Update(depotList);
+                    _context.Depots.Update(depotList);
                     await _context.SaveChangesAsync();
                     DepotList depot = await _context.Depots.Where(x=>x.Name == depotList.Name).FirstOrDefaultAsync(); 
                     City city = await _context.Cities.Where(x=>x.Name.Contains(depotList.City.Name)).FirstOrDefaultAsync();
