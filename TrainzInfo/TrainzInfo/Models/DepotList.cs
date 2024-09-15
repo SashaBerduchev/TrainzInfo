@@ -13,10 +13,10 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public string UkrainsRailways { get; set; }
-        public string Addres { get; set; }
-
+        public City City { get; set; }
         public UkrainsRailways UkrainsRailway { get; set; }
         public ICollection<Locomotive> Locomotives { get; set; }
         public ICollection<ElectricTrain> ElectricTrains { get; set; }
+        public ICollection<DieselTrains> DieselTrains { get; set; }
     }
 }

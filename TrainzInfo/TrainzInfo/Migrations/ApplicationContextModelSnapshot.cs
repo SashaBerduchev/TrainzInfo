@@ -115,8 +115,8 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("Addres")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Cityid")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -130,6 +130,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Cityid");
 
                     b.HasIndex("UkrainsRailwayid");
 
@@ -196,6 +198,37 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("DieselLocomotiveInfos");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DepotListid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumberTrain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SuburbanTrainsInfoid")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepotListid");
+
+                    b.HasIndex("SuburbanTrainsInfoid");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("DieselTrains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
@@ -1296,11 +1329,38 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
                 {
+                    b.HasOne("TrainzInfo.Models.City", "City")
+                        .WithMany("DepotLists")
+                        .HasForeignKey("Cityid");
+
                     b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailway")
                         .WithMany("DepotLists")
                         .HasForeignKey("UkrainsRailwayid");
 
+                    b.Navigation("City");
+
                     b.Navigation("UkrainsRailway");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
+                        .WithMany("DieselTrains")
+                        .HasForeignKey("DepotListid");
+
+                    b.HasOne("TrainzInfo.Models.SuburbanTrainsInfo", "SuburbanTrainsInfo")
+                        .WithMany("DieselTrains")
+                        .HasForeignKey("SuburbanTrainsInfoid");
+
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("DepotList");
+
+                    b.Navigation("SuburbanTrainsInfo");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
@@ -1474,6 +1534,8 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
                 {
+                    b.Navigation("DepotLists");
+
                     b.Navigation("ElectricTrains");
 
                     b.Navigation("Stations");
@@ -1481,6 +1543,8 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
                 {
+                    b.Navigation("DieselTrains");
+
                     b.Navigation("ElectricTrains");
 
                     b.Navigation("Locomotives");
@@ -1520,6 +1584,8 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
                 {
+                    b.Navigation("DieselTrains");
+
                     b.Navigation("ElectricTrain");
                 });
 

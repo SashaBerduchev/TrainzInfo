@@ -71,6 +71,7 @@ namespace TrainzInfo.Data
         public DbSet<MetroStation> MetroStations { get; set; }
         public DbSet<MetroLines> MetroLines { get; set; }
         public DbSet<TrainzInfo.Models.TrainsShadule> TrainsShadule { get; set; }
+        public DbSet<TrainzInfo.Models.DieselTrains> DieselTrains { get; set; }
 
     }
 

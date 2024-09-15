@@ -17,6 +17,7 @@ namespace TrainzInfo.Models
         public ICollection<Stations> Stations { get; set; }
         public Oblast Oblasts  { get; set; }
         public ICollection<ElectricTrain> ElectricTrains { get; set; }
+        public ICollection<DepotList> DepotLists { get; set; }
 
     }
 }

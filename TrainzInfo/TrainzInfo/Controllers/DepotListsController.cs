@@ -63,6 +63,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            List<City> city = await _context.Cities.ToListAsync();
             if (uzname == null)
             {
                 List<DepotList> depotsfull = await _context.Depots.ToListAsync();
@@ -149,7 +150,10 @@ namespace TrainzInfo.Controllers
             }
 
             SelectList uzlist = new SelectList(await _context.UkrainsRailways.Select(x => x.Name).ToListAsync());
+            List<City> cities = await _context.Cities.ToListAsync();
+            SelectList citiesList = new SelectList(cities.Select(x=>x.Name).Distinct());
             ViewBag.Ukrrailways = uzlist;
+            ViewBag.cities = citiesList;
 
             return View(depotList);
         }
@@ -159,7 +163,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,UkrainsRailways,Addres")] DepotList depotList)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,UkrainsRailways,City")] DepotList depotList, string? City)
         {
             if (id != depotList.id)
             {
@@ -170,8 +174,18 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    depotList.City = await _context.Cities.Where(x => x.Name == City).FirstOrDefaultAsync();
                     depotList.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name.Contains(depotList.UkrainsRailways)).FirstOrDefaultAsync();
                     _context.Update(depotList);
+                    await _context.SaveChangesAsync();
+                    DepotList depot = await _context.Depots.Where(x=>x.Name == depotList.Name).FirstOrDefaultAsync(); 
+                    City city = await _context.Cities.Where(x=>x.Name.Contains(depotList.City.Name)).FirstOrDefaultAsync();
+                    if(city.DepotLists == null)
+                    {
+                        city.DepotLists = new List<DepotList>();
+                    }
+                    city.DepotLists.Add(depot);
+                    _context.Cities.Update(city);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

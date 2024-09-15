@@ -10,10 +10,10 @@
 {
     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
     {
-       <p>
-           <a class="btn btn-info" asp-action="Create">Додати</a>
-          <a class="btn btn-info" asp-action="UpdateForce">Націоналізувати</a>
-       </p>
+        <p>
+            <a class="btn btn-info" asp-action="Create">Додати</a>
+            <a class="btn btn-info" asp-action="UpdateForce">Націоналізувати</a>
+        </p>
     }
 }
 
@@ -34,31 +34,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UkrainsRailway.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Addres)
-            </td>
-            <td>
-                @if (ViewBag.user != null)
-                 {
-                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
-                     {
-                         <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                     }
-                 }
-                <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список рухомого складу</a>
-                @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
-                @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.City != null)
+                    {
+                        <p>@item.Name @item.City.Name</p> 
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UkrainsRailway.Name)
+                </td>
+                <td>
+                    @if (item.City != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.City.Name)
+                    }
+                    
+                </td>
+                <td>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+                        {
+                            <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                        }
+                    }
+                    <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список рухомого складу</a>
+                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
+                    @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <style>

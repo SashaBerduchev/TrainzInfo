@@ -16,5 +16,6 @@ namespace TrainzInfo.Models
         [Required]
         public string AllInfo { get; set; }
         public ICollection<ElectricTrain> ElectricTrain { get; set; }
+        public ICollection<DieselTrains> DieselTrains { get; set; }
     }
 }

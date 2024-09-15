@@ -134,6 +134,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectrickTrainsLists/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrVHJhaW5zTGlzdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

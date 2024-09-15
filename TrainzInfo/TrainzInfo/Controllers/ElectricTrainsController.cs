@@ -204,7 +204,7 @@ namespace TrainzInfo.Controllers
             }
             try
             {
-                var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
+                var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depo;
                 electricTrain.IsProof = true.ToString();
                 electricTrain.DepotList = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
@@ -426,7 +426,7 @@ namespace TrainzInfo.Controllers
             //{
             try
             {
-                var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.Addres).FirstOrDefault();
+                var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
                 ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
                 train.Name = electricTrain.Name;
