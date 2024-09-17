@@ -50,8 +50,7 @@
               "RelativeToolTip": "TrainzInfo\\Views\\DepotLists\\Edit.cshtml",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-15T18:09:30.489Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-15T18:09:30.489Z"
             },
             {
               "$type": "Document",
@@ -59,9 +58,9 @@
               "Title": "DepotListsController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DepotListsController.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs*",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs*",
-              "ViewState": "AgIAAJ8AAAAAAAAAAAAiwKUAAACMAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs",
+              "ViewState": "AgIAAKoAAAAAAAAAAAArwLIAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-15T17:43:45.442Z",
               "EditorCaption": ""
