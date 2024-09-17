@@ -29,6 +29,7 @@ namespace TrainzInfo.Models
         public City Citys { get; set; }
         public ICollection<TrainsShadule> TrainsShadules { get; set; }
         public ICollection<StationsShadule> StationsShadules { get; set; }
+        public StationInfo StationInfo { get; set; }
     }
 
 }

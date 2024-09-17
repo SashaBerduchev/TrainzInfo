@@ -38,6 +38,26 @@ namespace TrainzInfo.Controllers
             return View(await _context.DieselTrains.ToListAsync());
         }
 
+        public async Task<IActionResult> IndexDepot(int? id)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+
+            List<DieselTrains> dieselTrains = new List<DieselTrains>();
+            if (id != null)
+            {
+                dieselTrains = await _context.DieselTrains.Where(x=>x.DepotList.id == id).ToListAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
+            return View(dieselTrains);
+        }
         // GET: DieselTrains/Details/5
         public async Task<IActionResult> Details(int? id)
         {

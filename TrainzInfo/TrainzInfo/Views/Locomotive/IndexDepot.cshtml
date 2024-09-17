@@ -1,0 +1,91 @@
+﻿@model IEnumerable<TrainzInfo.Models.Locomotive>
+
+@{
+    ViewData["Title"] = "Локомотиви";
+}
+
+<h1>Локомотиви</h1>
+
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Кількість записів: @Model.Count().ToString()</b>
+        @* <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
+        <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
+        <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploads" /><br>
+            <input type="submit" value="Зберегти" class="btn btn-primary" />
+        </form> *@
+    }
+}
+
+<p>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-info" asp-action="Create">Додати новий локомотив</a>
+            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
+        }
+    }
+
+</p>
+
+<form method="get">
+    <div class="form-inline">
+        @Html.DropDownList("Seria", ViewBag.seria as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Отобразить" class="btn btn-info" />
+    </div>
+</form>
+<div class="maininfo" style="position:absolute">
+    @foreach (var item in Model)
+    {
+        <div style="margin:25px; width:1100px; background-color:aliceblue; height:300px">
+            <div style="position:relative; left:20px; top:20px;">
+                <div class="img">
+                    <img class="img-thumbnail" width="350" height="250"
+                         src="@Url.Action("GetImage", "Locomotive",
+                        new { item.id })" />
+                </div>
+            </div>
+            <div style="position:relative; left:410px; top:-180px; font-size:25px">
+                <div>@Html.DisplayName("Назва - ") @Html.DisplayFor(modelItem => item.Locomotive_Series.Seria)</div>
+                <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => item.Number)</div>
+                <div>@Html.DisplayName("Максимальна швидкість - ") @Html.DisplayFor(modelItem => item.Speed)</div>
+                <div>@Html.DisplayName("Депо - ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
+
+            </div>
+            <div style="position:relative; left:780px; top:-360px; width:250px">
+
+
+                <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальна інформаціія</a>
+                <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото користувачів</a>
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-outline-primary" style="width:250px; margin:10px;" asp-action="edit" asp-route-id="@item.id">Редагувати @item.Seria - @item.Number</a>
+                    }
+                }
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-outline-warning" style="width:250px; margin:10px;" asp-action="AddImageForm" asp-route-id="@item.id">Додати зображення</a>
+                        <a class="btn btn-outline-danger" style="width:250px; margin:10px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                        @* <a class="btn btn-info" asp-action="Copy" asp-route-id="@item.id">Копіювати</a> *@
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

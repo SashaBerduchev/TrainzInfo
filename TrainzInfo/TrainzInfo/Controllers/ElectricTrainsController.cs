@@ -51,6 +51,29 @@ namespace TrainzInfo.Controllers
             return View(electricks);
         }
 
+        public async Task<IActionResult> IndexDepot(int? id)
+        {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            List<ElectricTrain> electrics = new List<ElectricTrain>();
+            if(id != null)
+            {
+                electrics = await _context.Electrics.Where(x=>x.DepotList.id == id).ToListAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
+            List<DepotList> depotLists = await _context.Depots.ToListAsync();
+            List<City> city = await _context.Cities.ToListAsync();
+            SelectList selectLists = new SelectList(electrics.Select(x=>x.Name).ToList());
+            ViewBag.electrics = selectLists;
+            return View(electrics);
+        }
         public async Task<IActionResult> UpdateIndex()
         {
             List<ElectricTrain> elektricTrains = await _context.Electrics.ToListAsync();

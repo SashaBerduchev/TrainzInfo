@@ -72,6 +72,9 @@ namespace TrainzInfo.Controllers
             List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailway.id == uzname).ToListAsync();
             UkrainsRailways ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).FirstOrDefaultAsync();
             ViewBag.Filia = ukrains.Name;
+            List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
+            List<ElectricTrain> electrics = await _context.Electrics.ToListAsync();
+            List<DieselTrains> diesels = await _context.DieselTrains.ToListAsync();
             return View(depots);
         }
 

@@ -5,10 +5,10 @@
 }
 
 <h1>@Model.Name</h1>
-<div>
+<div style="position:center">
     <a class="btn btn-info" asp-controller="DepotLists" asp-action="Index" asp-route-uzname="@Model.id">Список депо</a>
     <a class="btn btn-success" asp-controller="Stations" asp-action="Index" asp-route-filialsName="@Model.Name">Список всіх станцій</a>
-    <a class="btn btn-success" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
+    @* <a class="btn btn-success" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a> *@
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin")

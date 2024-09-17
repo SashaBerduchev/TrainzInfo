@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TrainzInfo.Models.DieselTrains>
+
+@{
+    ViewData["Title"] = "Дизель-поїзди";
+}
+
+<h1>Дизель-поїзди</h1>
+
+@if (ViewBag.user != null)
+{
+    @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+    {
+        <a style="btn btn-info" asp-action="Create">Створити</a>
+    }
+}
+
+@foreach (var item in Model)
+{
+    <div style="background-color:aliceblue; margin:20px; height:430px;">
+        <div style="margin:20px; position:relative; top:20px">
+            <div class="img">
+                <img class="img-thumbnail" width="350" height="250"
+                     src="@Url.Action("GetImage", "DieselTrains",
+                        new { item.Id })" />
+            </div>
+        </div>
+        <div style="position:relative; left:400px; top:-230px; font-size:25px">
+            <div>@Html.DisplayName("Назва поїзда: ") @Html.DisplayFor(modelItem => item.SuburbanTrainsInfo.Model)</div>
+            <div>@Html.DisplayName("Номер: ") @Html.DisplayFor(modelItem => item.NumberTrain)</div>
+            <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
+        </div>
+        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Детально</a>
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редагувати</a>
+
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+            }
+        }
+    </div>
+
+}
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

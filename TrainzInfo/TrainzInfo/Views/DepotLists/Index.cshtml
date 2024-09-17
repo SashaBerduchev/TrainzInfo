@@ -61,7 +61,16 @@
                             <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
                         }
                     }
-                    <a class="btn btn-info" style="margin:10px" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@item.Name">Список рухомого складу</a>
+                    @if (item.Locomotives != null)
+                    {
+                        <a class="btn btn-info" asp-controller="Locomotive" asp-action="IndexDepot" asp-route-id="@item.id">Локомотиви</a>
+                    }else if (item.ElectricTrains != null)
+                    {
+                        <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="IndexDepot" asp-route-id="@item.id">Електрички</a>
+                    }else if(item.DieselTrains != null)
+                    {
+                        <a class="btn btn-info" asp-controller="DieselTrains" asp-action="IndexDepot" asp-route-id="@item.id">Дизель-поїзди</a>
+                    }
                     @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
                     @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
                 </td>
