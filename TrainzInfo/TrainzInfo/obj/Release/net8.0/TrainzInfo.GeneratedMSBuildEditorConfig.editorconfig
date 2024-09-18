@@ -158,6 +158,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/IndexDepot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXEluZGV4RGVwb3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectrickTrainsLists/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNrVHJhaW5zTGlzdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -220,6 +224,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectricTrains/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNUcmFpbnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectricTrains/IndexDepot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWxlY3RyaWNUcmFpbnNcSW5kZXhEZXBvdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/ElectricTrains/IndexNotModered.cshtml]
@@ -328,6 +336,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/IndexDepot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZVxJbmRleERlcG90LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive_series/Create.cshtml]

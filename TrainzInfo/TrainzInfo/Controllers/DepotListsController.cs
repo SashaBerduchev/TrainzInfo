@@ -66,6 +66,10 @@ namespace TrainzInfo.Controllers
             List<City> city = await _context.Cities.ToListAsync();
             if (uzname == null)
             {
+                List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
+                List<Locomotive> locomotive = await _context.Locomotives.ToListAsync();
+                List<ElectricTrain> electric = await _context.Electrics.ToListAsync();
+                List<DieselTrains> diesel = await _context.DieselTrains.ToListAsync();
                 List<DepotList> depotsfull = await _context.Depots.ToListAsync();
                 return View(depotsfull);
             }
@@ -187,7 +191,10 @@ namespace TrainzInfo.Controllers
                     {
                         city.DepotLists = new List<DepotList>();
                     }
-                    city.DepotLists.Add(depot);
+                    if(city.DepotLists.Where(x=>x.Name == depotList.Name) == null)
+                    {
+                        city.DepotLists.Add(depot);
+                    }
                     _context.Cities.Update(city);
                     await _context.SaveChangesAsync();
                 }

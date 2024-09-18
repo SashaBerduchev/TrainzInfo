@@ -3,40 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\dieseltrainscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\dieseltrainscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\dieseltrains\\indexdepot.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\dieseltrains\\indexdepot.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\dieseltrains\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\dieseltrains\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\depotlists\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\depotlists\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\locomotivecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\depotlistscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\electrictrainscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\electrictrainscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\ukrainsrailwayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\ukrainsrailwayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\electrictrains\\indexdepot.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\electrictrains\\indexdepot.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\users\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\users\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\users\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\models\\stations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\models\\stations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 512,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,117 +50,91 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DieselTrainsController.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DieselTrainsController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DieselTrainsController.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DieselTrainsController.cs*",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\DieselTrainsController.cs*",
-              "ViewState": "AgIAABkAAAAAAAAAAAAgwCgAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T18:25:44.033Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\Index.cshtml",
-              "ViewState": "AgIAABcAAAAAAAAAAAAkwCMAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-17T18:25:26.363Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "IndexDepot.cshtml",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\IndexDepot.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DieselTrains\\IndexDepot.cshtml",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DieselTrains\\IndexDepot.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\DieselTrains\\IndexDepot.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAADEAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-17T18:25:21.945Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "DepotListsController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DepotListsController.cs",
               "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
               "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAAAWwEsAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAADgAAAAAAAAAAAAvwEQAAABlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T18:19:54.219Z",
+              "WhenOpened": "2024-09-18T18:57:22.335Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UkrainsRailwaysController.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAApwBEAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-18T18:54:09.348Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "LocomotiveController.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\LocomotiveController.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\LocomotiveController.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAIwGcAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T18:17:17.28Z",
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Details.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Users\\Details.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Details.cshtml",
+              "RelativeToolTip": "TrainzInfo\\Views\\Users\\Details.cshtml",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAADwAAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-18T18:53:17.306Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Edit.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\Users\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Edit.cshtml",
+              "RelativeToolTip": "TrainzInfo\\Views\\Users\\Edit.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAADAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-18T18:48:21.238Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\DepotLists\\Index.cshtml",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAEcAAABMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-17T18:08:31.473Z",
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "TrainzInfo\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAEkBAAAAAAAAAAAWwFYBAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-18T18:48:07.715Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "ElectricTrainsController.cs",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\ElectricTrainsController.cs",
-              "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\ElectricTrainsController.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\ElectricTrainsController.cs",
-              "RelativeToolTip": "TrainzInfo\\Controllers\\ElectricTrainsController.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAjwEYAAABNAAAAAAAAAA==",
+              "Title": "Stations.cs",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Stations.cs",
+              "RelativeDocumentMoniker": "TrainzInfo\\Models\\Stations.cs",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Stations.cs",
+              "RelativeToolTip": "TrainzInfo\\Models\\Stations.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAcwB4AAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-17T17:58:51.614Z",
+              "WhenOpened": "2024-09-18T18:38:52.67Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "IndexDepot.cshtml",
-              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\ElectricTrains\\IndexDepot.cshtml",
-              "RelativeDocumentMoniker": "TrainzInfo\\Views\\ElectricTrains\\IndexDepot.cshtml",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\ElectricTrains\\IndexDepot.cshtml",
-              "RelativeToolTip": "TrainzInfo\\Views\\ElectricTrains\\IndexDepot.cshtml",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwCEAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-17T17:58:02.879Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
-              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
-              "RelativeToolTip": "TrainzInfo\\Startup.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABkAAABkAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs*",
+              "RelativeToolTip": "TrainzInfo\\Startup.cs*",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-25T11:59:02.174Z",
               "EditorCaption": ""

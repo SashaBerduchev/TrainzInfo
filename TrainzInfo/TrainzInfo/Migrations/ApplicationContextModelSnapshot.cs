@@ -138,68 +138,6 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Depots");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DieselLocomoives", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("DiseslPower")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Imgsrc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MaxSpeed")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SectionCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("DieselLocomoives");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.DieselLocomotiveInfo", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("AllInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Baseinfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Diesel_Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Imgsrc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Power")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("DieselLocomotiveInfos");
-                });
-
             modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
                 {
                     b.Property<int>("Id")
@@ -476,24 +414,6 @@ namespace TrainzInfo.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Locomotive_Series");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.LocomotivesType", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("LocomotivesTypes");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.MainImages", b =>
@@ -1186,17 +1106,20 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("ImageMimeTypeOfData")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Locomotiveid")
+                        .HasColumnType("int");
+
                     b.Property<string>("NameLocomotive")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Locomotiveid");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserLocomotivePhotos");
                 });
@@ -1511,6 +1434,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.UserLocomotivePhotos", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Locomotive", "Locomotive")
+                        .WithMany("UserLocomotivesPhoto")
+                        .HasForeignKey("Locomotiveid");
+
+                    b.HasOne("TrainzInfo.Models.Users", "User")
+                        .WithMany("UserLocomotivePhotos")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Locomotive");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.UserTrainzPhoto", b =>
                 {
                     b.HasOne("TrainzInfo.Models.Stations", "Stations")
@@ -1518,7 +1456,7 @@ namespace TrainzInfo.Migrations
                         .HasForeignKey("Stationsid");
 
                     b.HasOne("TrainzInfo.Models.Users", "Userid")
-                        .WithMany()
+                        .WithMany("UserTrainzPhotos")
                         .HasForeignKey("UseridId");
 
                     b.Navigation("Stations");
@@ -1542,6 +1480,11 @@ namespace TrainzInfo.Migrations
                     b.Navigation("ElectricTrains");
 
                     b.Navigation("Locomotives");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
+                {
+                    b.Navigation("UserLocomotivesPhoto");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
@@ -1597,6 +1540,13 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
 
                     b.Navigation("stationsShadules");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Users", b =>
+                {
+                    b.Navigation("UserLocomotivePhotos");
+
+                    b.Navigation("UserTrainzPhotos");
                 });
 #pragma warning restore 612, 618
         }

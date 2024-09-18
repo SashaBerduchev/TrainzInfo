@@ -58,6 +58,7 @@
                 <a class="btn btn-info btn_new" style="margin:10px" asp-action="Index">Користувачі</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Cities" asp-action="Index">Міста</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Oblasts" asp-action="Index">Області</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="UkrainsRailways" asp-action="RollingStoneInfo">Рухомий склад</a>
 
             }
             else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")

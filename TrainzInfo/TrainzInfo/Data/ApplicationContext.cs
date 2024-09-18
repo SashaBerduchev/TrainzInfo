@@ -35,10 +35,7 @@ namespace TrainzInfo.Data
 
         public DbSet<Users> User { get; set; }
         public DbSet<TrainzType> TrainzTypes { get; set; }
-        public DbSet<LocomotivesType> LocomotivesTypes { get; set; }
         public DbSet<Locomotive> Locomotives { get; set; }
-        public DbSet<DieselLocomoives> DieselLocomoives { get; set; }
-        public DbSet<DieselLocomotiveInfo> DieselLocomotiveInfos { get; set; }
         public DbSet<PassangerCarriere> PassangerCarrieres { get; set; }
         public DbSet<PassangerCarriegesInfo> PassangerCarriegesInfos { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }

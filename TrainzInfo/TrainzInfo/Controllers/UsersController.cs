@@ -337,6 +337,9 @@ namespace TrainzInfo.Controllers
             {
                 Users user = _context.User.Where(x => x.Id == users.Id).FirstOrDefault();
                 user.Role = users.Role;
+                user.Name = users.Name;
+                user.Age = users.Age;
+                user.Email = users.Email;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Done));
@@ -352,8 +355,6 @@ namespace TrainzInfo.Controllers
                     throw;
                 }
             }
-
-            return View(users);
         }
 
         // GET: Users/Delete/5

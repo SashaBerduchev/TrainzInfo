@@ -23,5 +23,7 @@ namespace TrainzInfo.Models
         public string Role { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
+        public ICollection<UserTrainzPhoto> UserTrainzPhotos { get; set; }
+        public ICollection<UserLocomotivePhotos> UserLocomotivePhotos { get; set; }
     }
 }

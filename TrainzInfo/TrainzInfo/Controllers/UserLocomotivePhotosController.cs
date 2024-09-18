@@ -89,7 +89,6 @@ namespace TrainzInfo.Controllers
             }
             List<string> locomotives = new List<string>();
             locomotives = _context.Locomotives.Select(x=>x.Seria + " - " + x.Number).ToList();
-            locomotives.AddRange(_context.DieselLocomoives.Select(x => x.Name).ToList());
             SelectList selectLists = new SelectList(locomotives);
             ViewBag.locomotives = selectLists;
             
@@ -115,8 +114,6 @@ namespace TrainzInfo.Controllers
                 userid = user.Id;
                 email = user.Email;
             }
-            userLocomotivePhotos.UserName = username;
-            userLocomotivePhotos.UserId = userid;
             userLocomotivePhotos.Email = email;
             userLocomotivePhotos.DateTime = DateTime.Now;
             _context.Add(userLocomotivePhotos);
@@ -133,7 +130,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
-                m.Body = userLocomotivePhotos.UserName + " Ваша публикация опубликована, Спасибо Вам";
+                m.Body = userLocomotivePhotos.User.Name + " Ваша публикация опубликована, Спасибо Вам";
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
@@ -237,10 +234,6 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            if(userLocomotivePhotos.UserName == username && userLocomotivePhotos.UserId == userid)
-            {
-                return View(userLocomotivePhotos);
-            }
             else
             {
                 return RedirectToAction(nameof(EditDenied));
@@ -318,10 +311,6 @@ namespace TrainzInfo.Controllers
             if (userLocomotivePhotos == null)
             {
                 return NotFound();
-            }
-            if (userLocomotivePhotos.UserName == username && userLocomotivePhotos.UserId == userid)
-            {
-                return View(userLocomotivePhotos);
             }
             else
             {

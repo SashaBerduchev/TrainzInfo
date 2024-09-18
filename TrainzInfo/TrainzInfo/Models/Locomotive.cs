@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TrainzInfo.Models
 {
@@ -17,5 +19,7 @@ namespace TrainzInfo.Models
         public string ImageMimeTypeOfData { get; set; }
         public DepotList DepotList { get; set; }
         public Locomotive_series Locomotive_Series { get; set; }
+        public ICollection<UserLocomotivePhotos> UserLocomotivesPhoto { get; set; }
+
     }
 }
