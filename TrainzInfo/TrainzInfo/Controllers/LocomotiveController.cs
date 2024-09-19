@@ -187,14 +187,19 @@ namespace TrainzInfo.Controllers
             locomotive.User = myuser;
             locomotive.DepotList = await _context.Depots.Where(x=>x.Name == locomotive.Depot).FirstOrDefaultAsync();
             locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
-            Locomotive_series locomotive_Series = locomotive.Locomotive_Series;
+            Locomotive_series locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
             if(locomotive_Series.Locomotives == null)
             {
                 locomotive_Series.Locomotives = new List<Locomotive>();
             }
-            locomotive_Series.Locomotives.Add(locomotive);
+            if (locomotive_Series.Locomotives.Count == 0 || locomotive_Series.Locomotives.Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number).First() == null)
+            {
+                locomotive_Series.Locomotives.Add(locomotive);
+                _context.Locomotive_Series.Update(locomotive_Series);
+                await _context.SaveChangesAsync();
+            }
+            locomotive.id = 0;
             _context.Add(locomotive);
-            _context.Locomotive_Series.Update(locomotive_Series);
             await _context.SaveChangesAsync();
             //SendMessage(user);
             int locid = _context.Locomotives.Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).Select(x => x.id).FirstOrDefault();
@@ -293,7 +298,7 @@ namespace TrainzInfo.Controllers
                     locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
                     locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Locomotives.Update(locomotive);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
 
