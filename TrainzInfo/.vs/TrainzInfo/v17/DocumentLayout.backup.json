@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\LocomotiveController.cs",
               "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\LocomotiveController.cs*",
               "RelativeToolTip": "TrainzInfo\\Controllers\\LocomotiveController.cs*",
-              "ViewState": "AgIAALUAAAAAAAAAAIAwwL0AAACOAAAAAAAAAA==",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAhwKQAAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-19T10:17:33.509Z",
               "EditorCaption": ""
@@ -59,8 +59,7 @@
               "RelativeToolTip": "TrainzInfo\\Models\\Locomotive_series.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-19T10:17:24.189Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-19T10:17:24.189Z"
             },
             {
               "$type": "Document",
@@ -72,8 +71,7 @@
               "RelativeToolTip": "TrainzInfo\\Models\\Locomotive.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAA9wBQAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-19T10:17:04.267Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-19T10:17:04.267Z"
             },
             {
               "$type": "Document",
@@ -83,7 +81,7 @@
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
               "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeToolTip": "TrainzInfo\\Startup.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABAAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-25T11:59:02.174Z",
               "EditorCaption": ""

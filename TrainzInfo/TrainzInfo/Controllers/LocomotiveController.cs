@@ -162,7 +162,7 @@ namespace TrainzInfo.Controllers
             ViewBag.Seria = seria;
             List<string> depotlist = new List<string>();
             depotlist.Add("");
-            depotlist.AddRange(await _context.Depots.Select(x => x.Name).ToListAsync());
+            depotlist.AddRange(await _context.Depots.Select(x=>x.Name +" "+x.City.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             return View();
@@ -373,7 +373,7 @@ namespace TrainzInfo.Controllers
             ViewBag.Seria = seria;
             List<string> depotLists = new List<string>();
             depotLists.Add("");
-            depotLists.AddRange(await _context.Depots.OrderByDescending(x => x.Name).Select(x => x.Name).ToListAsync());
+            depotLists.AddRange(await _context.Depots.OrderByDescending(x => x.Name + " " + x.City.Name).Select(x => x.Name).ToListAsync());
             ViewBag.Depo = new SelectList(depotLists);
             return View(locomotive);
         }
