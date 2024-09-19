@@ -130,12 +130,23 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,UkrainsRailways,Addres")] DepotList depotList)
+        public async Task<IActionResult> Create([Bind("id,Name,UkrainsRailways,Addres")] DepotList depotList, string? Addres)
         {
             if (ModelState.IsValid)
             {
                 depotList.UkrainsRailway = await _context.UkrainsRailways.Where(x => x.Name.Contains(depotList.UkrainsRailways)).FirstOrDefaultAsync();
+                depotList.City = await _context.Cities.Where(x=>x.Name == Addres).FirstOrDefaultAsync();
                 _context.Add(depotList);
+                City city = await _context.Cities.Where(x => x.Name.Contains(depotList.City.Name)).FirstOrDefaultAsync();
+                if (city.DepotLists == null)
+                {
+                    city.DepotLists = new List<DepotList>();
+                }
+                if (city.DepotLists.Where(x => x.Name == depotList.Name) == null)
+                {
+                    city.DepotLists.Add(depotList);
+                }
+                _context.Cities.Update(city);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
