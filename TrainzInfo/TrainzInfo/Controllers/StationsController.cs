@@ -45,7 +45,7 @@ namespace TrainzInfo.Controllers
             
             List<string> obl = new List<string>();
             obl.Add("");
-            obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
+            obl.AddRange(await _context.Oblasts.OrderBy(x=>x.Name).Select(x => x.Name).ToListAsync());
             SelectList oblasts = new SelectList(obl);
             ViewBag.oblast = oblasts;
 
