@@ -94,46 +94,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVwb3RMaXN0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomoives/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vaXZlc1xDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomoives/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vaXZlc1xEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomoives/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vaXZlc1xEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomoives/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vaXZlc1xFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomoives/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vaXZlc1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomotiveInfoes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomotiveInfoes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomotiveInfoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomotiveInfoes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselLocomotiveInfoes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsTG9jb21vdGl2ZUluZm9lc1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DieselTrains/AddImageForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGllc2VsVHJhaW5zXEFkZEltYWdlRm9ybS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -288,26 +248,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotiveBaseInfoes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZUJhc2VJbmZvZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/LocomotivesTypes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jb21vdGl2ZXNUeXBlc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sasha/source/repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Locomotive/AddImageForm.cshtml]

@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\depotlists\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\depotlists\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\views\\depotlists\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\views\\depotlists\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|c:\\users\\sasha\\source\\repos\\trainzinfo\\trainzinfo\\trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}|TrainzInfo\\TrainzInfo.csproj|solutionrelative:trainzinfo\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -38,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 512,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +58,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Edit.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DepotLists\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Edit.cshtml*",
+              "RelativeToolTip": "TrainzInfo\\Views\\DepotLists\\Edit.cshtml*",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-19T04:53:02.23Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Create.cshtml",
+              "RelativeDocumentMoniker": "TrainzInfo\\Views\\DepotLists\\Create.cshtml",
+              "ToolTip": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\DepotLists\\Create.cshtml*",
+              "RelativeToolTip": "TrainzInfo\\Views\\DepotLists\\Create.cshtml*",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-19T04:52:46.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "DepotListsController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\DepotListsController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\DepotListsController.cs",
@@ -58,12 +92,11 @@
               "RelativeToolTip": "TrainzInfo\\Controllers\\DepotListsController.cs",
               "ViewState": "AgIAADgAAAAAAAAAAAAvwEQAAABlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-18T18:57:22.335Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:57:22.335Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "UkrainsRailwaysController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
@@ -71,12 +104,11 @@
               "RelativeToolTip": "TrainzInfo\\Controllers\\UkrainsRailwaysController.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAApwBEAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-18T18:54:09.348Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:54:09.348Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Details.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Details.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\Users\\Details.cshtml",
@@ -84,12 +116,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\Users\\Details.cshtml",
               "ViewState": "AgIAAC0AAAAAAAAAAAAAADwAAAByAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-18T18:53:17.306Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:53:17.306Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Views\\Users\\Edit.cshtml",
               "RelativeDocumentMoniker": "TrainzInfo\\Views\\Users\\Edit.cshtml",
@@ -97,12 +128,11 @@
               "RelativeToolTip": "TrainzInfo\\Views\\Users\\Edit.cshtml",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAADAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-18T18:48:21.238Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:48:21.238Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Controllers\\UsersController.cs",
@@ -110,12 +140,11 @@
               "RelativeToolTip": "TrainzInfo\\Controllers\\UsersController.cs",
               "ViewState": "AgIAAEkBAAAAAAAAAAAWwFYBAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-18T18:48:07.715Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:48:07.715Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Stations.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Models\\Stations.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Models\\Stations.cs",
@@ -123,12 +152,11 @@
               "RelativeToolTip": "TrainzInfo\\Models\\Stations.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAcwB4AAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-18T18:38:52.67Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T18:38:52.67Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\sasha\\source\\repos\\TrainzInfo\\TrainzInfo\\TrainzInfo\\Startup.cs",
               "RelativeDocumentMoniker": "TrainzInfo\\Startup.cs",
