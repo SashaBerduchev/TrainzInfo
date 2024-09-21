@@ -50,7 +50,7 @@ namespace TrainzInfo.Controllers
             ViewBag.oblast = oblasts;
 
             List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
-            List<City> cities = await _context.Cities.ToListAsync();
+            List<City> Citys = await _context.Cities.ToListAsync();
             List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
@@ -74,10 +74,24 @@ namespace TrainzInfo.Controllers
             List<Stations> stationsupdate = new List<Stations>();
             foreach (var item in stations)
             {
-                item.Citys = await _context.Cities.Where(x => x.Name == item.City).FirstOrDefaultAsync();
+                City city = await _context.Cities.Where(x => x.Name == item.City).FirstOrDefaultAsync();
+                item.Citys = city;
                 item.UkrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == item.Railway).FirstOrDefaultAsync();
                 item.Oblasts = await _context.Oblasts.Where(x => x.Name == item.Oblast).FirstOrDefaultAsync();
                 stationsupdate.Add(item);
+                if (city != null)
+                {
+                    if (city.Stations == null)
+                    {
+                        city.Stations = new List<Stations>();
+                    }
+                    if (city.Stations.Where(x => x.City == item.City).FirstOrDefault() == null)
+                    {
+                        city.Stations.Add(item);
+                        _context.Cities.Update(city);
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
             _context.UpdateRange(stationsupdate);
             await _context.SaveChangesAsync();
@@ -148,6 +162,9 @@ namespace TrainzInfo.Controllers
             obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
             SelectList oblasts = new SelectList(obl);
             ViewBag.oblast = oblasts;
+            List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
+            List<City> Citys = await _context.Cities.ToListAsync();
+            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
 
