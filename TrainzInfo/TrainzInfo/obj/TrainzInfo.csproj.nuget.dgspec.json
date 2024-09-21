@@ -52,7 +52,7 @@
           "dependencies": {
             "EPPlus": {
               "target": "Package",
-              "version": "[7.3.1, )"
+              "version": "[7.3.2, )"
             },
             "Microsoft.Bcl.AsyncInterfaces": {
               "target": "Package",
