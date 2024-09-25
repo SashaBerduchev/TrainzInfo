@@ -34,7 +34,6 @@ namespace TrainzInfo.Data
 
 
         public DbSet<Users> User { get; set; }
-        public DbSet<TrainzType> TrainzTypes { get; set; }
         public DbSet<Locomotive> Locomotives { get; set; }
         public DbSet<PassangerCarriere> PassangerCarrieres { get; set; }
         public DbSet<PassangerCarriegesInfo> PassangerCarriegesInfos { get; set; }
@@ -60,7 +59,6 @@ namespace TrainzInfo.Data
         public DbSet<SuburbanTrainsInfo> SuburbanTrainsInfos { get; set; }
         public DbSet<IpAdresses> IpAdresses { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<TrainzStations> TrainzStations { get; set; }
         public DbSet<RailwayUsersPhoto> RailwayUsersPhotos { get; set; }
         public DbSet<MainImages> MainImages { get; set; }
         public DbSet<Metro> Metros { get; set; }

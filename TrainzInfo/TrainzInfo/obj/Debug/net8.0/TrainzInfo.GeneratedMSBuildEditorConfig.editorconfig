@@ -710,46 +710,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW5zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzStations/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56U3RhdGlvbnNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzStations/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56U3RhdGlvbnNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzStations/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56U3RhdGlvbnNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzStations/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56U3RhdGlvbnNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzStations/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56U3RhdGlvbnNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzTypes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56VHlwZXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzTypes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56VHlwZXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzTypes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56VHlwZXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzTypes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56VHlwZXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TrainzTypes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhaW56VHlwZXNcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/TypeOfPassTrains/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHlwZU9mUGFzc1RyYWluc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

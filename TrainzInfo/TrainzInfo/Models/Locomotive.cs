@@ -20,6 +20,7 @@ namespace TrainzInfo.Models
         public DepotList DepotList { get; set; }
         public Locomotive_series Locomotive_Series { get; set; }
         public ICollection<UserLocomotivePhotos> UserLocomotivesPhoto { get; set; }
+        public LocomotiveBaseInfo LocomotiveBaseInfo { get; set; }
 
     }
 }

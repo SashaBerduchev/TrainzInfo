@@ -55,17 +55,17 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in ViewBag.stations as List<TrainzStations>)
+                @foreach (var item in ViewBag.stations as List<TrainsShadule>)
                 {
                     <tr>
                         <td>
-                            <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStationStop">@Html.DisplayFor(modelitem => item.NameStationStop)</a>
+                                <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStation">@Html.DisplayFor(modelitem => item.NameStation)</a>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelitem => item.TimeOfArrive.TimeOfDay)
+                            @Html.DisplayFor(modelitem => item.Departure.TimeOfDay)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelitem => item.TimeOfDepet.TimeOfDay)
+                            @Html.DisplayFor(modelitem => item.Arrival.TimeOfDay)
                         </td>
                         <td>
                             @if (ViewBag.user != null)

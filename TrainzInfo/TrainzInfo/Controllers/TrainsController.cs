@@ -147,7 +147,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            List<TrainzStations> stations = await _context.TrainzStations.Where(x => x.NumberOFTrain == train.Number).ToListAsync();
+            List<TrainsShadule> stations = await _context.TrainsShadule.Where(x => x.Train == train).ToListAsync();
             ViewBag.stations = stations;
             return View(train);
         }
