@@ -12,5 +12,6 @@ namespace TrainzInfo.Models
         [Required]
         public string NameRole { get; set; }
         public string Rules { get; set; }
+        public ICollection<Users> Users { get; set; }
     }
 }

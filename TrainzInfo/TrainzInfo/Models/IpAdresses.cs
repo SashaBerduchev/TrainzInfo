@@ -10,5 +10,6 @@ namespace TrainzInfo.Models
         public int id { get; set; }
         public string IpAddres { get; set; }
         public DateTime Date { get; set; }
+        public Users Users { get; set; }
     }
 }

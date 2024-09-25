@@ -16,5 +16,6 @@ namespace TrainzInfo.Models
         public int MetroLineId { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
+        public MetroLines MetroLines { get; set; }
     }
 }

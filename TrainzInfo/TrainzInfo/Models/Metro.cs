@@ -16,5 +16,6 @@ namespace TrainzInfo.Models
         public string Information { get; set; }
         [Required]
         public string Photo { get; set; }
+        public ICollection<MetroLines> MetroLines { get; set; }
     }
 }

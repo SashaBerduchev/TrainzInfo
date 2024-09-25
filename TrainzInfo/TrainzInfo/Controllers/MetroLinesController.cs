@@ -33,7 +33,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            return View(await _context.MetroLines.Where(x=>x.Metro == Metro).ToListAsync());
+            return View(await _context.MetroLines.Where(x=>x.Metro.Name == Metro).FirstOrDefaultAsync());
         }
 
         // GET: MetroLines/Details/5

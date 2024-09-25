@@ -16,5 +16,6 @@ namespace TrainzInfo.Models
         public byte[] Image { get; set; }
         public string ImageType { get; set; }
         public string IsProof { get; set; }
+        public Stations Stations { get; set; }
     }
 }
