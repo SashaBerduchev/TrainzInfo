@@ -201,6 +201,10 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            IpAdresses ipAdresses = await _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefaultAsync();
+            ipAdresses.Users = user;
+            _context.IpAdresses.Update(ipAdresses);
+            await _context.SaveChangesAsync();
             return View();
         }
 
@@ -212,6 +216,10 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            IpAdresses ipAdresses = await _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefaultAsync();
+            ipAdresses.Users = null;
+            _context.IpAdresses.Update(ipAdresses);
+            await _context.SaveChangesAsync();
             return View();
         }
 
