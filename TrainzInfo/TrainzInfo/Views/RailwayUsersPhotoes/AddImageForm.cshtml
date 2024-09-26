@@ -8,8 +8,7 @@
 
 <form asp-controller="RailwayUsersPhotoes" asp-action="AddImage" method="post" enctype="multipart/form-data">
     <input asp-for="id" readonly class="control-label"></input>
-    <input asp-for="NameUser" readonly class="control-label"></input>
-    <input asp-for="CityFrom" readonly class="control-label"></input>
+    <input asp-for="Stations.Name" readonly class="control-label"></input>
     <input type="file" name="uploads" /><br>
     <input type="submit" value="Зберегти" class="btn btn-primary" />
 </form>

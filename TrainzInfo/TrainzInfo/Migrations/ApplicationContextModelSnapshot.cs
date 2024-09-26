@@ -707,12 +707,6 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("CityFrom")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CitytTo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
@@ -725,18 +719,17 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("IsProof")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NameUser")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("Stationsid")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
                     b.HasIndex("Stationsid");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("RailwayUsersPhotos");
                 });
@@ -1406,7 +1399,13 @@ namespace TrainzInfo.Migrations
                         .WithMany("railwayUsersPhotos")
                         .HasForeignKey("Stationsid");
 
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany("RailwayUsersPhotos")
+                        .HasForeignKey("UsersId");
+
                     b.Navigation("Stations");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
@@ -1613,6 +1612,8 @@ namespace TrainzInfo.Migrations
             modelBuilder.Entity("TrainzInfo.Models.Users", b =>
                 {
                     b.Navigation("IpAdresses");
+
+                    b.Navigation("RailwayUsersPhotos");
 
                     b.Navigation("UserLocomotivePhotos");
 

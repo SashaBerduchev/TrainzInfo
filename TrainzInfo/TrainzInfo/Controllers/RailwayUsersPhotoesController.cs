@@ -25,14 +25,25 @@ namespace TrainzInfo.Controllers
         {
             return View(await _context.RailwayUsersPhotos.Where(x => x.IsProof == false.ToString()).ToListAsync());
         }
+
         // GET: RailwayUsersPhotoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
+            }
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            List<RailwayUsersPhoto> railwayUsersPhoto = new List<RailwayUsersPhoto>();
+            if (id != null)
+            {
+                railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.Stations.id == id).ToListAsync();
+            }
+            else
+            {
+                railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.IsProof == false.ToString()).ToListAsync();
             }
             return View(await _context.RailwayUsersPhotos.Where(x=>x.IsProof == true.ToString()).ToListAsync());
         }
@@ -84,18 +95,31 @@ namespace TrainzInfo.Controllers
             List<string> stationslist = new List<string>();
             stationslist.Add("");
             stationslist.AddRange(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            SelectList stations = new SelectList(stationslist);
+            SelectList stations = new SelectList(stationslist.Distinct());
             ViewBag.stations = stations;
 
             return View();
         }
 
+        public async Task<IActionResult> Update()
+        {
+            List<RailwayUsersPhoto> railwayUsers = await _context.RailwayUsersPhotos.ToListAsync();
+            List<RailwayUsersPhoto> railwayUsersUpdate = new List<RailwayUsersPhoto>();
+            foreach (var item in railwayUsers)
+            {
+                item.IsProof = true.ToString();
+                railwayUsersUpdate.Add(item);
+            }
+            _context.RailwayUsersPhotos.UpdateRange(railwayUsersUpdate);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
         // POST: RailwayUsersPhotoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,NameUser,UserId,CityFrom,CitytTo,Information,Image,ImageType")] RailwayUsersPhoto railwayUsersPhoto)
+        public async Task<IActionResult> Create([Bind("id,Information")] RailwayUsersPhoto railwayUsersPhoto, string? Stations)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -106,12 +130,20 @@ namespace TrainzInfo.Controllers
 
             if (ModelState.IsValid)
             {
-                railwayUsersPhoto.UserId = user.Id;
-                railwayUsersPhoto.NameUser = user.Name;
+                railwayUsersPhoto.Users = user;
                 railwayUsersPhoto.IsProof = false.ToString();
+                Stations stations = await _context.Stations.Where(x => x.Name == Stations).FirstOrDefaultAsync();
+                railwayUsersPhoto.Stations = stations;
                 _context.Add(railwayUsersPhoto);
                 await _context.SaveChangesAsync();
-                TempData["PhotoID"] = _context.RailwayUsersPhotos.Select(x=>x.id).ToList().Last();
+                if(stations.railwayUsersPhotos == null)
+                {
+                    stations.railwayUsersPhotos = new List<RailwayUsersPhoto>();
+                }
+                stations.railwayUsersPhotos.Add(railwayUsersPhoto);
+                _context.Stations.Update(stations);
+                await _context.SaveChangesAsync();
+                TempData["PhotoID"] = _context.RailwayUsersPhotos.Where(x=>x.Users == user && x.Stations.Name == Stations).Select(x=>x.id).ToList().Last();
                 return RedirectToAction(nameof(AddImageForm));
             }
             return View(railwayUsersPhoto);
@@ -235,8 +267,6 @@ namespace TrainzInfo.Controllers
                 {
                     RailwayUsersPhoto userPhoto = _context.RailwayUsersPhotos.Where(x => x.id == railwayUsersPhoto.id).FirstOrDefault();
                     userPhoto.Information = railwayUsersPhoto.Information;
-                    userPhoto.CityFrom = railwayUsersPhoto.CityFrom;
-                    userPhoto.CitytTo = railwayUsersPhoto.CitytTo;
                     _context.Update(userPhoto);
                     await _context.SaveChangesAsync();
                 }

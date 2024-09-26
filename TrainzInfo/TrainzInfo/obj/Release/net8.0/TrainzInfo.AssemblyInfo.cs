@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TrainzInfo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2586f0843dcb257a899a869d86dbde2056a13710")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9834b89d8344389c1ab7b317f8abda56b6d4288e")]
 [assembly: System.Reflection.AssemblyProductAttribute("TrainzInfo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TrainzInfo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

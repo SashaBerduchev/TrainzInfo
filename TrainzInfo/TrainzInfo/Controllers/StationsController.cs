@@ -56,6 +56,7 @@ namespace TrainzInfo.Controllers
             List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
             List<City> Citys = await _context.Cities.ToListAsync();
             List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
+            List<RailwayUsersPhoto> railwayUsersPhotos = await _context.RailwayUsersPhotos.ToListAsync();
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
                 return View(stations.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());

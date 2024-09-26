@@ -27,5 +27,6 @@ namespace TrainzInfo.Models
         public ICollection<UserLocomotivePhotos> UserLocomotivePhotos { get; set; }
         public ICollection<Role> Roles { get; set; }
         public ICollection<IpAdresses> IpAdresses { get; set; }
+        public ICollection<RailwayUsersPhoto> RailwayUsersPhotos { get; set; }
     }
 }

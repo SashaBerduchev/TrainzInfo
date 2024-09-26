@@ -12,6 +12,7 @@
     {
         <b>Колличество записей: @Model.Count().ToString()</b>
         <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a>
+        <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
     }
 }
 <p>
@@ -57,7 +58,10 @@
                 <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>
 
                 <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@item.Name">Інформація</a>
-
+                @if (item.railwayUsersPhotos != null)
+                {
+                    <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@item.id">Фотографії користувачів</a>
+                }
                 @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
