@@ -40,6 +40,10 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            if(filialsName == null)
+            {
+                filialsName = TempData["FiliasStation"].ToString();
+            }
             List<Stations> stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault()).OrderBy(x => x.Name).ToListAsync();
             ViewBag.Filia = filialsName;
             
@@ -64,6 +68,7 @@ namespace TrainzInfo.Controllers
             {
                 return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
             }
+            TempData["FiliasStation"] = filialsName;
             return View(stations);
 
         }
