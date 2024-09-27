@@ -275,10 +275,10 @@ namespace TrainzInfo.Controllers
                     station.Image = p1;
                     _context.Stations.Update(station);
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(IndexAll));
+                    return RedirectToAction(nameof(Index));
                 }
 
-            return RedirectToAction(nameof(IndexAll));
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult AddImageForm(int? id)
@@ -286,15 +286,18 @@ namespace TrainzInfo.Controllers
             Stations stations;
             if (id == null)
             {
-                string stationName = TempData["StationName"] as string;
-                if (stationName == null)
+                string stationId = TempData["Stationid"].ToString();
+                if (stationId == null)
                 {
                     return NotFound();
                 }
-                stations = _context.Stations.Where(x => x.Name == stationName).FirstOrDefault();
+                stations = _context.Stations.Where(x => x.id == Convert.ToInt32(stationId)).FirstOrDefault();
+            }
+            else
+            {
+                stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
             }
 
-            stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
             if (stations == null)
             {
                 return NotFound();
@@ -363,16 +366,45 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
-            stations.UserId = user.Id;
+            Users users = await _context.User.Where(x => x.Id == user.Id).FirstOrDefaultAsync();
+            stations.Users = user;
             Trace.WriteLine(stations);
             Trace.WriteLine(stations.Name);
-            stations.Citys = await _context.Cities.Where(x => x.Name == stations.City).FirstOrDefaultAsync();
-            stations.Oblasts = await _context.Oblasts.Where(x => x.Name == stations.Oblast).FirstOrDefaultAsync();
-            stations.UkrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
+            Oblast oblast = await _context.Oblasts.Where(x => x.Name == stations.Oblast).FirstOrDefaultAsync();
+            City city = await _context.Cities.Where(x => x.Name == stations.City).FirstOrDefaultAsync();
+            UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
+            stations.Citys = city;
+            stations.Oblasts = oblast;
+            stations.UkrainsRailways = ukrainsRailways;
             _context.Add(stations);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(IndexAll));
+            if(user.Stations == null)
+            {
+                user.Stations = new List<Stations>();
+            }
+            if(ukrainsRailways.Stations == null)
+            {
+                ukrainsRailways.Stations = new List<Stations>();
+            }
+            if(city.Stations == null)
+            {
+                city.Stations = new List<Stations>();
+            }
+            if(oblast.Stations == null)
+            {
+                oblast.Stations = new List<Stations>();
+            }
+            ukrainsRailways.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
+            city.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
+            oblast.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
+            user.Stations.Add(await _context.Stations.Where(x=>x.Name == stations.Name).FirstOrDefaultAsync());
+            _context.UkrainsRailways.Update(ukrainsRailways);
+            _context.Cities.Update(city);
+            _context.Oblasts.Update(oblast);
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+            TempData["Stationid"] = await _context.Stations.Where(x => x.Users == user && x.Name == stations.Name).Select(x=>x.id).FirstOrDefaultAsync();
+            return RedirectToAction(nameof(AddImageForm));
 
             //return View(stations);
         }

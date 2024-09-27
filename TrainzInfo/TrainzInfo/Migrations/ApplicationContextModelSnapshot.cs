@@ -34,7 +34,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUsers");
+                    b.ToTable("RoleUsers", (string)null);
                 });
 
             modelBuilder.Entity("StationsShaduleTrainsShadule", b =>
@@ -49,7 +49,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("stationsShadulesid");
 
-                    b.ToTable("StationsShaduleTrainsShadule");
+                    b.ToTable("StationsShaduleTrainsShadule", (string)null);
                 });
 
             modelBuilder.Entity("StationsTrainsShadule", b =>
@@ -64,7 +64,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("TrainsShadulesid");
 
-                    b.ToTable("StationsTrainsShadule");
+                    b.ToTable("StationsTrainsShadule", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.City", b =>
@@ -95,7 +95,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("Oblastsid");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Client", b =>
@@ -119,7 +119,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
@@ -150,7 +150,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UkrainsRailwayid");
 
-                    b.ToTable("Depots");
+                    b.ToTable("Depots", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
@@ -187,7 +187,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("DieselTrains");
+                    b.ToTable("DieselTrains", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
@@ -273,7 +273,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("Electrics");
+                    b.ToTable("Electrics", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.ElectrickTrainzInformation", b =>
@@ -298,7 +298,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ElectrickTrainzInformation");
+                    b.ToTable("ElectrickTrainzInformation", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.IpAdresses", b =>
@@ -322,7 +322,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("IpAdresses");
+                    b.ToTable("IpAdresses", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
@@ -373,7 +373,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("Locomotive_Seriesid");
 
-                    b.ToTable("Locomotives");
+                    b.ToTable("Locomotives", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.LocomotiveBaseInfo", b =>
@@ -394,7 +394,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("locomotiveBaseInfos");
+                    b.ToTable("locomotiveBaseInfos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
@@ -411,7 +411,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Locomotive_Series");
+                    b.ToTable("Locomotive_Series", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.MainImages", b =>
@@ -438,7 +438,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("MainImages");
+                    b.ToTable("MainImages", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Metro", b =>
@@ -463,7 +463,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Metros");
+                    b.ToTable("Metros", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.MetroLines", b =>
@@ -494,7 +494,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("Metroid");
 
-                    b.ToTable("MetroLines");
+                    b.ToTable("MetroLines", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.MetroStation", b =>
@@ -531,7 +531,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("MetroLinesid");
 
-                    b.ToTable("MetroStations");
+                    b.ToTable("MetroStations", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
@@ -561,7 +561,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("NewsComments");
+                    b.ToTable("NewsComments", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
@@ -602,7 +602,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("NewsInfos");
+                    b.ToTable("NewsInfos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>
@@ -623,7 +623,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Oblasts");
+                    b.ToTable("Oblasts", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.PassangerCarriegesInfo", b =>
@@ -644,7 +644,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("PassangerCarriegesInfos");
+                    b.ToTable("PassangerCarriegesInfos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.PassangerCarriere", b =>
@@ -676,7 +676,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("PassangerCarrieres");
+                    b.ToTable("PassangerCarrieres", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Plants", b =>
@@ -696,7 +696,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("plants");
+                    b.ToTable("plants", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.RailwayUsersPhoto", b =>
@@ -731,7 +731,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RailwayUsersPhotos");
+                    b.ToTable("RailwayUsersPhotos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Role", b =>
@@ -751,7 +751,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
@@ -776,7 +776,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("stationInfos");
+                    b.ToTable("stationInfos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
@@ -836,7 +836,7 @@ namespace TrainzInfo.Migrations
                     b.Property<int?>("UkrainsRailwaysid")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("id");
@@ -851,7 +851,9 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UkrainsRailwaysid");
 
-                    b.ToTable("Stations");
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("Stations", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
@@ -899,7 +901,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UkrainsRailwaysid");
 
-                    b.ToTable("StationsShadules");
+                    b.ToTable("StationsShadules", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
@@ -924,7 +926,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("SuburbanTrainsInfos");
+                    b.ToTable("SuburbanTrainsInfos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Train", b =>
@@ -960,7 +962,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("TypeOfPassTrainid");
 
-                    b.ToTable("Trains");
+                    b.ToTable("Trains", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
@@ -993,7 +995,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("Trainid");
 
-                    b.ToTable("TrainsShadule");
+                    b.ToTable("TrainsShadule", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
@@ -1010,7 +1012,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("TypeOfPassTrains");
+                    b.ToTable("TypeOfPassTrains", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
@@ -1045,7 +1047,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("UkrainsRailways");
+                    b.ToTable("UkrainsRailways", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UserLocomotivePhotos", b =>
@@ -1092,7 +1094,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLocomotivePhotos");
+                    b.ToTable("UserLocomotivePhotos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.UserTrainzPhoto", b =>
@@ -1136,7 +1138,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("UseridId");
 
-                    b.ToTable("UserTrainzPhotos");
+                    b.ToTable("UserTrainzPhotos", (string)null);
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Users", b =>
@@ -1180,7 +1182,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("RoleUsers", b =>
@@ -1430,6 +1432,10 @@ namespace TrainzInfo.Migrations
                         .WithMany("Stations")
                         .HasForeignKey("UkrainsRailwaysid");
 
+                    b.HasOne("TrainzInfo.Models.Users", "Users")
+                        .WithMany("Stations")
+                        .HasForeignKey("UsersId");
+
                     b.Navigation("Citys");
 
                     b.Navigation("Metro");
@@ -1439,6 +1445,8 @@ namespace TrainzInfo.Migrations
                     b.Navigation("StationInfo");
 
                     b.Navigation("UkrainsRailways");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
@@ -1614,6 +1622,8 @@ namespace TrainzInfo.Migrations
                     b.Navigation("IpAdresses");
 
                     b.Navigation("RailwayUsersPhotos");
+
+                    b.Navigation("Stations");
 
                     b.Navigation("UserLocomotivePhotos");
 
