@@ -234,19 +234,23 @@ namespace TrainzInfo.Controllers
             citys.Add("");
             
             List<string> stations = _context.Stations.Select(x => x.Name).ToList();
-            string filialsName = TempData["FiliasStation"].ToString();
+            string filialsName = "";
+            if (TempData["FiliasStation"] != null)
+            {
+                filialsName = TempData["FiliasStation"].ToString();
+            }
             List<string> oblasts = new List<string>();
             oblasts.Add("");
-            if(filialsName != null && filialsName.Contains("Львівсь"))
+            if(filialsName != "" && filialsName.Contains("Львівсь"))
             {
                 oblasts.AddRange(_context.Oblasts.Where(x=>x.Name.Contains("Франківс") || x.Name.Contains("Чернів") || x.Name.Contains("Львів") || x.Name.Contains("Закарпат") || x.Name.Contains("Волин")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
                 citys.AddRange(_context.Cities.Where(x=>x.Oblasts.Name.Contains("Франківс") || x.Oblasts.Name.Contains("Чернів") || x.Oblasts.Name.Contains("Львів") || x.Oblasts.Name.Contains("Закарпат") || x.Oblasts.Name.Contains("Волин")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
             }
-            else if(filialsName != null && filialsName.Contains("Централь"))
+            else if(filialsName != ""  && filialsName.Contains("Централь"))
             {
                 oblasts.AddRange(_context.Oblasts.Where(x => x.Name.Contains("Київ") || x.Name.Contains("Черніг") || x.Name.Contains("Тернопі") || x.Name.Contains("Хмель") || x.Name.Contains("Вінн") || x.Name.Contains("Рівнен")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
                 citys.AddRange(_context.Cities.Where(x => x.Oblasts.Name.Contains("Київ") || x.Oblasts.Name.Contains("Черніг") || x.Oblasts.Name.Contains("Тернопі") || x.Oblasts.Name.Contains("Хмель") || x.Oblasts.Name.Contains("Вінн") || x.Oblasts.Name.Contains("Рівне")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
-            }else if(filialsName != null && filialsName.Contains("Одеська"))
+            }else if(filialsName != "" && filialsName.Contains("Одеська"))
             {
                 oblasts.AddRange(_context.Oblasts.Where(x => x.Name.Contains("Черкаси") || x.Name.Contains("Кірово") || x.Name.Contains("Одес") || x.Name.Contains("Микола") || x.Name.Contains("Херсон")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
                 citys.AddRange(_context.Cities.Where(x => x.Oblasts.Name.Contains("Черкаси") || x.Oblasts.Name.Contains("Кірово") || x.Oblasts.Name.Contains("Одес") || x.Oblasts.Name.Contains("Микола") || x.Oblasts.Name.Contains("Херсон")).OrderBy(x => x.Name).Select(x => x.Name).ToList());
@@ -428,6 +432,7 @@ namespace TrainzInfo.Controllers
             _context.User.Update(user);
             await _context.SaveChangesAsync();
             TempData["Stationid"] = await _context.Stations.Where(x => x.Users == user && x.Name == stations.Name).Select(x=>x.id).FirstOrDefaultAsync();
+            TempData["FiliasStation"] = stations.UkrainsRailways.Name;
             return RedirectToAction(nameof(AddImageForm));
 
             //return View(stations);
