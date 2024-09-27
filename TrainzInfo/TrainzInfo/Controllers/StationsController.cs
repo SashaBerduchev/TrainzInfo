@@ -224,6 +224,12 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Create
         public IActionResult Create()
         {
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
             List<string> citys = new List<string>();
             citys.Add("");
             citys.AddRange(_context.Cities.OrderBy(x => x.Name).Select(x => x.Name).ToList());
