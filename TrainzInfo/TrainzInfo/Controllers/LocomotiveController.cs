@@ -61,9 +61,13 @@ namespace TrainzInfo.Controllers
             SelectList depot = new SelectList(depotslist);
 
             List<Locomotive> locomotives = await _context.Locomotives.ToListAsync();
-            List<DepotList> depots = await _context.Depots.ToListAsync();
+            List<City> city = await _context.Cities.ToListAsync();
+            List<DepotList> depots = await _context.Depots.Where(x=>x.Name.Contains("ТЧ")).ToListAsync();
             List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
-            ViewBag.depot = new SelectList(depots.Select(x => x.Name));
+            List<string> depotsname = new List<string>();
+            depotsname.Add("");
+            depotsname.AddRange(depots.Select(x => x.Name).Distinct());
+            ViewBag.depot = new SelectList(depotsname);
             ViewBag.series = new SelectList(locomotive_Series.Select(x => x.Seria));
             if (Seria != null && Seria != "")
             {
@@ -72,7 +76,7 @@ namespace TrainzInfo.Controllers
             }
             if (Depot != null && Depot != "")
             {
-                List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
+                List<Locomotive> locomotiveresult = locomotives.Where(x => x.DepotList.Name == Depot).ToList();
 
                 return View(locomotiveresult);
             }

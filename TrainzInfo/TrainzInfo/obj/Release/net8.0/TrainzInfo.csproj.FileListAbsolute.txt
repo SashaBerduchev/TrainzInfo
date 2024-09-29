@@ -670,3 +670,4 @@ C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\TrainzInfo.pdb
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\TrainzInfo.genruntimeconfig.cache
 C:\Users\sasha\source\repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\ref\TrainzInfo.dll
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\bin\Release\net8.0\libman.json

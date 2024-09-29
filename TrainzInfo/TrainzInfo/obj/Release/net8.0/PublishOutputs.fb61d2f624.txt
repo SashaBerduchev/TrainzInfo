@@ -1,6 +1,7 @@
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\TrainzInfo.exe
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\appsettings.json
+C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\libman.json
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\TrainzInfo.dll
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\TrainzInfo.runtimeconfig.json
 C:\Users\sasha\Source\Repos\TrainzInfo\TrainzInfo\TrainzInfo\obj\Release\net8.0\PubTmp\Out\TrainzInfo.pdb

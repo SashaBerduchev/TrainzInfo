@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                var names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
 
                 return Ok(names);
             }
@@ -42,7 +43,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                var names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
 
                 return Ok(names);
             }
@@ -60,13 +61,30 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                var names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
 
                 return Ok(names);
             }
             catch (Exception exp)
             {
                 Trace.WriteLine(exp);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("locomotives")]
+        public async Task<IActionResult> GetLocomotivesModel()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                List<string> strings = await _context.Locomotive_Series.Where(x => x.Seria.Contains(term)).Select(x=>x.Seria).ToListAsync();
+                return Ok(strings);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp.ToString());
                 return BadRequest();
             }
         }

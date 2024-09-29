@@ -11,5 +11,8 @@ function Api() {
         $('#stations').autocomplete({
             source: 'api/ApiController/stations'
         });
+        $('#locomotivesmodel').autocomplete({
+            source: 'api/ApiController/locomotives'
+        })
     });
 }
