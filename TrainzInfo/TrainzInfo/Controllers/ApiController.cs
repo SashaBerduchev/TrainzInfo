@@ -1,0 +1,74 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using TrainzInfo.Data;
+
+namespace TrainzInfo.Controllers
+{
+    [Route("api/ApiController")]
+    public class ApiController : Controller
+    {
+        private readonly ApplicationContext _context;
+        public ApiController(ApplicationContext context)
+        {
+            _context = context;
+        }
+
+        [Produces("application/json")]
+        [HttpGet("cities")]
+        public async Task<IActionResult> GetCities()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                var names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+
+                return Ok(names);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("oblasts")]
+        public async Task<IActionResult> GetOblasts()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                var names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+
+                return Ok(names);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp);
+                return BadRequest();
+            }
+        }
+
+        [Produces("application/json")]
+        [HttpGet("stations")]
+        public async Task<IActionResult> GetStations()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                var names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+
+                return Ok(names);
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp);
+                return BadRequest();
+            }
+        }
+    }
+}
