@@ -88,5 +88,22 @@ namespace TrainzInfo.Controllers
                 return BadRequest();
             }
         }
+
+        [Produces("application/json")]
+        [HttpGet("electrics")]
+        public async Task<IActionResult> GetElectricsSeries()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                List<string> strings = await _context.Electrics.Where(x => x.Name.Contains(term)).Select(x=>x.Name).ToListAsync();
+                return Ok(strings.Distinct());
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                return BadRequest();
+            }
+        }
     }
 }

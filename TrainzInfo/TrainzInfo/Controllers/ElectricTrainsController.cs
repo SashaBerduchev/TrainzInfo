@@ -37,16 +37,12 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<string> depot = new List<string>();
-            List<string> cities = new List<string>();
-            depot.Add("");
-            depot.Add("");
-            List<DepotList> depotLists = await _context.Depots.ToListAsync();
-            depot.AddRange(depotLists.Select(x => x.Name).Distinct());
+            List<string> depotnames = new List<string>();
+            List<DepotList> depots = await _context.Depots.Where(x=>x.Name.Contains("РПЧ")).ToListAsync();
             List<City> city = await _context.Cities.ToListAsync();
-            cities.AddRange(city.Select(x => x.Name).Distinct());
-            ViewBag.depots = new SelectList(depot);
-            ViewBag.cities = new SelectList(cities);
+            depotnames.Add("");
+            depotnames.AddRange(depots.Select(x => x.Name).Distinct());
+            ViewBag.depots = new SelectList(depotnames);
             List<ElectricTrain> electricks = await _context.Electrics.Where(x => x.IsProof == true.ToString()).ToListAsync();
             return View(electricks);
         }
