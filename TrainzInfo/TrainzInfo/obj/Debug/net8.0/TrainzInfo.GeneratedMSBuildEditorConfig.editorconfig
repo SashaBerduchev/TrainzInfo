@@ -54,26 +54,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0aWVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Clients/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Clients/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Clients/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xEZXRhaWxzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Clients/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Clients/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/DepotLists/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVwb3RMaXN0c1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -448,46 +428,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Oblasts/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2JsYXN0c1xJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarriegesInfoes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllZ2VzSW5mb2VzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarriegesInfoes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllZ2VzSW5mb2VzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarriegesInfoes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllZ2VzSW5mb2VzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarriegesInfoes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllZ2VzSW5mb2VzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarriegesInfoes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllZ2VzSW5mb2VzXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarrieres/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllcmVzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarrieres/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllcmVzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarrieres/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllcmVzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarrieres/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllcmVzXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/PassangerCarrieres/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFzc2FuZ2VyQ2FycmllcmVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sasha/Source/Repos/TrainzInfo/TrainzInfo/TrainzInfo/Views/Plants/Create.cshtml]
