@@ -25,17 +25,26 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: DieselTrains
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? TrainsModel)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            List<DieselTrains> diesel = new List<DieselTrains>();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
             List<DepotList> depotLists = await _context.Depots.ToListAsync();
             List<SuburbanTrainsInfo> suburbanTrains = await _context.SuburbanTrainsInfos.ToListAsync();
-            return View(await _context.DieselTrains.ToListAsync());
+            if(TrainsModel != null)
+            {
+                diesel = await _context.DieselTrains.Where(x => x.SuburbanTrainsInfo.Model.Contains(TrainsModel)).ToListAsync();
+            }
+            else
+            {
+                diesel = await _context.DieselTrains.ToListAsync();
+            }
+            return View(diesel);
         }
 
         public async Task<IActionResult> IndexDepot(int? id)

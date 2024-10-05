@@ -10,9 +10,13 @@
 {
     @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
     {
-        <a style="btn btn-info" asp-action="Create">Створити</a>
+        <a class="btn btn-info" asp-action="Create">Створити</a>
     }
 }
+<form method="get">
+    <input type="text" class="form-control" id="trainsmodel" name="TrainsModel"/>
+    <input type="submit" value="Відобразити" class="btn btn-info" />
+</form>
 
 @foreach (var item in Model)
 {
