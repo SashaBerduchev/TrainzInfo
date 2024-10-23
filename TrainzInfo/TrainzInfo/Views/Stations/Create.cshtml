@@ -12,7 +12,6 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                @*<label asp-for="Name" class="control-label"></label>*@
                 @Html.DisplayName("Назва станції")
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
@@ -21,7 +20,6 @@
                 @Html.DisplayName("Місто")
                 <input type="text" id="cities" asp-for="City" placeholder="Почніть вводити назву міста" class="form-control" />
                 <span asp-validation-for="City" class="text-danger"></span>
-                
             </div>
             <div class="form-group">
                 @Html.DisplayName("Філія залізниці")

@@ -1,12 +1,12 @@
 ﻿@model TrainzInfo.Models.StationInfo
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Додати інформацію про станцію";
 }
 
-<h1>Create</h1>
+<h1>Додати інформацію про станцію</h1>
 
-<h4>StationInfo</h4>
+<h4>Інформація про станцію</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,7 +20,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 @Html.DisplayName("Станция")
-                @Html.DropDownList("Name", ViewBag.stations as SelectList)
+                <input type="text" id="cities" asp-for="Name" placeholder="Почніть вводити назву станції" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group" style="width:250px;">
@@ -34,7 +34,7 @@
                 <span asp-validation-for="AllInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -45,7 +45,5 @@
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
 </style>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 

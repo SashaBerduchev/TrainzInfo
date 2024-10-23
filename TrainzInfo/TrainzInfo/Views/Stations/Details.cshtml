@@ -29,8 +29,8 @@
             }
         </div>
         <div>
-            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-280px;"><p>@ViewBag.baseinfo</p></div>
-            <div style="font-size:17px; position:relative; top:-280px; margin:20px; width:700px"><p>@ViewBag.allinfo</p></div>
+            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-200px;"><p>@ViewBag.baseinfo</p></div>
+            <div style="font-size:17px; position:relative; top:-200px; margin:20px; width:700px"><p>@ViewBag.allinfo</p></div>
         </div>
         @if (Model.DopImgSrc != null && Model.DopImgSrc != null && Model.DopImgSrcSec != null && Model.DopImgSrcSec != null && Model.DopImgSrcThd != null && Model.DopImgSrcThd != null)
         {
@@ -48,7 +48,6 @@
         }
 
         <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">Розклад по станції</a>
-
         <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@Model.Name">Інформація</a>
 
     </div>
@@ -60,7 +59,6 @@
             {
                 <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
                 <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Додати інформацію</a>
-                <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-name="@Model.Name">Редагувати інформацію</a>
 
             }
         }

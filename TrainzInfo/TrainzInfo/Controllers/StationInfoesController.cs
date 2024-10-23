@@ -59,7 +59,10 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                Stations stations = await _context.Stations.Where(x=>x.Name.Contains(stationInfo.Name)).FirstOrDefaultAsync();
+                stations.StationInfo = stationInfo;
                 _context.Add(stationInfo);
+                _context.Stations.Update(stations);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Create));
             }

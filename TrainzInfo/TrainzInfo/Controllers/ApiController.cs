@@ -59,7 +59,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> GetStations()
         {
             try
-            {
+           {
                 string term = HttpContext.Request.Query["term"].ToString();
                 List<string> names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
 
@@ -119,7 +119,7 @@ namespace TrainzInfo.Controllers
             catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
-                return BadRequest();
+                return BadRequest(e.Message);
             }
         }
     }
