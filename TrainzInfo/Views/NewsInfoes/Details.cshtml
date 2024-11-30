@@ -1,0 +1,83 @@
+﻿@model TrainzInfo.Models.NewsInfo
+
+@{
+    // ViewData["Title"] = "Details";
+}
+<h1 style="background-color:aliceblue">@Model.NameNews</h1>
+<h2 style="background-color:aliceblue">@Model.Users.Name</h2>
+<head>
+    <meta charset="utf-8">
+    <title>Фон</title>
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</head>
+<div style="background-color:aliceblue">
+    <hr />
+    <div style="position:relative; left:20px">
+        <dl class="row">
+            <dd class="col-sm-10">
+                @*@Html.DisplayFor(model => model.Imgsrc)*@
+                @if (Model.NewsImage == null)
+                {
+                    <img src="@Model.Imgsrc" width="350" height="350">
+                }
+                else
+                {
+                    <img class="img-thumbnail" width="350" height="350"
+                         src="@Url.Action("GetImage", "NewsInfoes",
+                        new { Model.id })" />
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.NameNews)*@
+            </dt>
+            <dd class="col-sm-10" style="        font-size: 25px
+">
+                @Html.DisplayFor(model => model.NameNews)
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.BaseNewsInfo)*@
+            </dt>
+            <dd class="col-sm-10" style="        font-size: 25px
+">
+                @Html.DisplayFor(model => model.BaseNewsInfo)
+            </dd>
+            <dt class="col-sm-2">
+                @*@Html.DisplayNameFor(model => model.NewsInfoAll)*@
+            </dt>
+            <dd class="col-sm-10" style="font-size: 25px">
+                @Html.DisplayFor(model => model.NewsInfoAll)
+            </dd>
+        </dl>
+    </div>
+    @if (ViewBag.user != null)
+    {
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Create" asp-route-id="@Model.id">Коментувати</a>
+        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Коментарі + @Convert.ToString(ViewBag.count)</a>
+    }
+
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+        {
+            if (Model != null)
+            {
+                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model.id">Редагуввати информацию</a>
+                <a class="btn btn-outline-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
+            }
+            else
+            {
+                <meta http-equiv="refresh" content="900">
+            }
+        }
+    }
+</div>
+<style>
+        row {
+            background: #c7b39b url(@Model.Imgsrc); /* Цвет фона и путь к файлу */
+            color: #fff; /* Цвет текста */
+        }
+</style>

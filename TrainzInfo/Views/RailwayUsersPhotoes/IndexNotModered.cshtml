@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TrainzInfo.Models.RailwayUsersPhoto>
+
+@{
+    ViewData["Title"] = "Фото от пользователей";
+}
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</head>
+<body>
+    <p>
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+            {
+                <a class="btn btn-dark" asp-action="Create">Добавить</a>
+            }
+        }
+    </p>
+
+    @foreach (var item in Model)
+    {
+        <div style="margin:15px; padding:10px; background-color:aliceblue">
+            <div>
+                <img class="img-thumbnail" width="350" height="350"
+                     src="@Url.Action("GetImage", "RailwayUsersPhotoes",
+                        new { item.id })" />
+            </div>
+            <div class="row" style="font-size: 20px; position: relative; left: 15px "><p>Автор: </p><a asp-controller="Users" asp-action="Details" asp-route-id="@item.Users"><p>@item.Users.Name</p></a></div>
+
+            <div style="font-size:20px"><p>Станція:</p><p>@item.Stations.Name</p></div>
+            <div style="font-size:20px"><p>Информация о фото:</p><p>@item.Information</p></div>
+            <div>
+                <a class="btn btn-info" asp-controller="RailwayUsersPhotoes" asp-action="Allow" asp-route-id="@item.id">Разрешить</a>
+                <a class="btn btn-danger" asp-controller="RailwayUsersPhotoes" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+
+            </div>
+        </div>
+    }
+</body>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

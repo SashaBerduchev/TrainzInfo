@@ -1,0 +1,113 @@
+﻿@model IEnumerable<TrainzInfo.Models.Train>
+
+@{
+    ViewData["Title"] = "Поїзди";
+}
+
+<h1>Призначені поїзди</h1>
+
+<p>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
+            <a class="btn btn-dark" asp-controller="Trains" asp-action="UpdateInfo">Оновити дані</a>
+
+        }
+    }
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Номер")
+            </th>
+            <th>
+                @Html.DisplayName("Прибуття")
+            </th>
+            <th>
+                @Html.DisplayName("Відправлення")
+            </th>
+            <th>
+                @Html.DisplayName("Тип поїзда")
+            </th>
+            <th>
+                @Html.DisplayName("Назва")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            
+            <tr>
+                <td>
+                    <div style="font-size:22px; color:black" >
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:22px; color:black" >
+                        @Html.DisplayFor(modelItem => item.StationFrom)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:22px; color:black">
+                        @Html.DisplayFor(modelItem => item.StationTo)
+                    </div>
+                </td>
+                <td>
+                    @if (item.TypeOfPassTrain != null){
+                    <div style="font-size:22px; color:black; width: 120px">
+                        @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
+                    </div>
+                    }
+                </td>
+                <td>
+                    <div style="font-size:22px">
+                        @Html.DisplayFor(modelItem => item.NameOfTrain)
+                    </div>
+                </td>
+                <td>
+                    @if(item.TrainsShadules != null)
+                    {
+                        <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
+                    }
+                    
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin")
+                        {
+                            <a class="btn btn-success"  asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            @*<a class="btn btn" asp-action="Details" asp-route-id="@item.id">Details</a>*@
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                            <a class="btn btn-outline-danger" asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">Додати зупинку розкладу</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<style type="text/css">
+    td {
+        background-color: aliceblue; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 800px;
+        color: cornflowerblue;
+        text-decoration: solid;
+    }
+</style>
+

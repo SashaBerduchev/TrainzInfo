@@ -1,0 +1,72 @@
+﻿@model TrainzInfo.Models.Stations
+
+@{
+    ViewData["Title"] = "Станція";
+}
+<meta property="og:image" content="@Url.Action("GetImage", "Stations",  new { Model.id })" />
+<h1>@Model.Name</h1>
+
+<div>
+    <h4>Інформація</h4>
+    <hr />
+
+    <div style="background-color:aliceblue;">
+        <div style="margin:20px; position:relative; left:430px; top:40px; font-size:20px">
+            <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(model => model.City)</div>
+            <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(model => model.Railway)</div>
+            <div>@Html.DisplayName("Область: ") @Html.DisplayFor(model => model.Oblast)</div>
+        </div>
+        <div style="position:relative; top:-70px; margin:20px;">
+            @if (Model.Image == null)
+            {
+                <img src="@Model.Imgsrc" width="350" height="350">
+            }
+            else
+            {
+                <img class="img-thumbnail" width="350" height="250"
+                     src="@Url.Action("GetImageDetails", "Stations",
+                        new { Model.id })" />
+            }
+        </div>
+        <div>
+            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-200px;"><p>@ViewBag.baseinfo</p></div>
+            <div style="font-size:17px; position:relative; top:-200px; margin:20px; width:700px"><p>@ViewBag.allinfo</p></div>
+        </div>
+        @if (Model.DopImgSrc != null && Model.DopImgSrc != null && Model.DopImgSrcSec != null && Model.DopImgSrcSec != null && Model.DopImgSrcThd != null && Model.DopImgSrcThd != null)
+        {
+            <div style="position:relative; left:720px; top:-1750px; margin:5px; background-color:cadetblue; width:380px; height:970px">
+                <div style="margin:15px; position:relative; top:10px;">
+                    <img src="@Model.DopImgSrc" width="350" height="300">
+                </div>
+                <div style="margin:15px; position:relative; top:10px;">
+                    <img src="@Model.DopImgSrcSec" width="350" height="300">
+                </div>
+                <div style="margin:15px; position:relative; top:10px;">
+                    <img src="@Model.DopImgSrcThd" width="350" height="300">
+                </div>
+            </div>
+        }
+
+        <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">Розклад по станції</a>
+        <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@Model.Name">Інформація</a>
+
+    </div>
+
+    <div>
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
+                <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Додати інформацію</a>
+
+            }
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

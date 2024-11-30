@@ -1,0 +1,55 @@
+﻿@model TrainzInfo.Models.Users
+
+@{
+    ViewData["Title"] = "Редагувати";
+}
+>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                @Html.DisplayName("Ім'я")
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Вік")
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Пошта")>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            @if (ViewBag.user != null)
+            {
+                if (ViewBag.user.Role == "Superadmin")
+                {
+                    <div class="form-group">
+                        @Html.DisplayName("Рoль")
+                        @Html.DropDownList("Role", ViewBag.roles as SelectList, htmlAttributes: new { @class = "form-control" })
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                }
+            }
+            @*<div class="form-group">
+            @Html.DisplayName("Роль")
+            @Html.DropDownList("Role", ViewBag.roles as SelectList);
+        </div>*@
+            <div class="form-group">
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

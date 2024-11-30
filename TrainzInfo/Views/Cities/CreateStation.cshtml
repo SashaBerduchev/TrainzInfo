@@ -1,0 +1,7 @@
+﻿<form asp-controller="Cities" asp-action="CreateStationsDone" method="post" enctype="multipart/form-data">
+    <div class="form-inline">
+        @Html.DropDownList("Olast", ViewBag.obl as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Filia", ViewBag.filia as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Створити" class="btn btn-info" />
+    </div>
+</form>

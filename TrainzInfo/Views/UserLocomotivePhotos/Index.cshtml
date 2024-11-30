@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TrainzInfo.Models.UserLocomotivePhotos>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "IndexAll";
+}
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
+    {
+        <a class="btn btn-info" asp-action="Create">Добавить Ваше фото</a>
+    }
+}
+
+@foreach (var item in Model)
+{
+<div style="padding:20px; margin:20px; background-color:aliceblue">
+    <div>
+        <img class="img-thumbnail" width="350" height="250"
+             src="@Url.Action("GetImage", "UserLocomotivePhotos",
+                        new { item.Id })" />
+    </div>
+    <div style="font-size:25px">
+        <div><p>Электровоз: @item.NameLocomotive</p></div>
+    </div>
+    <div style="font-size:20px"><p>@item.BaseInfo</p></div>
+    <div>
+        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Информация</a>
+        @if (ViewBag.user != null)
+        {
+            if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
+            {
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редагуввати</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            }
+        }
+    </div>
+</div>
+}
+
+<style>
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

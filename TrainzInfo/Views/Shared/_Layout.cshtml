@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta property="og:url" content="https://trainzinfo.com.ua">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:site_name" content="trainzinfo" />
+    <meta property="og:title" content="TrainzInfo">
+    <meta property="og:description" content="Залізничний сайт">
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrainzInfo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <link rel="shortcut icon" href="/image/оо-300x197.ico" type="image/x-icon">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="img-thumbnail" width="200" height="200"
+                         src="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})" />
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="navbar-nav">
+
+                            @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+                            @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
+                            <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
+                            <a id="btn" class="btn btn-primary text-white" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
+                            @* <a id="btn" class="btn btn-primary text-white" asp-controller="UkrainsRailways" asp-action="RollingStoneInfo">Рухомий склад</a> *@
+                            @*<a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>*@
+                            @if (ViewBag.user != null)
+                            {
+                                <div style="font-size:35px; color:cornflowerblue">
+                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">@Html.DisplayName(ViewBag.user.Name)</a>
+                                </div>
+                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Вийти</a>
+
+                            }
+                            else
+                            {
+                                <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вхід</a>
+                                <a id="btn3" class="btn btn-outline-primary" style="width:120px" asp-area="" asp-controller="Users" asp-action="Create">Реєстрація</a>
+                            }
+                            @*@if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
+                                {
+                                    if (Model[0] is NewsInfo && Model[0].user == null)
+                                    {
+                                        <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вход</a>
+                                        <a id="btn3" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
+                                    }
+                                    else if (Model[0] is NewsInfo)
+                                    {
+                                        @Html.DisplayName(Model[0].user)
+                                        <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Delete" asp-route-name="@Model[0].user">Выйти</a>
+                                    }
+
+                                }*@
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
+            <li><a asp-area="" asp-controller="Create" asp-action="Create">Users</a></li>
+            <li><a asp-area="" asp-controller="Delete" asp-action="Delete">Users</a></li>
+        </ul>
+    </div>
+    @*<footer style="top: 4800px;" class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - TrainzInfo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+        <div class="container">
+            <a asp-controller="Clients" asp-action="Index">Клиент</a>
+            &copy; 2020 - TrainzInfo - <a> Version 2.5</a>
+        </div>
+    </footer>*@
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/ApiScript.js"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/StartJS.js"></script>*@
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
+<style>
+    #btn {
+        width: 240px;
+        height: 40px;
+        margin: 7px;
+    }
+
+    #btn1 {
+        width: 130px;
+        height: 40px;
+        margin: 7px;
+    }
+
+    #btn2 {
+        width: 80px;
+        height: 40px;
+        margin: 7px;
+    }
+
+    #btn3 {
+        width: 110px;
+        height: 40px;
+        margin: 7px;
+    }
+</style>

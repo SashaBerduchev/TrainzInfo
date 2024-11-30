@@ -1,0 +1,119 @@
+﻿@model IEnumerable<TrainzInfo.Models.TrainsShadule>
+
+@{
+    ViewData["Title"] = "Розклад поїздів";
+}
+
+
+<meta name="viewport" content="width=device-width" />
+<title>Index</title>
+
+
+<p>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
+            <a class="btn btn-dark" asp-action="UpdateInfo" asp-route-numbertr="@ViewBag.traininfo.Number">Оновити дані</a>
+        }
+    }
+
+</p>
+<H2 style="font-weight:bold">Поїзд номер "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Назва станції")
+            </th>
+            <th>
+                @Html.DisplayName("Час прибуття")
+            </th>
+            <th>
+                @Html.DisplayName("Час відправлення")
+            </th>
+            <th>
+                @Html.DisplayName("Відстань")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div style="font-size:25px">
+                        @if (item.Stations is not null)
+                        {
+                            <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.Stations.Name">@Html.DisplayFor(modelItem => item.NameStation)</a>
+                        }else{
+                            @Html.DisplayFor(modelItem => item.NameStation)
+                        }
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px" ; color:black>
+                        @Html.DisplayFor(modelItem => item.Arrival.TimeOfDay)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px" ; color:black>
+                        @Html.DisplayFor(modelItem => item.Departure.TimeOfDay)
+                    </div>
+                </td>
+                <td>
+                    <div style="font-size:20px" ; color:black>
+                        @Html.DisplayFor(modelItem => item.Distance)
+                    </div>
+                </td>
+
+                <td>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin")
+                        {
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                        }
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (null != TempData["alertMessage"])
+{
+    <script type="text/javascript">
+        alert("@TempData["alertMessage"]");
+    </script>
+}
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<style type="text/css">
+    td {
+        background-color: aliceblue; /* Цвет фона */
+        position: relative;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: cornflowerblue;
+        text-decoration: solid;
+    }
+
+    tr {
+        display: table-row;
+        vertical-align: inherit;
+        unicode-bidi: isolate;
+        border-color: inherit;
+        margin: 25px;
+        padding: 15px;
+    }
+</style>

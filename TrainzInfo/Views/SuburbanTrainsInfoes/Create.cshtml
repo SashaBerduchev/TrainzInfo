@@ -1,0 +1,44 @@
+﻿@model TrainzInfo.Models.SuburbanTrainsInfo
+
+@{
+    ViewData["Title"] = "Моделі приміських поїздів";
+}
+
+<h1>Створити</h1>
+
+<h4>Модель приміського поїзда</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.DisplayName("Модель")
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Общая информация")
+                <textarea style="width:800px; height:500px" asp-for="BaseInfo" class="form-control" ></textarea>
+                <span asp-validation-for="BaseInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Подробная информация")
+                <textarea style="width:800px; height:500px" asp-for="AllInfo" class="form-control"></textarea>
+                <span asp-validation-for="AllInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

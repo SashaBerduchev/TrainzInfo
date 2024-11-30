@@ -1,0 +1,13 @@
+﻿@model TrainzInfo.Models.MetroStation
+
+<form asp-controller="MetroStations" asp-action="AddImage" method="post" enctype="multipart/form-data">
+    <input asp-for="id" readonly class="control-label"></input>
+    <input asp-for="Name" readonly class="control-label"></input>
+    <input type="file" name="uploads" /><br>
+    <input type="submit" value="Зберегти" class="btn btn-primary" />
+</form>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

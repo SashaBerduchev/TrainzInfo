@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TrainzInfo.Models.City>
+
+@{
+    ViewData["Title"] = "Міста";
+}
+
+<h1>Міста</h1>
+
+<p>
+    <a class="btn btn-info" asp-action="Create">Додати місто</a>
+    <a class="btn btn-dark" asp-action="AddExcelView">Імпорт</a>
+    <a class="btn btn-info" asp-action="Update">Update</a>
+    <a class="btn btn-info" asp-action="CreateStation">Створити станцію</a>
+    <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
+</p>
+<form method="get">
+    <div class="form-inline">
+        @Html.DropDownList("oblast", ViewBag.obl as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Відобразити" class="btn btn-info" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Oblast)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsStationExist)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if(item.Oblasts !=null){
+                        @Html.DisplayFor(modelItem => item.Oblasts.Name)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Region)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsStationExist)
+                </td>
+                <td>
+                    
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

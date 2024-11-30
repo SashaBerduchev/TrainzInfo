@@ -1,0 +1,41 @@
+﻿@model TrainzInfo.Models.RailwayUsersPhoto
+
+@{
+    ViewData["Title"] = "Редагуввати раздел";
+}
+
+<body>
+
+    <h4>@ViewBag.user.Name</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    @Html.DisplayName("Вибрати станцію")
+                    @Html.DropDownList("Stations", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+                    <span asp-validation-for="Stations" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.DisplayName("Загальна інформація")
+                    <textarea style="width:700px; height:400px" asp-for="Information" class="form-control"></textarea>
+                    <span asp-validation-for="Information" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Зберегти" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
+    </div>
+
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</body>

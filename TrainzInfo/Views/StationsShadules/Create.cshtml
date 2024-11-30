@@ -1,0 +1,62 @@
+﻿@model TrainzInfo.Models.StationsShadule
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Добавить</h1>
+
+
+<hr />
+<a class="btn" asp-controller="StationsShadules" asp-action="Create">Обновить</a>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.DisplayName("Станція")
+                @Html.DropDownList("Station", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+                <span asp-validation-for="Station" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Філія")
+                @Html.DropDownList("UzFilia", ViewBag.uz as SelectList, htmlAttributes: new { @class = "form-control" })
+                <span asp-validation-for="UzFilia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Час прибуття")
+                <input asp-for="TimeOfArrive" class="form-control" />
+                <span asp-validation-for="TimeOfArrive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Час відправлення")
+                <input asp-for="TimeOfDepet" class="form-control" />
+                <span asp-validation-for="TimeOfDepet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Поїзд")
+                @Html.DropDownList("TrainInfo", ViewBag.trainz as SelectList, htmlAttributes: new { @class = "form-control" })
+                <a target="_blank" class="btn btn-success" asp-controller="Trains" asp-action="Create">Добавить поезд</a>
+                <span asp-validation-for="NumberTrain" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                @Html.DisplayName("Возможное фото поезда при желании")
+                <input asp-for="ImgTrain" class="form-control" />
+                <span asp-validation-for="ImgTrain" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<TrainzInfo.Models.Stations>
+
+@{
+    ViewData["Title"] = "Станції";
+}
+
+<h1>Станції</h1>
+<h2>@Html.DisplayName(ViewBag.Filia)</h2>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <b>Колличество записей: @Model.Count().ToString()</b>
+        <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a>
+        <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
+    }
+}
+<p>
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-dark" asp-action="Create">Додати</a>
+            <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
+        }
+    }
+</p>
+
+<form method="get">
+    <div class="form-inline" style="position:relative; width:90%">
+        <input type="hidden" name="filialsName" value="@ViewBag.Filia" />
+        @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="text" name="NameStation" id="stations" class="form-control"></input>
+        <input type="submit" value="Відобразити" class="btn btn-info" />
+    </div>
+</form>
+<div>
+    @foreach (var item in Model)
+    {
+        <div style="background-color:aliceblue; margin:20px; height:430px;">
+            <div style="margin:20px; position:relative; top:20px">
+                <div class="img">
+                    <img class="img-thumbnail" width="350" height="250"
+                         src="@Url.Action("GetImage", "Stations",
+                        new { item.id })" />
+                </div>
+            </div>
+            <div style="position:relative; left:400px; top:-230px; font-size:25px">
+                <div>@Html.DisplayName("Назва станції: ") @Html.DisplayFor(modelItem => item.Name)</div>
+                @if (item.Oblasts != null)
+                {
+                    <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblasts.Name)</div>
+                    <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.Citys.Name)</div>
+                    <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelItem => item.UkrainsRailways.Name)</div>
+                }
+            </div>
+            <div style="position:relative;top:-140px">
+                <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>
+
+                <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@item.Name">Інформація</a>
+                @if (item.railwayUsersPhotos != null)
+                {
+                    <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@item.id">Фотографії користувачів</a>
+                }
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                    {
+                        <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@item.id">Дадати зображення</a>
+                        <a class="btn btn-danger margin:5px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

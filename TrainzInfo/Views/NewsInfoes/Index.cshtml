@@ -1,0 +1,66 @@
+﻿@model IEnumerable<TrainzInfo.Models.NewsInfo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Новости</h1>
+
+<head>
+    <meta charset="utf-8">
+    <title>Фон</title>
+    <style>
+        body {
+            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+        }
+    </style>
+</head>
+<p>
+    <a asp-action="Create">Створити новую новость</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameNews)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BaseNewsInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsInfoAll)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    if (item.NameNews != "")
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameNews)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BaseNewsInfo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewsInfoAll)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                <a class="btn btn-outline-info" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@item.id">Добавить картинку</a>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+        }
+}
+    </tbody>
+</table>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TrainzInfo.Models.UserTrainzPhoto>
+
+@{
+    ViewData["Title"] = "Фото поездов от пользователей";
+}
+
+<h1>Поезда</h1>
+
+<p>
+    <a class="btn btn-outline-info" asp-action="Create">Добавить</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Фото")
+            </th>
+            <th>
+                @Html.DisplayName("Имя")
+            </th>
+            <th>
+                @Html.DisplayName("Емеил")
+            </th>
+            <th>
+                @Html.DisplayName("Маршрут")
+            </th>
+            <th>
+                @Html.DisplayName("Тип поезда")
+            </th>
+            <th>
+                @Html.DisplayName("Краткие сведения")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BaseInfo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

@@ -1,0 +1,20 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model TrainzInfo.Models.UserLocomotivePhotos
+
+    <form asp-controller="UserLocomotivePhotos" asp-action="AddImage" method="post" enctype="multipart/form-data">
+        <input asp-for="Id" readonly class="control-label"></input>
+        <input asp-for="NameLocomotive" readonly class="control-label"></input>
+        
+        <input type="file" name="uploads" /><br>
+        <input type="submit" value="Зберегти" class="btn btn-primary" />
+    </form>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

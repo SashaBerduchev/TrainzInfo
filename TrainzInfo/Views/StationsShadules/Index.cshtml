@@ -1,0 +1,74 @@
+﻿@model IEnumerable<TrainzInfo.Models.StationsShadule>
+
+@{
+    ViewData["Title"] = "Розклад по станції";
+}
+
+
+<h1>Розклад по станції @ViewBag.station</h1>
+
+<p>
+   @* @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+        {
+            <a class="btn btn-primary" asp-action="Create">Добавить</a>
+            
+        }
+    }*@
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Номер")
+            </th>
+            <th>
+                @Html.DisplayName("Час прибуття")
+            </th>
+            <th>
+                @Html.DisplayName("Час відправлення")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeOfArrive.TimeOfDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeOfDepet.TimeOfDay)
+                </td>
+                
+                <!--<td>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |-->
+                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
+                    <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                </td>-->
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+<style type="text/css">
+    td {
+        background-color: aliceblue; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: cornflowerblue;
+        text-decoration: solid;
+    }
+</style>

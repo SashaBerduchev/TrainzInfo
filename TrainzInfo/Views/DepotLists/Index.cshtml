@@ -1,0 +1,97 @@
+﻿@model IEnumerable<TrainzInfo.Models.DepotList>
+
+@{
+    ViewData["Title"] = "Список депо";
+}
+
+<h1>Список депо</h1>
+<H2>@Html.DisplayName(ViewBag.Filia)</H2>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+    {
+        <p>
+            <a class="btn btn-info" asp-action="Create">Додати</a>
+            <a class="btn btn-info" asp-action="UpdateForce">Націоналізувати</a>
+        </p>
+    }
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Назва")
+            </th>
+            <th>
+                @Html.DisplayName("Філія")
+            </th>
+            <th>
+                @Html.DisplayName("Станція")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.City != null)
+                    {
+                        <p>@item.Name @item.City.Name</p> 
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UkrainsRailway.Name)
+                </td>
+                <td>
+                    @if (item.City != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.City.Name)
+                    }
+                    
+                </td>
+                <td>
+                    @if (ViewBag.user != null)
+                    {
+                        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+                        {
+                            <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                        }
+                    }
+                    @if (item.Locomotives != null)
+                    {
+                        <a class="btn btn-info" asp-controller="Locomotive" asp-action="IndexDepot" asp-route-id="@item.id">Локомотиви</a>
+                    }else if (item.ElectricTrains != null)
+                    {
+                        <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="IndexDepot" asp-route-id="@item.id">Електрички</a>
+                    }else if(item.DieselTrains != null)
+                    {
+                        <a class="btn btn-info" asp-controller="DieselTrains" asp-action="IndexDepot" asp-route-id="@item.id">Дизель-поїзди</a>
+                    }
+                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
+                    @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+
+</style>
+<style type="text/css">
+    td {
+        background: #fff; /* Цвет фона */
+        padding: 5px; /* Поля в ячейках */
+        opacity: 0.8; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width 700;
+        color: black;
+        text-decoration: solid;
+    }
+</style>

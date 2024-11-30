@@ -1,0 +1,100 @@
+﻿@model IEnumerable<TrainzInfo.Models.Users>
+
+@{
+    ViewData["Title"] = "Крристувачі";
+}
+
+<h1>Користувачі</h1>
+
+<p>
+    @* <a asp-action="Create">Create New</a> *@
+</p>
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <table class="table" style="background-color:aliceblue">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Age)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Role)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IpAddress)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Age)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Role)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IpAddress)
+                        </td>
+                        <td>
+                            <div class="img">
+                                @if (item.Image == null)
+                                {
+                                    <p>Нет картинки</p>
+                                }
+                                else
+                                {
+                                    <img class="img-thumbnail" width="350" height="350"
+                                         src="@Url.Action("GetImage", "Users",
+                            new { item.Id })" />
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            @if (ViewBag.user != null)
+                            {
+                                if (ViewBag.user.Role == "Superadmin")
+                                {
+                                    <a class="btn btn-success" asp-action="ChangeRole" asp-route-id="@item.Id">Изменить роль</a>
+                                }
+                            }
+
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Изменить</a>
+                            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Информация</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

@@ -1,0 +1,57 @@
+﻿@model TrainzInfo.Models.MetroLines
+
+@{
+    ViewData["Title"] = "Линия метро";
+}
+
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    
+</head>
+<body>
+
+<div>
+    <h4>@Model.NameLine</h4>
+    <hr />
+    <dl class="row" style="font-size:25px;">
+        <dt class = "col-sm-2" >
+            @Html.DisplayName("Назва метро")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Metro)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("Назва линии")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NameLine)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("колличество станций")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CountStation)
+        </dd>
+        <dd>
+            <img class="img-thumbnail" width="750" height="650"
+                 src="@Url.Action("GetImage", "MetroLines",
+                        new { Model.id })" />
+        </dd>
+    </dl>
+    <a class="btn btn-info" asp-controller="MetroStations" asp-action="Index" asp-route-metro="@Model.Metro" asp-route-line="@Model.NameLine">Станции</a>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

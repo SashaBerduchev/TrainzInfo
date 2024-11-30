@@ -1,0 +1,38 @@
+﻿@model TrainzInfo.Models.UkrainsRailways
+
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<h1>@Model.Name</h1>
+<div style="position:center">
+    <a class="btn btn-info" asp-controller="DepotLists" asp-action="Index" asp-route-uzname="@Model.id">Список депо</a>
+    <a class="btn btn-success" asp-controller="Stations" asp-action="Index" asp-route-filialsName="@Model.Name">Список всіх станцій</a>
+    @* <a class="btn btn-success" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a> *@
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-success" asp-controller="Stations" asp-action="IndexAll">Список всіх абсолютно станцій</a>
+            <a class="btn btn-info" asp-action="AddImageForm" asp-route-name="@Model.Name">Додати зображення</a>
+        }
+    }
+</div>
+<div style="background-color:aliceblue">
+    <img class="img-thumbnail" width="350" height="250"
+         src="@Url.Action("GetImageDetails", "UkrainsRailways",
+                        new { Model.id })" />
+    <div style="margin:20px; font-size:25px;">
+        <div><b>@Html.DisplayName("Назав: ")</b>   @Html.DisplayFor(model => model.Name)</div>
+        <div><b>@Html.DisplayName("Інформація: ")</b> @Html.DisplayFor(model => model.Information)</div>
+    </div>
+</div>
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div*@>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

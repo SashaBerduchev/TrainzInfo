@@ -1,0 +1,70 @@
+﻿@model TrainzInfo.Models.Locomotive
+
+@{
+    ViewData["Title"] = "Локомотив";
+}
+
+<h1>@Model.Seria</h1>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+
+    <div>
+
+        <hr />
+
+        <div style="background-color:aliceblue">
+            <div class="img">
+
+                <img class="img-thumbnail" width="350" height="250"
+                     src="@Url.Action("GetImage", "Locomotive",
+                        new { Model.id })" />
+            </div>
+            <div style="position:relative; left:540px; top:-200px; font-size:25px; background-color:lightblue; width:400px">
+                <div>@Html.DisplayName("Електровоз: ") @Html.DisplayName(Model.Seria + " - " + Model.Number)</div>
+                <div>@Html.DisplayName("Макимальна швидкість: ") @Html.DisplayName(Model.Speed.ToString())</div>
+                <div>
+                    @Html.DisplayName("Депо: ")  @Html.DisplayFor(model => model.Depot)
+                    <a class="btn btn-success" asp-controller="ListRollingStones" asp-action="IndexDepot" asp-route-depotname="@Model.Depot">Перейти в депо</a>
+                </div>
+                @* <div>@Html.DisplayName("Пользователь: ") @Html.DisplayName(Model.User)</div> *@
+            </div>
+        </div>
+        <div style="position:relative; left:650px; top:-100px;">
+            @if (ViewBag.user != null)
+            {
+                if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+                {
+                    <a class="btn btn-info" target="_blank" style="width:350px" asp-controller="Electrick_Lockomotive_Info" asp-action="Edit" asp-route-idname="@Model.Seria">Редагувати додаткову інформацію @Model.Seria</a>
+                }
+            }
+
+        </div>
+        <div style="position:relative; left:250px; top:-780px; width:400px; font-size:20px;">
+            <p>@ViewBag.base_info</p>
+        </div>
+        <div style="position:relative; top:-150px">
+            <p>@ViewBag.allinfo</p>
+        </div>
+    </div>
+
+    @if (ViewBag.user != null)
+    {
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редагуати</a>
+            <a class="btn btn-success" asp-action="AddImageForm" asp-route-id="@Model.id">Додати зображення</a>
+
+        }
+    }
+</body>
+</html>
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

@@ -1,0 +1,58 @@
+﻿@model TrainzInfo.Models.ElectricTrain
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <hr />
+
+    <div style="background-color:aliceblue;">
+        <div style="margin:20px">
+        <img class="img-thumbnail" width="450" height="450"
+                     src="@Url.Action("GetImage", "ElectricTrains",
+                        new { Model.id })" />
+        </div>
+        <div style="position:relative; left:540px; top:-270px; font-size:25px; background-color:aliceblue; width:400px">
+            <div>@Html.DisplayName("Назва: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</div>
+            <div>@Html.DisplayName("Кількість вагонів: ") @Html.DisplayName(Model.VagonsCountP)</div>
+            <div>@Html.DisplayName("Максимальна швидкість: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
+            <div>@Html.DisplayName("Місто прописки: ") @Html.DisplayName(Model.City.Name)</div>
+            <div>@Html.DisplayName("Депо прописки: ") @Html.DisplayName(Model.DepotList.Name)</div>
+            <div>@Html.DisplayName("Побудовано: ") @Html.DisplayName(Model.Created.Year.ToString())</div>
+            <div style="width:450px">@Html.DisplayName("Завод постройки") @Html.DisplayName(Model.Plant)</div>
+            <div>@Html.DisplayName("Останній КВР: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
+            <div style="width:450px">@Html.DisplayName("Завод який провів КВР: ") @Html.DisplayName(Model.PlaceKvr)</div>
+           @*  <div style="width:450px">@Html.DisplayName("Имя пользователя: ") @Html.DisplayName(Model.User)</div> *@
+            <div style="position:relative; left:-470px; top:50px; font-size:22px; width:1000px;">
+                <div><p>@ViewBag.baseinfo</p></div>
+                <div><p>@ViewBag.allinfo</p></div>
+            </div>
+        </div>
+    </div>
+    <div style="margin:20px;">
+        @if (ViewBag.user != null)
+        {
+            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            {
+                <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
+                <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Изменить общую информацию о поезде</a>
+                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагуввати данные о поезде </a>
+
+            }
+        }
+
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
+

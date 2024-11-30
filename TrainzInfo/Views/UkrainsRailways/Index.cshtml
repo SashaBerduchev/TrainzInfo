@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TrainzInfo.Models.UkrainsRailways>
+
+@{
+    ViewData["Title"] = "Філії";
+}
+
+<h1>Філії Української залізниці</h1>
+
+
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin")
+    {
+        <a class="btn btn-info" asp-action="Create">Добавить филию</a>
+        <a class="btn btn-info" asp-action="UpdateIndex">Оновити дані</a>
+
+    }
+}
+<div style="background-color:aliceblue">
+    @foreach (var item in Model)
+    {
+        <div style="width:90%">
+            <a class="btn btn-info btn-filia" style="width:100%; margin:10px" asp-action="Details" asp-route-id="@item.id">
+                <div>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </div>
+            </a>
+            <div>
+
+                @if (ViewBag.user != null)
+                {
+                    if (ViewBag.user.Role == "Superadmin")
+                    {
+                        <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+<img class="img-thumbnail" width="900" height="700"
+     src="@Url.Action("GetImage", "MainImages", new { name ="MainMap"})" />
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+
+    td {
+        background: #6a5eff; /* Цвет фона */
+        position: center;
+        padding: 5px; /* Поля в ячейках */
+        opacity: 1.9; /* Полупрозрачность таблицы */
+        filter: alpha(Opacity=50); /* Для IE */
+        width: 700px;
+        color: white;
+        text-decoration: solid;
+    }
+</style>

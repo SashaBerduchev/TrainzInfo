@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@{
+    ViewData["Title"] = "Рухомий склад";
+}
+
+<h1>Рухомий склад</h1>
+
+
+<a id="btn" class="btn btn-primary text-white" asp-controller="Locomotive" asp-action="Index">Локомотиви</a>
+<a id="btn" class="btn btn-primary text-white" asp-controller="ElectricTrains" asp-action="Index">Електрички</a>
+<a id="btn" class="btn btn-primary text-white" asp-controller="DieselTrains" asp-action="Index">Дизель поїзди</a>
+
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
