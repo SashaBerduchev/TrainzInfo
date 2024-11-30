@@ -30,7 +30,7 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             ViewBag.station = station;
-            List<StationsShadule> stationsShadule = await _context.StationsShadules.Include(x=>x.UkrainsRailways).Include(x=>x.Train).Include(x=>x.Stations).Where(x => x.Station == station).ToListAsync();
+            List<StationsShadule> stationsShadule = await _context.StationsShadules.Include(x=>x.UkrainsRailways).Include(x=>x.Train).Include(x=>x.Stations).Where(x => x.Station == station).OrderBy(x=>x.TimeOfArrive).ToListAsync();
             return View(stationsShadule);
         }
         public async Task<List<StationsShadule>> IndexAction()

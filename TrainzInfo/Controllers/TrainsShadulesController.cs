@@ -273,10 +273,38 @@ namespace TrainzInfo.Controllers
                     trainsShadule.Train = train;
                     _context.Update(trainsShadule);
                     StationsShadule stationsShadule = stations.StationsShadules.Where(x=>x.NumberTrain == train.Number).FirstOrDefault();
-                    stationsShadule.TimeOfArrive = trainsShadule.Arrival;
-                    stationsShadule.TimeOfDepet = trainsShadule.Departure;
-                    _context.StationsShadules.Update(stationsShadule);
-                    _context.Stations.Update(stations);
+                    if(stationsShadule is null)
+                    {
+                        stationsShadule = new StationsShadule();
+                        stationsShadule.TimeOfArrive = trainsShadule.Arrival;
+                        stationsShadule.TimeOfDepet = trainsShadule.Departure;
+                        stationsShadule.NumberTrain = Convert.ToInt32(trainsShadule.NumberTrain);
+                        stationsShadule.UkrainsRailways = stations.UkrainsRailways;
+                        stationsShadule.UzFilia = stations.UkrainsRailways.Name;
+                        stationsShadule.Station = stations.Name;
+                        stationsShadule.Train = train;
+                        stationsShadule.Stations = stations;
+                        _context.StationsShadules.Add(stationsShadule);
+                        if(stations.StationsShadules is null)
+                        {
+                            stations.StationsShadules = new List<StationsShadule>();
+                        }
+                        stations.StationsShadules.Add(stationsShadule);
+                        _context.Stations.Update(stations);
+                    }
+                    else
+                    {
+                        stationsShadule.TimeOfArrive = trainsShadule.Arrival;
+                        stationsShadule.TimeOfDepet = trainsShadule.Departure;
+                        stationsShadule.NumberTrain = Convert.ToInt32(trainsShadule.NumberTrain);
+                        stationsShadule.UkrainsRailways = stations.UkrainsRailways;
+                        stationsShadule.UzFilia = stations.UkrainsRailways.Name;
+                        stationsShadule.Station = stations.Name;
+                        stationsShadule.Train = train;
+                        stationsShadule.Stations = stations;
+                        _context.StationsShadules.Update(stationsShadule);
+                        _context.Stations.Update(stations);
+                    }
                     await _context.SaveChangesAsync();
                     TempData["TrainNumber"] = train.id;
                 }
