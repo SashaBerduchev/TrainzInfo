@@ -40,10 +40,10 @@
                     <a asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfArrive.TimeOfDay)
+                    @Html.DisplayFor(modelItem => item.TimeOfArrive)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfDepet.TimeOfDay)
+                    @Html.DisplayFor(modelItem => item.TimeOfDepet)
                 </td>
                 
                 <!--<td>

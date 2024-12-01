@@ -197,26 +197,25 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Details/5
         public async Task<IActionResult> Details(string? name)
         {
-            if (name == null || name == "")
-            {
-                return NotFound();
-            }
-
-            var stations = await _context.Stations
-                .FirstOrDefaultAsync(m => m.Name == name);
-            if (stations == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.baseinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.BaseInfo).FirstOrDefault();
-            ViewBag.allinfo = _context.stationInfos.Where(x => x.Name == stations.Name).Select(x => x.AllInfo).FirstOrDefault();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
+            if (name == null || name == "")
+            {
+                return NotFound();
+            }
+
+            var stations = await _context.Stations.Include(x => x.Users).Include(x => x.UkrainsRailways)
+                .Include(x => x.Oblasts).Include(x => x.Citys).Include(x => x.StationInfo)
+                .Include(x => x.railwayUsersPhotos).Where(x => x.Name == name).FirstOrDefaultAsync();
+            if (stations == null)
+            {
+                return NotFound();
+            }
+            
             return View(stations);
         }
 

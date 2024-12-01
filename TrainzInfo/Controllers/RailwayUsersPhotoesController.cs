@@ -35,17 +35,18 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<Stations> stations = await _context.Stations.ToListAsync();
             List<RailwayUsersPhoto> railwayUsersPhoto = new List<RailwayUsersPhoto>();
-            if (id != null)
-            {
-                railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.Stations.id == id).ToListAsync();
-            }
-            else
-            {
-                railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.IsProof == false.ToString()).ToListAsync();
-            }
-            return View(await _context.RailwayUsersPhotos.Where(x=>x.IsProof == true.ToString()).ToListAsync());
+            railwayUsersPhoto = await _context.RailwayUsersPhotos.Include(x=>x.Users).Include(x=>x.Stations)
+                .Where(x => x.Stations.id == id).ToListAsync();
+            //if (id != null)
+            //{
+            //    railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.Stations.id == id).ToListAsync();
+            //}
+            //else
+            //{
+            //    railwayUsersPhoto = await _context.RailwayUsersPhotos.Where(x => x.IsProof == false.ToString()).ToListAsync();
+            //}
+            return View(railwayUsersPhoto);
         }
 
         // GET: RailwayUsersPhotoes/Details/5
@@ -62,7 +63,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var railwayUsersPhoto = await _context.RailwayUsersPhotos
+            var railwayUsersPhoto = await _context.RailwayUsersPhotos.Include(x=>x.Users)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (railwayUsersPhoto == null)
             {

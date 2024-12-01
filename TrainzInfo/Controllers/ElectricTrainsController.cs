@@ -43,7 +43,7 @@ namespace TrainzInfo.Controllers
             depotnames.Add("");
             depotnames.AddRange(depots.Select(x => x.Name).Distinct());
             ViewBag.depots = new SelectList(depotnames);
-            List<ElectricTrain> electricks = await _context.Electrics.Where(x => x.IsProof == true.ToString()).Include(x=>x.City).Include(x=>x.DepotList).ToListAsync();
+            List<ElectricTrain> electricks = await _context.Electrics.Include(x=>x.City).Include(x=>x.DepotList).ToListAsync();
             return View(electricks);
         }
 

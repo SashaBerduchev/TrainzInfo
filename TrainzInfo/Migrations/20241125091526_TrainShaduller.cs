@@ -10,23 +10,23 @@ namespace TrainzInfo.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Stationsid",
-                table: "TrainsShadule",
-                type: "int",
-                nullable: true);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "Stationsid",
+            //    table: "TrainsShadule",
+            //    type: "int",
+            //    nullable: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_TrainsShadule_Stationsid",
-                table: "TrainsShadule",
-                column: "Stationsid");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_TrainsShadule_Stationsid",
+            //    table: "TrainsShadule",
+            //    column: "Stationsid");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_TrainsShadule_Stations_Stationsid",
-                table: "TrainsShadule",
-                column: "Stationsid",
-                principalTable: "Stations",
-                principalColumn: "id");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_TrainsShadule_Stations_Stationsid",
+            //    table: "TrainsShadule",
+            //    column: "Stationsid",
+            //    principalTable: "Stations",
+            //    principalColumn: "id");
         }
 
         /// <inheritdoc />

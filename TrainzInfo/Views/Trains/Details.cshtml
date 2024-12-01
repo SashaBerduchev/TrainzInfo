@@ -62,10 +62,10 @@
                                 <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.NameStation">@Html.DisplayFor(modelitem => item.NameStation)</a>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelitem => item.Departure.TimeOfDay)
+                            @Html.DisplayFor(modelitem => item.Departure)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelitem => item.Arrival.TimeOfDay)
+                            @Html.DisplayFor(modelitem => item.Arrival)
                         </td>
                         <td>
                             @if (ViewBag.user != null)

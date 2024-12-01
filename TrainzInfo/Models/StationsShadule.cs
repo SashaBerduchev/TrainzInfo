@@ -13,8 +13,8 @@ namespace TrainzInfo.Models
         public string Station { get; set; }
         [Required]
         public string UzFilia { get; set; }
-        public DateTime TimeOfArrive { get; set; }
-        public DateTime TimeOfDepet { get; set; }
+        public TimeSpan TimeOfArrive { get; set; }
+        public TimeSpan TimeOfDepet { get; set; }
         [Required]
         public int NumberTrain { get; set; }
         public UkrainsRailways UkrainsRailways { get; set; }

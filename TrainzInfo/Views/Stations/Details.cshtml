@@ -29,8 +29,8 @@
             }
         </div>
         <div>
-            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-200px;"><p>@ViewBag.baseinfo</p></div>
-            <div style="font-size:17px; position:relative; top:-200px; margin:20px; width:700px"><p>@ViewBag.allinfo</p></div>
+            <div style="font-size:17px; width:650px; position:relative; left:450px; top:-200px;"><p>@Model.StationInfo.BaseInfo</p></div>
+            <div style="font-size:17px; position:relative; top:-200px; margin:20px; width:700px"><p>@Model.StationInfo.BaseInfo</p></div>
         </div>
         @if (Model.DopImgSrc != null && Model.DopImgSrc != null && Model.DopImgSrcSec != null && Model.DopImgSrcSec != null && Model.DopImgSrcThd != null && Model.DopImgSrcThd != null)
         {
@@ -48,7 +48,8 @@
         }
 
         <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">Розклад по станції</a>
-        <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@Model.Name">Інформація</a>
+        <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@Model.">Фотографії користувачів</a>
+
 
     </div>
 
