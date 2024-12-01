@@ -76,8 +76,6 @@ namespace TrainzInfo.Controllers
             UkrainsRailways ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).FirstOrDefaultAsync();
             ViewBag.Filia = ukrains.Name;
             List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailway.id == uzname).Include(x => x.UkrainsRailway).Include(x => x.Locomotives).Include(x => x.ElectricTrains).Include(x => x.DieselTrains).Include(x => x.City).ToListAsync();
-            var quear = _context.Depots.Where(x => x.UkrainsRailway.id == uzname).Include(x => x.UkrainsRailway).Include(x => x.Locomotives).Include(x => x.ElectricTrains).Include(x => x.DieselTrains).Include(x=>x.City).ToQueryString();
-            Trace.WriteLine(quear);
             return View(depots);
         }
 

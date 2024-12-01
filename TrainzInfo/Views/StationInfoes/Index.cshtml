@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.AllInfo)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
@@ -45,3 +45,9 @@
 }
     </tbody>
 </table>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>

@@ -24,7 +24,6 @@ namespace TrainzInfo.Controllers
         public CitiesController(ApplicationContext context)
         {
             _context = context;
-            Trace.WriteLine(this);
         }
 
         public IActionResult AddExcelView()

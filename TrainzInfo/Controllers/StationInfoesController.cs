@@ -59,8 +59,12 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
-                Stations stations = await _context.Stations.Where(x=>x.Name.Contains(stationInfo.Name)).FirstOrDefaultAsync();
+
+                Stations stations = await _context.Stations.Include(x => x.Citys)
+                        .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
                 stations.StationInfo = stationInfo;
+                _context.Stations.Update(stations);
                 _context.Add(stationInfo);
                 _context.Stations.Update(stations);
                 await _context.SaveChangesAsync();
@@ -102,6 +106,11 @@ namespace TrainzInfo.Controllers
                 try
                 {
                     _context.Update(stationInfo);
+                    Stations stations = await _context.Stations.Include(x => x.Citys)
+                        .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
+                    stations.StationInfo = stationInfo;
+                    _context.Stations.Update(stations);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
