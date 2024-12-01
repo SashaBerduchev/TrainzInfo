@@ -229,10 +229,7 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<string> citys = new List<string>();
-            citys.Add("");
-            
-            List<string> stations = _context.Stations.Select(x => x.Name).ToList();
+            List<string> stations = await _context.Stations.Select(x => x.Name).ToListAsync();
             string filialsName = "";
             if (TempData["FiliasStation"] != null)
             {
@@ -240,14 +237,12 @@ namespace TrainzInfo.Controllers
             }
             List<string> oblasts = new List<string>();
             oblasts.Add("");
-            oblasts.AddRange(await _context.Oblasts.Select(x=>x.Name).ToListAsync());
+            oblasts.AddRange(await _context.Oblasts.OrderBy(x => x.Name).Select(x=>x.Name).ToListAsync());
             SelectList oblast = new SelectList(oblasts);
             List<string> fillias = new List<string>();
             fillias.Add("");
-            fillias.AddRange(_context.UkrainsRailways.Select(x => x.Name).ToList());
+            fillias.AddRange( await _context.UkrainsRailways.Select(x => x.Name).ToListAsync());
             SelectList uz = new SelectList(fillias);
-            SelectList city = new SelectList(citys);
-            ViewBag.city = city;
             ViewBag.oblast = oblast;
             ViewBag.uz = uz;
             return View();
