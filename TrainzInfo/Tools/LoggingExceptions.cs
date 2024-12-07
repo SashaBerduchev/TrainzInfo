@@ -78,8 +78,8 @@ namespace TrainzInfo.Tools
             }
             catch (Exception ex)
             {
-                //Trace.WriteLine("------Start log------- \n" + ex.Message + "\n -------EndLog--------\n");
-                //Console.WriteLine(ex.Message);
+                Trace.WriteLine("------Start log------- \n" + ex.Message + "\n -------EndLog--------\n");
+                Console.WriteLine(ex.Message);
             }
             WriteSqlLog(log);
             ErrorLogEF(log);

@@ -29,7 +29,7 @@ namespace TrainzInfo.Controllers
         // GET: NewsInfoes
         public async Task<IActionResult> Index()
         {
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderBy(x => x.DateTime).ToListAsync();
+            List<NewsInfo> newsInfo = await _context.NewsInfos.Include(x=>x.NewsComments).OrderBy(x => x.DateTime.DayNumber).ToListAsync();
             return View(newsInfo);
         }
         public async Task<List<NewsInfo>> GetNewsAction()
@@ -176,7 +176,7 @@ namespace TrainzInfo.Controllers
             }
             try
             {
-                newsInfo.DateTime = DateTime.Now;
+                newsInfo.DateTime = DateOnly.FromDateTime(DateTime.Now);
                 if (user != null && user.Status == "true")
                 {
                     newsInfo.Users = user;
@@ -260,7 +260,7 @@ namespace TrainzInfo.Controllers
             {
                 Trace.WriteLine(content);
                 NewsInfo pars = JsonConvert.DeserializeObject<NewsInfo>(content);
-                pars.DateTime = DateTime.Now;
+                pars.DateTime =DateOnly.FromDateTime(DateTime.Now);
                 _context.Add(pars);
                 Trace.WriteLine(pars);
                 _context.SaveChangesAsync();
