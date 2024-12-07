@@ -11,12 +11,13 @@
     if (ViewBag.user.Role == "Superadmin")
     {
         <b>Кількість записів: @Model.Count().ToString()</b>
-        @* <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
-        <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
+        <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
+        @* <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
         <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
             <input type="file" name="uploads" /><br>
             <input type="submit" value="Зберегти" class="btn btn-primary" />
-        </form> *@
+        </form>  *@
+        <a class="btn btn-info" asp-action="UpdateInfo">Оновити дані</a>
     }
 }
 

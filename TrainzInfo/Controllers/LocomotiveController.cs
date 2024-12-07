@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
-using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -35,8 +34,16 @@ namespace TrainzInfo.Controllers
             List<Locomotive> locomotivesupdate = new List<Locomotive>();
             foreach (var item in locomotives)
             {
+                DepotList depot = await _context.Depots.Where(x => x.Name == item.Depot).FirstOrDefaultAsync();
                 item.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == item.Seria).FirstOrDefaultAsync();
                 locomotivesupdate.Add(item);
+                item.DepotList = depot;
+                if(depot.Locomotives is null)
+                {
+                    depot.Locomotives = new List<Locomotive>();
+                }
+                depot.Locomotives.Add(item);
+                _context.Depots.Update(depot);
             }
             _context.Locomotives.UpdateRange(locomotivesupdate);
             await _context.SaveChangesAsync();
@@ -62,7 +69,7 @@ namespace TrainzInfo.Controllers
             SelectList depot = new SelectList(depotslist);
 
             List<Locomotive> locomotives = await _context.Locomotives
-                .Include(x=>x.DepotList).Include(x=>x.Locomotive_Series).Include(x=>x.UserLocomotivesPhoto).Include(x=>x.LocomotiveBaseInfo).ToListAsync();
+                .Include(x=>x.DepotList).Include(x=>x.DepotList.City).Include(x=>x.Locomotive_Series).Include(x=>x.UserLocomotivesPhoto).Include(x=>x.LocomotiveBaseInfo).ToListAsync();
             
             List<DepotList> depots = await _context.Depots.Where(x=>x.Name.Contains("ТЧ")).ToListAsync();
             List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
@@ -400,7 +407,8 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
-                    locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
+                    DepotList depot = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
+                    locomotive.DepotList = depot;
                     locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Update(locomotive);
                     Locomotive_series locomotiveSeries = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Locomotive_Series.Seria).FirstOrDefaultAsync();
@@ -408,7 +416,12 @@ namespace TrainzInfo.Controllers
                     {
                         locomotiveSeries.Locomotives = new List<Locomotive>();
                     }
-
+                    if(depot.Locomotives is null)
+                    {
+                        depot.Locomotives = new List<Locomotive>();
+                    }
+                    depot.Locomotives.Add(locomotive);
+                    _context.Depots.Update(depot);
                     Locomotive locomotiveForAdd = locomotiveSeries.Locomotives
                         .Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
                     if (locomotiveForAdd == null)
