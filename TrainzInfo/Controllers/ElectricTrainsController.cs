@@ -345,7 +345,7 @@ namespace TrainzInfo.Controllers
                     //}
                     _context.Electrics.Update(train);
                     _context.SaveChanges();
-                    return RedirectToAction(nameof(InModered));
+                    return RedirectToAction(nameof(Index));
                 }
 
             return RedirectToAction(nameof(Index));
