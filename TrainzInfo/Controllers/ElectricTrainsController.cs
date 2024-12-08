@@ -43,7 +43,9 @@ namespace TrainzInfo.Controllers
             depotnames.Add("");
             depotnames.AddRange(depots.Select(x => x.Name).Distinct());
             ViewBag.depots = new SelectList(depotnames);
-            List<ElectricTrain> electricks = await _context.Electrics.Include(x=>x.City).Include(x=>x.DepotList).ToListAsync();
+            List<ElectricTrain> electricks = await _context.Electrics.Include(x => x.Plants).Include(x => x.ElectrickTrainzInformation)
+                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
+                    .Include(x => x.ElectrickTrainzInformation).ToListAsync();
             return View(electricks);
         }
 
@@ -58,14 +60,16 @@ namespace TrainzInfo.Controllers
             List<ElectricTrain> electrics = new List<ElectricTrain>();
             if(id != null)
             {
-                electrics = await _context.Electrics.Where(x=>x.DepotList.id == id).ToListAsync();
+                electrics = await _context.Electrics.Include(x=>x.Plants).Include(x=>x.ElectrickTrainzInformation)
+                    .Include(x=>x.DepotList).Include(x=>x.City).Include(x=>x.Trains).Include(x=>x.Users)
+                    .Include(x=>x.ElectrickTrainzInformation).Where(x=>x.DepotList.id == id).ToListAsync();
             }
             else
             {
                 return NotFound();
             }
-            List<DepotList> depotLists = await _context.Depots.ToListAsync();
-            List<City> city = await _context.Cities.ToListAsync();
+            //List<DepotList> depotLists = await _context.Depots.ToListAsync();
+            //List<City> city = await _context.Cities.ToListAsync();
             SelectList selectLists = new SelectList(electrics.Select(x=>x.Name).ToList());
             ViewBag.electrics = selectLists;
             return View(electrics);

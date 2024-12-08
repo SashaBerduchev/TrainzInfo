@@ -101,18 +101,18 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-
+            //List<DepotList> depots = await _context.Depots.ToListAsync();
+            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
             List<Locomotive> locomotives = new List<Locomotive>();
             if (id != null)
             {
-                locomotives = await _context.Locomotives.Where(x=>x.DepotList.id == id).ToListAsync();
+                locomotives = await _context.Locomotives.Include(x=>x.DepotList).Include(x=>x.Locomotive_Series).Include(x=>x.UserLocomotivesPhoto).Include(x=>x.LocomotiveBaseInfo).Where(x=>x.DepotList.id == id).ToListAsync();
             }
             else
             {
                 return NotFound();
             }
-            List<DepotList> depots = await _context.Depots.ToListAsync();
-            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
+            
             SelectList locomotiveSeries = new SelectList(locomotives.Select(x=>x.Locomotive_Series.Seria).ToList());
             ViewBag.seria = locomotiveSeries;
             return View(locomotives);
