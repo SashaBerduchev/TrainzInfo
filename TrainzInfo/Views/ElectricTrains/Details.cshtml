@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.ElectricTrain
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Model.Name;
 }
 
 <h1>@Model.Name</h1>
@@ -17,14 +17,13 @@
         </div>
         <div style="position:relative; left:540px; top:-270px; font-size:25px; background-color:aliceblue; width:400px">
             <div>@Html.DisplayName("Назва: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</div>
-            <div>@Html.DisplayName("Кількість вагонів: ") @Html.DisplayName(Model.VagonsCountP)</div>
             <div>@Html.DisplayName("Максимальна швидкість: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
             <div>@Html.DisplayName("Місто прописки: ") @Html.DisplayName(Model.City.Name)</div>
             <div>@Html.DisplayName("Депо прописки: ") @Html.DisplayName(Model.DepotList.Name)</div>
-            <div>@Html.DisplayName("Побудовано: ") @Html.DisplayName(Model.Created.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод постройки") @Html.DisplayName(Model.Plant)</div>
-            <div>@Html.DisplayName("Останній КВР: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод який провів КВР: ") @Html.DisplayName(Model.PlaceKvr)</div>
+            <div>@Html.DisplayName("Побудовано: ") @Html.DisplayName(Model.CreatedTrain.Year.ToString())</div>
+            <div style="width:450px">@Html.DisplayName("Завод-виробник") @Html.DisplayName(Model.PlantsCreate.Name)</div>
+            <div>@Html.DisplayName("Останній ремонт: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
+            <div style="width:450px">@Html.DisplayName("Завод який провів ремонт: ") @Html.DisplayName(Model.PlantsKvr.Name)</div>
            @*  <div style="width:450px">@Html.DisplayName("Имя пользователя: ") @Html.DisplayName(Model.User)</div> *@
             <div style="position:relative; left:-470px; top:50px; font-size:22px; width:1000px;">
                 <div><p>@ViewBag.baseinfo</p></div>

@@ -66,12 +66,7 @@ namespace TrainzInfo.Controllers
             }
             if (uzname == null)
             {
-                List<DepotList> depotsfull = await _context.Depots
-                    .Include(x=>x.UkrainsRailway).Include(x=>x.Locomotives).Include(x=>x.ElectricTrains).Include(x=>x.DieselTrains).ToListAsync();
-                var query = _context.Depots
-                    .Include(x => x.UkrainsRailway).Include(x => x.Locomotives).Include(x => x.ElectricTrains).Include(x => x.DieselTrains).ToQueryString();
-                Trace.WriteLine(query);
-                return View(depotsfull);
+                uzname =Convert.ToInt32(TempData["uzfilia"]);
             }
             UkrainsRailways ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).FirstOrDefaultAsync();
             ViewBag.Filia = ukrains.Name;
@@ -165,11 +160,7 @@ namespace TrainzInfo.Controllers
             }
 
             SelectList uzlist = new SelectList(await _context.UkrainsRailways.Select(x => x.Name).ToListAsync());
-            List<City> cities = await _context.Cities.ToListAsync();
-            SelectList citiesList = new SelectList(cities.OrderBy(x => x.Name).Select(x=>x.Name).Distinct());
             ViewBag.Ukrrailways = uzlist;
-            ViewBag.cities = citiesList;
-
             return View(depotList);
         }
 
@@ -217,6 +208,8 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
+
+                TempData["uzfilia"] = depotList.UkrainsRailway.id;
                 return RedirectToAction(nameof(Index));
             }
             return View(depotList);

@@ -43,7 +43,7 @@ namespace TrainzInfo.Controllers
             depotnames.Add("");
             depotnames.AddRange(depots.Select(x => x.Name).Distinct());
             ViewBag.depots = new SelectList(depotnames);
-            List<ElectricTrain> electricks = await _context.Electrics.Include(x => x.Plants).Include(x => x.ElectrickTrainzInformation)
+            List<ElectricTrain> electricks = await _context.Electrics.Include(x => x.PlantsCreate).Include(x=>x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
                     .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
                     .Include(x => x.ElectrickTrainzInformation).ToListAsync();
             return View(electricks);
@@ -60,7 +60,7 @@ namespace TrainzInfo.Controllers
             List<ElectricTrain> electrics = new List<ElectricTrain>();
             if(id != null)
             {
-                electrics = await _context.Electrics.Include(x=>x.Plants).Include(x=>x.ElectrickTrainzInformation)
+                electrics = await _context.Electrics.Include(x=>x.PlantsCreate).Include(x=>x.PlantsKvr).Include(x=>x.ElectrickTrainzInformation)
                     .Include(x=>x.DepotList).Include(x=>x.City).Include(x=>x.Trains).Include(x=>x.Users)
                     .Include(x=>x.ElectrickTrainzInformation).Where(x=>x.DepotList.id == id).ToListAsync();
             }
@@ -78,28 +78,22 @@ namespace TrainzInfo.Controllers
         {
             List<ElectricTrain> elektricTrains = await _context.Electrics.ToListAsync();
             List<ElectricTrain> electricsNew = new List<ElectricTrain>();
-            List<DepotList> depotLists = await _context.Depots.ToListAsync();
-            List<City> cities = await _context.Cities.ToListAsync();
-            List<Plants> plants = await _context.plants.ToListAsync();
+            List<Plants> plants = await _context.Plants.ToListAsync();
             foreach (var item in elektricTrains)
             {
-                item.DepotList = depotLists.Where(x => x.Name == item.DepotTrain).FirstOrDefault();
-                item.City = cities.Where(x => x.Name.Equals(item.DepotCity)).FirstOrDefault();
-                Plants plant = plants.Where(x => x.Name.Equals(item.Plant)).FirstOrDefault();
-                if (plant.electricTrains == null)
-                {
-                    plant.electricTrains = new List<ElectricTrain>();
-                }
-                if (plant.electricTrains.Contains(item) == false)
-                {
-                    plant.electricTrains.Add(item);
-                    _context.plants.Update(plant);
-                    await _context.SaveChangesAsync();
-                }
+                DepotList depot = await _context.Depots.Where(x => x.Name == item.DepotTrain).FirstOrDefaultAsync();
+                item.DepotList = depot;
+                item.City = await _context.Cities.Where(x => x.Name.Equals(item.DepotCity)).FirstOrDefaultAsync();
+                item.PlantsKvr = plants.Where(x => x.Name == item.PlantKvr).FirstOrDefault();
+                item.PlantsCreate = plants.Where(x => x.Name == item.PlantCreate).FirstOrDefault();
                 item.IsProof = true.ToString();
-                item.Plants = plant;
                 electricsNew.Add(item);
-
+                if(depot.ElectricTrains is null)
+                {
+                    depot.ElectricTrains = new List<ElectricTrain>();
+                }
+                depot.ElectricTrains.Add(item);
+                _context.Depots.Update(depot);
             }
             _context.Electrics.UpdateRange(electricsNew);
             await _context.SaveChangesAsync();
@@ -188,7 +182,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ElectricTrains/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -196,13 +190,14 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
-            ViewBag.users = users;
-            SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).OrderByDescending(x => x.Name).Select(x => x.Name).ToList());
+            List<string> Depots = new List<string>();
+            Depots.Add("");
+            Depots.AddRange(await _context.Depots.Where(x => x.Name.Contains("РПЧ")).OrderByDescending(x => x.Name).Select(x => x.Name).ToListAsync());
+            SelectList depots = new SelectList(Depots);
             ViewBag.depots = depots;
             List<string> plants = new List<string>();
             plants.Add("");
-            plants.AddRange(_context.plants.Select(x => x.Name).ToList());
+            plants.AddRange(await _context.Plants.Select(x=>x.Name).ToListAsync());
             SelectList plantslist = new SelectList(plants);
             ViewBag.plants = plantslist;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
@@ -215,7 +210,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Create([Bind("id,Name, Model, MaxSpeed,Imgsrc, DepotTrain, LastKvr, CreatedTrain, PlantCreate, PlantKvr, User")] ElectricTrain electricTrain)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -227,26 +222,36 @@ namespace TrainzInfo.Controllers
             }
             try
             {
+                DepotList depot = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
                 var depo = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depo;
                 electricTrain.IsProof = true.ToString();
-                electricTrain.DepotList = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
+                electricTrain.DepotList = depot;
                 electricTrain.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
                 if (userlog != null && userlog.Status == "true")
                 {
                     electricTrain.Users = userlog;
                 }
+                electricTrain.PlantsCreate = await _context.Plants.Where(x => x.Name == electricTrain.PlantCreate).FirstOrDefaultAsync();
+                electricTrain.PlantsKvr = await _context.Plants.Where(x => x.Name == electricTrain.PlantKvr).FirstOrDefaultAsync();
                 _context.Add(electricTrain);
                 await _context.SaveChangesAsync();
-                Users user = await _context.User.Where(x => x.Name == electricTrain.Users.Name).FirstOrDefaultAsync();
-                //SendMessage(user);
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
                 if (suburbanTrainsInfo.ElectricTrain == null)
                 {
                     suburbanTrainsInfo.ElectricTrain = new List<ElectricTrain>();
                 }
+                if (depot.ElectricTrains == null)
+                {
+                    depot.ElectricTrains = new List<ElectricTrain>();
+                }
+                depot.ElectricTrains.Add(electricTrain);
                 suburbanTrainsInfo.ElectricTrain.Add(electricTrain);
+                _context.SuburbanTrainsInfos.Update(suburbanTrainsInfo);
+                _context.Depots.Update(depot);
                 await _context.SaveChangesAsync();
+
+                //SendMessage(user);
                 ElectricTrain train = _context.Electrics.Where(x => x.Name == electricTrain.Name && x.Model == electricTrain.Model && x.Users == electricTrain.Users).FirstOrDefault();
                 TempData["Train"] = train.id;
                 return RedirectToAction(nameof(AddImageForm));
@@ -321,23 +326,23 @@ namespace TrainzInfo.Controllers
                     }
                     train.ImageMimeTypeOfData = uploads.ContentType;
                     train.Image = p1;
-                    using (MemoryStream ms = new MemoryStream(train.Image, 0, train.Image.Length))
-                    {
-                        using (Image img = Image.FromStream(ms))
-                        {
-                            int h = 250;
-                            int w = 300;
+                    //using (MemoryStream ms = new MemoryStream(train.Image, 0, train.Image.Length))
+                    //{
+                    //    using (Image img = Image.FromStream(ms))
+                    //    {
+                    //        int h = 250;
+                    //        int w = 300;
 
-                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
-                            {
-                                using (MemoryStream ms2 = new MemoryStream())
-                                {
-                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                    train.Image = ms2.ToArray();
-                                }
-                            }
-                        }
-                    }
+                    //        using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                    //        {
+                    //            using (MemoryStream ms2 = new MemoryStream())
+                    //            {
+                    //                b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //                train.Image = ms2.ToArray();
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     _context.Electrics.Update(train);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(InModered));
@@ -420,7 +425,7 @@ namespace TrainzInfo.Controllers
             ViewBag.users = users;
             SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
-            SelectList plants = new SelectList(_context.plants.Select(x => x.Name).ToList());
+            SelectList plants = new SelectList(_context.Plants.Select(x => x.Name).ToList());
             ViewBag.plants = plants;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
             ViewBag.models = models;
@@ -432,7 +437,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, VagonsCountP,MaxSpeed,Imgsrc, DepotTrain, DepotCity, LastKvr, Created, Plant, PlaceKvr, User")] ElectricTrain electricTrain)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, MaxSpeed,Imgsrc, DepotTrain, LastKvr, CreatedTrain, PlantCreate, PlantKvr, User")] ElectricTrain electricTrain)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -452,22 +457,24 @@ namespace TrainzInfo.Controllers
                 var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
                 ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
+                DepotList depot = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
                 train.Name = electricTrain.Name;
                 train.Model = electricTrain.Model;
-                train.VagonsCountP = electricTrain.VagonsCountP;
                 train.MaxSpeed = electricTrain.MaxSpeed;
                 train.DepotCity = electricTrain.DepotCity;
                 train.DepotTrain = electricTrain.DepotTrain;
                 train.LastKvr = electricTrain.LastKvr;
-                train.Created = electricTrain.Created;
-                train.Plant = electricTrain.Plant;
-                train.PlaceKvr = electricTrain.PlaceKvr;
-                train.DepotList = await _context.Depots.Where(x => x.Name == train.DepotTrain).FirstOrDefaultAsync();
-                train.City = await _context.Cities.Where(x => x.Name == train.DepotCity).FirstOrDefaultAsync();
+                train.CreatedTrain = electricTrain.CreatedTrain;
+                train.PlantsCreate = await _context.Plants.Where(x=>x.Name.Contains(electricTrain.PlantCreate)).FirstOrDefaultAsync();
+                train.PlantsKvr = await _context.Plants.Where(x => x.Name.Contains(electricTrain.PlantKvr)).FirstOrDefaultAsync();
+                train.DepotList = depot;
+                train.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
                 if (userlog != null && userlog.Status == "true")
                 {
                     train.Users = userlog;
                 }
+                train.PlantsCreate = await _context.Plants.Where(x => x.Name == train.PlantCreate).FirstOrDefaultAsync();
+                train.PlantsKvr = await _context.Plants.Where(x => x.Name == train.PlantKvr).FirstOrDefaultAsync();
                 _context.Update(train);
                 await _context.SaveChangesAsync();
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
@@ -475,7 +482,14 @@ namespace TrainzInfo.Controllers
                 {
                     suburbanTrainsInfo.ElectricTrain = new List<ElectricTrain>();
                 }
+                if (depot.ElectricTrains == null)
+                {
+                    depot.ElectricTrains = new List<ElectricTrain>();
+                }
+                depot.ElectricTrains.Add(train);
                 suburbanTrainsInfo.ElectricTrain.Add(train);
+                _context.SuburbanTrainsInfos.Update(suburbanTrainsInfo);
+                _context.Depots.Update(depot);
                 await _context.SaveChangesAsync();
                 SendMessage(userlog);
 

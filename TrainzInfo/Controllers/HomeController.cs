@@ -82,7 +82,7 @@ namespace TrainzInfo.Controllers
             for (int i = 0; i < electics.Count; i++)
             {
                 ElectricTrain train = new ElectricTrain();
-                train.Created = electics[i].Created;
+                train.CreatedTrain = electics[i].CreatedTrain;
                 train.Image = electics[i].Image;
                 train.ImageMimeTypeOfData = electics[i].ImageMimeTypeOfData;
                 train.DepotCity = electics[i].DepotCity;
@@ -91,10 +91,9 @@ namespace TrainzInfo.Controllers
                 train.Users = userget;
                 train.Model = electics[i].Model;
                 train.LastKvr = electics[i].LastKvr;
-                train.Created = electics[i].Created;
-                train.Plant = electics[i].Plant;
-                train.PlaceKvr = electics[i].PlaceKvr;
-                train.VagonsCountP = electics[i].VagonsCountP;
+                train.CreatedTrain = electics[i].CreatedTrain;
+                train.PlantsCreate = await _context.Plants.Where(x=>x.Name == electics[i].PlantCreate).FirstOrDefaultAsync();
+                train.PlantsKvr = await _context.Plants.Where(x => x.Name == electics[i].PlantKvr).FirstOrDefaultAsync();
                 train.Name = electics[i].Name;
                 train.MaxSpeed = electics[i].MaxSpeed;
                 electricTrains.Add(train);

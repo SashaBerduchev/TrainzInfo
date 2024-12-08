@@ -22,7 +22,7 @@ namespace TrainzInfo.Controllers
         // GET: Plants
         public async Task<IActionResult> Index()
         {
-            return View(await _context.plants.ToListAsync());
+            return View(await _context.Plants.ToListAsync());
         }
 
         // GET: Plants/Details/5
@@ -33,7 +33,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var plants = await _context.plants
+            var plants = await _context.Plants
                 .FirstOrDefaultAsync(m => m.id == id);
             if (plants == null)
             {
@@ -75,7 +75,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var plants = await _context.plants.FindAsync(id);
+            var plants = await _context.Plants.FindAsync(id);
             if (plants == null)
             {
                 return NotFound();
@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var plants = await _context.plants
+            var plants = await _context.Plants
                 .FirstOrDefaultAsync(m => m.id == id);
             if (plants == null)
             {
@@ -141,15 +141,15 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plants = await _context.plants.FindAsync(id);
-            _context.plants.Remove(plants);
+            var plants = await _context.Plants.FindAsync(id);
+            _context.Plants.Remove(plants);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PlantsExists(int id)
         {
-            return _context.plants.Any(e => e.id == id);
+            return _context.Plants.Any(e => e.id == id);
         }
     }
 }

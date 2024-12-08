@@ -21,7 +21,7 @@ namespace TrainzInfo.Controllers
         // GET: StationInfoes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.stationInfos.ToListAsync());
+            return View(await _context.StationInfos.ToListAsync());
         }
 
         // GET: StationInfoes/Details/5
@@ -32,7 +32,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var stationInfo = await _context.stationInfos
+            var stationInfo = await _context.StationInfos
                 .FirstOrDefaultAsync(m => m.id == id);
             if (stationInfo == null)
             {
@@ -81,7 +81,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var stationInfo = await _context.stationInfos.FirstOrDefaultAsync(x=>x.Name == name);
+            var stationInfo = await _context.StationInfos.FirstOrDefaultAsync(x=>x.Name == name);
             if (stationInfo == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var stationInfo = await _context.stationInfos
+            var stationInfo = await _context.StationInfos
                 .FirstOrDefaultAsync(m => m.id == id);
             if (stationInfo == null)
             {
@@ -152,15 +152,15 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var stationInfo = await _context.stationInfos.FindAsync(id);
-            _context.stationInfos.Remove(stationInfo);
+            var stationInfo = await _context.StationInfos.FindAsync(id);
+            _context.StationInfos.Remove(stationInfo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StationInfoExists(int id)
         {
-            return _context.stationInfos.Any(e => e.id == id);
+            return _context.StationInfos.Any(e => e.id == id);
         }
     }
 }

@@ -83,7 +83,7 @@ namespace TrainzInfo.Controllers
                 item.Citys = city;
                 item.UkrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == item.Railway).FirstOrDefaultAsync();
                 item.Oblasts = await _context.Oblasts.Where(x => x.Name == item.Oblast).FirstOrDefaultAsync();
-                item.StationInfo = await _context.stationInfos.Where(x => x.Name == item.Name).FirstOrDefaultAsync();
+                item.StationInfo = await _context.StationInfos.Where(x => x.Name == item.Name).FirstOrDefaultAsync();
                 stationsupdate.Add(item);
                 if (city != null)
                 {

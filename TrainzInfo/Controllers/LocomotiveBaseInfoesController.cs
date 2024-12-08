@@ -22,7 +22,7 @@ namespace TrainzInfo.Controllers
         // GET: LocomotiveBaseInfoes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.locomotiveBaseInfos.ToListAsync());
+            return View(await _context.LocomotiveBaseInfos.ToListAsync());
         }
 
         // GET: LocomotiveBaseInfoes/Details/5
@@ -33,7 +33,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var locomotiveBaseInfo = await _context.locomotiveBaseInfos
+            var locomotiveBaseInfo = await _context.LocomotiveBaseInfos
                 .FirstOrDefaultAsync(m => m.id == id);
             if (locomotiveBaseInfo == null)
             {
@@ -76,7 +76,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var locomotiveBaseInfo = await _context.locomotiveBaseInfos.FindAsync(id);
+            var locomotiveBaseInfo = await _context.LocomotiveBaseInfos.FindAsync(id);
             if (locomotiveBaseInfo == null)
             {
                 return NotFound();
@@ -127,7 +127,7 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var locomotiveBaseInfo = await _context.locomotiveBaseInfos
+            var locomotiveBaseInfo = await _context.LocomotiveBaseInfos
                 .FirstOrDefaultAsync(m => m.id == id);
             if (locomotiveBaseInfo == null)
             {
@@ -142,15 +142,15 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var locomotiveBaseInfo = await _context.locomotiveBaseInfos.FindAsync(id);
-            _context.locomotiveBaseInfos.Remove(locomotiveBaseInfo);
+            var locomotiveBaseInfo = await _context.LocomotiveBaseInfos.FindAsync(id);
+            _context.LocomotiveBaseInfos.Remove(locomotiveBaseInfo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LocomotiveBaseInfoExists(int id)
         {
-            return _context.locomotiveBaseInfos.Any(e => e.id == id);
+            return _context.LocomotiveBaseInfos.Any(e => e.id == id);
         }
     }
 }

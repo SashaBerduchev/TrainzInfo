@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20241208073958_TablesUpdates")]
+    partial class TablesUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,8 +150,8 @@ namespace TrainzInfo.Migrations
                     b.Property<int?>("Cityid")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("CreatedTrain")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DepotCity")
                         .HasColumnType("nvarchar(max)");
@@ -172,8 +175,8 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("IsProof")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("LastKvr")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("LastKvr")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MaxSpeed")
                         .HasColumnType("int");
@@ -186,16 +189,13 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PlantCreate")
+                    b.Property<string>("PlaceKvr")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PlantKvr")
+                    b.Property<string>("Plant")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlantsCreateid")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PlantsKvrid")
+                    b.Property<int?>("Plantsid")
                         .HasColumnType("int");
 
                     b.Property<int?>("Trainsid")
@@ -203,6 +203,10 @@ namespace TrainzInfo.Migrations
 
                     b.Property<int?>("UsersId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VagonsCountP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -212,9 +216,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("ElectrickTrainzInformationid");
 
-                    b.HasIndex("PlantsCreateid");
-
-                    b.HasIndex("PlantsKvrid");
+                    b.HasIndex("Plantsid");
 
                     b.HasIndex("Trainsid");
 
@@ -1170,13 +1172,9 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("ElectrickTrainzInformationid");
 
-                    b.HasOne("TrainzInfo.Models.Plants", "PlantsCreate")
-                        .WithMany()
-                        .HasForeignKey("PlantsCreateid");
-
-                    b.HasOne("TrainzInfo.Models.Plants", "PlantsKvr")
-                        .WithMany()
-                        .HasForeignKey("PlantsKvrid");
+                    b.HasOne("TrainzInfo.Models.Plants", "Plants")
+                        .WithMany("electricTrains")
+                        .HasForeignKey("Plantsid");
 
                     b.HasOne("TrainzInfo.Models.SuburbanTrainsInfo", "Trains")
                         .WithMany("ElectricTrain")
@@ -1192,9 +1190,7 @@ namespace TrainzInfo.Migrations
 
                     b.Navigation("ElectrickTrainzInformation");
 
-                    b.Navigation("PlantsCreate");
-
-                    b.Navigation("PlantsKvr");
+                    b.Navigation("Plants");
 
                     b.Navigation("Trains");
 
@@ -1486,6 +1482,11 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Cities");
 
                     b.Navigation("Stations");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.Plants", b =>
+                {
+                    b.Navigation("electricTrains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>

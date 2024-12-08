@@ -12,6 +12,5 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public string Adress { get; set; }
-        public ICollection<ElectricTrain> electricTrains { get; set; }
     }
 }

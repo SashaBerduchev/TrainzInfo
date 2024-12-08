@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.Stations
 
 @{
-    ViewData["Title"] = "Станція";
+    ViewData["Title"] = Model.Name;
 }
 <meta property="og:image" content="@Url.Action("GetImage", "Stations",  new { Model.id })" />
 <h1>@Model.Name</h1>

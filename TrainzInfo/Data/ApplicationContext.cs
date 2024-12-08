@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
@@ -41,9 +37,9 @@ namespace TrainzInfo.Data
         public DbSet<Train> Trains { get; set; }
         public DbSet<StationsShadule> StationsShadules { get; set; }
         public DbSet<Locomotive_series> Locomotive_Series { get; set; }
-        public DbSet<LocomotiveBaseInfo> locomotiveBaseInfos { get; set; }
-        public DbSet<StationInfo> stationInfos { get; set; }
-        public DbSet<Plants> plants { get; set; }
+        public DbSet<LocomotiveBaseInfo> LocomotiveBaseInfos { get; set; }
+        public DbSet<StationInfo> StationInfos { get; set; }
+        public DbSet<Plants> Plants { get; set; }
         public DbSet<SuburbanTrainsInfo> SuburbanTrainsInfos { get; set; }
         public DbSet<IpAdresses> IpAdresses { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -52,8 +48,8 @@ namespace TrainzInfo.Data
         public DbSet<Metro> Metros { get; set; }
         public DbSet<MetroStation> MetroStations { get; set; }
         public DbSet<MetroLines> MetroLines { get; set; }
-        public DbSet<TrainzInfo.Models.TrainsShadule> TrainsShadule { get; set; }
-        public DbSet<TrainzInfo.Models.DieselTrains> DieselTrains { get; set; }
+        public DbSet<TrainsShadule> TrainsShadule { get; set; }
+        public DbSet<DieselTrains> DieselTrains { get; set; }
 
     }
 
