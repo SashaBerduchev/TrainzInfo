@@ -53,14 +53,13 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            var newsInfo = await _context.NewsInfos
+            var newsInfo = await _context.NewsInfos.Include(x=>x.Users).Include(x=>x.NewsComments)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (newsInfo == null)
             {
                 return NotFound();
             }
-            Trace.WriteLine("POST " + newsInfo);
-            ViewBag.count = _context.NewsComments.Where(x => x.NewsInfo == newsInfo).Count();
+            ViewBag.count = newsInfo.NewsComments.Count();
             return View(newsInfo);
         }
 
