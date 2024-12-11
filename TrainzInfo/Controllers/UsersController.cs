@@ -78,17 +78,37 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-            SelectList selectLists = new SelectList( _context.Roles.Select(x => x.NameRole).ToList());
+            SelectList selectLists = new SelectList(_context.Roles.Select(x => x.NameRole).ToList());
             ViewBag.roles = selectLists;
             return View(users);
         }
 
         public async Task<IActionResult> Change(int? id, string Role)
         {
-
-            Users users = await _context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
+            Role role = await _context.Roles.Where(x => x.NameRole == Role).FirstOrDefaultAsync();
+            Users users = await _context.User.Include(x=>x.Roles).Where(x => x.Id == id).FirstOrDefaultAsync();
+            Role oldrole = users.Roles;
             users.Role = Role;
+            if (role.Users is null)
+            {
+                role.Users = new List<Users>();
+            }
+            if (oldrole is not null)
+            {
+                if (users.Roles != role)
+                {
+                    oldrole.Users.Remove(users);
+                    role.Users.Add(users);
+                    _context.Roles.Update(oldrole);
+                }
+            }
+            else
+            {
+                role.Users.Add(users);
+            }
+            users.Roles = role;
             _context.User.Update(users);
+            _context.Roles.Update(role);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
@@ -111,7 +131,14 @@ namespace TrainzInfo.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            if (user != null && user.Status == "true")
+            {
+                ViewBag.user = user;
+            }
+            List<Users> users = await _context.User.Include(x => x.IpAdresses).Include(x => x.Roles).ToListAsync();
+            return View(users);
         }
 
         public async Task<IActionResult> Enter(string Email, string Password)
