@@ -1,10 +1,10 @@
 ﻿@model TrainzInfo.Models.TrainsShadule
 
 @{
-    ViewData["Title"] = "Редагувати розклад";
+    ViewData["Title"] = Model.NameStation;
 }
 
-<h4>TrainsShadule</h4>
+<h4>@Model.NameStation</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -42,4 +42,10 @@
         </form>
     </div>
 </div>
+
+<style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style>
 
