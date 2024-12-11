@@ -109,7 +109,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Trains
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -117,9 +117,17 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<TrainsShadule> trainsShadules = await _context.TrainsShadule.ToListAsync();
-            List<Train> trains = await _context.Trains.OrderBy(x => x.Number).ToListAsync();
-            List<TypeOfPassTrain> typeOfPassTrain = await _context.TypeOfPassTrains.ToListAsync();
+            List<Train> trains = new List<Train>();
+            if (number == null && from == null && to == null)
+            {
+                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).OrderBy(x => x.Number).ToListAsync();
+            }else if(number is not null)
+            {
+                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).Where(x=>x.Number == number).OrderBy(x => x.Number).ToListAsync();
+            }
+            ViewBag.number = new SelectList(trains.Select(x => x.Number));
+            ViewBag.from = new SelectList(trains.Select(x => x.StationFrom));
+            ViewBag.to = new SelectList(trains.Select(x => x.StationTo));
             return View(trains);
         }
 

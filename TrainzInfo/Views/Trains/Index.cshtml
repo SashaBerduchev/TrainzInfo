@@ -16,8 +16,14 @@
 
         }
     }
-
 </p>
+
+<form method="get">
+    <div class="form-inline" style="position:relative; width:90%">
+        @Html.DropDownList("number", ViewBag.number as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Відобразити" class="btn btn-info" />
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -72,7 +78,7 @@
                     </div>
                 </td>
                 <td>
-                    @if(item.TrainsShadules != null)
+                    @if (item.TrainsShadules != null && item.TrainsShadules.Count > 0)
                     {
                         <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
                     }
