@@ -84,7 +84,7 @@
                             <a class="btn btn-success" style="width:150px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
                             @*<a class="btn btn" asp-action="Details" asp-route-id="@item.id">Details</a>*@
                             <a class="btn btn-danger" asp-action="Delete" style="width:150px; margin:10px" asp-route-id="@item.id">Видалити</a>
-                            <a class="btn btn-outline-danger" style="width:150px; margin:10px" asp-action="Create" asp-route-numbertr="@item.Number">Додати розклад</a>
+                            <a class="btn btn-outline-danger" style="width:150px; margin:10px" asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">Додати розклад</a>
                         }
                     }
                 </td>
