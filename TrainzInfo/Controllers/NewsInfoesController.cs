@@ -116,23 +116,23 @@ namespace TrainzInfo.Controllers
 
                     news.ImageMimeTypeOfData = uploads.ContentType;
                     news.NewsImage = p1;
-                    using (MemoryStream ms = new MemoryStream(news.NewsImage, 0, news.NewsImage.Length))
-                    {
-                        using (Image img = Image.FromStream(ms))
-                        {
-                            int h = 250;
-                            int w = 300;
+                    //using (MemoryStream ms = new MemoryStream(news.NewsImage, 0, news.NewsImage.Length))
+                    //{
+                    //    using (Image img = Image.FromStream(ms))
+                    //    {
+                    //        int h = 250;
+                    //        int w = 300;
 
-                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
-                            {
-                                using (MemoryStream ms2 = new MemoryStream())
-                                {
-                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                    news.NewsImage = ms2.ToArray();
-                                }
-                            }
-                        }
-                    }
+                    //        using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                    //        {
+                    //            using (MemoryStream ms2 = new MemoryStream())
+                    //            {
+                    //                b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //                news.NewsImage = ms2.ToArray();
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     _context.NewsInfos.Update(news);
                     await _context.SaveChangesAsync();
                     return View();
