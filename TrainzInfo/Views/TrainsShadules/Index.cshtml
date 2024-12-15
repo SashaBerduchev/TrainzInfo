@@ -16,6 +16,7 @@
         {
             <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
             <a class="btn btn-dark" asp-action="UpdateInfo" asp-route-numbertr="@ViewBag.traininfo.Number">Оновити дані</a>
+            <a class="btn btn-danger" asp-action="Truncate" asp-route-numbertr="@ViewBag.traininfo.Number">Видалити графік</a>
         }
     }
 
@@ -76,7 +77,6 @@
                         if (ViewBag.user.Role == "Superadmin")
                         {
                             <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
                         }
                     }
 

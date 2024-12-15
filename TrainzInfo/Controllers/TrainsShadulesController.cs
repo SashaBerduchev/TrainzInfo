@@ -79,7 +79,7 @@ namespace TrainzInfo.Controllers
                                 if(stations is null)
                                 {
                                     TempData["alertMessage"] = "Станція не існує: " + trainaddshad.NameStation;
-                                    break;
+                                    return RedirectToAction(nameof(Index));                                    
                                 }
                                 UkrainsRailways rails = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
                                 trainaddshad.Train = train;
@@ -138,6 +138,38 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Truncate(string? numbertr)
+        {
+            List<TrainsShadule> trainsshaduller = await _context.TrainsShadule.Include(x=>x.Train).Where(x=>x.NumberTrain == numbertr).ToListAsync();
+            List<StationsShadule> stationsShadules = await _context.StationsShadules.Include(x => x.UkrainsRailways)
+                .Include(x => x.Train).Include(x => x.Stations).Where(x => x.NumberTrain == Convert.ToUInt32(numbertr)).ToListAsync();
+            foreach(TrainsShadule item in trainsshaduller)
+            {
+                Train train = item.Train;
+                if (train.TrainsShadules.Count > 0)
+                {
+                    foreach (var itemtr in train.TrainsShadules)
+                    {
+                        train.TrainsShadules.Remove(itemtr);
+                    }
+                }
+                _context.TrainsShadule.Remove(item);
+            }
+            foreach (StationsShadule item in stationsShadules)
+            {
+                Train train = item.Train;
+                if (train.StationsShadules.Count > 0)
+                {
+                    foreach (var itemtr in train.StationsShadules)
+                    {
+                        train.StationsShadules.Remove(itemtr);
+                    }
+                }
+                _context.StationsShadules.Remove(item);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: TrainsShadules
         public async Task<IActionResult> Index(int? id)
