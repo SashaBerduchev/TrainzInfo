@@ -8,12 +8,12 @@
 <h1>Розклад по станції @ViewBag.station</h1>
 
 <p>
-   @* @if (ViewBag.user != null)
+    @* @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
             <a class="btn btn-primary" asp-action="Create">Добавить</a>
-            
+
         }
     }*@
 </p>
@@ -37,7 +37,7 @@
         {
             <tr>
                 <td>
-                    <a asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">@Html.DisplayFor(modelItem => item.NumberTrain)</a>
+                    @Html.DisplayFor(modelItem => item.NumberTrain)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TimeOfArrive)
@@ -45,10 +45,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TimeOfDepet)
                 </td>
-                
+                <td>
+                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">Розклад поїзда</a>
+                </td>
                 <!--<td>
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |-->
-                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
+                @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
                     <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.id">Delete</a>
                 </td>-->
             </tr>

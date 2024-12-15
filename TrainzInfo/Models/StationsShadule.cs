@@ -17,6 +17,7 @@ namespace TrainzInfo.Models
         public TimeSpan TimeOfDepet { get; set; }
         [Required]
         public int NumberTrain { get; set; }
+        public bool IsUsing { get; set; }
         public UkrainsRailways UkrainsRailways { get; set; }
         public Train Train { get; set; }
         public Stations Stations { get; set; }

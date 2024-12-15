@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.Train
 
 @{
-    ViewData["Title"] = "Редагувати";
+    ViewData["Title"] = "Редагувати поїзд";
 }
 
 <h1>Редагувати</h1>
@@ -14,28 +14,33 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="id" />
             <div class="form-group">
-                @Html.DisplayName("Номер");
+                @Html.DisplayName("Номер")
                 <input asp-for="Number" class="form-control" />
                 <span asp-validation-for="StationFrom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Станція відправлення");
+                @Html.DisplayName("Станція відправлення")
                 @Html.DropDownList("StationFrom", ViewBag.city as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="StationFrom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Станція прибуття");
+                @Html.DisplayName("Станція прибуття")
                 @Html.DropDownList("StationTo", ViewBag.city as SelectList, htmlAttributes: new { @class = "form-control" })
                 <span asp-validation-for="StationTo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @Html.DisplayName("Тип поїзда");
+                @Html.DisplayName("Тип поїзда")
                 @Html.DropDownList("Type", ViewBag.type as SelectList, htmlAttributes: new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.DisplayName("Назва поїзда");
+                @Html.DisplayName("Назва поїзда")
                 <input asp-for="NameOfTrain" class="form-control" />
                 <span asp-validation-for="NameOfTrain" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @Html.DisplayName("Не використовується")
+                <input asp-for="IsUsing" class="form-control" />
+                <span asp-validation-for="IsUsing" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Зберегти" class="btn btn-primary" />
@@ -48,7 +53,3 @@
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
     }
 </style>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

@@ -10,17 +10,18 @@ namespace TrainzInfo.Models
     {
         public int id { get; set; }
         public Users User { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Уведіть номер")]
         public int Number { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Вкажіть станцію початку руху")]
         public string StationFrom { get; set; }
-        [Required]
+        [Required (ErrorMessage ="Вкажіть станцію кінця руху")]
         public string StationTo { get; set; }
         public Stations From { get; set; }
         public Stations To { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Вкажіть тип поїзда")]
         public string Type { get; set; }
         public string NameOfTrain { get; set; }
+        public bool IsUsing { get; set; }
         public ICollection<TrainsShadule> TrainsShadules { get; set; }
         public ICollection<StationsShadule> StationsShadules { get; set; }
 

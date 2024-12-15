@@ -11,6 +11,7 @@ namespace TrainzInfo.Models
         public TimeSpan Arrival { get; set; }
         public TimeSpan Departure { get; set; }
         public string Distance { get; set; }
+        public bool IsUsing { get; set; }
         public Stations Stations { get; set; }
         public Train Train { get; set; }
     }

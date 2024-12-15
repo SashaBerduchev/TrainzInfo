@@ -145,5 +145,27 @@ namespace TrainzInfo.Tools
             }
 
         }
+        public static void AddExcelExeptions(string exception)
+        {
+            try
+            {
+                string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
+                string dir = folderlog + "\\" + log;
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExcelErrors, FileMode.Append);
+                for (int i = 0; i < log.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(log.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                Trace.WriteLine(log);
+                Console.WriteLine(log);
+                fileStreamLog.Close();
+            }
+            catch (Exception exp)
+            {
+                Trace.WriteLine(exp);
+            }
+
+        }
     }
 }

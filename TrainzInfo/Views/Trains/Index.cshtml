@@ -13,6 +13,8 @@
         {
             <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
             <a class="btn btn-dark" asp-controller="Trains" asp-action="UpdateInfo">Оновити дані</a>
+            <a class="btn btn-info" asp-action="AddTrainExcel">Додати поїзд з Ексель</a>
+            <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="AddStationExcel">Додати графік поїзда з Ексель</a>
 
         }
     }
@@ -48,15 +50,15 @@
     <tbody>
         @foreach (var item in Model)
         {
-            
+
             <tr>
                 <td>
-                    <div style="font-size:22px; color:black" >
+                    <div style="font-size:22px; color:black">
                         @Html.DisplayFor(modelItem => item.Number)
                     </div>
                 </td>
                 <td>
-                    <div style="font-size:22px; color:black" >
+                    <div style="font-size:22px; color:black">
                         @Html.DisplayFor(modelItem => item.StationFrom)
                     </div>
                 </td>
@@ -66,10 +68,11 @@
                     </div>
                 </td>
                 <td>
-                    @if (item.TypeOfPassTrain != null){
-                    <div style="font-size:22px; color:black; width: 120px">
-                        @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
-                    </div>
+                    @if (item.TypeOfPassTrain != null)
+                    {
+                        <div style="font-size:22px; color:black; width: 120px">
+                            @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
+                        </div>
                     }
                 </td>
                 <td>
@@ -82,7 +85,7 @@
                     {
                         <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
                     }
-                    
+
                     @if (ViewBag.user != null)
                     {
                         if (ViewBag.user.Role == "Superadmin")
@@ -98,6 +101,92 @@
         }
     </tbody>
 </table>
+
+
+@if (ViewBag.user != null)
+{
+    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
+    {
+
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Номер")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Прибуття")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Відправлення")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Тип поїзда")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Назва")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.trainnotuse as List<Train>)
+                {
+
+                    <tr>
+                        <td>
+                            <div style="font-size:22px; color:black">
+                                @Html.DisplayFor(modelItem => item.Number)
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size:22px; color:black">
+                                @Html.DisplayFor(modelItem => item.StationFrom)
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size:22px; color:black">
+                                @Html.DisplayFor(modelItem => item.StationTo)
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.TypeOfPassTrain != null)
+                            {
+                                <div style="font-size:22px; color:black; width: 120px">
+                                    @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <div style="font-size:22px">
+                                @Html.DisplayFor(modelItem => item.NameOfTrain)
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.TrainsShadules != null && item.TrainsShadules.Count > 0)
+                            {
+                                <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
+                            }
+
+                            @if (ViewBag.user != null)
+                            {
+                                if (ViewBag.user.Role == "Superadmin")
+                                {
+                                    <a class="btn btn-success" style="width:150px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                                    @*<a class="btn btn" asp-action="Details" asp-route-id="@item.id">Details</a>*@
+                                    <a class="btn btn-danger" asp-action="Delete" style="width:150px; margin:10px" asp-route-id="@item.id">Видалити</a>
+                                    <a class="btn btn-outline-danger" style="width:150px; margin:10px" asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">Додати розклад</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
 
 <style>
     body {

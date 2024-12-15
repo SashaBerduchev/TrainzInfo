@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -47,7 +48,7 @@ namespace TrainzInfo.Controllers
                             var rowCount = worksheet.Dimension?.Rows;
                             var colCount = worksheet.Dimension?.Columns;
                             List<Train> trainslist = new List<Train>();
-                            for (int row = 1; row <= rowCount.Value; row++)
+                            for (int row = 2; row <= rowCount.Value; row++)
                             {
                                 Train train = new Train();
                                 int number = Convert.ToInt32(worksheet.Cells[row, 1].Value);
@@ -60,12 +61,19 @@ namespace TrainzInfo.Controllers
                                 train.StationFrom = from.ToString();
                                 train.StationTo = to.ToString();
                                 train.Type = type.ToString();
+                                train.IsUsing = false;
                                 if (name != null)
                                 {
                                     train.NameOfTrain = name.ToString();
                                 }
 
-
+                                TypeOfPassTrain typeOfPassTrain = await _context.TypeOfPassTrains.Where(x=>x.Type == train.Type).FirstOrDefaultAsync();
+                                if (typeOfPassTrain.Trains == null)
+                                {
+                                    typeOfPassTrain.Trains = new List<Train>();
+                                }
+                                typeOfPassTrain.Trains.Add(train);
+                                _context.TypeOfPassTrains.Update(typeOfPassTrain);
                                 trainslist.Add(train);
                             }
                             await _context.Trains.AddRangeAsync(trainslist);
@@ -76,8 +84,8 @@ namespace TrainzInfo.Controllers
                     }
                     catch (Exception exp)
                     {
-                        Trace.WriteLine(exp);
-                        TempData["alertMessage"] = "Exception";
+                        LoggingExceptions.AddExcelExeptions(exp.ToString());
+                        TempData["alertMessage"] = "Помилка імпорту";
                     }
                 }
             }
@@ -120,14 +128,15 @@ namespace TrainzInfo.Controllers
             List<Train> trains = new List<Train>();
             if (number == null && from == null && to == null)
             {
-                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).OrderBy(x => x.Number).ToListAsync();
+                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).OrderBy(x => x.Number).Where(x=>x.IsUsing == false).ToListAsync();
             }else if(number is not null)
             {
-                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).Where(x=>x.Number == number).OrderBy(x => x.Number).ToListAsync();
+                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).Where(x=>x.Number == number && x.IsUsing == false).OrderBy(x => x.Number).ToListAsync();
             }
             ViewBag.number = new SelectList(trains.Select(x => x.Number));
             ViewBag.from = new SelectList(trains.Select(x => x.StationFrom));
             ViewBag.to = new SelectList(trains.Select(x => x.StationTo));
+            ViewBag.trainnotuse = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).OrderBy(x => x.Number).Where(x => x.IsUsing == true).ToListAsync();
             return View(trains);
         }
 
@@ -191,7 +200,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain")] Train train)
+        public async Task<IActionResult> Create([Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain, IsUsing")] Train train)
         {
             if (ModelState.IsValid)
             {
@@ -238,7 +247,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain")] Train train)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Number,StationFrom,StationTo,Type,NameOfTrain, IsUsing")] Train train)
         {
             if (id != train.id)
             {
@@ -249,7 +258,28 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
-                    _context.Update(train);
+                    Train traindb = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.StationsShadules).Include(x => x.From).Include(x => x.To)
+                        .Include(x => x.TypeOfPassTrain).Where(x => x.id == train.id).FirstOrDefaultAsync();
+                    List<TrainsShadule> trainsShadule = traindb.TrainsShadules.ToList();
+                    List<StationsShadule> stationsShadule = traindb.StationsShadules.ToList();
+                    List<TrainsShadule> trainsShadulesForUpdate = new List<TrainsShadule>();
+                    List<StationsShadule> stationsShadulesForUpdate = new List<StationsShadule>();
+                    foreach (var item in trainsShadule)
+                    {
+                        item.IsUsing = train.IsUsing;
+                        trainsShadulesForUpdate.Add(item);
+                    }
+                    foreach (var item in stationsShadule)
+                    {
+                        item.IsUsing = train.IsUsing;
+                        stationsShadulesForUpdate.Add(item);
+                    }
+                    traindb.StationTo = train.StationTo;
+                    traindb.StationFrom = train.StationFrom;
+                    traindb.IsUsing = train.IsUsing;
+                    _context.Update(traindb);
+                    _context.TrainsShadule.UpdateRange(trainsShadulesForUpdate);
+                    _context.StationsShadules.UpdateRange(stationsShadulesForUpdate);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -32,9 +32,12 @@ namespace TrainzInfo.Controllers
         {
             if (uploads != null)
             {
+
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var memoryStream = new MemoryStream())
                 {
+                    int count = 0;
+                    int trainid = 0;
                     await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
                     try
                     {
@@ -44,20 +47,23 @@ namespace TrainzInfo.Controllers
                             Trace.WriteLine(worksheet);
                             var rowCount = worksheet.Dimension?.Rows;
                             var colCount = worksheet.Dimension?.Columns;
-                            List<TrainsShadule> stations = new List<TrainsShadule>();
-                            for (int row = 1; row <= rowCount.Value; row++)
+                            List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
+                            for (int row = 2; row <= rowCount.Value; row++)
                             {
-                                TrainsShadule trainaddshad = new TrainsShadule();
+                                TrainsShadule trainaddshad = new TrainsShadule(); // колекція
+                                //считування почато
                                 var name = worksheet.Cells[row, 1].Value;
                                 var number = worksheet.Cells[row, 2].Value;
-                                TimeSpan timearrive = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 3].Value)).Date.TimeOfDay;
-                                TimeSpan timedep = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[row, 4].Value)).Date.TimeOfDay;
-
+                                TimeSpan timearrive =  TimeSpan.FromDays(Convert.ToDouble(worksheet.Cells[row, 3].Value));
+                                TimeSpan timedep = TimeSpan.FromDays(Convert.ToDouble(worksheet.Cells[row, 4].Value));
                                 var dist = worksheet.Cells[row, 5].Value;
                                 if (name == null)
                                 {
                                     break;
                                 }
+                                //считав 
+
+
                                 trainaddshad.NameStation = name.ToString();
                                 trainaddshad.NumberTrain = number.ToString();
                                 trainaddshad.Arrival = timearrive;
@@ -66,10 +72,51 @@ namespace TrainzInfo.Controllers
                                 {
                                     trainaddshad.Distance = dist.ToString();
                                 }
-                                stations.Add(trainaddshad);
+                                Train train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainaddshad.NumberTrain)).FirstOrDefaultAsync();
+                                Stations stations = await _context.Stations.Include(x => x.Citys)
+                                        .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();
+                                if(stations is null)
+                                {
+                                    TempData["alertMessage"] = "Станція не існує: " + trainaddshad.NameStation;
+                                    break;
+                                }
+                                UkrainsRailways rails = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
+                                trainaddshad.Train = train;
+                                trainaddshad.Stations = stations;
+                                _context.Stations.Update(stations);
+                                _context.Add(trainaddshad);
+                                if (train.TrainsShadules == null)
+                                {
+                                    train.TrainsShadules = new List<TrainsShadule>();
+                                }
+                                if (train.TrainsShadules.Count <= 0)
+                                {
+                                    train.TrainsShadules.Add(trainaddshad);
+                                }
+                                _context.Trains.Update(train);
+                                StationsShadule stationsShadule = new StationsShadule();
+                                stationsShadule.NumberTrain = Convert.ToInt32(trainaddshad.NumberTrain);
+                                stationsShadule.UzFilia = rails.Name;
+                                stationsShadule.Station = stations.Name;
+                                stationsShadule.Train = train;
+                                stationsShadule.Stations = stations;
+                                stationsShadule.UkrainsRailways = rails;
+                                stationsShadule.TimeOfArrive = trainaddshad.Arrival;
+                                stationsShadule.TimeOfDepet = trainaddshad.Departure;
+                                _context.StationsShadules.Add(stationsShadule);
+                                if (stations.StationsShadules is null)
+                                {
+                                    stations.StationsShadules = new List<StationsShadule>();
+                                }
+                                stations.StationsShadules.Add(stationsShadule);
+                                _context.Stations.Update(stations);
+                                trainsShadules.Add(trainaddshad);
+                                count = row;
+                                trainid = train.id;
                             }
-                            TempData["TrainNumber"] = stations[0].NumberTrain;
-                            await _context.TrainsShadule.AddRangeAsync(stations);
+                            TempData["TrainNumber"] = trainid;
+                            await _context.TrainsShadule.AddRangeAsync(trainsShadules);
                             await _context.SaveChangesAsync();
 
                         }
@@ -78,12 +125,17 @@ namespace TrainzInfo.Controllers
                     catch (Exception exp)
                     {
                         Trace.WriteLine(exp);
-                        TempData["TrainNumber"] = "0";
-                        TempData["alertMessage"] = "Exception";
+                        //TempData["TrainNumber"] = "0";
+                        TempData["alertMessage"] = "Exception" + count.ToString();
                     }
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private IActionResult Error()
+        {
+            return View();
         }
 
 
