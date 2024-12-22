@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -124,8 +125,8 @@ namespace TrainzInfo.Controllers
                     }
                     catch (Exception exp)
                     {
-                        Trace.WriteLine(exp);
-                        //TempData["TrainNumber"] = "0";
+                        LoggingExceptions.AddExcelExeptions(exp.ToString());
+                        TempData["TrainNumber"] = "1";
                         TempData["alertMessage"] = "Exception" + count.ToString();
                     }
                 }
