@@ -46,9 +46,7 @@ namespace TrainzInfo.Controllers
             {
                 filialsName = TempData["FiliasStation"].ToString();
             }
-            List<Stations> stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault())
-                .Include(x => x.Citys).Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x=>x.railwayUsersPhotos)
-                .OrderBy(x => x.Name).ToListAsync();
+            List<Stations> stations = new List<Stations>();
             ViewBag.Filia = filialsName;
 
             List<string> obl = new List<string>();
@@ -58,15 +56,29 @@ namespace TrainzInfo.Controllers
             ViewBag.oblast = oblasts;
             if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
             {
-                return View(stations.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
+                stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault())
+                .Include(x => x.Citys).Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                .OrderBy(x => x.Name).Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToListAsync();
+                return View(stations);
             }
             else if (Oblast != null && Oblast != "")
             {
-                return View(stations.Where(x => x.Oblast == Oblast).ToList());
+                stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault())
+                .Include(x => x.Citys).Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                .OrderBy(x => x.Name).Where(x => x.Oblast.Contains(Oblast)).ToListAsync();
+                return View(stations);
             }
             else if (NameStation != null && NameStation != "")
             {
-                return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
+                stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault())
+                .Include(x => x.Citys).Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                .OrderBy(x => x.Name).Where(x => x.Name.Contains(NameStation)).ToListAsync();
+                return View(stations);
+            }else
+            {
+                stations = await _context.Stations.Where(x => x.UkrainsRailways == _context.UkrainsRailways.Where(x => x.Name == filialsName).FirstOrDefault())
+                .Include(x => x.Citys).Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
+                .OrderBy(x => x.Name).ToListAsync();
             }
             TempData["FiliasStation"] = filialsName;
             return View(stations);
