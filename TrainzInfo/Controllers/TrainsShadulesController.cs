@@ -37,6 +37,7 @@ namespace TrainzInfo.Controllers
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var memoryStream = new MemoryStream())
                 {
+                    string stationnotexist = "";
                     int count = 0;
                     int trainid = 0;
                     await uploads.CopyToAsync(memoryStream).ConfigureAwait(false);
@@ -48,6 +49,7 @@ namespace TrainzInfo.Controllers
                             Trace.WriteLine(worksheet);
                             var rowCount = worksheet.Dimension?.Rows;
                             var colCount = worksheet.Dimension?.Columns;
+                            
                             List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
                             for (int row = 2; row <= rowCount.Value; row++)
                             {
@@ -74,14 +76,11 @@ namespace TrainzInfo.Controllers
                                     trainaddshad.Distance = dist.ToString();
                                 }
                                 Train train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainaddshad.NumberTrain)).FirstOrDefaultAsync();
+                                stationnotexist = trainaddshad.NameStation;
+                                LoggingExceptions.WorkLog(trainaddshad.NameStation);
                                 Stations stations = await _context.Stations.Include(x => x.Citys)
                                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
                                         .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();
-                                if(stations is null)
-                                {
-                                    TempData["alertMessage"] = "Станція не існує: " + trainaddshad.NameStation;
-                                    return RedirectToAction(nameof(Index));                                    
-                                }
                                 UkrainsRailways rails = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
                                 trainaddshad.Train = train;
                                 trainaddshad.Stations = stations;
@@ -127,14 +126,16 @@ namespace TrainzInfo.Controllers
                     {
                         LoggingExceptions.AddExcelExeptions(exp.ToString());
                         TempData["TrainNumber"] = "1";
-                        TempData["alertMessage"] = "Exception" + count.ToString();
+                        TempData["alertMessage"] = "Станція не існує: " + stationnotexist;
+                        ViewBag.error = "Станція не існує: " + stationnotexist;
+                        return RedirectToAction(nameof(Error));
                     }
                 }
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private IActionResult Error()
+        public IActionResult Error()
         {
             return View();
         }

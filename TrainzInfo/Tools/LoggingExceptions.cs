@@ -65,25 +65,46 @@ namespace TrainzInfo.Tools
         {
             Trace.WriteLine("------Start log------- \n" + log + "\n -------EndLog--------\n");
             Console.WriteLine(log);
-            try
-            {
-                string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
-                for (int i = 0; i < standartlogging.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
-                fileStreamLog.Close();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine("------Start log------- \n" + ex.Message + "\n -------EndLog--------\n");
-                Console.WriteLine(ex.Message);
-            }
+            //try
+            //{
+            //    string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
+            //    FileStream fileStreamLog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
+            //    for (int i = 0; i < standartlogging.Length; i++)
+            //    {
+            //        byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+            //        fileStreamLog.Write(array, 0, array.Length);
+            //    }
+            //    fileStreamLog.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Trace.WriteLine("------Start log------- \n" + ex.Message + "\n -------EndLog--------\n");
+            //    Console.WriteLine(ex.Message);
+            //}
             WriteSqlLog(log);
             ErrorLogEF(log);
 
+        }
+        public static void WorkLog(string log)
+        {
+            try
+            {
+                if (log.Contains("Executing DbCommand"))
+                {
+                    string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
+                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + worklog, FileMode.Append);
+                    for (int i = 0; i < standartlogging.Length; i++)
+                    {
+                        byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                        fileStreamLog.Write(array, 0, array.Length);
+                    }
+                    fileStreamLog.Close();
+                }
+            }
+            catch (System.Exception exp)
+            {
+                Console.WriteLine(exp.StackTrace);
+            }
         }
 
         private static void WriteSqlLog(string log)
