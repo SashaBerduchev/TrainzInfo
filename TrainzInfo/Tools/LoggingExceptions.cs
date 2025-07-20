@@ -11,13 +11,49 @@ namespace TrainzInfo.Tools
         static string folder = "Logs";
         static string folderlog = @"Logs";
         static string StandartLog = "StandartLog.log";
-        static string SQLserversLog = "SQLserversLog.log";
+        static string SQLserversLog = "SQLLog.log";
         static string worklog = "WorkLog.log";
         static string ExceptionLog = "ExceptionLog.log";
         static string ErrorLog = "ErrorLog.log";
         static string ConnectionLog = "ConnectionLog.log";
         static string MailLog = "MailLog.log";
         static string ExcelErrors = "ExcelErrors.log";
+
+        static string startStandartLogStr = "";
+
+        public static void LogInit(string nameClass, string nameMethod)
+        {
+            startStandartLogStr = nameClass + " - " + nameMethod;
+        }
+        public static void LogStart()
+        {
+            StandartLogFile(startStandartLogStr + " - " + "Start");
+        }
+        public static void LogFinish()
+        { 
+            StandartLogFile(startStandartLogStr + " - " + "Finish");
+            startStandartLogStr = "";
+        }
+        public static void LogWright(string log)
+        {
+            StandartLogFile(startStandartLogStr + " - " + log);
+        }
+        public static void StandartLogErrWright(string errlog)
+        {
+            StandartLogFile(startStandartLogStr + " - " + "Exception: " + errlog);
+        }
+        private static void StandartLogFile(string logmessage)
+        {
+            logmessage = logmessage + "\n";
+            Trace.WriteLine(logmessage);
+            //FileStream fileStreamLog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
+            //for (int i = 0; i < logmessage.Length; i++)
+            //{
+            //    byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
+            //    fileStreamLog.Write(array, 0, array.Length);
+            //}
+            //fileStreamLog.Close();
+        }
 
         public static void CreateFolder()
         {

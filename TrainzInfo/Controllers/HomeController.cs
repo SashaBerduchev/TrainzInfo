@@ -31,8 +31,6 @@ namespace TrainzInfo.Controllers
 
         }
 
-
-
         public async Task<IActionResult> CopyNews()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -114,11 +112,15 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
+            LoggingExceptions.LogStart();
             var useragent = Request.Headers;
+            LoggingExceptions.LogWright("Find user IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            LoggingExceptions.LogWright("User IP - " + remoteIpAddres);
             var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
             Trace.WriteLine(_context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).ToQueryString());
+            LoggingExceptions.LogWright("Find user IP in DB");
             if (ipaddres == null || ipaddres == "")
             {
                 IpAdresses ipAdresses = new IpAdresses
@@ -127,6 +129,7 @@ namespace TrainzInfo.Controllers
                     Date = DateTime.Now
                 };
                 _context.IpAdresses.Add(ipAdresses);
+                LoggingExceptions.LogWright("Save new IP");
                 await _context.SaveChangesAsync();
             }
             else
@@ -134,11 +137,14 @@ namespace TrainzInfo.Controllers
                 IpAdresses ipaddreslocal = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
                 ipaddreslocal.Date = DateTime.Now;
                 _context.IpAdresses.Update(ipaddreslocal);
+                LoggingExceptions.LogWright("IP is find");
                 await _context.SaveChangesAsync();
             }
+            LoggingExceptions.LogWright("Try to find user");
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
+                LoggingExceptions.LogWright("User found - " + user.Name +" "+ user.Email);
                 ViewBag.user = user;
             }
 
@@ -148,6 +154,7 @@ namespace TrainzInfo.Controllers
             //{
             //    ViewBag.user = user;
             //}
+            LoggingExceptions.LogFinish();
             return View(newsInfo);
         }
 
