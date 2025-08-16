@@ -27,9 +27,9 @@
 
 <form method="get">
     <div class="form-inline" style="position:relative; width:90%">
-        @*@Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })*@
         @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
-        <input type="text" name="NameStation" class="form-control"></input>
+        @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
+        @* <input type="text" name="NameStation" class="form-control"></input> *@
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>

@@ -46,13 +46,13 @@ namespace TrainzInfo.Tools
         {
             logmessage = logmessage + "\n";
             Trace.WriteLine(logmessage);
-            //FileStream fileStreamLog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
-            //for (int i = 0; i < logmessage.Length; i++)
-            //{
-            //    byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
-            //    fileStreamLog.Write(array, 0, array.Length);
-            //}
-            //fileStreamLog.Close();
+            FileStream filestreamlog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
+            for (int i = 0; i < logmessage.Length; i++)
+            {
+                byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
+                filestreamlog.Write(array, 0, array.Length);
+            }
+            filestreamlog.Close();
         }
 
         public static void CreateFolder()

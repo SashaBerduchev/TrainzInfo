@@ -85,7 +85,8 @@ namespace TrainzInfo.Controllers
             }
             if (Depot != null && Depot != "")
             {
-                List<Locomotive> locomotiveresult = locomotives.Where(x => x.DepotList.Name == Depot).ToList();
+                DepotList depotFind = await _context.Depots.Where(x => x.Name == Depot).FirstOrDefaultAsync();
+                List<Locomotive> locomotiveresult = locomotives.Where(x => x.DepotList == depotFind).ToList();
 
                 return View(locomotiveresult);
             }
@@ -175,7 +176,7 @@ namespace TrainzInfo.Controllers
             ViewBag.Seria = seria;
             List<string> depotlist = new List<string>();
             depotlist.Add("");
-            depotlist.AddRange(await _context.Depots.Select(x=>x.Name +" "+x.City.Name).ToListAsync());
+            depotlist.AddRange(await _context.Depots.OrderBy(x=>x.Name).Select(x=>x.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             return View();
@@ -201,6 +202,7 @@ namespace TrainzInfo.Controllers
             locomotive.DepotList = await _context.Depots.Where(x=>x.Name == locomotive.Depot).FirstOrDefaultAsync();
             locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
             Locomotive_series locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
+            DepotList depotList = locomotive.DepotList;
             if(locomotive_Series.Locomotives == null)
             {
                 locomotive_Series.Locomotives = new List<Locomotive>();
@@ -209,7 +211,16 @@ namespace TrainzInfo.Controllers
             {
                 locomotive_Series.Locomotives.Add(locomotive);
                 _context.Locomotive_Series.Update(locomotive_Series);
-                await _context.SaveChangesAsync();
+                
+            }
+            if (depotList.Locomotives == null)
+            {
+                depotList.Locomotives = new List<Locomotive>();
+            }
+            if (depotList.Locomotives.Contains(locomotive))
+            {
+                depotList.Locomotives.Add(locomotive);
+                _context.Depots.Update(depotList);
             }
             locomotive.id = 0;
             _context.Add(locomotive);
