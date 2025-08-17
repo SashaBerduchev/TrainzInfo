@@ -59,32 +59,30 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+
+            
             LoggingExceptions.WorkLog("Запит інформації");
-            List<Locomotive> locomotives = await _context.Locomotives
+            List<Locomotive> locomotives = new List<Locomotive>();
+            IQueryable<Locomotive> query = _context.Locomotives
                 .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
-                .Include(x => x.DepotList.UkrainsRailway).ToListAsync();
+                .Include(x => x.DepotList.UkrainsRailway).AsQueryable();
+
+            query = query.Where(x => true);
+            if (Filia != null)
+            {
+                query = query.Where(x => x.DepotList.UkrainsRailway.Name == Filia);
+            }
+            if (Seria != null)
+            {
+                query = query.Where(x => x.Seria == Seria);
+            }
+            if (Depot != null)
+            {
+                query = query.Where(x => x.DepotList.Name == Depot);
+            }
+            locomotives = await query.ToListAsync();
             UpdateFilter(locomotives);
-
-            if (Filia != null && Filia != "")
-            {
-                locomotives = locomotives.Where(x => x.DepotList.UkrainsRailway.Name == Filia).ToList();
-                UpdateFilter(locomotives);
-                return View(locomotives);
-            }
-            if (Seria != null && Seria != "")
-            {
-                locomotives = locomotives.Where(x => x.Seria == Seria).ToList();
-                UpdateFilter(locomotives);
-                return View(locomotives);
-            }
-            if (Depot != null && Depot != "")
-            {
-                locomotives = locomotives.Where(x => x.DepotList.Name == Depot).ToList();
-                UpdateFilter(locomotives);
-                return View(locomotives);
-            }
-
             return View(locomotives);
         }
 

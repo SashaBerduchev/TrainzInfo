@@ -44,28 +44,19 @@ namespace TrainzInfo.Controllers
                     .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains)
                     .Include(x => x.Users).Include(x => x.DepotList.UkrainsRailway)
                     .Include(x => x.ElectrickTrainzInformation).AsQueryable();
+            query = query.Where(x => true);
+            if (Depot != null)
+            {
+                query = query.Where(x => x.DepotList.Name == Depot);
+            }
+            if (Name != null)
+            {
+                query = query.Where(x => x.Name == Name);
+            }
 
-            if (Depot != null && Name != null)
-            {
-                electricTrains = await query.Where(x => true && x.DepotList.Name == Depot && x.Name == Name).Distinct().ToListAsync();
-                UpdateFilter(electricTrains);
-            }
-            else if (Depot != null)
-            {
-                electricTrains = await query.Where(x => true && x.DepotList.Name == Depot).Distinct().ToListAsync();
-                UpdateFilter(electricTrains);
-            }
-            else if (Name != null)
-            {
-                electricTrains = await query.Where(x => true && x.Name == Name).Distinct().ToListAsync();
-                UpdateFilter(electricTrains);
-            }
-            else
-            {
-                electricTrains = await query.Where(x => true).Distinct().ToListAsync();
-                UpdateFilter(electricTrains);
-            }
-            
+            electricTrains = await query.Distinct().ToListAsync();
+
+            UpdateFilter(electricTrains);
             return View(electricTrains);
         }
 
