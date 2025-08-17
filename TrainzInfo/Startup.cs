@@ -14,8 +14,8 @@ namespace TrainzInfo
 {
     public class Startup
     {
-        public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = false;
+        public static bool DEBUG_MODE = false;
+        public static bool START_IN_PROD_DB = true;
 
         public Startup(IConfiguration configuration)
         {

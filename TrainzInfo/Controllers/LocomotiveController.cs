@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -50,7 +51,7 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
         // GET: Locomotive
-        public async Task<IActionResult> Index(string? Seria, string? Depot)
+        public async Task<IActionResult> Index(string? Seria, string? Filia, string? Depot)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -58,40 +59,53 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<string> serieses = new List<string>();
-            serieses.Add("");
-            serieses.AddRange(await _context.Locomotive_Series.Select(x => x.Seria).ToListAsync());
-            List<string> depotslist = new List<string>();
-            depotslist.Add("");
-            depotslist.AddRange(_context.Locomotives.Select(x => x.Depot).ToList().Distinct());
-            SelectList series = new SelectList(serieses);
-            ViewBag.seria = series;
-            SelectList depot = new SelectList(depotslist);
-
+            LoggingExceptions.WorkLog("Запит інформації");
             List<Locomotive> locomotives = await _context.Locomotives
-                .Include(x=>x.DepotList).Include(x=>x.DepotList.City).Include(x=>x.Locomotive_Series).Include(x=>x.UserLocomotivesPhoto).Include(x=>x.LocomotiveBaseInfo).ToListAsync();
-            
-            List<DepotList> depots = await _context.Depots.Where(x=>x.Name.Contains("ТЧ")).ToListAsync();
-            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
-            List<string> depotsname = new List<string>();
-            depotsname.Add("");
-            depotsname.AddRange(depots.Select(x => x.Name).Distinct());
-            ViewBag.depot = new SelectList(depotsname);
-            ViewBag.series = new SelectList(locomotive_Series.Select(x => x.Seria));
+                .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
+                .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
+                .Include(x => x.DepotList.UkrainsRailway).ToListAsync();
+            UpdateFilter(locomotives);
+
+            if (Filia != null && Filia != "")
+            {
+                locomotives = locomotives.Where(x => x.DepotList.UkrainsRailway.Name == Filia).ToList();
+                UpdateFilter(locomotives);
+                return View(locomotives);
+            }
             if (Seria != null && Seria != "")
             {
-                List<Locomotive> locomotiveresult = locomotives.Where(x => x.Seria == Seria).ToList();
-                return View(locomotiveresult);
+                locomotives = locomotives.Where(x => x.Seria == Seria).ToList();
+                UpdateFilter(locomotives);
+                return View(locomotives);
             }
             if (Depot != null && Depot != "")
             {
-                DepotList depotFind = await _context.Depots.Where(x => x.Name == Depot).FirstOrDefaultAsync();
-                List<Locomotive> locomotiveresult = locomotives.Where(x => x.DepotList == depotFind).ToList();
-
-                return View(locomotiveresult);
+                locomotives = locomotives.Where(x => x.DepotList.Name == Depot).ToList();
+                UpdateFilter(locomotives);
+                return View(locomotives);
             }
 
             return View(locomotives);
+        }
+
+        private void UpdateFilter(List<Locomotive> locomotives)
+        {
+            //Сбор данных для фильтра
+            LoggingExceptions.WorkLog("Зібрали дані для фільтру");
+            List<string> filiasstr = new List<string>();
+            filiasstr.Add("");
+            filiasstr.AddRange(locomotives.Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
+            List<string> depotsname = new List<string>();
+            depotsname.Add("");
+            depotsname.AddRange(locomotives.Where(x => x.DepotList.Name.Contains("ТЧ")).Select(x => x.DepotList.Name).Distinct().ToList());
+            List<string> serieses = new List<string>();
+            serieses.Add("");
+            serieses.AddRange(locomotives.Select(x => x.Seria).Distinct().ToList());
+            // Вываод на форму
+            LoggingExceptions.WorkLog("Вивід на форму");
+            ViewBag.filia = new SelectList(filiasstr); 
+            ViewBag.seria = new SelectList(serieses); 
+            ViewBag.depot = new SelectList(depotsname);
         }
 
         public async Task<IActionResult> IndexDepot(int? id)
@@ -171,12 +185,12 @@ namespace TrainzInfo.Controllers
             }
             List<string> serieslist = new List<string>();
             serieslist.Add("");
-            serieslist.AddRange(await _context.Locomotive_Series.Select(x => x.Seria).ToListAsync());
+            serieslist.AddRange(await _context.Locomotive_Series.OrderBy(x=>x.Seria).Select(x => x.Seria).ToListAsync());
             SelectList seria = new SelectList(serieslist);
             ViewBag.Seria = seria;
             List<string> depotlist = new List<string>();
             depotlist.Add("");
-            depotlist.AddRange(await _context.Depots.OrderBy(x=>x.Name).Select(x=>x.Name).ToListAsync());
+            depotlist.AddRange(await _context.Depots.Where(x=>x.Name.Contains("ТЧ")).OrderBy(x=>x.Name).Select(x=>x.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             return View();
