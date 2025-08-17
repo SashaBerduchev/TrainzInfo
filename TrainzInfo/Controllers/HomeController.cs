@@ -109,7 +109,40 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        public async Task<IActionResult> UpdateAll()
+        {
+            IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
+                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways)
+                .Include(x => x.railwayUsersPhotos)
+                .OrderBy(x => x.Name).Distinct().AsQueryable();
+            List<Stations> stations = await query.ToListAsync();
+            foreach (var station in stations)
+            {
+                Oblast oblast = await _context.Oblasts.Where(x => x.Name == station.Oblasts.Name).FirstOrDefaultAsync();
+                City city = await _context.Cities.Where(x=>x.Name == station.Citys.Name).FirstOrDefaultAsync();
+                UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == station.UkrainsRailways.Name).FirstOrDefaultAsync();
+                if(oblast.Stations == null)
+                {
+                    oblast.Stations = new List<Stations>();
+                }
+                if(city.Stations == null)
+                {
+                    city.Stations = new List<Stations>();
+                }
+                if(ukrainsRailways.Stations == null)
+                {
+                    ukrainsRailways.Stations = new List<Stations>();
+                }
+                oblast.Stations.Add(station);
+                city.Stations.Add(station);
+                ukrainsRailways.Stations.Add(station);
+                _context.Cities.Update(city);
+                _context.UkrainsRailways.Update(ukrainsRailways);
+                _context.Oblasts.Update(oblast);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public async Task<IActionResult> Index()
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Index));

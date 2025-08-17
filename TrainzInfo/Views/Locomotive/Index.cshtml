@@ -21,17 +21,6 @@
     }
 }
 
-<p>
-    @if (ViewBag.user != null)
-    {
-        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-        {
-            <a class="btn btn-info" asp-action="Create">Додати новий локомотив</a>
-            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
-        }
-    }
-
-</p>
 
 <form method="get">
     <div class="form-inline">

@@ -57,6 +57,9 @@
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Plants" asp-action="Index">Підприємства</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі приміських поїздів</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Locomotive_series" asp-action="Index">Моделі локомотивів</a>
+                <a class="btn btn-danger" style="margin:10px" asp-controller="Home" asp-action="UpdateAll">Оновлення індексів на сайті</a>
+
+
 
             }
             else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")

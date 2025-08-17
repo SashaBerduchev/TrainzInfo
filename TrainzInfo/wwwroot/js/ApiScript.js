@@ -20,5 +20,8 @@ function Api() {
         $('#trainsmodel').autocomplete({
             source: 'api/ApiController/trainsmodel'
         })
+        $('#depots').autocomplete({
+            source: 'api/ApiController/depots'
+        })
     });
 }

@@ -34,7 +34,7 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Stations
-        public async Task<IActionResult> Index(string? filialsName, string? NameStation, string? Oblast)
+        public async Task<IActionResult> Index(string? FilialsName, string? NameStation, string? Oblast)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -42,9 +42,9 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            if(filialsName == null)
+            if(FilialsName == null)
             {
-                filialsName = TempData["FiliasStation"].ToString();
+                FilialsName = TempData["FiliasStation"].ToString();
             }
 
             List<Stations> stations = new List<Stations>();
@@ -55,9 +55,9 @@ namespace TrainzInfo.Controllers
                 .OrderBy(x => x.Name).Distinct().AsQueryable();
 
 
-            if(filialsName != null)
+            if(FilialsName != null)
             {
-                query = query.Where(x => x.UkrainsRailways.Name == filialsName);
+                query = query.Where(x => x.UkrainsRailways.Name == FilialsName);
             }
             if(NameStation != null)
             {
@@ -70,7 +70,7 @@ namespace TrainzInfo.Controllers
 
             stations = await query.ToListAsync();
             UpdateFilter(stations);
-            TempData["FiliasStation"] = filialsName;
+            TempData["FiliasStation"] = FilialsName;
             return View(stations);
         }
 
@@ -78,12 +78,16 @@ namespace TrainzInfo.Controllers
         {
             List<string> oblasts = new List<string>();
             List<string> filias = new List<string>();
+            List<string> stationsnames = new List<string>();
             oblasts.Add("");
             oblasts.AddRange(stations.Select(x => x.Oblasts.Name).Distinct().ToList());
             filias.Add("");
             filias.AddRange(stations.Select(x => x.UkrainsRailways.Name).Distinct().ToList());
+            stationsnames.Add("");
+            stationsnames.AddRange(stations.Select(x=>x.Name).Distinct().ToList());
             ViewBag.oblast = new SelectList(oblasts);
-            ViewBag.Filia = new SelectList(filias);
+            ViewBag.Filias = new SelectList(filias);
+            ViewBag.stations = new SelectList(stationsnames);
         }
 
         public async Task<IActionResult> UpdateInfo()
@@ -475,15 +479,47 @@ namespace TrainzInfo.Controllers
 
             try
             {
-                Stations stationfinddb = await _context.Stations.Where(x => x.id == stations.id).FirstOrDefaultAsync();
+                Stations stationfinddb = await _context.Stations.Include(x => x.Citys).Include(x => x.Oblasts)
+                    .Include(x => x.UkrainsRailways).Where(x => x.id == stations.id).FirstOrDefaultAsync();
 
                 stationfinddb.Name = stations.Name;
                 stationfinddb.City = stations.City;
                 stationfinddb.Oblast = stations.Oblast;
-                stationfinddb.Citys = await _context.Cities.Where(x => x.Name == stationfinddb.City).FirstOrDefaultAsync();
-                stationfinddb.Oblasts = await _context.Oblasts.Where(x => x.Name == stationfinddb.Oblast).FirstOrDefaultAsync();
-                stationfinddb.UkrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stationfinddb.Railway).FirstOrDefaultAsync();
+                stationfinddb.Railway = stations.Railway;
+                City oldcity = stationfinddb.Citys;
+                Oblast oldoblast = stationfinddb.Oblasts;
+                UkrainsRailways oldfilia = stationfinddb.UkrainsRailways;
+                City city = await _context.Cities.Where(x => x.Name == stations.City).FirstOrDefaultAsync();
+                Oblast oblast = await _context.Oblasts.Where(x => x.Name == stations.Oblast).FirstOrDefaultAsync();
+                UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
+                oldcity.Stations.Remove(stationfinddb);
+                oldoblast.Stations.Remove(stationfinddb);
+                oldfilia.Stations.Remove(stationfinddb);
+                stationfinddb.Citys = city;
+                stationfinddb.Oblasts = oblast;
+                stationfinddb.UkrainsRailways = ukrainsRailways;
+                if(city.Stations == null)
+                {
+                    city.Stations = new List<Stations>();
+                }
+                if(oblast.Stations == null)
+                {
+                    oblast.Stations = new List<Stations>();
+                }
+                if (ukrainsRailways.Stations == null)
+                {
+                    ukrainsRailways.Stations = new List<Stations>();
+                }
+                city.Stations.Add(stationfinddb);
+                oblast.Stations.Add(stationfinddb);
+                ukrainsRailways.Stations.Add(stationfinddb);
                 _context.Update(stationfinddb);
+                _context.Cities.Update(city);
+                _context.Cities.Update(oldcity);
+                _context.Oblasts.Update(oblast);
+                _context.Oblasts.Update(oldoblast);
+                _context.UkrainsRailways.Update(ukrainsRailways);
+                _context.UkrainsRailways.Update(oldfilia);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

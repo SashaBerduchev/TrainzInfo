@@ -34,6 +34,7 @@
                 <div class="form-group">
                     @Html.DisplayName("Депо")
                     @Html.DropDownList("Depot", ViewBag.Depo as SelectList, htmlAttributes: new { @class = "form-control" })
+                    @* <input type="text" id="depots" asp-for="Depot" placeholder="Почніть вводити назву міста" class="form-control"></input> *@
                     <span asp-validation-for="Depot" class="text-danger"></span>
                 </div>
                 <div class="form-group">

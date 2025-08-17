@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -115,6 +114,22 @@ namespace TrainzInfo.Controllers
                 return Ok(strings.Distinct());
             }
             catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                return BadRequest(e.Message);
+            }
+        }
+        [Produces("application/json")]
+        [HttpGet("depots")]
+        public async Task<IActionResult> GetDepots()
+        {
+            try
+            {
+                string term = HttpContext.Request.Query["term"].ToString();
+                List<string> strings = await _context.Depots.Where(x => x.Name.Contains(term))
+                    .Select(x => x.Name).ToListAsync();
+                return Ok(strings.Distinct());
+            }catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
                 return BadRequest(e.Message);
