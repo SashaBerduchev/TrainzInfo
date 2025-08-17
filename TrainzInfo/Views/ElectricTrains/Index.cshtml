@@ -30,8 +30,8 @@
 
 <form method="get">
     <div class="form-inline">
-        <input type="text" name="NameStation" id="electrics" class="form-control"></input>
         @Html.DropDownList("Depot", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Name", ViewBag.name as SelectList, htmlAttributes: new { @class = "form-control" })
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>

@@ -99,7 +99,7 @@ namespace TrainzInfo.Tools
         }
         public static void EFLog(string log)
         {
-            Trace.WriteLine("------Start log------- \n" + log + "\n -------EndLog--------\n");
+            //Trace.WriteLine("------Start log------- \n" + log + "\n -------EndLog--------\n");
             Console.WriteLine(log);
             //try
             //{
@@ -142,7 +142,7 @@ namespace TrainzInfo.Tools
                 Console.WriteLine(exp.StackTrace);
             }
         }
-
+        
         private static void WriteSqlLog(string log)
         {
             try
@@ -150,6 +150,7 @@ namespace TrainzInfo.Tools
                 if (log.Contains("Executing DbCommand"))
                 {
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
+                    Trace.Write(standartlogging);
                     FileStream fileStreamLog = new FileStream(folderlog + "\\" + SQLserversLog, FileMode.Append);
                     for (int i = 0; i < standartlogging.Length; i++)
                     {

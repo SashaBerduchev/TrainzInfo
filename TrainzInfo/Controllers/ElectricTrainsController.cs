@@ -38,15 +38,47 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            List<string> depotnames = new List<string>();
-            List<DepotList> depots = await _context.Depots.Where(x=>x.Name.Contains("РПЧ")).ToListAsync();
-            depotnames.Add("");
-            depotnames.AddRange(depots.Select(x => x.Name).Distinct());
-            ViewBag.depots = new SelectList(depotnames);
-            List<ElectricTrain> electricks = await _context.Electrics.Include(x => x.PlantsCreate).Include(x=>x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
-                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
-                    .Include(x => x.ElectrickTrainzInformation).ToListAsync();
-            return View(electricks);
+            IQueryable<ElectricTrain> query;
+            List<ElectricTrain> electricTrains = new List<ElectricTrain>();
+            query = _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
+                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains)
+                    .Include(x => x.Users).Include(x => x.DepotList.UkrainsRailway)
+                    .Include(x => x.ElectrickTrainzInformation).AsQueryable();
+
+            if (Depot != null && Name != null)
+            {
+                electricTrains = await query.Where(x => true && x.DepotList.Name == Depot && x.Name == Name).Distinct().ToListAsync();
+                UpdateFilter(electricTrains);
+            }
+            else if (Depot != null)
+            {
+                electricTrains = await query.Where(x => true && x.DepotList.Name == Depot).Distinct().ToListAsync();
+                UpdateFilter(electricTrains);
+            }
+            else if (Name != null)
+            {
+                electricTrains = await query.Where(x => true && x.Name == Name).Distinct().ToListAsync();
+                UpdateFilter(electricTrains);
+            }
+            else
+            {
+                electricTrains = await query.Where(x => true).Distinct().ToListAsync();
+                UpdateFilter(electricTrains);
+            }
+            
+            return View(electricTrains);
+        }
+
+        private void UpdateFilter(List<ElectricTrain> electricks)
+        {
+            List<string> depots = new List<string>();
+            List<string> nameelectrics = new List<string>();
+            depots.Add("");
+            depots.AddRange(electricks.Select(x => x.DepotList.Name).Distinct().ToList());
+            nameelectrics.Add("");
+            nameelectrics.AddRange(electricks.Select(x => x.Name).Distinct().ToList());
+            ViewBag.depots = new SelectList(depots);
+            ViewBag.name = new SelectList(nameelectrics);
         }
 
         public async Task<IActionResult> IndexDepot(int? id)
@@ -58,11 +90,11 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             List<ElectricTrain> electrics = new List<ElectricTrain>();
-            if(id != null)
+            if (id != null)
             {
-                electrics = await _context.Electrics.Include(x=>x.PlantsCreate).Include(x=>x.PlantsKvr).Include(x=>x.ElectrickTrainzInformation)
-                    .Include(x=>x.DepotList).Include(x=>x.City).Include(x=>x.Trains).Include(x=>x.Users)
-                    .Include(x=>x.ElectrickTrainzInformation).Where(x=>x.DepotList.id == id).ToListAsync();
+                electrics = await _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
+                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
+                    .Include(x => x.ElectrickTrainzInformation).Where(x => x.DepotList.id == id).ToListAsync();
             }
             else
             {
@@ -70,7 +102,7 @@ namespace TrainzInfo.Controllers
             }
             //List<DepotList> depotLists = await _context.Depots.ToListAsync();
             //List<City> city = await _context.Cities.ToListAsync();
-            SelectList selectLists = new SelectList(electrics.Select(x=>x.Name).ToList());
+            SelectList selectLists = new SelectList(electrics.Select(x => x.Name).ToList());
             ViewBag.electrics = selectLists;
             return View(electrics);
         }
@@ -88,7 +120,7 @@ namespace TrainzInfo.Controllers
                 item.PlantsCreate = plants.Where(x => x.Name == item.PlantCreate).FirstOrDefault();
                 item.IsProof = true.ToString();
                 electricsNew.Add(item);
-                if(depot.ElectricTrains is null)
+                if (depot.ElectricTrains is null)
                 {
                     depot.ElectricTrains = new List<ElectricTrain>();
                 }
@@ -164,10 +196,10 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
 
-            ElectricTrain electricTrain = await _context.Electrics.Where(m => m.id == id).Include(x=>x.Trains)
-                .Include(x=>x.City).Include(x=>x.DepotList).Include(x=>x.ElectrickTrainzInformation)
+            ElectricTrain electricTrain = await _context.Electrics.Where(m => m.id == id).Include(x => x.Trains)
+                .Include(x => x.City).Include(x => x.DepotList).Include(x => x.ElectrickTrainzInformation)
                 .FirstOrDefaultAsync();
-            
+
             if (electricTrain == null)
             {
                 return NotFound();
@@ -197,7 +229,7 @@ namespace TrainzInfo.Controllers
             ViewBag.depots = depots;
             List<string> plants = new List<string>();
             plants.Add("");
-            plants.AddRange(await _context.Plants.Select(x=>x.Name).ToListAsync());
+            plants.AddRange(await _context.Plants.Select(x => x.Name).ToListAsync());
             SelectList plantslist = new SelectList(plants);
             ViewBag.plants = plantslist;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
@@ -465,7 +497,7 @@ namespace TrainzInfo.Controllers
                 train.DepotTrain = electricTrain.DepotTrain;
                 train.LastKvr = electricTrain.LastKvr;
                 train.CreatedTrain = electricTrain.CreatedTrain;
-                train.PlantsCreate = await _context.Plants.Where(x=>x.Name.Contains(electricTrain.PlantCreate)).FirstOrDefaultAsync();
+                train.PlantsCreate = await _context.Plants.Where(x => x.Name.Contains(electricTrain.PlantCreate)).FirstOrDefaultAsync();
                 train.PlantsKvr = await _context.Plants.Where(x => x.Name.Contains(electricTrain.PlantKvr)).FirstOrDefaultAsync();
                 train.DepotList = depot;
                 train.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
@@ -478,7 +510,7 @@ namespace TrainzInfo.Controllers
                 _context.Update(train);
                 await _context.SaveChangesAsync();
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
-                if(suburbanTrainsInfo.ElectricTrain == null)
+                if (suburbanTrainsInfo.ElectricTrain == null)
                 {
                     suburbanTrainsInfo.ElectricTrain = new List<ElectricTrain>();
                 }
