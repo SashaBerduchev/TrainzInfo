@@ -42,19 +42,21 @@
             <div style="margin:20px; position:relative; top:10px;">
                 <img class="img-thumbnail" width="350" height="350"
                      src="@Url.Action("GetImage", "ElectricTrains",
-                        new { item.id })" />
-            </div>
-            <div style="position:relative; left:420px; top:-200px">
-                <div>@Html.DisplayName("Назва: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
-    @*             <div>@Html.DisplayName("Кількість вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div> *@
-                <div>@Html.DisplayName("Максимальна швидкість: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
-                <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotList.Name)</div>
-                <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.City.Name)</div>
-            </div>
+                                             new { item.id })" />
+        </div>
+        <div style="position:relative; left:420px; top:-200px">
+            <div>@Html.DisplayName("Назва: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
+            @*             <div>@Html.DisplayName("Кількість вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div> *@
+            <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotList.Name)</div>
+            <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelitem => item.DepotList.UkrainsRailway.Name)</div>
+            <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelitem => item.City.Oblasts.Name)</div>
+            <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.City.Name)</div>
+            <div>@Html.DisplayName("Максимальна швидкість: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
+        </div>
 
             <div style="position:relative; left:800px; top:-300px; width:150px">
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Детально</a>
-                @if (ViewBag.user != null)
+            @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin")
                     {

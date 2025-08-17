@@ -44,7 +44,7 @@ namespace TrainzInfo.Controllers
                     .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains)
                     .Include(x => x.Users).Include(x => x.DepotList.UkrainsRailway)
                     .Include(x => x.ElectrickTrainzInformation).AsQueryable();
-            query = query.Where(x => true);
+            query = query.Include(x=>x.City.Oblasts).Where(x => true);
             if (Depot != null)
             {
                 query = query.Where(x => x.DepotList.Name == Depot);

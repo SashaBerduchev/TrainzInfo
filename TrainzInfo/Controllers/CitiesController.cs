@@ -367,10 +367,12 @@ namespace TrainzInfo.Controllers
             }
 
             var city = await _context.Cities.FindAsync(id);
+            List<Oblast> oblasts = await _context.Oblasts.ToListAsync();
             if (city == null)
             {
                 return NotFound();
             }
+            ViewBag.oblasts = new SelectList(oblasts.Select(x => x.Name));
             return View(city);
         }
 
@@ -379,7 +381,7 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name, IsStationExist")] City city)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name, Oblast, IsStationExist")] City city)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -396,7 +398,15 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
+                    Oblast oblast = await _context.Oblasts.Where(x => x.Name == city.Oblast).FirstOrDefaultAsync();
+                    city.Oblasts = oblast;
                     _context.Update(city);
+                    if(oblast.Cities is null)
+                    {
+                        oblast.Cities = new List<City>();
+                    }
+                    oblast.Cities.Add(city);
+                    _context.Update(oblast);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

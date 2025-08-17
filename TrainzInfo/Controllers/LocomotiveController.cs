@@ -66,7 +66,8 @@ namespace TrainzInfo.Controllers
             IQueryable<Locomotive> query = _context.Locomotives
                 .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
-                .Include(x => x.DepotList.UkrainsRailway).AsQueryable();
+                .Include(x => x.DepotList.UkrainsRailway)
+                .Include(x=>x.DepotList.City.Oblasts).AsQueryable();
 
             query = query.Where(x => true);
             if (Filia != null)

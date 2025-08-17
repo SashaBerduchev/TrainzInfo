@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Migrations;
 using TrainzInfo.Models;
@@ -25,26 +26,60 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: DieselTrains
-        public async Task<IActionResult> Index(string? TrainsModel)
+        public async Task<IActionResult> Index(string? Filia, string? Oblast, string? Depo, string? Model)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            List<DieselTrains> diesel = new List<DieselTrains>();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
-            List<DepotList> depotLists = await _context.Depots.ToListAsync();
-            List<SuburbanTrainsInfo> suburbanTrains = await _context.SuburbanTrainsInfos.ToListAsync();
-            if(TrainsModel != null)
+            List<DieselTrains> diesel = new List<DieselTrains>();
+            IQueryable<DieselTrains> query = _context.DieselTrains.Include(x => x.DepotList)
+                .Include(x => x.SuburbanTrainsInfo).Include(x => x.DepotList.UkrainsRailway)
+                .Include(x => x.DepotList.City).Include(x => x.DepotList.City.Oblasts).AsQueryable();
+
+
+            if (Model is not null)
             {
-                diesel = await _context.DieselTrains.Where(x => x.SuburbanTrainsInfo.Model.Contains(TrainsModel)).ToListAsync();
+                query = query.Where(x => x.SuburbanTrainsInfo.Model.Contains(Model));
             }
-            else
+            if (Filia is not null)
             {
-                diesel = await _context.DieselTrains.ToListAsync();
+                query = query.Where(x => x.DepotList.UkrainsRailway.Name == Filia);
             }
+            if (Oblast is not null)
+            {
+                query = query.Where(x => x.DepotList.City.Oblasts.Name == Oblast);
+            }
+            if (Depo is not null)
+            {
+                query = query.Where(x => x.DepotList.Name == Depo);
+            }
+
+            diesel = await query.ToListAsync();
+            UpdateFilter(diesel);
             return View(diesel);
+        }
+
+        private void UpdateFilter(List<DieselTrains> diesel)
+        {
+            List<string> depo = new List<string>();
+            List<string> model = new List<string>();
+            List<string> oblast = new List<string>();
+            List<string> filia = new List<string>();
+            depo.Add("");
+            model.Add("");
+            oblast.Add("");
+            filia.Add("");
+            depo.AddRange(diesel.Select(x => x.DepotList.Name).Distinct().ToList());
+            model.AddRange(diesel.Select(x => x.SuburbanTrainsInfo.Model).Distinct().ToList());
+            filia.AddRange(diesel.Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
+            oblast.AddRange(diesel.Select(x => x.DepotList.City.Oblasts.Name).Distinct().ToList());
+            ViewBag.Filia = new SelectList(filia);
+            ViewBag.Oblast = new SelectList(oblast);
+            ViewBag.Depo = new SelectList(depo);
+            ViewBag.Model = new SelectList(model);
         }
 
         public async Task<IActionResult> IndexDepot(int? id)
@@ -56,16 +91,20 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            List<DieselTrains> dieselTrains = new List<DieselTrains>();
-            if (id != null)
+            List<DieselTrains> diesel = new List<DieselTrains>();
+            IQueryable<DieselTrains> query = _context.DieselTrains.Include(x => x.DepotList)
+                .Include(x => x.SuburbanTrainsInfo).Include(x => x.DepotList.UkrainsRailway)
+                .Include(x => x.DepotList.City).Include(x => x.DepotList.City.Oblasts).AsQueryable();
+
+
+            if (id is not null)
             {
-                dieselTrains = await _context.DieselTrains.Where(x=>x.DepotList.id == id).ToListAsync();
+                query = query.Where(x => x.DepotList.id == id);
             }
-            else
-            {
-                return NotFound();
-            }
-            return View(dieselTrains);
+
+            diesel = await query.ToListAsync();
+            UpdateFilter(diesel);
+            return View(diesel);
         }
         // GET: DieselTrains/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -134,7 +173,7 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
                 DieselTrains diesel = await _context.DieselTrains.Where(x => x.NumberTrain == dieselTrains.NumberTrain && x.SuburbanTrainsInfo.Model == dieselTrains.SuburbanTrainsInfo.Model).FirstOrDefaultAsync();
                 DepotList depot = await _context.Depots.Where(_ => _.Name == Depot).FirstOrDefaultAsync();
-                if(depot.DieselTrains == null)
+                if (depot.DieselTrains == null)
                 {
                     depot.DieselTrains = new List<DieselTrains>();
                 }
@@ -144,6 +183,8 @@ namespace TrainzInfo.Controllers
                 {
                     suburbanTrains.DieselTrains = new List<DieselTrains>();
                 }
+                _context.Update(depot);
+                _context.Update(suburbanTrains);
                 suburbanTrains.DieselTrains.Add(diesel);
                 await _context.SaveChangesAsync();
                 TempData["Train"] = dieselTrains.Id;

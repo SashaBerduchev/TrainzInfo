@@ -10,9 +10,18 @@
 {
     @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
     {
-        <a style="btn btn-info" asp-action="Create">Створити</a>
+        <a class="btn btn-info" asp-action="Create">Створити</a>
     }
 }
+<form method="get">
+    <div class="form-inline" style="position:relative; width:90%">
+        @Html.DropDownList("Filia", ViewBag.filia as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Depo", ViewBag.depo as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Model", ViewBag.model as SelectList, htmlAttributes: new { @class = "form-control" })
+        <input type="submit" value="Відобразити" class="btn btn-info" />
+    </div>
+</form>
 
 @foreach (var item in Model)
 {
@@ -21,16 +30,19 @@
             <div class="img">
                 <img class="img-thumbnail" width="350" height="250"
                      src="@Url.Action("GetImage", "DieselTrains",
-                        new { item.Id })" />
-            </div>
+                                                                  new { item.Id })" />
         </div>
-        <div style="position:relative; left:400px; top:-230px; font-size:25px">
-            <div>@Html.DisplayName("Назва поїзда: ") @Html.DisplayFor(modelItem => item.SuburbanTrainsInfo.Model)</div>
-            <div>@Html.DisplayName("Номер: ") @Html.DisplayFor(modelItem => item.NumberTrain)</div>
-            <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
-        </div>
-        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Детально</a>
-        @if (ViewBag.user != null)
+    </div>
+    <div style="position:relative; left:400px; top:-230px; font-size:25px">
+        <div>@Html.DisplayName("Назва поїзда: ") @Html.DisplayFor(modelItem => item.SuburbanTrainsInfo.Model)</div>
+        <div>@Html.DisplayName("Номер: ") @Html.DisplayFor(modelItem => item.NumberTrain)</div>
+        <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
+        <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelItem => item.DepotList.UkrainsRailway.Name)</div>
+        <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.DepotList.City.Oblasts.Name)</div>
+        <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.DepotList.City.Name)</div>
+    </div>
+    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Детально</a>
+    @if (ViewBag.user != null)
         {
             @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
             {
