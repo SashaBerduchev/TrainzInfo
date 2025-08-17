@@ -52,10 +52,11 @@
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="MainImages" asp-action="Index">Основні зображення</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-action="Index">Користувачі</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Cities" asp-action="Index">Міста</a>
-                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Cities" asp-action="Create">Додати місто</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Oblasts" asp-action="Index">Області</a>
                 <a class="btn btn-info btn_new" style="margin:10px" asp-controller="UkrainsRailways" asp-action="RollingStoneInfo">Рухомий склад</a>
-                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Plants" asp-action="Create">Додати підприємтсво</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Plants" asp-action="Index">Підприємства</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі приміських поїздів</a>
+                <a class="btn btn-info btn_new" style="margin:10px" asp-controller="Locomotive_series" asp-action="Index">Моделі локомотивів</a>
 
             }
             else if (ViewBag.user.Role != null && ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin")
