@@ -72,10 +72,10 @@ namespace TrainzInfo.Controllers
             model.Add("");
             oblast.Add("");
             filia.Add("");
-            depo.AddRange(diesel.Select(x => x.DepotList.Name).Distinct().ToList());
-            model.AddRange(diesel.Select(x => x.SuburbanTrainsInfo.Model).Distinct().ToList());
-            filia.AddRange(diesel.Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
-            oblast.AddRange(diesel.Select(x => x.DepotList.City.Oblasts.Name).Distinct().ToList());
+            depo.AddRange(diesel.AsParallel().Select(x => x.DepotList.Name).Distinct().ToList());
+            model.AddRange(diesel.AsParallel().Select(x => x.SuburbanTrainsInfo.Model).Distinct().ToList());
+            filia.AddRange(diesel.AsParallel().Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
+            oblast.AddRange(diesel.AsParallel().Select(x => x.DepotList.City.Oblasts.Name).Distinct().ToList());
             ViewBag.Filia = new SelectList(filia);
             ViewBag.Oblast = new SelectList(oblast);
             ViewBag.Depo = new SelectList(depo);

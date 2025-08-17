@@ -93,13 +93,13 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.WorkLog("Зібрали дані для фільтру");
             List<string> filiasstr = new List<string>();
             filiasstr.Add("");
-            filiasstr.AddRange(locomotives.Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
+            filiasstr.AddRange(locomotives.AsParallel().Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
             List<string> depotsname = new List<string>();
             depotsname.Add("");
-            depotsname.AddRange(locomotives.Where(x => x.DepotList.Name.Contains("ТЧ")).Select(x => x.DepotList.Name).Distinct().ToList());
+            depotsname.AddRange(locomotives.AsParallel().Where(x => x.DepotList.Name.Contains("ТЧ")).Select(x => x.DepotList.Name).Distinct().ToList());
             List<string> serieses = new List<string>();
             serieses.Add("");
-            serieses.AddRange(locomotives.Select(x => x.Seria).Distinct().ToList());
+            serieses.AddRange(locomotives.AsParallel().Select(x => x.Seria).Distinct().ToList());
             // Вываод на форму
             LoggingExceptions.WorkLog("Вивід на форму");
             ViewBag.filia = new SelectList(filiasstr); 

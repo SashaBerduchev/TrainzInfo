@@ -65,9 +65,9 @@ namespace TrainzInfo.Controllers
             List<string> depots = new List<string>();
             List<string> nameelectrics = new List<string>();
             depots.Add("");
-            depots.AddRange(electricks.Select(x => x.DepotList.Name).Distinct().ToList());
+            depots.AddRange(electricks.AsParallel().Select(x => x.DepotList.Name).Distinct().ToList());
             nameelectrics.Add("");
-            nameelectrics.AddRange(electricks.Select(x => x.Name).Distinct().ToList());
+            nameelectrics.AddRange(electricks.AsParallel().Select(x => x.Name).Distinct().ToList());
             ViewBag.depots = new SelectList(depots);
             ViewBag.name = new SelectList(nameelectrics);
         }

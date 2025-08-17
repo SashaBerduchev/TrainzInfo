@@ -80,11 +80,11 @@ namespace TrainzInfo.Controllers
             List<string> filias = new List<string>();
             List<string> stationsnames = new List<string>();
             oblasts.Add("");
-            oblasts.AddRange(stations.Select(x => x.Oblasts.Name).Distinct().ToList());
+            oblasts.AddRange(stations.AsParallel().Select(x => x.Oblasts.Name).Distinct().ToList());
             filias.Add("");
-            filias.AddRange(stations.Select(x => x.UkrainsRailways.Name).Distinct().ToList());
+            filias.AddRange(stations.AsParallel().Select(x => x.UkrainsRailways.Name).Distinct().ToList());
             stationsnames.Add("");
-            stationsnames.AddRange(stations.Select(x=>x.Name).Distinct().ToList());
+            stationsnames.AddRange(stations.AsParallel().Select(x=>x.Name).Distinct().ToList());
             ViewBag.oblast = new SelectList(oblasts);
             ViewBag.Filias = new SelectList(filias);
             ViewBag.stations = new SelectList(stationsnames);

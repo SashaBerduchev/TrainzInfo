@@ -30,7 +30,7 @@
             <div class="img">
                 <img class="img-thumbnail" width="350" height="250"
                      src="@Url.Action("GetImage", "DieselTrains",
-                                             new { item.Id })" />
+                                                                                       new { item.Id })" />
         </div>
     </div>
     <div style="position:relative; left:400px; top:-230px; font-size:25px">
@@ -41,16 +41,18 @@
         <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.DepotList.City.Oblasts.Name)</div>
         <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.DepotList.City.Name)</div>
     </div>
-    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Детально</a>
-    @if (ViewBag.user != null)
-        {
-            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+    <div style="position:relative; left:50px; top:-200px; font-size:25px">
+        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Детально</a>
+        @if (ViewBag.user != null)
             {
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редагувати</a>
+                @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+                {
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редагувати</a>
 
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                }
             }
-        }
+        </div>
     </div>
 
 }
