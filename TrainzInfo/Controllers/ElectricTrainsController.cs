@@ -189,6 +189,7 @@ namespace TrainzInfo.Controllers
 
             ElectricTrain electricTrain = await _context.Electrics.Where(m => m.id == id).Include(x => x.Trains)
                 .Include(x => x.City).Include(x => x.DepotList).Include(x => x.ElectrickTrainzInformation)
+                .Include(x=>x.DepotList.UkrainsRailway).Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
                 .FirstOrDefaultAsync();
 
             if (electricTrain == null)

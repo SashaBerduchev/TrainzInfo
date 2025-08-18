@@ -120,8 +120,10 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
-            var dieselTrains = await _context.DieselTrains
+            
+            var dieselTrains = await _context.DieselTrains.Include(x => x.DepotList)
+                .Include(x => x.SuburbanTrainsInfo).Include(x => x.DepotList.UkrainsRailway)
+                .Include(x => x.DepotList.City).Include(x => x.DepotList.City.Oblasts)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dieselTrains == null)
             {

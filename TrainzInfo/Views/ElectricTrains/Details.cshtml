@@ -21,9 +21,9 @@
             <div>@Html.DisplayName("Місто прописки: ") @Html.DisplayName(Model.City.Name)</div>
             <div>@Html.DisplayName("Депо прописки: ") @Html.DisplayName(Model.DepotList.Name)</div>
             <div>@Html.DisplayName("Побудовано: ") @Html.DisplayName(Model.CreatedTrain.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод-виробник") @Html.DisplayName(Model.PlantsCreate.Name)</div>
+            <div style="width:450px">@Html.DisplayName("Завод-виробник") @Html.DisplayName(Model.PlantCreate)</div>
             <div>@Html.DisplayName("Останній ремонт: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод який провів ремонт: ") @Html.DisplayName(Model.PlantsKvr.Name)</div>
+            <div style="width:450px">@Html.DisplayName("Завод який провів ремонт: ") @Html.DisplayName(Model.PlantKvr)</div>
            @*  <div style="width:450px">@Html.DisplayName("Имя пользователя: ") @Html.DisplayName(Model.User)</div> *@
             <div style="position:relative; left:-470px; top:50px; font-size:22px; width:1000px;">
                 <div><p>@ViewBag.baseinfo</p></div>
