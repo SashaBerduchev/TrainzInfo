@@ -179,31 +179,22 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            List<Stations> stations = await _context.Stations.OrderBy(x=>x.Name).ToListAsync();
-            List<string> obl = new List<string>();
-            obl.Add("");
-            obl.AddRange(await _context.Oblasts.Select(x => x.Name).ToListAsync());
-            SelectList oblasts = new SelectList(obl);
-            ViewBag.oblast = oblasts;
-            List<Oblast> Oblasts = await _context.Oblasts.ToListAsync();
-            List<City> Citys = await _context.Cities.ToListAsync();
-            List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
-            if (Oblast != null && Oblast != "" && NameStation != null && NameStation != "")
+            List<Stations> stations = new List<Stations>();
+            IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
+                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways)
+                .Include(x => x.railwayUsersPhotos).Include(x => x.StationInfo)
+                .OrderBy(x => x.Name).AsQueryable();
+           
+            if(NameStation != null)
             {
-
-                return View(stations.Where(x => x.Oblast == Oblast && x.Name.Contains(NameStation)).ToList());
+                query = query.Where(x => x.Name == NameStation);
             }
-            else if (Oblast != null && Oblast != "")
+            if(Oblast != null)
             {
-
-                return View(stations.Where(x => x.Oblast == Oblast).ToList());
+                query = query.Where(x => x.Oblasts.Name == Oblast);
             }
-            else if (NameStation != null && NameStation != "")
-            {
-
-                return View(stations.Where(x => x.Name.Contains(NameStation)).ToList());
-            }
-         
+            stations = await query.ToListAsync();
+            UpdateFilter(stations);
             return View(stations);
         }
 
