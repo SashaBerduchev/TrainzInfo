@@ -330,34 +330,43 @@ namespace TrainzInfo.Controllers
         {
             Stations station = _context.Stations
                 .FirstOrDefault(g => g.id == id);
-
-            if (station != null)
+            try
             {
-
-                using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
+                if (station != null)
                 {
-                    using (Image img = Image.FromStream(ms))
-                    {
-                        int h = 450;
-                        int w = 500;
 
-                        using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                    using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
+                    {
+                        using (Image img = Image.FromStream(ms))
                         {
-                            using (MemoryStream ms2 = new MemoryStream())
+                            int h = 450;
+                            int w = 500;
+
+                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
                             {
-                                b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                station.Image = ms2.ToArray();
+                                using (MemoryStream ms2 = new MemoryStream())
+                                {
+                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                    station.Image = ms2.ToArray();
+                                }
                             }
                         }
                     }
+
+                    var file = File(station.Image, station.ImageMimeTypeOfData);
+                    return file;
                 }
-                var file = File(station.Image, station.ImageMimeTypeOfData);
-                return file;
-            }
-            else
+                else
+                {
+                    return null;
+                }
+
+            }catch (Exception exp)
             {
-                return null;
+                LoggingExceptions.AddException(exp.ToString());
             }
+
+            return null;
         }
         public FileContentResult GetImageDetails(int id)
         {
@@ -470,61 +479,61 @@ namespace TrainzInfo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
+        public async Task<IActionResult> Edit(int id, [Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stationnew)
         {
-            if (id != stations.id)
+            if (id != stationnew.id)
             {
                 return NotFound();
             }
 
             try
             {
-                Stations stationfinddb = await _context.Stations.Include(x => x.Citys).Include(x => x.Oblasts)
-                    .Include(x => x.UkrainsRailways).Where(x => x.id == stations.id).FirstOrDefaultAsync();
+                Stations stationold = await _context.Stations.Include(x => x.Citys).Include(x => x.Oblasts)
+                    .Include(x => x.UkrainsRailways).Where(x => x.id == stationnew.id).FirstOrDefaultAsync();
 
-                stationfinddb.Name = stations.Name;
-                stationfinddb.City = stations.City;
-                stationfinddb.Oblast = stations.Oblast;
-                stationfinddb.Railway = stations.Railway;
-                City oldcity = stationfinddb.Citys;
-                Oblast oldoblast = stationfinddb.Oblasts;
-                UkrainsRailways oldfilia = stationfinddb.UkrainsRailways;
-                City city = await _context.Cities.Where(x => x.Name == stations.City).FirstOrDefaultAsync();
-                Oblast oblast = await _context.Oblasts.Where(x => x.Name == stations.Oblast).FirstOrDefaultAsync();
-                UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
-                oldcity.Stations.Remove(stationfinddb);
-                oldoblast.Stations.Remove(stationfinddb);
-                oldfilia.Stations.Remove(stationfinddb);
-                stationfinddb.Citys = city;
-                stationfinddb.Oblasts = oblast;
-                stationfinddb.UkrainsRailways = ukrainsRailways;
-                if(city.Stations == null)
+                stationold.Name = stationnew.Name;
+                stationold.City = stationnew.City;
+                stationold.Oblast = stationnew.Oblast;
+                stationold.Railway = stationnew.Railway;
+                City oldcity = stationold.Citys;
+                Oblast oldoblast = stationold.Oblasts;
+                UkrainsRailways oldfilia = stationold.UkrainsRailways;
+                City citynew = await _context.Cities.Where(x => x.Name == stationnew.City).FirstOrDefaultAsync();
+                Oblast oblastnew = await _context.Oblasts.Where(x => x.Name == stationnew.Oblast).FirstOrDefaultAsync();
+                UkrainsRailways ukrainsRailwaysnew = await _context.UkrainsRailways.Where(x => x.Name == stationnew.Railway).FirstOrDefaultAsync();
+                oldcity.Stations.Remove(stationold);
+                oldoblast.Stations.Remove(stationold);
+                oldfilia.Stations.Remove(stationold);
+                stationold.Citys = citynew;
+                stationold.Oblasts = oblastnew;
+                stationold.UkrainsRailways = ukrainsRailwaysnew;
+                if(citynew.Stations == null)
                 {
-                    city.Stations = new List<Stations>();
+                    citynew.Stations = new List<Stations>();
                 }
-                if(oblast.Stations == null)
+                if(oblastnew.Stations == null)
                 {
-                    oblast.Stations = new List<Stations>();
+                    oblastnew.Stations = new List<Stations>();
                 }
-                if (ukrainsRailways.Stations == null)
+                if (ukrainsRailwaysnew.Stations == null)
                 {
-                    ukrainsRailways.Stations = new List<Stations>();
+                    ukrainsRailwaysnew.Stations = new List<Stations>();
                 }
-                city.Stations.Add(stationfinddb);
-                oblast.Stations.Add(stationfinddb);
-                ukrainsRailways.Stations.Add(stationfinddb);
-                _context.Update(stationfinddb);
-                _context.Cities.Update(city);
-                _context.Cities.Update(oldcity);
-                _context.Oblasts.Update(oblast);
-                _context.Oblasts.Update(oldoblast);
-                _context.UkrainsRailways.Update(ukrainsRailways);
-                _context.UkrainsRailways.Update(oldfilia);
+                citynew.Stations.Add(stationold);
+                oblastnew.Stations.Add(stationold);
+                ukrainsRailwaysnew.Stations.Add(stationold);
+                _context.Update(stationold);
+                _context.Update(citynew);
+                _context.Update(oldcity);
+                _context.Update(oblastnew);
+                _context.Update(oldoblast);
+                _context.Update(ukrainsRailwaysnew);
+                _context.Update(oldfilia);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StationsExists(stations.id))
+                if (!StationsExists(stationnew.id))
                 {
                     return NotFound();
                 }
