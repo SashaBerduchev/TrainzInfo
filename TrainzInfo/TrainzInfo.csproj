@@ -27,6 +27,10 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="8.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 
 
 </Project>
