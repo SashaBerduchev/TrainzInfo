@@ -30,7 +30,7 @@ namespace TrainzInfo.Tools
             StandartLogFile(startStandartLogStr + " - " + "Start");
         }
         public static void LogFinish()
-        { 
+        {
             StandartLogFile(startStandartLogStr + " - " + "Finish");
             startStandartLogStr = "";
         }
@@ -121,6 +121,8 @@ namespace TrainzInfo.Tools
             ErrorLogEF(log);
 
         }
+
+
         public static void WorkLog(string log)
         {
             try
@@ -142,7 +144,7 @@ namespace TrainzInfo.Tools
                 Console.WriteLine(exp.StackTrace);
             }
         }
-        
+
         private static void WriteSqlLog(string log)
         {
             try
@@ -224,6 +226,26 @@ namespace TrainzInfo.Tools
                 Trace.WriteLine(exp);
             }
 
+        }
+
+        public static void MailLogging(string log)
+        {
+            try
+            {
+                string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
+                Trace.Write(standartlogging);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + MailLog, FileMode.Append);
+                for (int i = 0; i < standartlogging.Length; i++)
+                {
+                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
+                }
+                fileStreamLog.Close();
+            }
+            catch (System.Exception exp)
+            {
+                Console.WriteLine(exp.StackTrace);
+            }
         }
     }
 }

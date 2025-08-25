@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
@@ -184,7 +185,7 @@ namespace TrainzInfo.Controllers
                 _context.SaveChanges();
                 NewsInfo news = _context.NewsInfos.Where(x => x.NameNews == newsInfo.NameNews).FirstOrDefault();
                 TempData["NewsId"] = news.id;
-                SendMessage(newsInfo.NameNews);
+                SendMessage(newsInfo.NameNews, user, remoteIpAddres);
                 return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
@@ -201,36 +202,9 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
-        private void SendMessage(string news)
+        private void SendMessage(string nameNews, Users user, string remoteIpAddres)
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            try
-            {
-                MailMessage m = new MailMessage("dataset@trainzinfo.com.ua", user.Email);
-                m.Body = user.Name + "Новина: " + news + " опублікована, Дякуємо вам!!!";
-                SmtpClient smtp = new SmtpClient("trainzinfo.com.ua", 587);
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("dataset@trainzinfo.com.ua", "kbnswj7zcqoegayhrliv");
-                smtp.EnableSsl = true;
-                smtp.Send(m);
-            }
-            catch (Exception exp)
-            {
-                Trace.WriteLine(exp.ToString());
-                string expstr = exp.ToString();
-                FileStream fileStreamLog = new FileStream(@"MailSend.log", FileMode.Append);
-                for (int i = 0; i < expstr.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(expstr.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
-                fileStreamLog.Close();
-            }
+            Mail.SendMessageNews(nameNews, remoteIpAddres, user);
         }
 
         public FileContentResult GetImage(int id)

@@ -11,7 +11,7 @@ namespace TrainzInfo
 {
     public class Startup
     {
-        public static bool DEBUG_MODE = false;
+        public static bool DEBUG_MODE = true;
         public static bool START_IN_PROD_DB = true;
 
         public Startup(IConfiguration configuration)
@@ -52,9 +52,7 @@ namespace TrainzInfo
             LoggingExceptions.LogWright(connection);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
-
-
-
+            Mail mail = new Mail();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
