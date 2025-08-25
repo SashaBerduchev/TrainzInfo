@@ -170,7 +170,7 @@ namespace TrainzInfo.Controllers
             }
             return RedirectToAction(nameof(IndexAll));
         }
-        public async Task<IActionResult> IndexAll(string? NameStation, string? Oblast)
+        public async Task<IActionResult> IndexAll(string? FilialsName, string? NameStation, string? Oblast)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -185,7 +185,11 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.railwayUsersPhotos).Include(x => x.StationInfo)
                 .OrderBy(x => x.Name).AsQueryable();
            
-            if(NameStation != null)
+            if(FilialsName != null)
+            {
+                query = query.Where(x => x.UkrainsRailways.Name == FilialsName);
+            }
+            if (NameStation != null)
             {
                 query = query.Where(x => x.Name == NameStation);
             }

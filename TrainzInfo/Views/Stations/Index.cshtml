@@ -11,7 +11,7 @@
     if (ViewBag.user.Role == "Superadmin")
     {
         <b>Колличество записей: @Model.Count().ToString()</b>
-        <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a>
+        @* <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a> *@
         <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
     }
 }
@@ -21,15 +21,15 @@
         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
             <a class="btn btn-dark" asp-action="Create">Додати</a>
-            <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
+            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
         }
     }
 </p>
 
 <form method="get">
     <div class="form-inline" style="position:relative; width:90%">
-        @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
         @Html.DropDownList("FilialsName", ViewBag.Filias as SelectList, htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
         @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
         @* <input type="text" name="NameStation" class="form-control"></input> *@
         <input type="submit" value="Відобразити" class="btn btn-info" />
