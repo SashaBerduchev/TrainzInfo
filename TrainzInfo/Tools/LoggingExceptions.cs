@@ -47,11 +47,8 @@ namespace TrainzInfo.Tools
             logmessage = logmessage + "\n";
             Trace.WriteLine(logmessage);
             FileStream filestreamlog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
-            for (int i = 0; i < logmessage.Length; i++)
-            {
-                byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
-                filestreamlog.Write(array, 0, array.Length);
-            }
+            byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
+            filestreamlog.Write(array, 0, array.Length);
             filestreamlog.Close();
         }
 
@@ -84,11 +81,8 @@ namespace TrainzInfo.Tools
                 Console.WriteLine(log);
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + ConnectionLog, FileMode.Append);
-                for (int i = 0; i < standartlogging.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
+                byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
             }
             catch (System.Exception exp)
@@ -131,11 +125,8 @@ namespace TrainzInfo.Tools
                 {
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                     FileStream fileStreamLog = new FileStream(folderlog + "\\" + worklog, FileMode.Append);
-                    for (int i = 0; i < standartlogging.Length; i++)
-                    {
-                        byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                        fileStreamLog.Write(array, 0, array.Length);
-                    }
+                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
                 }
             }
@@ -154,11 +145,8 @@ namespace TrainzInfo.Tools
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                     Trace.Write(standartlogging);
                     FileStream fileStreamLog = new FileStream(folderlog + "\\" + SQLserversLog, FileMode.Append);
-                    for (int i = 0; i < standartlogging.Length; i++)
-                    {
-                        byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                        fileStreamLog.Write(array, 0, array.Length);
-                    }
+                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                    fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
                 }
             }
@@ -174,11 +162,8 @@ namespace TrainzInfo.Tools
             {
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + ErrorLog, FileMode.Append);
-                for (int i = 0; i < standartlogging.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
+                byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
             }
         }
@@ -190,11 +175,8 @@ namespace TrainzInfo.Tools
                 string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
                 string dir = folderlog + "\\" + log;
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExceptionLog, FileMode.Append);
-                for (int i = 0; i < log.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(log.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
+                byte[] array = Encoding.Default.GetBytes(log.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
                 Console.WriteLine(log);
                 fileStreamLog.Close();
@@ -212,11 +194,8 @@ namespace TrainzInfo.Tools
                 string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
                 string dir = folderlog + "\\" + log;
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExcelErrors, FileMode.Append);
-                for (int i = 0; i < log.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(log.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
+                byte[] array = Encoding.Default.GetBytes(log.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
                 Console.WriteLine(log);
                 fileStreamLog.Close();
@@ -235,11 +214,8 @@ namespace TrainzInfo.Tools
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 Trace.Write(standartlogging);
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + MailLog, FileMode.Append);
-                for (int i = 0; i < standartlogging.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
+                byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
             }
             catch (System.Exception exp)

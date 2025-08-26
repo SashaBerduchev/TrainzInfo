@@ -24,7 +24,8 @@ namespace TrainzInfo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            LoggingExceptions.LogInit(this.ToString(), nameof(ConfigureServices));
+            LoggingExceptions.LogStart();
             //services.AddControllersWithViews();
             string connection = "";
             string trace = "";
@@ -53,6 +54,8 @@ namespace TrainzInfo
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
             Mail mail = new Mail();
+            LoggingExceptions.LogWright(trace);
+            LoggingExceptions.LogFinish();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
