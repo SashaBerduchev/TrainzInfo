@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 
@@ -29,6 +30,11 @@ namespace TrainzInfo
             //services.AddControllersWithViews();
             string connection = "";
             string trace = "";
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
+            });
+            services.AddMvc();
 
             if (DEBUG_MODE == true)
             {
@@ -61,6 +67,7 @@ namespace TrainzInfo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -74,10 +81,13 @@ namespace TrainzInfo
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            
+
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

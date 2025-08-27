@@ -32,6 +32,9 @@
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>
+<div>
+    <a class="btn btn-info" style="margin:10px" asp-action="ClearFilter">Скинути фільтр</a>
+</div>
 <div class="maininfo" style="position:absolute">
     @foreach (var item in Model)
     {

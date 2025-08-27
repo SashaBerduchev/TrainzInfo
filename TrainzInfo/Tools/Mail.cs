@@ -31,7 +31,11 @@ namespace TrainzInfo.Tools
             string bodymail = user.Name + "Новина: " + news + " опублікована, Дякуємо вам!!!";
             SendMail(bodymail, user);
         }
-
+        public static void SendLocomotivesAddMessage(string Loconame, string remoteIpAddres, Users user)
+        {
+            string bodymail = user.Name + "Локомотив: " + Loconame + " додано на сайт, Дякуємо вам!!!";
+            SendMail(bodymail, user);
+        }
         public static void SendMail(string body, Users user)
         {
             LoggingExceptions.LogInit("Mail", nameof(SendMessageNews));

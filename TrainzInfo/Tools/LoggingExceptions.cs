@@ -10,13 +10,13 @@ namespace TrainzInfo.Tools
     {
         static string folder = "Logs";
         static string folderlog = @"Logs";
-        static string StandartLog = "StandartLog.log";
-        static string SQLserversLog = "SQLLog.log";
+        static string StandartLog = "StandartWork.log";
+        static string SQLserversLog = "SQL.log";
         static string worklog = "WorkLog.log";
-        static string ExceptionLog = "ExceptionLog.log";
+        static string ExceptionLog = "Exceptions.log";
         static string ErrorLog = "ErrorLog.log";
         static string ConnectionLog = "ConnectionLog.log";
-        static string MailLog = "MailLog.log";
+        static string MailLog = "Mail.log";
         static string ExcelErrors = "ExcelErrors.log";
 
         static string startStandartLogStr = "";
@@ -44,9 +44,10 @@ namespace TrainzInfo.Tools
         }
         private static void StandartLogFile(string logmessage)
         {
-            logmessage = logmessage + "\n";
-            Trace.WriteLine(logmessage);
-            FileStream filestreamlog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
+            logmessage = DateTime.Now.ToString() + " - " + logmessage + "\n";
+            Trace.WriteLine( logmessage);
+            Console.WriteLine(logmessage);
+            FileStream filestreamlog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() + " - " + StandartLog, FileMode.Append);
             byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
             filestreamlog.Write(array, 0, array.Length);
             filestreamlog.Close();
@@ -124,7 +125,7 @@ namespace TrainzInfo.Tools
                 if (log.Contains("Executing DbCommand"))
                 {
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + worklog, FileMode.Append);
+                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() +" - " +  worklog, FileMode.Append);
                     byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                     fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
@@ -145,7 +146,7 @@ namespace TrainzInfo.Tools
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                     Trace.Write(standartlogging);
                     Console.WriteLine(standartlogging);
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + SQLserversLog, FileMode.Append);
+                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() + " - " + SQLserversLog, FileMode.Append);
                     byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                     fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
@@ -179,7 +180,7 @@ namespace TrainzInfo.Tools
                 string dir = folderlog + "\\" + log;
                 Console.WriteLine(log);
                 Trace.Write(log);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExceptionLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() + " - " + ExceptionLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(log.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
@@ -219,7 +220,7 @@ namespace TrainzInfo.Tools
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 Trace.Write(standartlogging);
                 Console.WriteLine(standartlogging);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + MailLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() + " - " + MailLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
