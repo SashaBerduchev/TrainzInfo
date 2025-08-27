@@ -59,19 +59,19 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            if (TempData["Seria"] is not null)
-            {
-                Seria = TempData["Seria"].ToString();
-            }
+            //if (TempData["Seria"] is not null)
+            //{
+            //    Seria = TempData["Seria"].ToString();
+            //}
 
-            if (TempData["Filia"] is not null)
-            {
-                Filia = TempData["Filia"].ToString();
-            }
-            if (TempData["Depot"] is not null)
-            {
-                Depot = TempData["Depot"].ToString();
-            }
+            //if (TempData["Filia"] is not null)
+            //{
+            //    Filia = TempData["Filia"].ToString();
+            //}
+            //if (TempData["Depot"] is not null)
+            //{
+            //    Depot = TempData["Depot"].ToString();
+            //}
 
             LoggingExceptions.WorkLog("Запит інформації");
             List<Locomotive> locomotives = new List<Locomotive>();
