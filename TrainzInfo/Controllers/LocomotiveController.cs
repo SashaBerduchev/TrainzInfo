@@ -59,7 +59,19 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
+            if (TempData["Seria"] is not null)
+            {
+                Seria = TempData["Seria"].ToString();
+            }
 
+            if (TempData["Filia"] is not null)
+            {
+                Filia = TempData["Filia"].ToString();
+            }
+            if (TempData["Depot"] is not null)
+            {
+                Depot = TempData["Depot"].ToString();
+            }
 
             LoggingExceptions.WorkLog("Запит інформації");
             List<Locomotive> locomotives = new List<Locomotive>();
@@ -258,9 +270,18 @@ namespace TrainzInfo.Controllers
             _context.Add(locomotive);
             await _context.SaveChangesAsync();
             //SendMessage(user);
-            int locid = _context.Locomotives.Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).Select(x => x.id).FirstOrDefault();
+            
+            Locomotive locosaved    = _context.Locomotives
+                .Include(x=>x.DepotList).Include(x=>x.DepotList.UkrainsRailway).
+                Include(x=>x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
+            int locid = locosaved.id;
+            TempData["Filia"] = locosaved.DepotList.UkrainsRailway.Name;
+            TempData["Seria"] = locosaved.Locomotive_Series.Seria;
+            TempData["Depot"] = locosaved.DepotList.Name;
             TempData["LocomotiveId"] = locid;
             Trace.WriteLine(TempData);
+
+
             return RedirectToAction(nameof(AddImageForm));
 
         }
