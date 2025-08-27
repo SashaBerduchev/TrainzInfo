@@ -6,21 +6,22 @@
 
 <h1>Локомотиви</h1>
 
-@if (ViewBag.user != null)
-{
-    if (ViewBag.user.Role == "Superadmin")
+<div style="margin:10px">
+    @if (ViewBag.user != null)
     {
-        <b>Кількість записів: @Model.Count().ToString()</b>
-        <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
-        @* <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            @* <b>Кількість записів: @Model.Count().ToString()</b> *@
+            <a class="btn btn-info" asp-action="Create">Додати локомотив</a>
+            @* <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
         <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
             <input type="file" name="uploads" /><br>
             <input type="submit" value="Зберегти" class="btn btn-primary" />
         </form>  *@
-        <a class="btn btn-info" asp-action="UpdateInfo">Оновити дані</a>
+            @* <a class="btn btn-info" asp-action="UpdateInfo">Оновити дані</a> *@
+        }
     }
-}
-
+</div>
 
 <form method="get">
     <div class="form-inline">
@@ -39,7 +40,7 @@
                 <div class="img">
                     <img class="img-thumbnail" width="350" height="250"
                          src="@Url.Action("GetImage", "Locomotive",
-                                                 new { item.id })" />
+                                                                          new { item.id })" />
             </div>
         </div>
         <div style="position:relative; left:410px; top:-230px; font-size:25px">

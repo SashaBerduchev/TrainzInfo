@@ -6,19 +6,21 @@
 
 <h1>Локомотиви</h1>
 
-@if (ViewBag.user != null)
-{
-    if (ViewBag.user.Role == "Superadmin")
+<div style="margin:10px">
+    @if (ViewBag.user != null)
     {
-        <b>Кількість записів: @Model.Count().ToString()</b>
-        @* <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
-        <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
-        <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
-            <input type="file" name="uploads" /><br>
-            <input type="submit" value="Зберегти" class="btn btn-primary" />
-        </form> *@
+        if (ViewBag.user.Role == "Superadmin")
+        {
+            @* <b>Кількість записів: @Model.Count().ToString()</b> *@
+            <a class="btn btn-info" asp-action="Create">Додати електровоз</a>
+            @* <a class="btn btn-info" asp-action="MakeChange">Виправити записи</a>
+            <form asp-controller="Locomotives" asp-action="AddNews" method="post" enctype="multipart/form-data">
+                <input type="file" name="uploads" /><br>
+                <input type="submit" value="Зберегти" class="btn btn-primary" />
+            </form> *@
+        }
     }
-}
+</div>
 
 <p>
     @if (ViewBag.user != null)
@@ -46,14 +48,14 @@
                 <div class="img">
                     <img class="img-thumbnail" width="350" height="250"
                          src="@Url.Action("GetImage", "Locomotive",
-                        new { item.id })" />
-                </div>
+                                                                          new { item.id })" />
             </div>
-            <div style="position:relative; left:410px; top:-180px; font-size:25px">
-                <div>@Html.DisplayName("Назва - ") @Html.DisplayFor(modelItem => item.Locomotive_Series.Seria)</div>
-                <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => item.Number)</div>
-                <div>@Html.DisplayName("Максимальна швидкість - ") @Html.DisplayFor(modelItem => item.Speed)</div>
-                <div>@Html.DisplayName("Депо - ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
+        </div>
+        <div style="position:relative; left:410px; top:-180px; font-size:25px">
+            <div>@Html.DisplayName("Назва - ") @Html.DisplayFor(modelItem => item.Locomotive_Series.Seria)</div>
+            <div>@Html.DisplayName("Номер - ") @Html.DisplayFor(modelItem => item.Number)</div>
+            <div>@Html.DisplayName("Максимальна швидкість - ") @Html.DisplayFor(modelItem => item.Speed)</div>
+            <div>@Html.DisplayName("Депо - ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>
 
             </div>
             <div style="position:relative; left:780px; top:-360px; width:250px">
@@ -61,7 +63,7 @@
 
                 <a class="btn btn-outline-info" style="width:250px; margin:10px;" asp-action="Details" asp-route-id="@item.id">Детальна інформаціія</a>
                 <a class="btn btn-outline-success" style="width:250px; margin:10px;" asp-controller="UserLocomotivePhotos" asp-action="Index" asp-route-name="@item.Seria" asp-route-number="@item.Number">Фото користувачів</a>
-                @if (ViewBag.user != null)
+            @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {

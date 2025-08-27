@@ -39,7 +39,7 @@ namespace TrainzInfo.Controllers
                 item.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == item.Seria).FirstOrDefaultAsync();
                 locomotivesupdate.Add(item);
                 item.DepotList = depot;
-                if(depot.Locomotives is null)
+                if (depot.Locomotives is null)
                 {
                     depot.Locomotives = new List<Locomotive>();
                 }
@@ -60,14 +60,14 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
 
-            
+
             LoggingExceptions.WorkLog("Запит інформації");
             List<Locomotive> locomotives = new List<Locomotive>();
             IQueryable<Locomotive> query = _context.Locomotives
                 .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
                 .Include(x => x.DepotList.UkrainsRailway)
-                .Include(x=>x.DepotList.City.Oblasts).AsQueryable();
+                .Include(x => x.DepotList.City.Oblasts).AsQueryable();
 
             query = query.Where(x => true);
             if (Filia != null)
@@ -83,6 +83,9 @@ namespace TrainzInfo.Controllers
                 query = query.Where(x => x.DepotList.Name == Depot);
             }
             locomotives = await query.ToListAsync();
+            TempData["Filia"] = Filia;
+            TempData["Seria"] = Seria;
+            TempData["Depot"] = Depot;
             UpdateFilter(locomotives);
             return View(locomotives);
         }
@@ -102,8 +105,8 @@ namespace TrainzInfo.Controllers
             serieses.AddRange(locomotives.AsParallel().Select(x => x.Seria).Distinct().ToList());
             // Вываод на форму
             LoggingExceptions.WorkLog("Вивід на форму");
-            ViewBag.filia = new SelectList(filiasstr); 
-            ViewBag.seria = new SelectList(serieses); 
+            ViewBag.filia = new SelectList(filiasstr);
+            ViewBag.seria = new SelectList(serieses);
             ViewBag.depot = new SelectList(depotsname);
         }
 
@@ -116,18 +119,18 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             //List<DepotList> depots = await _context.Depots.ToListAsync();
-            List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
+            //List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
             List<Locomotive> locomotives = new List<Locomotive>();
             if (id != null)
             {
-                locomotives = await _context.Locomotives.Include(x=>x.DepotList).Include(x=>x.Locomotive_Series).Include(x=>x.UserLocomotivesPhoto).Include(x=>x.LocomotiveBaseInfo).Where(x=>x.DepotList.id == id).ToListAsync();
+                locomotives = await _context.Locomotives.Include(x => x.DepotList).Include(x => x.Locomotive_Series).Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo).Where(x => x.DepotList.id == id).ToListAsync();
             }
             else
             {
                 return NotFound();
             }
-            
-            SelectList locomotiveSeries = new SelectList(locomotives.Select(x=>x.Locomotive_Series.Seria).ToList());
+
+            SelectList locomotiveSeries = new SelectList(locomotives.Select(x => x.Locomotive_Series.Seria).ToList());
             ViewBag.seria = locomotiveSeries;
             return View(locomotives);
         }
@@ -183,13 +186,29 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             List<string> serieslist = new List<string>();
+            List<string> depotlist = new List<string>();
+            IQueryable<Locomotive_series> querySeria = _context.Locomotive_Series.OrderBy(x => x.Seria).AsQueryable();
+            IQueryable<DepotList> queryDepot = _context.Depots
+                .Include(x=>x.UkrainsRailway).OrderBy(x => x.Name).AsQueryable();
+            if (TempData["Seria"] is not null)
+            {
+                querySeria = querySeria.Where(x => x.Seria.Contains(TempData["Seria"].ToString()));
+            }
+
+            if (TempData["Filia"] is not null)
+            {
+                queryDepot = queryDepot.Where(x =>x.UkrainsRailway.Name.Contains(TempData["Filia"].ToString()));
+            }
+            if (TempData["Depot"] is not null)
+            {
+                queryDepot = queryDepot.Where(x => x.Name.Contains(TempData["Depot"].ToString()));
+            }
             serieslist.Add("");
-            serieslist.AddRange(await _context.Locomotive_Series.OrderBy(x=>x.Seria).Select(x => x.Seria).ToListAsync());
+            serieslist.AddRange(await querySeria.Select(x => x.Seria).ToListAsync());
             SelectList seria = new SelectList(serieslist);
             ViewBag.Seria = seria;
-            List<string> depotlist = new List<string>();
             depotlist.Add("");
-            depotlist.AddRange(await _context.Depots.Where(x=>x.Name.Contains("ТЧ")).OrderBy(x=>x.Name).Select(x=>x.Name).ToListAsync());
+            depotlist.AddRange(await queryDepot.Where(x=>x.Name.Contains("ТЧ")).Select(x => x.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             return View();
@@ -212,11 +231,11 @@ namespace TrainzInfo.Controllers
                 userId = user.Id;
             }
             locomotive.User = myuser;
-            locomotive.DepotList = await _context.Depots.Where(x=>x.Name == locomotive.Depot).FirstOrDefaultAsync();
-            locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
-            Locomotive_series locomotive_Series = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Seria).FirstOrDefaultAsync();
+            locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
+            locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
+            Locomotive_series locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
             DepotList depotList = locomotive.DepotList;
-            if(locomotive_Series.Locomotives == null)
+            if (locomotive_Series.Locomotives == null)
             {
                 locomotive_Series.Locomotives = new List<Locomotive>();
             }
@@ -224,7 +243,7 @@ namespace TrainzInfo.Controllers
             {
                 locomotive_Series.Locomotives.Add(locomotive);
                 _context.Locomotive_Series.Update(locomotive_Series);
-                
+
             }
             if (depotList.Locomotives == null)
             {
@@ -435,12 +454,12 @@ namespace TrainzInfo.Controllers
                     locomotive.DepotList = depot;
                     locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Update(locomotive);
-                    Locomotive_series locomotiveSeries = await _context.Locomotive_Series.Where(x=>x.Seria == locomotive.Locomotive_Series.Seria).FirstOrDefaultAsync();
+                    Locomotive_series locomotiveSeries = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Locomotive_Series.Seria).FirstOrDefaultAsync();
                     if (locomotiveSeries.Locomotives == null)
                     {
                         locomotiveSeries.Locomotives = new List<Locomotive>();
                     }
-                    if(depot.Locomotives is null)
+                    if (depot.Locomotives is null)
                     {
                         depot.Locomotives = new List<Locomotive>();
                     }
