@@ -81,7 +81,7 @@ namespace TrainzInfo.Tools
                 Trace.WriteLine("------Start log------- \n" + log + "\n -------EndLog--------\n");
                 Console.WriteLine(log);
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ConnectionLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + ConnectionLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
@@ -125,7 +125,7 @@ namespace TrainzInfo.Tools
                 if (log.Contains("Executing DbCommand"))
                 {
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.Date.ToShortDateString().ToString() +" - " +  worklog, FileMode.Append);
+                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " +  worklog, FileMode.Append);
                     byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                     fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
@@ -146,7 +146,7 @@ namespace TrainzInfo.Tools
                     string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                     Trace.Write(standartlogging);
                     Console.WriteLine(standartlogging);
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" +  SQLserversLog, FileMode.Append);
+                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog, FileMode.Append);
                     byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                     fileStreamLog.Write(array, 0, array.Length);
                     fileStreamLog.Close();
@@ -165,7 +165,7 @@ namespace TrainzInfo.Tools
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 Console.WriteLine(standartlogging);
                 Trace.Write(standartlogging);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ErrorLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + ErrorLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
@@ -180,7 +180,7 @@ namespace TrainzInfo.Tools
                 string dir = folderlog + "\\" + log;
                 Console.WriteLine(log);
                 Trace.Write(log);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExceptionLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + ExceptionLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(log.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
@@ -199,7 +199,7 @@ namespace TrainzInfo.Tools
             {
                 string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
                 string dir = folderlog + "\\" + log;
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + ExcelErrors, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + " - " + ExcelErrors, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(log.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
@@ -220,7 +220,7 @@ namespace TrainzInfo.Tools
                 string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
                 Trace.Write(standartlogging);
                 Console.WriteLine(standartlogging);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + MailLog, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + MailLog, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 fileStreamLog.Close();
