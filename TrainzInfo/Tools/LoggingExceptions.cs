@@ -47,7 +47,7 @@ namespace TrainzInfo.Tools
             logmessage = DateTime.Now.ToString() + " - " + logmessage + "\n";
             Trace.WriteLine( logmessage);
             Console.WriteLine(logmessage);
-            FileStream filestreamlog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
+            FileStream filestreamlog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + StandartLog, FileMode.Append);
             byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
             filestreamlog.Write(array, 0, array.Length);
             filestreamlog.Close();
