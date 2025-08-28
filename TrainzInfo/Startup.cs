@@ -18,24 +18,31 @@ namespace TrainzInfo
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            LoggingExceptions.CreateFolder();
         }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(ConfigureServices));
+            LoggingExceptions.LogInit("Startup", nameof(ConfigureServices));
             LoggingExceptions.LogStart();
-            //services.AddControllersWithViews();
+            LoggingExceptions.LogWright("Try add services");
+            services.AddControllersWithViews();
             string connection = "";
             string trace = "";
-            services.AddDistributedMemoryCache();
-            services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(1);
+            LoggingExceptions.LogWright("Try add DB context");
+            services.AddMemoryCache();
+            LoggingExceptions.LogWright("Try add session");
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
+            LoggingExceptions.LogWright("Try add MVC");
             services.AddMvc();
-
+            
+            LoggingExceptions.LogWright("Try find connection string");  
             if (DEBUG_MODE == true)
             {
                 if (START_IN_PROD_DB == false)
@@ -56,18 +63,20 @@ namespace TrainzInfo
                 trace = ("server connection good!!" + connection);
 
             }
-            LoggingExceptions.LogWright(connection);
+            LoggingExceptions.LogWright(trace);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
             Mail mail = new Mail();
-            LoggingExceptions.LogWright(trace);
             LoggingExceptions.LogFinish();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            LoggingExceptions.LogInit("Startup", nameof(Configure));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Try configure app");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -78,22 +87,25 @@ namespace TrainzInfo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            LoggingExceptions.LogWright("Try use HTTPS redirection");
             app.UseHttpsRedirection();
+            LoggingExceptions.LogWright("Try use static files");
             app.UseStaticFiles();
-
-            
-
+            LoggingExceptions.LogWright("Try use routing");
             app.UseRouting();
-
+            LoggingExceptions.LogWright("Try use authorization");
             app.UseAuthorization();
+            LoggingExceptions.LogWright("Try use session");
             app.UseSession();
-            
+            LoggingExceptions.LogWright("Try use endpoints");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            LoggingExceptions.LogFinish();
+
         }
 
         public static bool GetConfig()
