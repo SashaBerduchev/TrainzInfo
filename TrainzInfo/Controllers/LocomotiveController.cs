@@ -319,9 +319,7 @@ namespace TrainzInfo.Controllers
             locomotive.id = 0;
             LoggingExceptions.LogWright("Try save locomotive: " + locomotive.Seria + " - " + locomotive.Number);
             _context.Add(locomotive);
-            LoggingExceptions.LogWright(_context.Locomotives.ToQueryString());
             await _context.SaveChangesAsync();
-
             LoggingExceptions.LogWright("Try send email to user: " + user.Email);
             Locomotive locosaved    = _context.Locomotives
                 .Include(x=>x.DepotList).Include(x=>x.DepotList.UkrainsRailway).
