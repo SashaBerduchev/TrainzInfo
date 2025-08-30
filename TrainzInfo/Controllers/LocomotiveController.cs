@@ -89,7 +89,7 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.DepotList.City.Oblasts).AsQueryable();
 
             query = query.Where(x => true);
-            LoggingExceptions.LogWright(query.ToQueryString());
+            
             LoggingExceptions.LogWright("Фільтр по філії, серії, депо");
             if (Filia != null)
             {
@@ -115,7 +115,7 @@ namespace TrainzInfo.Controllers
                 HttpContext.Session.SetString("Depot", Depot);
                 LoggingExceptions.LogWright("Зберегли сесію Depot: " + Depot);
             }
-
+            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
             locomotives = await query.ToListAsync();
             
             UpdateFilter(locomotives);
@@ -192,6 +192,9 @@ namespace TrainzInfo.Controllers
         // GET: Locomotive/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(Details));
+            LoggingExceptions.LogStart();   
+            LoggingExceptions.LogWright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
@@ -203,14 +206,16 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            LoggingExceptions.LogWright("Try find locomotive by id: " + id);
             var Locomotives = await _context.Locomotives
                 .FirstOrDefaultAsync(m => m.id == id);
             if (Locomotives == null)
             {
+                LoggingExceptions.LogWright("Locomotive not found");
                 return NotFound();
             }
-
+            LoggingExceptions.LogWright("Locomotive found: " + Locomotives.Seria + " - " + Locomotives.Number);
+            LoggingExceptions.LogFinish();
             return View(Locomotives);
         }
 
@@ -391,10 +396,15 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(AddImage));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             if (id != null)
                 if (uploads != null)
                 {
+                    LoggingExceptions.LogWright("Try find locomotive by id: " + id);
                     Locomotive locomotive = await _context.Locomotives.Where(x => x.id == id).FirstOrDefaultAsync();
+                    LoggingExceptions.LogWright("Try read image stream");
                     byte[] p1 = null;
                     using (var fs1 = uploads.OpenReadStream())
                     using (var ms1 = new MemoryStream())
@@ -403,7 +413,9 @@ namespace TrainzInfo.Controllers
                         p1 = ms1.ToArray();
                     }
                     Trace.WriteLine(uploads.ContentType.ToString());
+                    LoggingExceptions.LogWright("Image content type: " + uploads.ContentType.ToString());
                     Trace.WriteLine(p1);
+                    LoggingExceptions.LogWright("Image size: " + p1.Length);
                     locomotive.ImageMimeTypeOfData = uploads.ContentType;
                     locomotive.Image = p1;
                     using (MemoryStream ms = new MemoryStream(locomotive.Image, 0, locomotive.Image.Length))
@@ -423,10 +435,13 @@ namespace TrainzInfo.Controllers
                             }
                         }
                     }
+                    LoggingExceptions.LogWright("Try update locomotive with image");
                     locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
                     locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Locomotives.Update(locomotive);
+                    LoggingExceptions.LogWright("Try save changes to database");
                     await _context.SaveChangesAsync();
+                    LoggingExceptions.LogFinish();
                     return RedirectToAction(nameof(Index));
                 }
 
