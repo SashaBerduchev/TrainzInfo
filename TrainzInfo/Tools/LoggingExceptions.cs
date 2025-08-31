@@ -176,7 +176,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
+                string log = "------Start log------- \n" + exception + "\n -------EndLog--------\n";
                 string dir = folderlog + "\\" + log;
                 Console.WriteLine(log);
                 Trace.Write(log);

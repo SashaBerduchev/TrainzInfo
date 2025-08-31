@@ -218,6 +218,9 @@ namespace TrainzInfo.Controllers
         // GET: Stations/Details/5
         public async Task<IActionResult> Details(string? name)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(Details));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Enter Details stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
@@ -228,15 +231,19 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
-            var stations = await _context.Stations.Include(x => x.Users).Include(x => x.UkrainsRailways)
+            LoggingExceptions.LogWright("Get station by name: " + name);
+            Stations stations = new Stations();
+            IQueryable query =  _context.Stations.Include(x => x.Users).Include(x => x.UkrainsRailways)
                 .Include(x => x.Oblasts).Include(x => x.Citys).Include(x => x.StationInfo)
-                .Include(x => x.railwayUsersPhotos).Where(x => x.Name == name).FirstOrDefaultAsync();
+                .Include(x => x.railwayUsersPhotos).Where(x => x.Name == name);
             if (stations == null)
             {
                 return NotFound();
             }
-            
+            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
+            stations = await query.Cast<Stations>().FirstOrDefaultAsync();
+            LoggingExceptions.LogWright("Get station id: " + stations.id.ToString());
+            LoggingExceptions.LogFinish();
             return View(stations);
         }
 

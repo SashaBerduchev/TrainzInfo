@@ -7,6 +7,13 @@
 <h1>@Model.Seria</h1>
 <html>
 <head>
+    <meta property="og:image" content="@Url.Action("GetImage", "Locomotive",
+                                 new { Model.id })" ">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:site_name" content="trainzinfo" />
+    <meta property="og:title" content="@Html.DisplayName(Model.Seria + " - " + Model.Number)">
+    <meta property="og:description" content="@ViewBag.base_info">
+
     <meta name="viewport" content="width=device-width" />
     <title>Details</title>
 </head>

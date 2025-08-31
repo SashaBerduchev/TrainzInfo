@@ -428,8 +428,12 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(Edit));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Start edit electric train");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
@@ -438,13 +442,13 @@ namespace TrainzInfo.Controllers
             {
                 return NotFound();
             }
-
+            LoggingExceptions.LogWright("Get electric train by id: " + id);
             var electricTrain = await _context.Electrics.FindAsync(id);
             if (electricTrain == null)
             {
                 return NotFound();
             }
-
+            LoggingExceptions.LogWright("Electric train found: " + electricTrain.Name);
             SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
             ViewBag.users = users;
             SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
@@ -453,6 +457,8 @@ namespace TrainzInfo.Controllers
             ViewBag.plants = plants;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
             ViewBag.models = models;
+            LoggingExceptions.LogWright("Edit electric train view prepared");
+            LoggingExceptions.LogFinish();
             return View(electricTrain);
         }
 
@@ -463,8 +469,10 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, MaxSpeed,Imgsrc, DepotTrain, LastKvr, CreatedTrain, PlantCreate, PlantKvr, User")] ElectricTrain electricTrain)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(Edit));
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
             if (userlog != null && userlog.Status == "true")
             {
                 ViewBag.user = userlog;
@@ -476,12 +484,22 @@ namespace TrainzInfo.Controllers
 
             //if (ModelState.IsValid)
             //{
+            LoggingExceptions.LogWright("Start edit electric train: " + electricTrain.Name);
             try
             {
+                LoggingExceptions.LogWright("Get depot city");
                 var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
+                LoggingExceptions.LogWright("Get electric train by id: " + electricTrain.id);
                 ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
                 DepotList depot = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
+                DepotList olddepo = electricTrain.DepotList;
+                if(olddepo is not null)
+                {
+                    olddepo.ElectricTrains.Remove(train);
+                }
+                LoggingExceptions.LogWright("Update old depot list");
+                _context.Depots.Update(olddepo);
                 train.Name = electricTrain.Name;
                 train.Model = electricTrain.Model;
                 train.MaxSpeed = electricTrain.MaxSpeed;
@@ -497,10 +515,13 @@ namespace TrainzInfo.Controllers
                 {
                     train.Users = userlog;
                 }
+                LoggingExceptions.LogWright("Update plants");
                 train.PlantsCreate = await _context.Plants.Where(x => x.Name == train.PlantCreate).FirstOrDefaultAsync();
                 train.PlantsKvr = await _context.Plants.Where(x => x.Name == train.PlantKvr).FirstOrDefaultAsync();
                 _context.Update(train);
+                LoggingExceptions.LogWright("Save changes");
                 await _context.SaveChangesAsync();
+                LoggingExceptions.LogWright("Get suburban info");
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
                 if (suburbanTrainsInfo.ElectricTrain == null)
                 {
@@ -510,12 +531,15 @@ namespace TrainzInfo.Controllers
                 {
                     depot.ElectricTrains = new List<ElectricTrain>();
                 }
+                LoggingExceptions.LogWright("Update depot list");
                 depot.ElectricTrains.Add(train);
                 suburbanTrainsInfo.ElectricTrain.Add(train);
                 _context.SuburbanTrainsInfos.Update(suburbanTrainsInfo);
                 _context.Depots.Update(depot);
+                LoggingExceptions.LogWright("Save changes");
                 await _context.SaveChangesAsync();
-                SendMessage(userlog);
+                LoggingExceptions.LogWright("Electric train edited successfully: " + electricTrain.Name);
+                //SendMessage(userlog);
 
             }
             catch (DbUpdateConcurrencyException)
