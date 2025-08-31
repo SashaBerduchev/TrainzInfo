@@ -6,21 +6,21 @@
 
 <h1>Всі станції</h1>
 <h2>@Html.DisplayName(ViewBag.Filia)</h2>
-@if (ViewBag.user != null)
+@* @if (ViewBag.user != null)
 {
     if (ViewBag.user.Role == "Superadmin")
     {
         <b>Колличество записей: @Model.Count().ToString()</b>
         <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a>
     }
-}
+} *@
 <p>
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
         {
             <a class="btn btn-dark" asp-action="Create">Додати</a>
-            <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a>
+            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
         }
     }
 </p>
@@ -34,6 +34,10 @@
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>
+<div>
+    <a class="btn btn-info" style="margin:10px" asp-action="ClearFilter">Скинути фільтр</a>
+</div>
+
 <div>
     @foreach (var item in Model)
     {

@@ -10,7 +10,7 @@
 {
     if (ViewBag.user.Role == "Superadmin")
     {
-        <b>Колличество записей: @Model.Count().ToString()</b>
+        @* <b>Колличество записей: @Model.Count().ToString()</b> *@
         @* <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a> *@
         <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
     }
