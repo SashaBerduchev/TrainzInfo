@@ -1,19 +1,20 @@
 ﻿@model IEnumerable<TrainzInfo.Models.Stations>
 
 @{
-    ViewData["Title"] = "Всі станції";
+    ViewData["Title"] = "Станції";
 }
 
-<h1>Всі станції</h1>
+<h1>Станції</h1>
 <h2>@Html.DisplayName(ViewBag.Filia)</h2>
-@* @if (ViewBag.user != null)
+@if (ViewBag.user != null)
 {
     if (ViewBag.user.Role == "Superadmin")
     {
-        <b>Колличество записей: @Model.Count().ToString()</b>
-        <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a>
+        @* <b>Колличество записей: @Model.Count().ToString()</b> *@
+        @* <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a> *@
+        <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
     }
-} *@
+}
 <p>
     @if (ViewBag.user != null)
     {
@@ -35,10 +36,6 @@
     </div>
 </form>
 <div>
-    <a class="btn btn-info" style="margin:10px" asp-action="ClearFilter">Скинути фільтр</a>
-</div>
-
-<div>
     @foreach (var item in Model)
     {
         <div style="background-color:aliceblue; margin:20px; height:430px;">
@@ -46,12 +43,12 @@
                 <div class="img">
                     <img class="img-thumbnail" width="350" height="250"
                          src="@Url.Action("GetImage", "Stations",
-                        new { item.id })" />
-                </div>
+                                                 new { item.id })" />
             </div>
-            <div style="position:relative; left:400px; top:-230px; font-size:25px">
-                <div>@Html.DisplayName("Назва станції: ") @Html.DisplayFor(modelItem => item.Name)</div>
-                @if (item.Oblasts != null)
+        </div>
+        <div style="position:relative; left:400px; top:-230px; font-size:25px">
+            <div>@Html.DisplayName("Назва станції: ") @Html.DisplayFor(modelItem => item.Name)</div>
+            @if (item.Oblasts != null)
                 {
                     <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblasts.Name)</div>
                     <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.Citys.Name)</div>
@@ -62,7 +59,10 @@
                 <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>
 
                 <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@item.Name">Інформація</a>
-
+                @if (item.railwayUsersPhotos != null)
+                {
+                    <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@item.id">Фотографії користувачів</a>
+                }
                 @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")

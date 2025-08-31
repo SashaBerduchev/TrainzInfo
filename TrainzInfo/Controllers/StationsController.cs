@@ -79,9 +79,19 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get stations count: " + stations.Count.ToString());
             UpdateFilter(stations);
             LoggingExceptions.LogWright("Update filter");
-            HttpContext.Session.SetString("LastFilial", FilialsName);
-            HttpContext.Session.SetString("LastStation", NameStation);
-            HttpContext.Session.SetString("LastOblast", Oblast);
+            
+            if (FilialsName is not null)
+            {
+                HttpContext.Session.SetString("LastFilial", FilialsName);
+            }
+            if (NameStation is not null)
+            {
+                HttpContext.Session.SetString("LastStation", NameStation);
+            }
+            if (Oblast is not null)
+            {
+                HttpContext.Session.SetString("LastOblast", Oblast);
+            }
             LoggingExceptions.LogFinish();
             return View(stations);
         }
