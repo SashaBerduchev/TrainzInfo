@@ -25,7 +25,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).Distinct().ToListAsync();
                 return Ok(names);
             }
             catch (Exception exp)
@@ -42,7 +42,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).Distinct().ToListAsync();
                 return Ok(names);
             }
             catch (Exception exp)

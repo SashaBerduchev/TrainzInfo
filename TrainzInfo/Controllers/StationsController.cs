@@ -42,13 +42,22 @@ namespace TrainzInfo.Controllers
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogWright("Get user by IP: " + remoteIpAddres);
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+            LoggingExceptions.LogWright("Get last filter from session");
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
-            if(FilialsName == null)
+            if (HttpContext.Session.GetString("LastFilial") is not null)
             {
-                FilialsName = TempData["FiliasStation"].ToString();
+                FilialsName = HttpContext.Session.GetString("LastFilial").ToString();
+            }
+            if (HttpContext.Session.GetString("LastStation") is not null)
+            {
+                NameStation = HttpContext.Session.GetString("LastStation").ToString();
+            }
+            if (HttpContext.Session.GetString("LastOblast") is not null)
+            {
+                Oblast = HttpContext.Session.GetString("LastOblast").ToString();
             }
             LoggingExceptions.LogWright("Get stations from DB");
             List<Stations> stations = new List<Stations>();
