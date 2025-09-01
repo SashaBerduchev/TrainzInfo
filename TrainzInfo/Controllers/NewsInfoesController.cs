@@ -209,15 +209,10 @@ namespace TrainzInfo.Controllers
 
         public async Task<FileContentResult> GetImage(int id)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(GetImage));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("id = " + id.ToString());
             try
             {
-                LoggingExceptions.LogWright("Запрос изображения новости по id = " + id.ToString());
                 NewsInfo news = await _context.NewsInfos
                     .FirstOrDefaultAsync(g => g.id == id);
-                LoggingExceptions.LogWright("Новость найдена - " + news.NameNews);
                 if (news != null)
                 {
                     LoggingExceptions.LogWright("Попытка вывести изображение новости - " + news.NameNews);
@@ -233,13 +228,8 @@ namespace TrainzInfo.Controllers
                 }
             }catch(Exception exp)
             {
-                LoggingExceptions.LogWright("Ошибка при выводе изображения новости - " + exp.ToString());
                 LoggingExceptions.AddException(exp.ToString());
                 return null;
-            }finally
-            {
-                LoggingExceptions.LogWright("Завершение метода");
-                LoggingExceptions.LogFinish();
             }
         }
 
