@@ -470,10 +470,10 @@ namespace TrainzInfo.Controllers
             return View(locomotive);
         }
 
-        public FileContentResult GetImage(int id)
+        public async Task<FileContentResult> GetImage(int id)
         {
-            Locomotive locomotive = _context.Locomotives
-                .FirstOrDefault(g => g.id == id);
+            Locomotive locomotive = await _context.Locomotives
+                .FirstOrDefaultAsync(g => g.id == id);
 
             if (locomotive != null)
             {

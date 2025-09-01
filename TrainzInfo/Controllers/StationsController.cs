@@ -68,39 +68,32 @@ namespace TrainzInfo.Controllers
                 .OrderBy(x => x.Name).Distinct().AsQueryable();
 
             LoggingExceptions.LogWright("Check filials");
-            if (FilialsName != null)
+            if (FilialsName is not null)
             {
                 LoggingExceptions.LogWright("Filter by filials: " + FilialsName);
                 query = query.Where(x => x.UkrainsRailways.Name == FilialsName);
+                LoggingExceptions.LogWright("Set session LastFilial: " + FilialsName);
+                HttpContext.Session.SetString("LastFilial", FilialsName);
             }
-            if(NameStation != null)
+            if(NameStation is not null)
             {
                 LoggingExceptions.LogWright("Filter by station name: " + NameStation);
                 query = query.Where(x => x.Name == NameStation);
+                LoggingExceptions.LogWright("Set session LastStation: " + NameStation);
+                HttpContext.Session.SetString("LastStation", NameStation);
             }
-            if(Oblast != null)
+            if(Oblast is not null)
             {
                 LoggingExceptions.LogWright("Filter by oblast: " + Oblast);
                 query = query.Where(x => x.Oblasts.Name == Oblast);
+                LoggingExceptions.LogWright("Set session LastOblast: " + Oblast);
+                HttpContext.Session.SetString("LastOblast", Oblast);
             }
             LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
             stations = await query.ToListAsync();
             LoggingExceptions.LogWright("Get stations count: " + stations.Count.ToString());
             UpdateFilter(stations);
             LoggingExceptions.LogWright("Update filter");
-            
-            if (FilialsName is not null)
-            {
-                HttpContext.Session.SetString("LastFilial", FilialsName);
-            }
-            if (NameStation is not null)
-            {
-                HttpContext.Session.SetString("LastStation", NameStation);
-            }
-            if (Oblast is not null)
-            {
-                HttpContext.Session.SetString("LastOblast", Oblast);
-            }
             LoggingExceptions.LogFinish();
             return View(stations);
         }
@@ -407,13 +400,13 @@ namespace TrainzInfo.Controllers
             return View(stations);
         }
 
-        public FileContentResult GetImage(int id)
+        public async Task<FileContentResult> GetImage(int id)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(GetImage));
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Enter GetImage stations");
-            Stations station = _context.Stations
-                .FirstOrDefault(g => g.id == id);
+            Stations station = await _context.Stations
+                .FirstOrDefaultAsync(g => g.id == id);
             LoggingExceptions.LogWright("Get station by id: " + id.ToString());
             try
             {
@@ -456,10 +449,10 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogFinish();
             return null;
         }
-        public FileContentResult GetImageDetails(int id)
+        public async Task<FileContentResult> GetImageDetails(int id)
         {
-            Stations station = _context.Stations
-                .FirstOrDefault(g => g.id == id);
+            Stations station = await _context.Stations
+                .FirstOrDefaultAsync(g => g.id == id);
 
             if (station != null)
             {

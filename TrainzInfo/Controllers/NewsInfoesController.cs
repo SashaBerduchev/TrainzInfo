@@ -207,22 +207,39 @@ namespace TrainzInfo.Controllers
             Mail.SendMessageNews(nameNews, remoteIpAddres, user);
         }
 
-        public FileContentResult GetImage(int id)
+        public async Task<FileContentResult> GetImage(int id)
         {
-            NewsInfo news = _context.NewsInfos
-                .FirstOrDefault(g => g.id == id);
-
-            if (news != null)
+            LoggingExceptions.LogInit(this.ToString(), nameof(GetImage));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("id = " + id.ToString());
+            try
             {
-                var file = File(news.NewsImage, news.ImageMimeTypeOfData);
-                Trace.WriteLine(news.NewsImage + " + " + news.ImageMimeTypeOfData.ToString());
-                Trace.WriteLine(file);
-                return file;
+                LoggingExceptions.LogWright("Запрос изображения новости по id = " + id.ToString());
+                NewsInfo news = await _context.NewsInfos
+                    .FirstOrDefaultAsync(g => g.id == id);
+                LoggingExceptions.LogWright("Новость найдена - " + news.NameNews);
+                if (news != null)
+                {
+                    LoggingExceptions.LogWright("Попытка вывести изображение новости - " + news.NameNews);
+                    var file = File(news.NewsImage, news.ImageMimeTypeOfData);
+                    Trace.WriteLine(news.NewsImage + " + " + news.ImageMimeTypeOfData.ToString());
+                    Trace.WriteLine(file);
+                    return file;
 
-            }
-            else
+                }
+                else
+                {
+                    return null;
+                }
+            }catch(Exception exp)
             {
+                LoggingExceptions.LogWright("Ошибка при выводе изображения новости - " + exp.ToString());
+                LoggingExceptions.AddException(exp.ToString());
                 return null;
+            }finally
+            {
+                LoggingExceptions.LogWright("Завершение метода");
+                LoggingExceptions.LogFinish();
             }
         }
 

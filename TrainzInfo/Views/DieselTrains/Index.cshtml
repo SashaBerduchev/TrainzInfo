@@ -22,18 +22,20 @@
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>
-
+<div>
+    <a class="btn btn-info" style="margin:10px" asp-action="ClearFilter">Скинути фільтр</a>
+</div>
 @foreach (var item in Model)
 {
     <div style="background-color:aliceblue; margin:20px; height:430px;">
         <div style="margin:20px; position:relative; top:20px">
             <div class="img">
-                <img class="img-thumbnail" width="350" height="250"
+                <img class="img-thumbnail" width="400" height="120"
                      src="@Url.Action("GetImage", "DieselTrains",
-                                                                                       new { item.Id })" />
+                                                new { item.Id })" />
         </div>
     </div>
-    <div style="position:relative; left:400px; top:-230px; font-size:25px">
+    <div style="position:relative; left:460px; top:-230px; font-size:25px">
         <div>@Html.DisplayName("Назва поїзда: ") @Html.DisplayFor(modelItem => item.SuburbanTrainsInfo.Model)</div>
         <div>@Html.DisplayName("Номер: ") @Html.DisplayFor(modelItem => item.NumberTrain)</div>
         <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelItem => item.DepotList.Name)</div>

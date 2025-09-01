@@ -180,7 +180,7 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("User found - " + user.Name +" "+ user.Email);
                 ViewBag.user = user;
             }
-
+            LoggingExceptions.LogWright("Try to get news");
             List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x=>x.DateTime).ToListAsync();
             LoggingExceptions.LogFinish();
             return View(newsInfo);

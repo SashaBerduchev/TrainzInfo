@@ -402,10 +402,10 @@ namespace TrainzInfo.Controllers
             return View(train);
         }
 
-        public FileContentResult GetImage(int id)
+        public async Task<FileContentResult> GetImage(int id)
         {
-            ElectricTrain train = _context.Electrics
-                .FirstOrDefault(g => g.id == id);
+            ElectricTrain train = await _context.Electrics
+                .FirstOrDefaultAsync(g => g.id == id);
             try
             {
                 if (train != null)
