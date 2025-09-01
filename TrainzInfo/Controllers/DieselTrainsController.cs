@@ -2,16 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Migrations;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
@@ -303,19 +302,27 @@ namespace TrainzInfo.Controllers
                     train.Image = p1;
                     using (MemoryStream ms = new MemoryStream(train.Image, 0, train.Image.Length))
                     {
-                        using (Image img = Image.FromStream(ms))
-                        {
-                            int h = 250;
-                            int w = 300;
 
-                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                        int h = 250;
+                        int w = 300;
+                        using (Image img = Image.Load(ms))
+                        {
+
+                            img.Mutate(x => x.Resize(w, h));
+                            using (MemoryStream ms2 = new MemoryStream())
                             {
-                                using (MemoryStream ms2 = new MemoryStream())
-                                {
-                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                    train.Image = ms2.ToArray();
-                                }
-                            }
+                                img.SaveAsJpeg(ms2);
+                                train.Image = ms2.ToArray();
+                            }; // формат определяется по расширению файла
+
+                            //using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            //{
+                            //    using (MemoryStream ms2 = new MemoryStream())
+                            //    {
+                            //        b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            //        station.Image = ms2.ToArray();
+                            //    }
+                            //}
                         }
                     }
                     _context.DieselTrains.Update(train);

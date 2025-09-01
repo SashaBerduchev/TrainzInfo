@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace TrainzInfo.Controllers
             }
             if (HttpContext.Session.GetString("Depot") is not null)
             {
-                LoggingExceptions.LogWright("Знайшли сесію Depot: " + HttpContext.Session.GetString("Depot").ToString());   
+                LoggingExceptions.LogWright("Знайшли сесію Depot: " + HttpContext.Session.GetString("Depot").ToString());
                 Depot = HttpContext.Session.GetString("Depot").ToString();
             }
             HttpContext.Session.Clear();
@@ -89,7 +90,7 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.DepotList.City.Oblasts).AsQueryable();
 
             query = query.Where(x => true);
-            
+
             LoggingExceptions.LogWright("Фільтр по філії, серії, депо");
             if (Filia != null)
             {
@@ -117,7 +118,7 @@ namespace TrainzInfo.Controllers
             }
             LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
             locomotives = await query.ToListAsync();
-            
+
             UpdateFilter(locomotives);
             LoggingExceptions.LogFinish();
             return View(locomotives);
@@ -193,7 +194,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Details));
-            LoggingExceptions.LogStart();   
+            LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -238,23 +239,23 @@ namespace TrainzInfo.Controllers
             IQueryable<Locomotive_series> querySeria = _context.Locomotive_Series.OrderBy(x => x.Seria).AsQueryable();
             LoggingExceptions.LogWright("Try create query for depots");
             IQueryable<DepotList> queryDepot = _context.Depots
-                .Include(x=>x.UkrainsRailway).OrderBy(x => x.Name).AsQueryable();
+                .Include(x => x.UkrainsRailway).OrderBy(x => x.Name).AsQueryable();
 
             LoggingExceptions.LogWright("Try filter by session");
             if (HttpContext.Session.GetString("Seria") is not null)
             {
                 querySeria = querySeria.Where(x => x.Seria.Contains(HttpContext.Session.GetString("Seria").ToString()));
                 LoggingExceptions.LogWright("Filter by session Seria: " + HttpContext.Session.GetString("Seria").ToString());
-                LoggingExceptions.LogWright(querySeria.ToQueryString());    
+                LoggingExceptions.LogWright(querySeria.ToQueryString());
             }
 
-            if (HttpContext.Session.GetString("Filia")is not null)
+            if (HttpContext.Session.GetString("Filia") is not null)
             {
-                queryDepot = queryDepot.Where(x =>x.UkrainsRailway.Name.Contains(HttpContext.Session.GetString("Filia").ToString()));
+                queryDepot = queryDepot.Where(x => x.UkrainsRailway.Name.Contains(HttpContext.Session.GetString("Filia").ToString()));
                 LoggingExceptions.LogWright("Filter by session Filia: " + HttpContext.Session.GetString("Filia").ToString());
                 LoggingExceptions.LogWright(queryDepot.ToQueryString());
             }
-            if (HttpContext.Session.GetString("Depot")is not null)
+            if (HttpContext.Session.GetString("Depot") is not null)
             {
                 queryDepot = queryDepot.Where(x => x.Name.Contains(HttpContext.Session.GetString("Depot").ToString()));
                 LoggingExceptions.LogWright("Filter by session Depot: " + HttpContext.Session.GetString("Depot").ToString());
@@ -265,7 +266,7 @@ namespace TrainzInfo.Controllers
             SelectList seria = new SelectList(serieslist);
             ViewBag.Seria = seria;
             depotlist.Add("");
-            depotlist.AddRange(await queryDepot.Where(x=>x.Name.Contains("ТЧ")).Select(x => x.Name).ToListAsync());
+            depotlist.AddRange(await queryDepot.Where(x => x.Name.Contains("ТЧ")).Select(x => x.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
             LoggingExceptions.LogFinish();
@@ -326,9 +327,9 @@ namespace TrainzInfo.Controllers
             _context.Add(locomotive);
             await _context.SaveChangesAsync();
             LoggingExceptions.LogWright("Try send email to user: " + user.Email);
-            Locomotive locosaved    = _context.Locomotives
-                .Include(x=>x.DepotList).Include(x=>x.DepotList.UkrainsRailway).
-                Include(x=>x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
+            Locomotive locosaved = _context.Locomotives
+                .Include(x => x.DepotList).Include(x => x.DepotList.UkrainsRailway).
+                Include(x => x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
             int locid = locosaved.id;
             LoggingExceptions.LogWright("Find saved locomotive id: " + locid);
             LoggingExceptions.LogWright("Send email to user: " + user.Email);
@@ -420,19 +421,29 @@ namespace TrainzInfo.Controllers
                     locomotive.Image = p1;
                     using (MemoryStream ms = new MemoryStream(locomotive.Image, 0, locomotive.Image.Length))
                     {
-                        using (Image img = Image.FromStream(ms))
-                        {
-                            int h = 500;
-                            int w = 700;
 
-                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                        int h = 500;
+                        int w = 700;
+
+                        using (Image img = Image.Load(ms))
+                        {
+
+                            img.Mutate(x => x.Resize(w, h));
+                            using (MemoryStream ms2 = new MemoryStream())
                             {
-                                using (MemoryStream ms2 = new MemoryStream())
-                                {
-                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                    locomotive.Image = ms2.ToArray();
-                                }
+                                img.SaveAsJpeg(ms2);
+                                locomotive.Image = ms2.ToArray();
                             }
+                            ; // формат определяется по расширению файла
+
+                            //using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            //{
+                            //    using (MemoryStream ms2 = new MemoryStream())
+                            //    {
+                            //        b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            //        station.Image = ms2.ToArray();
+                            //    }
+                            //}
                         }
                     }
                     LoggingExceptions.LogWright("Try update locomotive with image");

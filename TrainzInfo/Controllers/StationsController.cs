@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NuGet.Packaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
@@ -416,19 +416,26 @@ namespace TrainzInfo.Controllers
                     LoggingExceptions.LogWright("Resize image to 500x450");
                     using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
                     {
-                        using (Image img = Image.FromStream(ms))
+                        int h = 450;
+                        int w = 500;
+                        using (Image img = Image.Load(ms))
                         {
-                            int h = 450;
-                            int w = 500;
 
-                            using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            img.Mutate(x => x.Resize(w, h));
+                            using (MemoryStream ms2 = new MemoryStream())
                             {
-                                using (MemoryStream ms2 = new MemoryStream())
-                                {
-                                    b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                    station.Image = ms2.ToArray();
-                                }
-                            }
+                                img.SaveAsJpeg(ms2);
+                                station.Image = ms2.ToArray();
+                            }; // формат определяется по расширению файла
+                            
+                            //using (Bitmap b = new Bitmap(img, new Size(w, h)))
+                            //{
+                            //    using (MemoryStream ms2 = new MemoryStream())
+                            //    {
+                            //        b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            //        station.Image = ms2.ToArray();
+                            //    }
+                            //}
                         }
                     }
                     LoggingExceptions.LogWright("Return image");
