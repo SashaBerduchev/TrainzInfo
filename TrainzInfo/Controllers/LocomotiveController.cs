@@ -161,17 +161,18 @@ namespace TrainzInfo.Controllers
             //List<DepotList> depots = await _context.Depots.ToListAsync();
             //List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
             List<Locomotive> locomotives = new List<Locomotive>();
+            IQueryable<Locomotive> query = _context.Locomotives.Include(x => x.DepotList).Include(x => x.Locomotive_Series)
+                .Include(x => x.UserLocomotivesPhoto).Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
+                .Include(x=>x.DepotList.UkrainsRailway).Include(x => x.LocomotiveBaseInfo).AsQueryable();
             if (id != null)
             {
-                locomotives = await _context.Locomotives.Include(x => x.DepotList).Include(x => x.Locomotive_Series).Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo).Where(x => x.DepotList.id == id).ToListAsync();
+                locomotives = await query.Where(x => x.DepotList.id == id).ToListAsync();
             }
             else
             {
                 return NotFound();
             }
-
-            SelectList locomotiveSeries = new SelectList(locomotives.Select(x => x.Locomotive_Series.Seria).ToList());
-            ViewBag.seria = locomotiveSeries;
+            UpdateFilter(locomotives);
             return View(locomotives);
         }
         public async Task<IActionResult> MakeChange()

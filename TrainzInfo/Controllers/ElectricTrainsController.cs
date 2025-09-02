@@ -81,11 +81,13 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             List<ElectricTrain> electrics = new List<ElectricTrain>();
+            IQueryable<ElectricTrain> query = _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
+                    .Include(x => x.DepotList).Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
+                    .Include(x=>x.DepotList.UkrainsRailway).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
+                    .Include(x => x.ElectrickTrainzInformation).AsQueryable();
             if (id != null)
             {
-                electrics = await _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
-                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains).Include(x => x.Users)
-                    .Include(x => x.ElectrickTrainzInformation).Where(x => x.DepotList.id == id).ToListAsync();
+                electrics = await query.Where(x => x.DepotList.id == id).ToListAsync();
             }
             else
             {
@@ -93,8 +95,8 @@ namespace TrainzInfo.Controllers
             }
             //List<DepotList> depotLists = await _context.Depots.ToListAsync();
             //List<City> city = await _context.Cities.ToListAsync();
-            SelectList selectLists = new SelectList(electrics.Select(x => x.Name).ToList());
-            ViewBag.electrics = selectLists;
+            
+            UpdateFilter(electrics);
             return View(electrics);
         }
         public async Task<IActionResult> UpdateIndex()
