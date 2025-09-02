@@ -21,46 +21,48 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
-            <div class="container justify-content-center">
-                <!-- Лого -->
-                <a class="navbar-brand d-flex align-items-center me-4" asp-area="" asp-controller="Home" asp-action="Index">
+            <div class="container d-flex justify-content-between align-items-center flex-wrap">
+
+                <!-- Логотип та ліва частина -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                     <img class="img-fluid rounded" style="max-height:80px;"
                          src="@Url.Action("GetImage", "MainImages", new { name = "MainPhoto" })" alt="Logo" />
                 </a>
 
-                <!-- Кнопка бургер -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                <!-- Бургер кнопка -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar"
                         aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- Меню -->
+                <!-- Меню (кнопки по центру) -->
                 <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item mx-2">
+                    <ul class="navbar-nav d-flex flex-wrap justify-content-center" style="gap:12px;">
+                        <li class="nav-item">
                             <a class="btn btn-primary text-white" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
                         </li>
-                        <li class="nav-item mx-2">
+                        <li class="nav-item">
                             <a class="btn btn-primary text-white" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
                         </li>
 
+                        @* Кнопки користувача *@
                         @if (ViewBag.user != null)
                         {
-                            <li class="nav-item mx-2 d-flex align-items-center">
+                            <li class="nav-item d-flex align-items-center">
                                 <a class="nav-link fw-bold text-primary" asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">
                                     @ViewBag.user.Name
                                 </a>
                             </li>
-                            <li class="nav-item mx-2">
+                            <li class="nav-item">
                                 <a class="btn btn-outline-danger" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Вийти</a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item mx-2">
+                            <li class="nav-item">
                                 <a class="btn btn-outline-primary" asp-controller="Users" asp-action="Enter">Вхід</a>
                             </li>
-                            <li class="nav-item mx-2">
+                            <li class="nav-item">
                                 <a class="btn btn-outline-primary" asp-controller="Users" asp-action="Create">Реєстрація</a>
                             </li>
                         }
@@ -70,16 +72,26 @@
         </nav>
     </header>
 
+
     <div class="container my-3">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
+    <!-- Скрипти -->
+    <!-- 1. jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-    <script src="~/js/ApiScript.js"></script>
+
+    <!-- 2. jQuery UI -->
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- 3. Popper.js (для Bootstrap 4) -->
+    <script src="~/lib/popper.js/dist/umd/popper.min.js"></script>
+
+    <!-- 4. Bootstrap 4 JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
