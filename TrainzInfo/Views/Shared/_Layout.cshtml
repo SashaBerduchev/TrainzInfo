@@ -20,88 +20,67 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="display-4" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img class="img-thumbnail" width="200" height="200"
-                         src="@Url.Action("GetImage", "MainImages", new { name ="MainPhoto"})" />
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container justify-content-center">
+                <!-- Лого -->
+                <a class="navbar-brand d-flex align-items-center me-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="img-fluid rounded" style="max-height:80px;"
+                         src="@Url.Action("GetImage", "MainImages", new { name = "MainPhoto" })" alt="Logo" />
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Кнопка бургер -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="navbar-nav">
 
-                            @*<a class="btn btn-success text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
-                            @*<a id="btn1" class="btn btn-primary text-white" asp-area="" asp-controller="TrainzTypes" asp-action="Index">Типы поезда</a>*@
-                            <a id="btn" class="btn btn-primary text-white" asp-area="" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
-                            <a id="btn" class="btn btn-primary text-white" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
-                            @* <a id="btn" class="btn btn-primary text-white" asp-controller="UkrainsRailways" asp-action="RollingStoneInfo">Рухомий склад</a> *@
-                            @*<a id="btn" class="btn btn-primary text-white" style="width:140px" asp-controller="Metroes" asp-action="Index">Метро</a>*@
-                            @if (ViewBag.user != null)
-                            {
-                                <div style="font-size:35px; color:cornflowerblue">
-                                    <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">@Html.DisplayName(ViewBag.user.Name)</a>
-                                </div>
-                                <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Вийти</a>
-
-                            }
-                            else
-                            {
-                                <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вхід</a>
-                                <a id="btn3" class="btn btn-outline-primary" style="width:120px" asp-area="" asp-controller="Users" asp-action="Create">Реєстрація</a>
-                            }
-                            @*@if (Model != null && Model is List<NewsInfo> && Model.Count > 0)
-                                {
-                                    if (Model[0] is NewsInfo && Model[0].user == null)
-                                    {
-                                        <a id="btn2" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Enter">Вход</a>
-                                        <a id="btn3" class="btn btn-outline-primary" asp-area="" asp-controller="Users" asp-action="Create">Регистрация</a>
-                                    }
-                                    else if (Model[0] is NewsInfo)
-                                    {
-                                        @Html.DisplayName(Model[0].user)
-                                        <a id="btn2" class="btn btn-outline-danger" asp-area="" asp-controller="Users" asp-action="Delete" asp-route-name="@Model[0].user">Выйти</a>
-                                    }
-
-                                }*@
+                <!-- Меню -->
+                <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item mx-2">
+                            <a class="btn btn-primary text-white" asp-controller="UkrainsRailways" asp-action="Index">Українська Залізниця</a>
                         </li>
+                        <li class="nav-item mx-2">
+                            <a class="btn btn-primary text-white" asp-controller="Trains" asp-action="Index">Список всіх поїздів</a>
+                        </li>
+
+                        @if (ViewBag.user != null)
+                        {
+                            <li class="nav-item mx-2 d-flex align-items-center">
+                                <a class="nav-link fw-bold text-primary" asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.user.Id">
+                                    @ViewBag.user.Name
+                                </a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="btn btn-outline-danger" asp-controller="Users" asp-action="Exit" asp-route-id="@ViewBag.user.Id">Вийти</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="btn btn-outline-primary" asp-controller="Users" asp-action="Enter">Вхід</a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="btn btn-outline-primary" asp-controller="Users" asp-action="Create">Реєстрація</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container my-3">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-            <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
-            <li><a asp-area="" asp-controller="Create" asp-action="Create">Users</a></li>
-            <li><a asp-area="" asp-controller="Delete" asp-action="Delete">Users</a></li>
-        </ul>
-    </div>
-    @*<footer style="top: 4800px;" class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - TrainzInfo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-        <div class="container">
-            <a asp-controller="Clients" asp-action="Index">Клиент</a>
-            &copy; 2020 - TrainzInfo - <a> Version 2.5</a>
-        </div>
-    </footer>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/ApiScript.js"></script>
-    @*<script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/StartJS.js"></script>*@
     @RenderSection("Scripts", required: false)
-
 </body>
 </html>
 <style>

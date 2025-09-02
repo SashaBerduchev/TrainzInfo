@@ -4,66 +4,66 @@
     ViewData["Title"] = "Електропоїзди";
 }
 
-<h1>Електропоїзди</h1>
+<h1 class="mb-4 text-center">Електропоїзди</h1>
 <head>
     <link rel="stylesheet" href="">
 </head>
-@if (ViewBag.user != null)
+@if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
 {
-    if (ViewBag.user.Role == "Superadmin")
-    {
-        <b>Кількість записів: @Model.Count().ToString()</b>
-    }
+    <b>Кількість записів: @Model.Count().ToString()</b>
 }
 
-<p>
-    @if (ViewBag.user != null)
+<p class="mb-3">
+    @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin"))
     {
-        @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
-        {
-            <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="Create">Створити електропоїзд</a>
-            <a class="btn btn-info" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі електропоїздів</a>
-            <a class="btn btn-info" asp-action="UpdateIndex">Оновити дані</a>
-        }
+        <a class="btn btn-info mb-2" asp-controller="ElectricTrains" asp-action="Create">Створити електропоїзд</a>
+        <a class="btn btn-info mb-2" asp-controller="SuburbanTrainsInfoes" asp-action="Index">Моделі електропоїздів</a>
+        <a class="btn btn-info mb-2" asp-action="UpdateIndex">Оновити дані</a>
     }
 </p>
 
-<form method="get">
-    <div class="form-inline">
-        @* @Html.DropDownList("Name", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" }) *@
-        @Html.DropDownList("Electrics", ViewBag.electrics as SelectList, htmlAttributes: new { @class = "form-control" })
-        <input type="submit" value="Відобразити" class="btn btn-info" />
+<form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+        @Html.DropDownList("Depot", ViewBag.depots as SelectList, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="col-12 col-md-4">
+        @Html.DropDownList("Name", ViewBag.name as SelectList, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="col-12 col-md-4">
+        <input type="submit" value="Відобразити" class="btn btn-info w-100" />
     </div>
 </form>
-<div>
+<div class="row">
     @foreach (var item in Model)
     {
-        <div style="font-size:25px; height:370px; margin:20px; background-color:aliceblue">
-            <div style="margin:20px; position:relative; top:10px;">
-                <img class="img-thumbnail" width="350" height="350"
-                     src="@Url.Action("GetImage", "ElectricTrains",
-                        new { item.id })" />
-            </div>
-            <div style="position:relative; left:420px; top:-200px">
-                <div>@Html.DisplayName("Назва: ") @Html.DisplayFor(modelItem => item.Name) - @Html.DisplayFor(modelItem => item.Model)</div>
-                @*             <div>@Html.DisplayName("Кількість вагонов: ")@Html.DisplayFor(modelItem => item.VagonsCountP)</div> *@
-                <div>@Html.DisplayName("Максимальна швидкість: ")@Html.DisplayFor(modelItem => item.MaxSpeed)</div>
-                <div>@Html.DisplayName("Депо: ") @Html.DisplayFor(modelitem => item.DepotList.Name)</div>
-                <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelitem => item.City.Name)</div>
-            </div>
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <div class="col-12 col-md-4">
+                        <img class="img-fluid rounded-start"
+                             src="@Url.Action("GetImage", "ElectricTrains", new { item.id })"
+                             alt="Електропоїзд" />
+                    </div>
 
-            <div style="position:relative; left:800px; top:-300px; width:150px">
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Детально</a>
-                @if (ViewBag.user != null)
-                {
-                    if (ViewBag.user.Role == "Superadmin")
-                    {
-                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                    <div class="col-12 col-md-5 p-3">
+                        <h5>@item.Name - @item.Model</h5>
+                        <p><b>Депо:</b> @item.DepotList.Name</p>
+                        <p><b>Філія:</b> @item.DepotList.UkrainsRailway.Name</p>
+                        <p><b>Область:</b> @item.City.Oblasts.Name</p>
+                        <p><b>Місто:</b> @item.City.Name</p>
+                        <p><b>Максимальна швидкість:</b> @item.MaxSpeed км/год</p>
+                    </div>
 
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
-                    }
-                }
+                    <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                        <a class="btn btn-info mb-2" asp-action="Details" asp-route-id="@item.id">Детально</a>
 
+                        @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+                        {
+                            <a class="btn btn-success mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     }

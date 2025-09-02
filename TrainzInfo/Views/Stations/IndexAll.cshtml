@@ -4,76 +4,91 @@
     ViewData["Title"] = "Станції";
 }
 
-<h1>Станції</h1>
-<h2>@Html.DisplayName(ViewBag.Filia)</h2>
-@if (ViewBag.user != null)
+<h1 class="mb-4 text-center">Станції</h1>
+<h2 class="mb-3 text-center">@ViewBag.Filia</h2>
+
+@if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
 {
-    if (ViewBag.user.Role == "Superadmin")
-    {
-        @* <b>Колличество записей: @Model.Count().ToString()</b> *@
-        @* <a class="btn btn-danger" asp-action="DeleteStations">Видалити всі без картинок</a> *@
-        <a class="btn btn-lg" asp-controller="RailwayUsersPhotoes" asp-action="Index">Фотографії користувачів</a>
-    }
+    <a class="btn btn-lg btn-outline-secondary mb-3" asp-controller="RailwayUsersPhotoes" asp-action="Index">
+        Фотографії користувачів
+    </a>
 }
-<p>
-    @if (ViewBag.user != null)
+
+<p class="mb-3">
+    @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin"))
     {
-        if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-        {
-            <a class="btn btn-dark" asp-action="Create">Додати</a>
-            @* <a class="btn btn-dark" asp-action="UpdateInfo">Оновити дані</a> *@
-        }
+        <a class="btn btn-dark" asp-action="Create">Додати</a>
     }
 </p>
 
-<form method="get">
-    <div class="form-inline" style="position:relative; width:90%">
+<form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
         @Html.DropDownList("FilialsName", ViewBag.Filias as SelectList, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="col-12 col-md-4">
         @Html.DropDownList("Oblast", ViewBag.oblast as SelectList, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="col-12 col-md-4">
         @Html.DropDownList("NameStation", ViewBag.stations as SelectList, htmlAttributes: new { @class = "form-control" })
-        @* <input type="text" name="NameStation" class="form-control"></input> *@
-        <input type="submit" value="Відобразити" class="btn btn-info" />
+    </div>
+    <div class="col-12 mt-2">
+        <input type="submit" value="Відобразити" class="btn btn-info w-100" />
     </div>
 </form>
-<div>
-    <a class="btn btn-info" style="margin:10px" asp-action="ClearFilter">Скинути фільтр</a>
+
+<div class="mb-3">
+    <a class="btn btn-secondary" asp-action="ClearFilter">Скинути фільтр</a>
 </div>
-<div>
+
+<div class="row">
     @foreach (var item in Model)
     {
-        <div style="background-color:aliceblue; margin:20px; height:430px;">
-            <div style="margin:20px; position:relative; top:20px">
-                <div class="img">
-                    <img class="img-thumbnail" width="350" height="250"
-                         src="@Url.Action("GetImage", "Stations",
-                                                 new { item.id })" />
-            </div>
-        </div>
-        <div style="position:relative; left:400px; top:-230px; font-size:25px">
-            <div>@Html.DisplayName("Назва станції: ") @Html.DisplayFor(modelItem => item.Name)</div>
-            @if (item.Oblasts != null)
-                {
-                    <div>@Html.DisplayName("Область: ") @Html.DisplayFor(modelItem => item.Oblasts.Name)</div>
-                    <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(modelItem => item.Citys.Name)</div>
-                    <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(modelItem => item.UkrainsRailways.Name)</div>
-                }
-            </div>
-            <div style="position:relative;top:-140px">
-                <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">Розклад по станції</a>
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <!-- Картинка -->
+                    <div class="col-12 col-md-4">
+                        <img class="img-fluid rounded-start"
+                             src="@Url.Action("GetImage", "Stations", new { item.id })"
+                             alt="Станція" />
+                    </div>
 
-                <a class="btn btn-primary" style="width:250px; margin:5px;" asp-action="Details" asp-route-name="@item.Name">Інформація</a>
-                @if (item.railwayUsersPhotos != null)
-                {
-                    <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@item.id">Фотографії користувачів</a>
-                }
-                @if (ViewBag.user != null)
-                {
-                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-                    {
-                        <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@item.id">Дадати зображення</a>
-                        <a class="btn btn-danger margin:5px;" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
-                    }
-                }
+                    <!-- Інформація -->
+                    <div class="col-12 col-md-5 p-3">
+                        <h5>@item.Name</h5>
+                        @if (item.Oblasts != null)
+                        {
+                            <p><b>Область:</b> @item.Oblasts.Name</p>
+                            <p><b>Місто:</b> @item.Citys.Name</p>
+                            <p><b>Філія:</b> @item.UkrainsRailways.Name</p>
+                        }
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                        <a class="btn btn-info mb-2 w-100" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">
+                            Розклад по станції
+                        </a>
+                        <a class="btn btn-primary mb-2 w-100" asp-action="Details" asp-route-name="@item.Name">
+                            Інформація
+                        </a>
+                        @if (item.railwayUsersPhotos != null)
+                        {
+                            <a class="btn btn-warning mb-2 w-100" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@item.id">
+                                Фотографії користувачів
+                            </a>
+                        }
+                        @if (ViewBag.user != null && (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin"))
+                        {
+                            <a class="btn btn-outline-info mb-2 w-100" asp-action="AddImageForm" asp-route-id="@item.id">
+                                Додати зображення
+                            </a>
+                            <a class="btn btn-danger w-100" asp-action="Delete" asp-route-id="@item.id">
+                                Видалити
+                            </a>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     }
