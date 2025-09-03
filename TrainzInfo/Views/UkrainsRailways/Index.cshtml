@@ -19,30 +19,23 @@
 
     }
 }
-<div style="background-color:aliceblue">
-    @foreach (var item in Model)
-    {
-        <div style="width:90%">
-            <a class="btn btn-info btn-filia" style="width:100%; margin:10px" asp-action="Details" asp-route-id="@item.id">
-                <div>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </div>
-            </a>
-            <div>
-
-                @* @if (ViewBag.user != null)
-                {
-                    if (ViewBag.user.Role == "Superadmin")
-                    {
-                        <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                    }
-                } *@
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-md-6 mb-3">
+                <a class="btn btn-info w-100 text-wrap py-3" asp-action="Details" asp-route-id="@item.id">
+                    <span class="h5">@Html.DisplayFor(modelItem => item.Name)</span>
+                </a>
             </div>
-        </div>
-    }
-</div>
-<img class="img-thumbnail" width="900" height="700"
-     src="@Url.Action("GetImage", "MainImages", new { name ="MainMap"})" />
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <img class="img-fluid rounded shadow"
+             src="@Url.Action("GetImage", "MainImages", new { name = "MainMap" })"
+             alt="Мапа Укрзалізниці" />
+    </div>
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
