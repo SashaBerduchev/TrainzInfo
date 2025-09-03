@@ -56,7 +56,7 @@
                     <!-- Інформація -->
                     <div class="col-12 col-md-5 p-3">
                         <h5>@item.Name</h5>
-                        @if (item.Oblasts is not null || item.Citys is not null)
+                        @if (item.Citys is not null)
                         {
                             <p><b>Область:</b> @item.Oblasts.Name</p>
                             <p><b>Місто:</b> @item.Citys.Name</p>
