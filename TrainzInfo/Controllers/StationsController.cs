@@ -402,18 +402,15 @@ namespace TrainzInfo.Controllers
 
         public async Task<FileContentResult> GetImage(int id)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(GetImage));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Enter GetImage stations");
             Stations station = await _context.Stations
                 .FirstOrDefaultAsync(g => g.id == id);
-            LoggingExceptions.LogWright("Get station by id: " + id.ToString());
+            
             try
             {
-                LoggingExceptions.LogWright("Try resize image");
+                
                 if (station != null)
                 {
-                    LoggingExceptions.LogWright("Resize image to 500x450");
+                    
                     using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
                     {
                         int h = 450;
@@ -426,25 +423,15 @@ namespace TrainzInfo.Controllers
                             {
                                 img.SaveAsJpeg(ms2);
                                 station.Image = ms2.ToArray();
-                            }; // формат определяется по расширению файла
-                            
-                            //using (Bitmap b = new Bitmap(img, new Size(w, h)))
-                            //{
-                            //    using (MemoryStream ms2 = new MemoryStream())
-                            //    {
-                            //        b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            //        station.Image = ms2.ToArray();
-                            //    }
-                            //}
+                            }; 
                         }
                     }
-                    LoggingExceptions.LogWright("Return image");
+                    
                     var file = File(station.Image, station.ImageMimeTypeOfData);
                     return file;
                 }
                 else
                 {
-                    LoggingExceptions.LogWright("Station not found");
                     return null;
                 }
 
