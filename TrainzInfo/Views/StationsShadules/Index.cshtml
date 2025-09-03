@@ -5,58 +5,52 @@
 }
 
 
-<h1>Розклад по станції @ViewBag.station</h1>
+<h1 class="text-center my-4">Розклад по станції @ViewBag.station</h1>
 
-<p>
-    @* @if (ViewBag.user != null)
-    {
-        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-        {
-            <a class="btn btn-primary" asp-action="Create">Добавить</a>
-
-        }
-    }*@
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Номер")
-            </th>
-            <th>
-                @Html.DisplayName("Час прибуття")
-            </th>
-            <th>
-                @Html.DisplayName("Час відправлення")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-responsive d-none d-md-block mb-5">
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="thead-dark">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberTrain)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfArrive)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeOfDepet)
-                </td>
-                <td>
-                    <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">Розклад поїзда</a>
-                </td>
-                <!--<td>
-                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Edit</a> |-->
-                @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@ <!--|
-                    <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.id">Delete</a>
-                </td>-->
+                <th>Номер</th>
+                <th>Час прибуття</th>
+                <th>Час відправлення</th>
+                <th class="text-center">Дії</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NumberTrain</td>
+                    <td>@item.TimeOfArrive</td>
+                    <td>@item.TimeOfDepet</td>
+                    <td class="text-center">
+                        <a class="btn btn-info btn-sm" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">
+                            Розклад поїзда
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="d-block d-md-none">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Поїзд № @item.NumberTrain</h5>
+                <p class="card-text mb-1"><strong>Час прибуття:</strong> @item.TimeOfArrive</p>
+                <p class="card-text mb-2"><strong>Час відправлення:</strong> @item.TimeOfDepet</p>
+                <a class="btn btn-info btn-sm w-100" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.Train.id">
+                    Розклад поїзда
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);

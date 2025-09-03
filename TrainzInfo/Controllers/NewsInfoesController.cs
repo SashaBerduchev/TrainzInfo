@@ -215,7 +215,6 @@ namespace TrainzInfo.Controllers
                     .FirstOrDefaultAsync(g => g.id == id);
                 if (news != null)
                 {
-                    LoggingExceptions.LogWright("Попытка вывести изображение новости - " + news.NameNews);
                     var file = File(news.NewsImage, news.ImageMimeTypeOfData);
                     Trace.WriteLine(news.NewsImage + " + " + news.ImageMimeTypeOfData.ToString());
                     Trace.WriteLine(file);

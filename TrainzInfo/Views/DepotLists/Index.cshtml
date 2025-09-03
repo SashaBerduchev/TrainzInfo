@@ -4,82 +4,79 @@
     ViewData["Title"] = "Список депо";
 }
 
-<h1>Список депо</h1>
-<H2>@Html.DisplayName(ViewBag.Filia)</H2>
-@if (ViewBag.user != null)
-{
-    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+<div class="container my-4">
+    <h1 class="text-center mb-3">Список депо</h1>
+    <h2 class="text-center text-muted">@Html.DisplayName(ViewBag.Filia)</h2>
+
+    @if (ViewBag.user != null)
     {
-        <p>
-            <a class="btn btn-info" asp-action="Create">Додати</a>
-            <a class="btn btn-info" asp-action="UpdateForce">Націоналізувати</a>
-        </p>
-    }
-}
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Назва")
-            </th>
-            <th>
-                @Html.DisplayName("Філія")
-            </th>
-            <th>
-                @Html.DisplayName("Станція")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
         {
-            <tr>
-                <td>
-                    @if (item.City != null)
-                    {
-                        <p>@item.Name @item.City.Name</p> 
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UkrainsRailway.Name)
-                </td>
-                <td>
-                    @if (item.City != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.City.Name)
-                    }
-                    
-                </td>
-                <td>
-                    @if (ViewBag.user != null)
-                    {
-                        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
-                        {
-                            <a class="btn btn-success" style="margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                        }
-                    }
-                    @if (item.Locomotives != null && item.Locomotives.Count >0)
-                    {
-                        <a class="btn btn-info" asp-controller="Locomotive" asp-action="IndexDepot" asp-route-id="@item.id">Локомотиви</a>
-                    }
-                    else if (item.ElectricTrains != null && item.ElectricTrains.Count > 0)
-                    {
-                        <a class="btn btn-info" asp-controller="ElectricTrains" asp-action="IndexDepot" asp-route-id="@item.id">Електрички</a>
-                    }
-                    else if (item.DieselTrains != null && item.DieselTrains.Count >0)
-                    {
-                        <a class="btn btn-info" asp-controller="DieselTrains" asp-action="IndexDepot" asp-route-id="@item.id">Дизель-поїзди</a>
-                    }
-                    @*<a asp-action="Details" asp-route-id="@item.id">Details</a>*@
-                    @*<a asp-action="Delete" asp-route-id="@item.id">Delete</a>*@
-                </td>
-            </tr>
+            <div class="mb-3 text-center">
+                <a class="btn btn-info mx-2 mb-2" asp-action="Create">Додати</a>
+                <a class="btn btn-warning mx-2 mb-2" asp-action="UpdateForce">Націоналізувати</a>
+            </div>
         }
-    </tbody>
-</table>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th>Назва</th>
+                    <th>Філія</th>
+                    <th>Станція</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.City != null)
+                            {
+                                <span class="fw-bold">@item.Name</span> <br />
+                                <small class="text-muted">@item.City.Name</small>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.UkrainsRailway.Name)</td>
+                        <td>
+                            @if (item.City != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.City.Name)
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                @if (ViewBag.user != null)
+                                {
+                                    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
+                                    {
+                                        <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                                    }
+                                }
+                                @if (item.Locomotives != null && item.Locomotives.Count > 0)
+                                {
+                                    <a class="btn btn-info btn-sm" asp-controller="Locomotive" asp-action="IndexDepot" asp-route-id="@item.id">Локомотиви</a>
+                                }
+                                else if (item.ElectricTrains != null && item.ElectricTrains.Count > 0)
+                                {
+                                    <a class="btn btn-info btn-sm" asp-controller="ElectricTrains" asp-action="IndexDepot" asp-route-id="@item.id">Електрички</a>
+                                }
+                                else if (item.DieselTrains != null && item.DieselTrains.Count > 0)
+                                {
+                                    <a class="btn btn-info btn-sm" asp-controller="DieselTrains" asp-action="IndexDepot" asp-route-id="@item.id">Дизель-поїзди</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <style>
     body {
         background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);

@@ -11,7 +11,7 @@
         Список депо
     </a>
     <a class="btn btn-success m-2" asp-controller="Stations" asp-action="Index" asp-route-filialsName="@Model.Name">
-        Список всіх станцій
+        Список станцій
     </a>
     @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
     {

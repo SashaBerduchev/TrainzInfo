@@ -4,188 +4,103 @@
     ViewData["Title"] = "Поїзди";
 }
 
-<h1>Призначені поїзди</h1>
+<h1 class="text-center my-4">Призначені поїзди</h1>
 
-<p>
-    @if (ViewBag.user != null)
-    {
-        if (ViewBag.user.Role == "Superadmin")
-        {
-            <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
-            <a class="btn btn-dark" asp-controller="Trains" asp-action="UpdateInfo">Оновити дані</a>
-            <a class="btn btn-info" asp-action="AddTrainExcel">Додати поїзд з Ексель</a>
-            <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="AddStationExcel">Додати графік поїзда з Ексель</a>
+@if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+{
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        <a class="btn btn-info" asp-action="Create">Додати поїзд</a>
+        <a class="btn btn-dark" asp-controller="Trains" asp-action="UpdateInfo">Оновити дані</a>
+        <a class="btn btn-info" asp-action="AddTrainExcel">Додати поїзд з Excel</a>
+        <a class="btn btn-info" asp-controller="TrainsShadules" asp-action="AddStationExcel">Додати графік з Excel</a>
+    </div>
+}
 
-        }
-    }
-</p>
-
-<form method="get">
-    <div class="form-inline" style="position:relative; width:90%">
-        @Html.DropDownList("number", ViewBag.number as SelectList, htmlAttributes: new { @class = "form-control" })
+<form method="get" class="mb-4">
+    <div class="form-inline d-flex flex-wrap gap-2">
+        @Html.DropDownList("number", ViewBag.number as SelectList,
+        htmlAttributes: new { @class = "form-control" })
         <input type="submit" value="Відобразити" class="btn btn-info" />
     </div>
 </form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Номер")
-            </th>
-            <th>
-                @Html.DisplayName("Прибуття")
-            </th>
-            <th>
-                @Html.DisplayName("Відправлення")
-            </th>
-            <th>
-                @Html.DisplayName("Тип поїзда")
-            </th>
-            <th>
-                @Html.DisplayName("Назва")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
 
+<!-- Таблиця для великих екранів -->
+<div class="d-none d-md-block table-responsive mb-5">
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="thead-dark">
             <tr>
-                <td>
-                    <div style="font-size:22px; color:black">
-                        @Html.DisplayFor(modelItem => item.Number)
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:22px; color:black">
-                        @Html.DisplayFor(modelItem => item.StationFrom)
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:22px; color:black">
-                        @Html.DisplayFor(modelItem => item.StationTo)
-                    </div>
-                </td>
-                <td>
-                    @if (item.TypeOfPassTrain != null)
-                    {
-                        <div style="font-size:22px; color:black; width: 120px">
-                            @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
-                        </div>
-                    }
-                </td>
-                <td>
-                    <div style="font-size:22px">
-                        @Html.DisplayFor(modelItem => item.NameOfTrain)
-                    </div>
-                </td>
-                <td>
-                    @if (item.TrainsShadules != null && item.TrainsShadules.Count > 0)
-                    {
-                        <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
-                    }
-
-                    @if (ViewBag.user != null)
-                    {
-                        if (ViewBag.user.Role == "Superadmin")
-                        {
-                            <a class="btn btn-success" style="width:150px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                            @*<a class="btn btn" asp-action="Details" asp-route-id="@item.id">Details</a>*@
-                            <a class="btn btn-outline-danger" style="width:150px; margin:10px" asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">Додати розклад</a>
-                        }
-                    }
-                </td>
+                <th>Номер</th>
+                <th>Прибуття</th>
+                <th>Відправлення</th>
+                <th>Тип поїзда</th>
+                <th>Назва</th>
+                <th class="text-center">Дії</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-
-@if (ViewBag.user != null)
-{
-    if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
-    {
-
-
-
-        <table class="table">
-            <thead>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>
-                        @Html.DisplayName("Номер")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Прибуття")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Відправлення")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Тип поїзда")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Назва")
-                    </th>
-                    <th></th>
+                    <td class="fw-bold">@item.Number</td>
+                    <td>@item.StationFrom</td>
+                    <td>@item.StationTo</td>
+                    <td>@item?.TypeOfPassTrain?.Type</td>
+                    <td>@item.NameOfTrain</td>
+                    <td class="text-center">
+                        @if (item.TrainsShadules?.Count > 0)
+                        {
+                            <a class="btn btn-info btn-sm d-block w-100 mb-2"
+                               asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">
+                                Розклад
+                            </a>
+                        }
+                        @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+                        {
+                            <a class="btn btn-success btn-sm d-block w-100 mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-outline-danger btn-sm d-block w-100 mb-2"
+                               asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">
+                                Додати розклад
+                            </a>
+                        }
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.trainnotuse as List<Train>)
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Картки для мобільних -->
+<div class="d-block d-md-none">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Поїзд №@item.Number</h5>
+                <p class="card-text mb-1"><b>Прибуття:</b> @item.StationFrom</p>
+                <p class="card-text mb-1"><b>Відправлення:</b> @item.StationTo</p>
+                <p class="card-text mb-1"><b>Тип:</b> @item?.TypeOfPassTrain?.Type</p>
+                <p class="card-text"><b>Назва:</b> @item.NameOfTrain</p>
+
+                @if (item.TrainsShadules?.Count > 0)
                 {
-
-                    <tr>
-                        <td>
-                            <div style="font-size:22px; color:black">
-                                @Html.DisplayFor(modelItem => item.Number)
-                            </div>
-                        </td>
-                        <td>
-                            <div style="font-size:22px; color:black">
-                                @Html.DisplayFor(modelItem => item.StationFrom)
-                            </div>
-                        </td>
-                        <td>
-                            <div style="font-size:22px; color:black">
-                                @Html.DisplayFor(modelItem => item.StationTo)
-                            </div>
-                        </td>
-                        <td>
-                            @if (item.TypeOfPassTrain != null)
-                            {
-                                <div style="font-size:22px; color:black; width: 120px">
-                                    @Html.DisplayFor(modelItem => item.TypeOfPassTrain.Type)
-                                </div>
-                            }
-                        </td>
-                        <td>
-                            <div style="font-size:22px">
-                                @Html.DisplayFor(modelItem => item.NameOfTrain)
-                            </div>
-                        </td>
-                        <td>
-                            @if (item.TrainsShadules != null && item.TrainsShadules.Count > 0)
-                            {
-                                <a class="btn btn-info" style="width: 150px" asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">Розклад поїзда</a>
-                            }
-
-                            @if (ViewBag.user != null)
-                            {
-                                if (ViewBag.user.Role == "Superadmin")
-                                {
-                                    <a class="btn btn-success" style="width:150px; margin:10px" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                                    @*<a class="btn btn" asp-action="Details" asp-route-id="@item.id">Details</a>*@
-                                    <a class="btn btn-danger" asp-action="Delete" style="width:150px; margin:10px" asp-route-id="@item.id">Видалити</a>
-                                    <a class="btn btn-outline-danger" style="width:150px; margin:10px" asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">Додати розклад</a>
-                                }
-                            }
-                        </td>
-                    </tr>
+                    <a class="btn btn-info btn-sm w-100 mb-2"
+                       asp-controller="TrainsShadules" asp-action="Index" asp-route-id="@item.id">
+                        Розклад
+                    </a>
                 }
-            </tbody>
-        </table>
+                @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+                {
+                    <a class="btn btn-success btn-sm w-100 mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                    <a class="btn btn-outline-danger btn-sm w-100"
+                       asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">
+                        Додати розклад
+                    </a>
+                }
+            </div>
+        </div>
     }
-}
+</div>
+
 
 <style>
     body {

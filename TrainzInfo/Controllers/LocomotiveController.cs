@@ -209,7 +209,8 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             LoggingExceptions.LogWright("Try find locomotive by id: " + id);
-            var Locomotives = await _context.Locomotives
+            var Locomotives = await _context.Locomotives.Include(x=>x.DepotList)
+                .Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (Locomotives == null)
             {

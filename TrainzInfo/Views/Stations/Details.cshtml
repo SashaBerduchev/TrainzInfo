@@ -4,70 +4,86 @@
     ViewData["Title"] = Model.Name;
 }
 <meta property="og:image" content="@Url.Action("GetImage", "Stations",  new { Model.id })" />
-<h1>@Model.Name</h1>
+<h1 class="text-center my-4">@Model.Name</h1>
 
-<div>
+<div class="container">
+
     <h4>Інформація</h4>
     <hr />
 
-    <div style="background-color:aliceblue;">
-        <div style="margin:20px; position:relative; left:430px; top:40px; font-size:20px">
-            <div>@Html.DisplayName("Місто: ") @Html.DisplayFor(model => model.City)</div>
-            <div>@Html.DisplayName("Філія: ") @Html.DisplayFor(model => model.Railway)</div>
-            <div>@Html.DisplayName("Область: ") @Html.DisplayFor(model => model.Oblast)</div>
-        </div>
-        <div style="position:relative; top:-70px; margin:20px;">
+    <div class="row bg-light p-3 rounded mb-4">
+        <!-- Основна інформація -->
+        <div class="col-md-6 order-md-2 text-center mb-3">
             @if (Model.Image == null)
             {
-                        <img src="@Model.Imgsrc" width="350" height="350">
+                <img src="@Model.Imgsrc" class="img-fluid rounded" alt="Зображення станції">
             }
             else
             {
-                        <img class="img-thumbnail" width="350" height="250"
-                             src="@Url.Action("GetImageDetails", "Stations",
-                        new { Model.id })" />
+                <img class="img-fluid img-thumbnail"
+                     src="@Url.Action("GetImageDetails", "Stations", new { Model.id })"
+                     alt="Зображення станції">
             }
         </div>
-        @if (Model.StationInfo is not null)
-        {
-                <div>
-                    <div style="font-size:17px; width:650px; position:relative; left:450px; top:-200px;"><p>@Model.StationInfo.BaseInfo</p></div>
-                    <div style="font-size:17px; position:relative; top:-200px; margin:20px; width:700px"><p>@Model.StationInfo.BaseInfo</p></div>
-                </div>
-        }
-        @if (Model.DopImgSrc != null && Model.DopImgSrc != null && Model.DopImgSrcSec != null && Model.DopImgSrcSec != null && Model.DopImgSrcThd != null && Model.DopImgSrcThd != null)
-        {
-                            <div style="position:relative; left:720px; top:-1750px; margin:5px; background-color:cadetblue; width:380px; height:970px">
-                                <div style="margin:15px; position:relative; top:10px;">
-                                    <img src="@Model.DopImgSrc" width="350" height="300">
-                                </div>
-                                <div style="margin:15px; position:relative; top:10px;">
-                                    <img src="@Model.DopImgSrcSec" width="350" height="300">
-                                </div>
-                                <div style="margin:15px; position:relative; top:10px;">
-                                    <img src="@Model.DopImgSrcThd" width="350" height="300">
-                                </div>
-                            </div>
-        }
 
-                <a class="btn btn-info" style="width:250px; margin:5px" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">Розклад по станції</a>
-                <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@Model.">Фотографії користувачів</a>
+        <div class="col-md-6 order-md-1">
+            <p><strong>Місто:</strong> @Html.DisplayFor(model => model.City)</p>
+            <p><strong>Філія:</strong> @Html.DisplayFor(model => model.Railway)</p>
+            <p><strong>Область:</strong> @Html.DisplayFor(model => model.Oblast)</p>
 
-
-            </div>
-
-            <div>
-        @if (ViewBag.user != null)
-        {
-            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
+            @if (Model.StationInfo != null)
             {
-                                        <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
-                                        <a class="btn btn-info" target="_blank" style="margin:20px" asp-controller="StationInfoes" asp-action="Create">Додати інформацію</a>
-
+                <div class="mt-3">
+                    <p>@Model.StationInfo.BaseInfo</p>
+                </div>
             }
-        }
+
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <a class="btn btn-info" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@Model.Name">
+                    Розклад по станції
+                </a>
+                <a class="btn btn-warning" asp-controller="RailwayUsersPhotoes" asp-action="Index" asp-route-id="@Model.id">
+                    Фотографії користувачів
+                </a>
             </div>
         </div>
+    </div>
+
+    @if (Model.DopImgSrc != null || Model.DopImgSrcSec != null || Model.DopImgSrcThd != null)
+    {
+        <div class="row mb-4 g-3">
+            @if (Model.DopImgSrc != null)
+            {
+                <div class="col-12 col-md-4 text-center">
+                    <img src="@Model.DopImgSrc" class="img-fluid rounded" alt="Додаткове зображення">
+                </div>
+            }
+            @if (Model.DopImgSrcSec != null)
+            {
+                <div class="col-12 col-md-4 text-center">
+                    <img src="@Model.DopImgSrcSec" class="img-fluid rounded" alt="Додаткове зображення">
+                </div>
+            }
+            @if (Model.DopImgSrcThd != null)
+            {
+                <div class="col-12 col-md-4 text-center">
+                    <img src="@Model.DopImgSrcThd" class="img-fluid rounded" alt="Додаткове зображення">
+                </div>
+            }
+        </div>
+    }
+
+    @if (ViewBag.user != null &&
+        (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin"))
+    {
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
+            <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Create">Додати інформацію</a>
+        </div>
+    }
+
+</div>
+
 
         <style>
             body {

@@ -5,90 +5,104 @@
 }
 
 
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Index</title>
 
-
-<p>
+<div class="mb-3">
     @if (ViewBag.user != null)
     {
         if (ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-info" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
-            <a class="btn btn-dark" asp-action="UpdateInfo" asp-route-numbertr="@ViewBag.traininfo.Number">Оновити дані</a>
-            <a class="btn btn-danger" asp-action="Truncate" asp-route-numbertr="@ViewBag.traininfo.Number">Видалити графік</a>
+            <a class="btn btn-info m-1" asp-action="Create" asp-route-numbertr="@ViewBag.traininfo.Number">Додати зупинку</a>
+            <a class="btn btn-dark m-1" asp-action="UpdateInfo" asp-route-numbertr="@ViewBag.traininfo.Number">Оновити дані</a>
+            <a class="btn btn-danger m-1" asp-action="Truncate" asp-route-numbertr="@ViewBag.traininfo.Number">Видалити графік</a>
         }
     }
+</div>
 
-</p>
-<H2 style="font-weight:bold">Поїзд номер "@ViewBag.traininfo.Number" сполученням: "@ViewBag.traininfo.StationFrom" - "@ViewBag.traininfo.StationTo" </H2>
+<h2 class="fw-bold text-center mb-3">
+    Поїзд № @ViewBag.traininfo.Number <br />
+    сполученням: @ViewBag.traininfo.StationFrom – @ViewBag.traininfo.StationTo
+</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Назва станції")
-            </th>
-            <th>
-                @Html.DisplayName("Час прибуття")
-            </th>
-            <th>
-                @Html.DisplayName("Час відправлення")
-            </th>
-            <th>
-                @Html.DisplayName("Відстань")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<!-- Таблиця для великих екранів -->
+<div class="table-responsive d-none d-md-block">
+    <table class="table table-striped table-bordered text-center align-middle">
+        <thead class="table-dark">
             <tr>
-                <td>
-                    <div style="font-size:25px">
+                <th>Назва станції</th>
+                <th>Час прибуття</th>
+                <th>Час відправлення</th>
+                <th>Відстань</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="font-size:18px">
                         @if (item.Stations is not null)
                         {
-                            <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.Stations.Name">@Html.DisplayFor(modelItem => item.NameStation)</a>
-                        }else{
+                            <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.Stations.Name">
+                                @Html.DisplayFor(modelItem => item.NameStation)
+                            </a>
+                        }
+                        else
+                        {
                             @Html.DisplayFor(modelItem => item.NameStation)
                         }
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:20px" ; color:black>
-                        @Html.DisplayFor(modelItem => item.Arrival)
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:20px" ; color:black>
-                        @Html.DisplayFor(modelItem => item.Departure)
-                    </div>
-                </td>
-                <td>
-                    <div style="font-size:20px" ; color:black>
-                        @Html.DisplayFor(modelItem => item.Distance)
-                    </div>
-                </td>
-
-                <td>
-                    @if (ViewBag.user != null)
-                    {
-                        if (ViewBag.user.Role == "Superadmin")
+                    </td>
+                    <td style="font-size:16px">@Html.DisplayFor(modelItem => item.Arrival)</td>
+                    <td style="font-size:16px">@Html.DisplayFor(modelItem => item.Departure)</td>
+                    <td style="font-size:16px">@Html.DisplayFor(modelItem => item.Distance)</td>
+                    <td>
+                        @if (ViewBag.user?.Role == "Superadmin")
                         {
-                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
                         }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Картки для мобільних -->
+<div class="d-block d-md-none">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @if (item.Stations is not null)
+                    {
+                        <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.Stations.Name">
+                            @Html.DisplayFor(modelItem => item.NameStation)
+                        </a>
                     }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.NameStation)
+                    }
+                </h5>
+                <p class="card-text mb-1"><b>Прибуття:</b> @item.Arrival</p>
+                <p class="card-text mb-1"><b>Відправлення:</b> @item.Departure</p>
+                <p class="card-text mb-2"><b>Відстань:</b> @item.Distance км</p>
 
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                @if (ViewBag.user?.Role == "Superadmin")
+                {
+                    <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                }
+            </div>
+        </div>
+    }
+</div>
 
-<div>
+<div class="mt-3">
     <a class="btn btn-info" asp-controller="Trains" asp-action="Index">До списку поїздів</a>
 </div>
+
 @if (null != TempData["alertMessage"])
 {
     <script type="text/javascript">

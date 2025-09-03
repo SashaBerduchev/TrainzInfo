@@ -4,49 +4,54 @@
     ViewData["Title"] = @Model.Name;
 }
 
-<h1>@Model.Name</h1>
 
-<div>
+<div class="container my-4">
+
     <hr />
 
-    <div style="background-color:aliceblue;">
-        <div style="margin:20px">
-        <img class="img-thumbnail" width="450" height="450"
-                     src="@Url.Action("GetImage", "ElectricTrains",
-                        new { Model.id })" />
-        </div>
-        <div style="position:relative; left:540px; top:-270px; font-size:25px; background-color:aliceblue; width:400px">
-            <div>@Html.DisplayName("Назва: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</div>
-            <div>@Html.DisplayName("Максимальна швидкість: ") @Html.DisplayName(Model.MaxSpeed.ToString())</div>
-            <div>@Html.DisplayName("Місто прописки: ") @Html.DisplayName(Model.City.Name)</div>
-            <div>@Html.DisplayName("Депо прописки: ") @Html.DisplayName(Model.DepotList.Name)</div>
-            <div>@Html.DisplayName("Побудовано: ") @Html.DisplayName(Model.CreatedTrain.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод-виробник") @Html.DisplayName(Model.PlantCreate)</div>
-            <div>@Html.DisplayName("Останній ремонт: ") @Html.DisplayName(Model.LastKvr.Year.ToString())</div>
-            <div style="width:450px">@Html.DisplayName("Завод який провів ремонт: ") @Html.DisplayName(Model.PlantKvr)</div>
-           @*  <div style="width:450px">@Html.DisplayName("Имя пользователя: ") @Html.DisplayName(Model.User)</div> *@
-            <div style="position:relative; left:-470px; top:50px; font-size:22px; width:1000px;">
-                <div><p>@ViewBag.baseinfo</p></div>
-                <div><p>@ViewBag.allinfo</p></div>
+    <div class="bg-light p-3 rounded">
+        <div class="row g-3 align-items-start">
+            <!-- Зображення -->
+            <div class="col-12 col-md-5 text-center">
+                <img class="img-thumbnail" style="max-width:100%; height:auto;"
+                     src="@Url.Action("GetImage", "ElectricTrains", new { Model.id })" />
+            </div>
+
+            <!-- Інформація про поїзд -->
+            <div class="col-12 col-md-7 bg-light p-3 rounded">
+                <h4>@Html.DisplayName("Назва: ") @Html.DisplayName(Model.Name) - @Html.DisplayName(Model.Model)</h4>
+                <p>Максимальна швидкість: @Html.DisplayName(Model.MaxSpeed.ToString())</p>
+                <p>Місто прописки: @Html.DisplayName(Model.City.Name)</p>
+                <p>Депо прописки: @Html.DisplayName(Model.DepotList.Name)</p>
+                <p>Побудовано: @Html.DisplayName(Model.CreatedTrain.Year.ToString())</p>
+                <p style="max-width:450px;">Завод-виробник: @Html.DisplayName(Model.PlantCreate)</p>
+                <p>Останній ремонт: @Html.DisplayName(Model.LastKvr.Year.ToString())</p>
+                <p style="max-width:450px;">Завод який провів ремонт: @Html.DisplayName(Model.PlantKvr)</p>
+
+                <!-- Додаткова інформація -->
+                <div class="mt-3">
+                    <p>@ViewBag.baseinfo</p>
+                    <p>@ViewBag.allinfo</p>
+                </div>
             </div>
         </div>
     </div>
-    <div style="margin:20px;">
-        @if (ViewBag.user != null)
+
+    <!-- Кнопки дій -->
+    <div class="mt-3 d-flex flex-wrap gap-2">
+        @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin"))
         {
-            @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
-            {
-                <a class="btn btn-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
-                <a class="btn btn-info" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Изменить общую информацию о поезде</a>
-                <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагуввати данные о поезде </a>
-
-            }
+            <a class="btn btn-info w-100 w-md-auto" asp-action="AddImageForm" asp-route-id="@Model.id">Додати картинку</a>
+            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Змінити загальну інформацію</a>
+            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати дані поїзда</a>
         }
-
     </div>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
+
+    <!-- Повернення -->
+    <div class="mt-3">
+        <a class="btn btn-secondary" asp-action="Index">Назад до списку</a>
+    </div>
+
 </div>
 
 <style>
