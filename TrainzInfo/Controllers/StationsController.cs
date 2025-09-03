@@ -63,7 +63,7 @@ namespace TrainzInfo.Controllers
             List<Stations> stations = new List<Stations>();
             LoggingExceptions.LogWright("Create query");
             IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
-                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways)
+                .Include(x => x.Oblasts).Include(x=>x.Citys).Include(x => x.UkrainsRailways)
                 .Include(x => x.railwayUsersPhotos)
                 .OrderBy(x => x.Name).Distinct().AsQueryable();
 
@@ -224,7 +224,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get stations from DB");
             List<Stations> stations = new List<Stations>();
             IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
-                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways)
+                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x=>x.Citys)
                 .Include(x => x.railwayUsersPhotos).Include(x => x.StationInfo)
                 .OrderBy(x => x.Name).AsQueryable();
            

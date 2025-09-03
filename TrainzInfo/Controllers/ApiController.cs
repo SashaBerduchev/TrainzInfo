@@ -25,7 +25,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).Distinct().ToListAsync();
+                List<string> names = await _context.Cities.Where(p => p.Name.Contains(term)).Select(x => x.Name).Take(10).ToListAsync();
                 return Ok(names);
             }
             catch (Exception exp)
@@ -42,7 +42,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).Distinct().ToListAsync();
+                List<string> names = await _context.Oblasts.Where(p => p.Name.Contains(term)).Select(x => x.Name).Take(10).ToListAsync();
                 return Ok(names);
             }
             catch (Exception exp)
@@ -59,7 +59,7 @@ namespace TrainzInfo.Controllers
             try
            {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> names = await _context.Stations.Where(p => p.Name.Contains(term)).Select(x => x.Name).Take(10).ToListAsync();
                 return Ok(names);
             }
             catch (Exception exp)
@@ -76,7 +76,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> strings = await _context.Locomotive_Series.Where(x => x.Seria.Contains(term)).Select(x => x.Seria).ToListAsync();
+                List<string> strings = await _context.Locomotive_Series.Where(x => x.Seria.Contains(term)).Select(x => x.Seria).Take(10).ToListAsync();
                 return Ok(strings);
             }
             catch (Exception exp)
@@ -93,7 +93,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> strings = await _context.Electrics.Where(x => x.Name.Contains(term)).Select(x => x.Name).ToListAsync();
+                List<string> strings = await _context.Electrics.Where(x => x.Name.Contains(term)).Select(x => x.Name).Take(10).ToListAsync();
                 return Ok(strings.Distinct());
             }
             catch (Exception e)
@@ -110,7 +110,7 @@ namespace TrainzInfo.Controllers
             try
             {
                 string term = HttpContext.Request.Query["term"].ToString();
-                List<string> strings = await _context.SuburbanTrainsInfos.Where(x => x.Model.Contains(term)).Select(x => x.Model).ToListAsync();
+                List<string> strings = await _context.SuburbanTrainsInfos.Where(x => x.Model.Contains(term)).Select(x => x.Model).Take(10).ToListAsync();
                 return Ok(strings.Distinct());
             }
             catch (Exception e)
@@ -127,7 +127,7 @@ namespace TrainzInfo.Controllers
             {
                 string term = HttpContext.Request.Query["term"].ToString();
                 List<string> strings = await _context.Depots.Where(x => x.Name.Contains(term))
-                    .Select(x => x.Name).ToListAsync();
+                    .Select(x => x.Name).Take(10).ToListAsync();
                 return Ok(strings.Distinct());
             }catch (Exception e)
             {

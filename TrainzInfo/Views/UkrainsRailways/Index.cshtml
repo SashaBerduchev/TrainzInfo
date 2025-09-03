@@ -14,8 +14,8 @@
 {
     if (ViewBag.user.Role == "Superadmin")
     {
-        <a class="btn btn-info" asp-action="Create">Добавить филию</a>
-        <a class="btn btn-info" asp-action="UpdateIndex">Оновити дані</a>
+        
+        @* <a class="btn btn-info" asp-action="UpdateIndex">Оновити дані</a> *@
 
     }
 }
@@ -30,13 +30,13 @@
             </a>
             <div>
 
-                @if (ViewBag.user != null)
+                @* @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Superadmin")
                     {
                         <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
                     }
-                }
+                } *@
             </div>
         </div>
     }
