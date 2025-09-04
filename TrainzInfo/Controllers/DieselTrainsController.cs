@@ -303,8 +303,8 @@ namespace TrainzInfo.Controllers
                     using (MemoryStream ms = new MemoryStream(train.Image, 0, train.Image.Length))
                     {
 
-                        int h = 250;
-                        int w = 300;
+                        int h = 500;
+                        int w = 700;
                         using (Image img = Image.Load(ms))
                         {
 
@@ -313,16 +313,7 @@ namespace TrainzInfo.Controllers
                             {
                                 img.SaveAsJpeg(ms2);
                                 train.Image = ms2.ToArray();
-                            }; // формат определяется по расширению файла
-
-                            //using (Bitmap b = new Bitmap(img, new Size(w, h)))
-                            //{
-                            //    using (MemoryStream ms2 = new MemoryStream())
-                            //    {
-                            //        b.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            //        station.Image = ms2.ToArray();
-                            //    }
-                            //}
+                            }; 
                         }
                     }
                     _context.DieselTrains.Update(train);

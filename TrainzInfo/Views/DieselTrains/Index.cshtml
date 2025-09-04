@@ -58,6 +58,7 @@
 
                         @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin"))
                         {
+                            <a class="btn btn-outline-warning mb-2" asp-action="AddImageForm" asp-route-id="@item.Id">Додати зображення</a>
                             <a class="btn btn-success mb-2" asp-action="Edit" asp-route-id="@item.Id">Редагувати</a>
                             <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
                         }
