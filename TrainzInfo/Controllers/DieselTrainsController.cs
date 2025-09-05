@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: DieselTrains
-        public async Task<IActionResult> Index(string? Filia, string? Oblast, string? Depo, string? Model)
+        public async Task<IActionResult> Index(string? Filia, string? Oblast, string? Depo, string? Model, int page = 1)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Index));
             LoggingExceptions.LogStart();
@@ -93,9 +93,20 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("Set session DepoDiesel: " + Depo); 
                 HttpContext.Session.SetString("DepoDiesel", Depo);
             }
-            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
-            diesel = await query.ToListAsync();
-            LoggingExceptions.LogWright("Query executed. Result count: " + diesel.Count.ToString());
+
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            diesel = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
             UpdateFilter(diesel);
             LoggingExceptions.LogWright("Return view with data");
             LoggingExceptions.LogFinish();
@@ -122,7 +133,7 @@ namespace TrainzInfo.Controllers
             ViewBag.Model = new SelectList(model);
         }
 
-        public async Task<IActionResult> IndexDepot(int? id)
+        public async Task<IActionResult> IndexDepot(int? id, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -142,7 +153,19 @@ namespace TrainzInfo.Controllers
                 query = query.Where(x => x.DepotList.id == id);
             }
 
-            diesel = await query.ToListAsync();
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            diesel = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
             UpdateFilter(diesel);
             return View(diesel);
         }

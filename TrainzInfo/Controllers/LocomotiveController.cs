@@ -52,7 +52,7 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(Index));
         }
         // GET: Locomotive
-        public async Task<IActionResult> Index(string? Seria, string? Filia, string? Depot)
+        public async Task<IActionResult> Index(string? Seria, string? Filia, string? Depot, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogInit(this.ToString(), "Index " + remoteIpAddres);
@@ -87,7 +87,7 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
                 .Include(x => x.DepotList.UkrainsRailway)
-                .Include(x => x.DepotList.City.Oblasts).AsQueryable();
+                .Include(x => x.DepotList.City.Oblasts).AsQueryable().AsNoTracking();
 
             query = query.Where(x => true);
 
@@ -116,8 +116,19 @@ namespace TrainzInfo.Controllers
                 HttpContext.Session.SetString("Depot", Depot);
                 LoggingExceptions.LogWright("Зберегли сесію Depot: " + Depot);
             }
-            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
-            locomotives = await query.ToListAsync();
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            locomotives = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
 
             UpdateFilter(locomotives);
             LoggingExceptions.LogFinish();
@@ -150,7 +161,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogFinish();
         }
 
-        public async Task<IActionResult> IndexDepot(int? id)
+        public async Task<IActionResult> IndexDepot(int? id, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -158,20 +169,33 @@ namespace TrainzInfo.Controllers
             {
                 ViewBag.user = user;
             }
-            //List<DepotList> depots = await _context.Depots.ToListAsync();
-            //List<Locomotive_series> locomotive_Series = await _context.Locomotive_Series.ToListAsync();
             List<Locomotive> locomotives = new List<Locomotive>();
             IQueryable<Locomotive> query = _context.Locomotives.Include(x => x.DepotList).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
                 .Include(x=>x.DepotList.UkrainsRailway).Include(x => x.LocomotiveBaseInfo).AsQueryable();
             if (id != null)
             {
-                locomotives = await query.Where(x => x.DepotList.id == id).ToListAsync();
+                query =  query.Where(x => x.DepotList.id == id);
             }
             else
             {
                 return NotFound();
             }
+
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            locomotives = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
+
             UpdateFilter(locomotives);
             return View(locomotives);
         }

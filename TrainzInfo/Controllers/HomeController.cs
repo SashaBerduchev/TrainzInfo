@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using OfficeOpenXml;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TrainzInfo.Controllers
 {
@@ -143,7 +144,7 @@ namespace TrainzInfo.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Index));
             LoggingExceptions.LogStart();
@@ -181,7 +182,22 @@ namespace TrainzInfo.Controllers
                 ViewBag.user = user;
             }
             LoggingExceptions.LogWright("Try to get news");
-            List<NewsInfo> newsInfo = await _context.NewsInfos.OrderByDescending(x=>x.DateTime).ToListAsync();
+            List<NewsInfo> newsInfo = new List<NewsInfo>();
+            IQueryable<NewsInfo> query =  _context.NewsInfos.OrderByDescending(x=>x.DateTime).Include(x=>x.Users)
+                .Include(x=>x.NewsComments).AsQueryable().AsNoTracking();
+            int pageSize = 10;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            newsInfo = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
             LoggingExceptions.LogFinish();
             return View(newsInfo);
         }

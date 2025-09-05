@@ -15,6 +15,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Migrations;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
@@ -30,14 +31,18 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: ElectricTrains
-        public async Task<IActionResult> Index(string Name, string Depot)
+        public async Task<IActionResult> Index(string Name, string Depot, int page = 1)
         {
+            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Start index electric trains");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             if (user != null && user.Status == "true")
             {
                 ViewBag.user = user;
             }
+            LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
             IQueryable<ElectricTrain> query;
             List<ElectricTrain> electricTrains = new List<ElectricTrain>();
             query = _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
@@ -53,9 +58,21 @@ namespace TrainzInfo.Controllers
             {
                 query = query.Where(x => x.Name == Name);
             }
-
-            electricTrains = await query.Distinct().ToListAsync();
-
+            LoggingExceptions.LogWright("Apply filters: " + query.ToQueryString());
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            electricTrains = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
+            LoggingExceptions.LogFinish();
             UpdateFilter(electricTrains);
             return View(electricTrains);
         }
@@ -72,7 +89,7 @@ namespace TrainzInfo.Controllers
             ViewBag.name = new SelectList(nameelectrics);
         }
 
-        public async Task<IActionResult> IndexDepot(int? id)
+        public async Task<IActionResult> IndexDepot(int? id, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
@@ -87,7 +104,7 @@ namespace TrainzInfo.Controllers
                     .Include(x => x.ElectrickTrainzInformation).AsQueryable();
             if (id != null)
             {
-                electrics = await query.Where(x => x.DepotList.id == id).ToListAsync();
+                query = query.Where(x => x.DepotList.id == id);
             }
             else
             {
@@ -95,7 +112,21 @@ namespace TrainzInfo.Controllers
             }
             //List<DepotList> depotLists = await _context.Depots.ToListAsync();
             //List<City> city = await _context.Cities.ToListAsync();
-            
+            LoggingExceptions.LogWright("Apply filters: " + query.ToQueryString());
+            int pageSize = 20;
+            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            int count = await query.CountAsync();
+            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            int totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            electrics = await query.Skip((page - 1) * pageSize)
+               .Take(pageSize) // <-- використання Take()
+               .ToListAsync();
+            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+               .Take(pageSize).ToQueryString());
+            ViewBag.PageIndex = page;
+            ViewBag.TotalPages = totalPages;
+            LoggingExceptions.LogFinish();
             UpdateFilter(electrics);
             return View(electrics);
         }
