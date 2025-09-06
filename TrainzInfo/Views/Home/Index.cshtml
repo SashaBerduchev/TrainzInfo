@@ -9,8 +9,7 @@
 
     <div class="maincardpage">
         <div class="main_text">
-            Сайт ТреінзІнфо присвячується любителям залізничного транспорту, любителям поїздів, електричок, електовозів та тепловозів.
-            Тут ви знайдете багато цікавої інформації про залізничний транспорт та новини з залізниці та транспорту
+            Сайт ТреінзІнфо присвячується любителям залізничного транспорту...
         </div>
 
         <div class="btn_main_panel">
@@ -22,98 +21,56 @@
     </div>
 </div>
 
-<div class="infocont container mt-4">
-    @foreach (var info in Model)
-    {
-        if (!string.IsNullOrWhiteSpace(info.NameNews))
-        {
-            <div class="basecont card shadow-sm mb-4 p-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        @if (info.NewsImage == null)
-                        {
-                            <img src="@info.Imgsrc" class="img-fluid rounded" alt="Новина">
-                        }
-                        else
-                        {
-                            <img class="img-thumbnail"
-                                 src="@Url.Action("GetImage", "NewsInfoes", new { info.id })"
-                                 alt="Зображення новини" />
-                        }
-                    </div>
-                    <div class="col-md-8">
-                        <div class="text-muted">@info.DateTime.ToString()</div>
-                        <h3>@info.NameNews</h3>
-                        <p>@info.BaseNewsInfo</p>
-                        <a class="btn btn-info btn_news" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Дивитися новину</a>
-
-                        @if (ViewBag.user != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin") || User.IsInRole("Publisher")))
-                        {
-                            <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Додати зображення</a>
-                            <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@info.id">Видалити</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-    }
+<div class="text-center mt-3">
+    <input type="text" id="searchInput" class="form-control" style="max-width:400px; margin:auto;" placeholder="Пошук новин..." />
 </div>
 
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
-        @* Попередня кнопка *@
-        @if (ViewBag.PageIndex > 1)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.PageIndex - 1)">Попередня</a>
-            </li>
-        }
+<div id="news-container">
+    @await Html.PartialAsync("_NewsPartial", Model)
+</div>
 
-        @{
-            int startPage = Math.Max(1, ViewBag.PageIndex - 3);
-            int endPage = Math.Min(ViewBag.TotalPages, ViewBag.PageIndex + 3);
+@section Scripts {
+    <!-- jQuery (якщо ще не підключено у _Layout) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            if (startPage > 1)
-            {
-                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="1">1</a></li>
-                if (startPage > 2)
-                {
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
+    <!-- jQuery UI для autocomplete -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // ---------- AJAX пагінатор ----------
+            $('#news-container').on('click', '.page-link', function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+
+                $.ajax({
+                    url: '@Url.Action("Index", "Home")',
+                    type: 'GET',
+                    data: { page: page },
+                    success: function (html) {
+                        $('#news-container').html(html);
+                        $('html, body').animate({ scrollTop: $('#news-container').offset().top }, 300);
+                    },
+                    error: function () {
+                        alert('Помилка при завантаженні новин.');
+                    }
+                });
+            });
+
+            // ---------- jQuery UI Autocomplete ----------
+            $("#searchInput").autocomplete({
+                source: '@Url.Action("SearchSuggestions", "Home")', // серверний метод повертає JSON масив рядків
+                minLength: 2,
+                select: function (event, ui) {
+                    // Коли користувач обрав підказку, можна перейти на сторінку новини
+                    window.location.href = '/NewsInfoes/Details/' + ui.item.id;
                 }
-            }
-
-            for (int i = startPage; i <= endPage; i++)
-            {
-                if (i == ViewBag.PageIndex)
-                {
-                    <li class="page-item active"><span class="page-link">@i</span></li>
-                }
-                else
-                {
-                    <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a></li>
-                }
-            }
-
-            if (endPage < ViewBag.TotalPages)
-            {
-                if (endPage < ViewBag.TotalPages - 1)
-                {
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                }
-                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@ViewBag.TotalPages">@ViewBag.TotalPages</a></li>
-            }
-        }
-
-        @* Наступна кнопка *@
-        @if (ViewBag.PageIndex < ViewBag.TotalPages)
-        {
-            <li class="page-item">
-                <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.PageIndex + 1)">Наступна</a>
-            </li>
-        }
-    </ul>
-</nav>
-
+            });
+        });
+    </script>
+}
 
 <style>
     body {

@@ -199,6 +199,11 @@ namespace TrainzInfo.Controllers
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_NewsPartial", newsInfo);
+            }
             LoggingExceptions.LogFinish();
             return View(newsInfo);
         }
