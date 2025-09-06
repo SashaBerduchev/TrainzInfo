@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,13 +19,14 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TrainzInfo.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
         private readonly ApplicationContext _context;
-
-        public HomeController(ILogger<HomeController> logger, ApplicationContext context)
+        
+        public HomeController(ILogger<HomeController> logger, ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager)
         {
             Trace.WriteLine(this);
             _logger = logger;
@@ -175,10 +177,15 @@ namespace TrainzInfo.Controllers
                 await _context.SaveChangesAsync();
             }
             LoggingExceptions.LogWright("Try to find user");
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
             {
-                LoggingExceptions.LogWright("User found - " + user.Name +" "+ user.Email);
+                // Тут можна додати додаткову перевірку "Status", якщо у тебе є кастомне поле
+                // Наприклад, якщо створив клас ApplicationUser : IdentityUser з полем Status
+                // if (((ApplicationUser)user).Status == "true") { ... }
+
+                LoggingExceptions.LogWright("User found - " + user.UserName + " " + user.Email);
                 ViewBag.user = user;
             }
             LoggingExceptions.LogWright("Try to get news");

@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 
@@ -41,8 +45,8 @@ namespace TrainzInfo
             });
             LoggingExceptions.LogWright("Try add MVC");
             services.AddMvc();
-            
-            LoggingExceptions.LogWright("Try find connection string");  
+
+            LoggingExceptions.LogWright("Try find connection string");
             if (DEBUG_MODE == true)
             {
                 if (START_IN_PROD_DB == false)
@@ -65,6 +69,17 @@ namespace TrainzInfo
             }
             LoggingExceptions.LogWright(trace);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+
+            LoggingExceptions.LogWright("Try add identity");
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 8;
+            })
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
             services.AddControllersWithViews();
             Mail mail = new Mail();
             LoggingExceptions.LogFinish();
@@ -94,18 +109,68 @@ namespace TrainzInfo
             LoggingExceptions.LogWright("Try use routing");
             app.UseRouting();
             LoggingExceptions.LogWright("Try use authorization");
+            app.UseAuthentication();
             app.UseAuthorization();
             LoggingExceptions.LogWright("Try use session");
             app.UseSession();
             LoggingExceptions.LogWright("Try use endpoints");
             app.UseEndpoints(endpoints =>
             {
+                // Спочатку MVC контролери
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                // Потім Razor Pages
+                endpoints.MapRazorPages();
             });
+
+            var endpointDataSource = app.ApplicationServices.GetRequiredService<EndpointDataSource>();
+            LoggingExceptions.LogWright("Try get all registered endpoints");
+            
+            foreach (var endpoint in endpointDataSource.Endpoints)
+            {
+                LoggingExceptions.LogWright($"Registered endpoint: {endpoint.DisplayName}");
+            }
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                CreateRoles(serviceProvider).Wait();
+            }
             LoggingExceptions.LogFinish();
 
+        }
+
+        public static async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            RoleManager<IdentityRole> roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            UserManager<IdentityUser> userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            string[] roleNames = { "Superadmin", "Admin", "Manager", "User" };
+
+            foreach (var roleName in roleNames)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            // Приклад: створити адміна
+            var adminUser = await userManager.FindByEmailAsync("alexander.vinichuk@outlook.com");
+            if (adminUser == null)
+            {
+                adminUser = new IdentityUser
+                {
+                    UserName = "alexander.vinichuk@outlook.com",
+                    Email = "alexander.vinichuk@outlook.com",
+                    EmailConfirmed = true
+                };
+                await userManager.CreateAsync(adminUser, "Admin123!");
+            }
+
+            await userManager.AddToRoleAsync(adminUser, "Superadmin");
         }
 
         public static bool GetConfig()

@@ -47,7 +47,7 @@
                         <p>@info.BaseNewsInfo</p>
                         <a class="btn btn-info btn_news" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Дивитися новину</a>
 
-                        @if (ViewBag.user != null && (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher"))
+                        @if (ViewBag.user != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin") || User.IsInRole("Publisher")))
                         {
                             <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Додати зображення</a>
                             <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@info.id">Видалити</a>
