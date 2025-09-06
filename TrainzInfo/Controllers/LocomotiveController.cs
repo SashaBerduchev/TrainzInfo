@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,6 +8,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -237,6 +239,7 @@ namespace TrainzInfo.Controllers
         }
 
         // GET: Locomotive/Create
+        [Authorize(Roles = "Superadmin, Admin")]
         public async Task<IActionResult> Create()
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Create));

@@ -7,7 +7,7 @@
 <h1 class="mb-4 text-center">Локомотиви</h1>
 
 <div class="mb-3">
-    @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+    @if (ViewBag.CurrentUser != null)
     {
         <a class="btn btn-info mb-2" asp-action="Create">Додати локомотив</a>
     }
