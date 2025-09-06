@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data;
@@ -26,17 +27,18 @@ namespace TrainzInfo.Tools
             _host = "trainzinfo.com.ua";
             _port = 587;
         }
-        public static void SendMessageNews( string news, string remoteIpAddres, Users user)
+        public static void SendMessageNews( string news, string remoteIpAddres, IdentityUser user)
         {
-            string bodymail = user.Name + "Новина: " + news + " опублікована, Дякуємо вам!!!";
+            
+            string bodymail = user.UserName + "Новина: " + news + " опублікована, Дякуємо вам!!!";
             SendMail(bodymail, user);
         }
-        public static void SendLocomotivesAddMessage(string Loconame, string remoteIpAddres, Users user)
+        public static void SendLocomotivesAddMessage(string Loconame, string remoteIpAddres, IdentityUser user)
         {
-            string bodymail = user.Name + "Локомотив: " + Loconame + " додано на сайт, Дякуємо вам!!!";
+            string bodymail = user.UserName + "Локомотив: " + Loconame + " додано на сайт, Дякуємо вам!!!";
             SendMail(bodymail, user);
         }
-        public static void SendMail(string body, Users user)
+        public static void SendMail(string body, IdentityUser user)
         {
             LoggingExceptions.LogInit("Mail", nameof(SendMessageNews));
             LoggingExceptions.LogStart();

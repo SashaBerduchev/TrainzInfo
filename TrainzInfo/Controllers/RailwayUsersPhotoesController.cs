@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,11 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class RailwayUsersPhotoesController : Controller
+    public class RailwayUsersPhotoesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public RailwayUsersPhotoesController(ApplicationContext context)
+        public RailwayUsersPhotoesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -30,13 +31,10 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             List<RailwayUsersPhoto> railwayUsersPhoto = new List<RailwayUsersPhoto>();
-            railwayUsersPhoto = await _context.RailwayUsersPhotos.Include(x=>x.Users).Include(x=>x.Stations)
+            railwayUsersPhoto = await _context.RailwayUsersPhotos.Include(x=>x.Stations)
                 .Where(x => x.Stations.id == id).ToListAsync();
             //if (id != null)
             //{
@@ -53,17 +51,14 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             if (id == null)
             {
                 return NotFound();
             }
 
-            var railwayUsersPhoto = await _context.RailwayUsersPhotos.Include(x=>x.Users)
+            var railwayUsersPhoto = await _context.RailwayUsersPhotos
                 .FirstOrDefaultAsync(m => m.id == id);
             if (railwayUsersPhoto == null)
             {
@@ -86,12 +81,7 @@ namespace TrainzInfo.Controllers
         public IActionResult Create()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-
+         
 
             List<string> stationslist = new List<string>();
             stationslist.Add("");
@@ -123,15 +113,11 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,Information")] RailwayUsersPhoto railwayUsersPhoto, string? Stations)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+          
 
             if (ModelState.IsValid)
             {
-                railwayUsersPhoto.Users = user;
+
                 railwayUsersPhoto.IsProof = false.ToString();
                 Stations stations = await _context.Stations.Where(x => x.Name == Stations).FirstOrDefaultAsync();
                 railwayUsersPhoto.Stations = stations;
@@ -144,7 +130,7 @@ namespace TrainzInfo.Controllers
                 stations.railwayUsersPhotos.Add(railwayUsersPhoto);
                 _context.Stations.Update(stations);
                 await _context.SaveChangesAsync();
-                TempData["PhotoID"] = _context.RailwayUsersPhotos.Where(x=>x.Users == user && x.Stations.Name == Stations).Select(x=>x.id).ToList().Last();
+                TempData["PhotoID"] = _context.RailwayUsersPhotos.Where(x=>x.Stations.Name == Stations).Select(x=>x.id).ToList().Last();
                 return RedirectToAction(nameof(AddImageForm));
             }
             return View(railwayUsersPhoto);
@@ -220,11 +206,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+           
             if (id == null)
             {
                 return NotFound();
@@ -252,11 +234,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("id,NameUser,UserId,CityFrom,CitytTo,Information,Image,ImageType")] RailwayUsersPhoto railwayUsersPhoto)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             if (id != railwayUsersPhoto.id)
             {
                 return NotFound();
@@ -291,11 +270,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
             if (id == null)
             {
                 return NotFound();

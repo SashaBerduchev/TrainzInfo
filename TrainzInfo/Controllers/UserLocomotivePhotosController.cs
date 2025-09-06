@@ -8,19 +8,21 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class UserLocomotivePhotosController : Controller
+    public class UserLocomotivePhotosController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public UserLocomotivePhotosController(ApplicationContext context)
+        public UserLocomotivePhotosController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -29,11 +31,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(string? name, string? number)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
             Trace.WriteLine(name + " - " + number);
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.Where(x => x.NameLocomotive == name + " - " + number).ToListAsync();
             return View(locomotivePhoto);
@@ -41,11 +40,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> IndexAll()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             List<UserLocomotivePhotos> locomotivePhoto = await _context.UserLocomotivePhotos.OrderByDescending(x=>x.DateTime).ToListAsync();
             return View(locomotivePhoto);
         }
@@ -54,11 +49,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             if (id == null)
             {
                 return NotFound();
@@ -80,13 +71,7 @@ namespace TrainzInfo.Controllers
             string username = "";
             int userid = 0;
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                username = user.Name;
-                userid = user.Id;
-            }
+        
             List<string> locomotives = new List<string>();
             locomotives = _context.Locomotives.Select(x=>x.Seria + " - " + x.Number).ToList();
             SelectList selectLists = new SelectList(locomotives);
@@ -106,49 +91,19 @@ namespace TrainzInfo.Controllers
             int userid = 0;
             string email = "";
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                username = user.Name;
-                userid = user.Id;
-                email = user.Email;
-            }
+             
+          
             userLocomotivePhotos.Email = email;
             userLocomotivePhotos.DateTime = DateTime.Now;
             _context.Add(userLocomotivePhotos);
             await _context.SaveChangesAsync();
-            SendMessage(userLocomotivePhotos);
             UserLocomotivePhotos userLocomotiveAdded = _context.UserLocomotivePhotos.ToList().LastOrDefault();
             TempData["LocomotiveID"] = userLocomotiveAdded.Id;
             return RedirectToAction(nameof(AddImageForm));
             
         }
 
-        private void SendMessage(UserLocomotivePhotos userLocomotivePhotos)
-        {
-            try
-            {
-                MailMessage m = new MailMessage("sashaberduchev@gmail.com", userLocomotivePhotos.Email);
-                m.Body = userLocomotivePhotos.User.Name + " Ваша публикация опубликована, Спасибо Вам";
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("sashaberduchev@gmail.com", "SashaVinichuk");
-                smtp.EnableSsl = true;
-                smtp.Send(m);
-            }catch(Exception exp)
-            {
-                Trace.WriteLine(exp.ToString());
-                string expstr = exp.ToString();
-                FileStream fileStreamLog = new FileStream(@"Mail.log", FileMode.Append);
-                for (int i = 0; i < expstr.Length; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes(expstr.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                }
-                fileStreamLog.Close();
-            }
-        }
+       
 
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
@@ -217,13 +172,8 @@ namespace TrainzInfo.Controllers
             int userid = 0;
             string username = "";
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                username = user.Name;
-                userid = user.Id;
-            }
+             
+          
             if (id == null)
             {
                 return NotFound();
@@ -288,13 +238,8 @@ namespace TrainzInfo.Controllers
             int userid = 0;
             string username = "";
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                username = user.Name;
-                userid = user.Id;
-            }
+             
+          
 
             if (id == null)
             {

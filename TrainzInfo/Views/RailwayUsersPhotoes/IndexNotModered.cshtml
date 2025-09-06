@@ -31,7 +31,7 @@
                      src="@Url.Action("GetImage", "RailwayUsersPhotoes",
                         new { item.id })" />
             </div>
-            <div class="row" style="font-size: 20px; position: relative; left: 15px "><p>Автор: </p><a asp-controller="Users" asp-action="Details" asp-route-id="@item.Users"><p>@item.Users.Name</p></a></div>
+            
 
             <div style="font-size:20px"><p>Станція:</p><p>@item.Stations.Name</p></div>
             <div style="font-size:20px"><p>Информация о фото:</p><p>@item.Information</p></div>

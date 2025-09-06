@@ -1,25 +1,27 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class DepotListsController : Controller
+    public class DepotListsController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public DepotListsController(ApplicationContext context)
+        public DepotListsController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            :base(userManager)
         {
             _context = context;
             Trace.WriteLine(this);
@@ -59,11 +61,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(int? uzname)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+            
             if (uzname == null)
             {
                 uzname =Convert.ToInt32(TempData["uzfilia"]);

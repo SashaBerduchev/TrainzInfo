@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,12 @@ using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class LocomotiveController : Controller
+    public class LocomotiveController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public LocomotiveController(ApplicationContext context)
+        public LocomotiveController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager)
         {
             _context = context;
             Trace.WriteLine(this);
@@ -57,12 +59,8 @@ namespace TrainzInfo.Controllers
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogInit(this.ToString(), "Index " + remoteIpAddres);
             LoggingExceptions.LogStart();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                LoggingExceptions.LogWright("Знайшли користувача: " + user.Name);
-                ViewBag.user = user;
-            }
+             
+            
             if (HttpContext.Session.GetString("Seria") is not null)
             {
                 LoggingExceptions.LogWright("Знайшли сесію Seria: " + HttpContext.Session.GetString("Seria").ToString());
@@ -164,11 +162,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> IndexDepot(int? id, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+         
             List<Locomotive> locomotives = new List<Locomotive>();
             IQueryable<Locomotive> query = _context.Locomotives.Include(x => x.DepotList).Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
@@ -222,11 +216,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+           
 
             if (id == null)
             {
@@ -253,11 +243,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             LoggingExceptions.LogWright("Try get series and depots for select list");
             List<string> serieslist = new List<string>();
             List<string> depotlist = new List<string>();
@@ -309,16 +295,9 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogInit(this.ToString(), nameof(Create) + " POST");
             LoggingExceptions.LogStart();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            string myuser = "";
-            int userId = 0;
-            if (user != null && user.Status == "true")
-            {
-                myuser = user.Name;
-                userId = user.Id;
-            }
+             
+          
             LoggingExceptions.LogWright("Try bind locomotive from form");
-            locomotive.User = myuser;
             LoggingExceptions.LogWright("Try find depot: " + locomotive.Depot);
             locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
             LoggingExceptions.LogWright("Try find series: " + locomotive.Seria);
@@ -352,14 +331,12 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Try save locomotive: " + locomotive.Seria + " - " + locomotive.Number);
             _context.Add(locomotive);
             await _context.SaveChangesAsync();
-            LoggingExceptions.LogWright("Try send email to user: " + user.Email);
             Locomotive locosaved = _context.Locomotives
                 .Include(x => x.DepotList).Include(x => x.DepotList.UkrainsRailway).
                 Include(x => x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
             int locid = locosaved.id;
             LoggingExceptions.LogWright("Find saved locomotive id: " + locid);
-            LoggingExceptions.LogWright("Send email to user: " + user.Email);
-            Mail.SendLocomotivesAddMessage(locosaved.Locomotive_Series.Seria + " - " + locosaved.Number, remoteIpAddres, user);
+            Mail.SendLocomotivesAddMessage(locosaved.Locomotive_Series.Seria + " - " + locosaved.Number, remoteIpAddres, _identityUser);
 
             TempData["LocomotiveId"] = locid;
             Trace.WriteLine(TempData);
@@ -368,58 +345,6 @@ namespace TrainzInfo.Controllers
             return RedirectToAction(nameof(AddImageForm));
 
         }
-
-        public async Task<IActionResult> Copy(int? id)
-        {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var locomotives = await _context.Locomotives.FindAsync(id);
-            if (locomotives == null)
-            {
-                return NotFound();
-            }
-            SelectList users = new SelectList(_context.User.Select(x => x.Name).ToList());
-            ViewBag.users = users;
-            return View(locomotives);
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CopySubmit(int id, [Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotives)
-        {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            string myuser = "";
-            int userId = 0;
-            if (user != null && user.Status == "true")
-            {
-                myuser = user.Name;
-                userId = user.Id;
-            }
-
-            Trace.WriteLine("POST: " + this + locomotives);
-            locomotives.User = myuser;
-            _context.Add(locomotives);
-            await _context.SaveChangesAsync();
-            //SendMessage(user);
-            int locid = _context.Locomotives.Where(x => x.Seria == locomotives.Seria && x.Number == locomotives.Number).Select(x => x.id).FirstOrDefault();
-            TempData["LocomotiveId"] = locid;
-            Trace.WriteLine(TempData);
-            return RedirectToAction(nameof(AddImageForm));
-
-        }
-
 
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {

@@ -11,6 +11,5 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         public byte[] Image { get; set; }
         public string ImageType { get; set; }
-        public Users Users { get; set; }
     }
 }

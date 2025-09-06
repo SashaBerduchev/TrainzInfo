@@ -37,14 +37,9 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> CopyNews()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            Trace.WriteLine(_context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).ToQueryString());
-            Users userget = new Users();
-            if (user != null && user.Status == "true")
-            {
-                userget = user;
-                ViewBag.user = user;
-            }
+             
+            
+           
             List<NewsInfo> news = await _context.NewsInfos.ToListAsync();
             List<NewsInfo> newsInfos = new List<NewsInfo>();
             for (int i = 0; i < news.Count; i++)
@@ -55,7 +50,6 @@ namespace TrainzInfo.Controllers
                 newsInfo.DateTime = news[i].DateTime;
                 newsInfo.Imgsrc = news[i].Imgsrc;
                 newsInfo.ImageMimeTypeOfData = news[i].ImageMimeTypeOfData;
-                newsInfo.Users = userget;
                 newsInfos.Add(newsInfo);
             }
             await _context.AddRangeAsync(newsInfos);
@@ -89,7 +83,7 @@ namespace TrainzInfo.Controllers
                 train.DepotCity = electics[i].DepotCity;
                 train.DepotTrain = electics[i].DepotTrain;
                 train.IsProof = electics[i].IsProof;
-                train.Users = userget;
+                
                 train.Model = electics[i].Model;
                 train.LastKvr = electics[i].LastKvr;
                 train.CreatedTrain = electics[i].CreatedTrain;
@@ -190,7 +184,7 @@ namespace TrainzInfo.Controllers
             }
             LoggingExceptions.LogWright("Try to get news");
             List<NewsInfo> newsInfo = new List<NewsInfo>();
-            IQueryable<NewsInfo> query =  _context.NewsInfos.OrderByDescending(x=>x.DateTime).Include(x=>x.Users)
+            IQueryable<NewsInfo> query =  _context.NewsInfos.OrderByDescending(x=>x.DateTime)
                 .Include(x=>x.NewsComments).AsQueryable().AsNoTracking();
             int pageSize = 10;
             LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());

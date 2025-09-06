@@ -13,7 +13,6 @@ namespace TrainzInfo.Models
         public string Comment { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
-        public Users Users { get; set; }
         public NewsInfo NewsInfo { get; set; }
     }
 }

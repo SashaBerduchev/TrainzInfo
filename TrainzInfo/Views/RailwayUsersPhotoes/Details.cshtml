@@ -18,7 +18,7 @@
 <body>
 
     <div>
-        <h4><a asp-controller="Users" asp-action="Details" asp-route-id="@Model.Users">@Model.Users.Name</a></h4>
+        @* <h4><a asp-controller="Users" asp-action="Details" asp-route-id="@Model.Users">@Model.Users.Name</a></h4> *@
         <hr />
         <div style="background-color:aliceblue">
             
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div>
-        @if (ViewBag.user != null)
+        @* @if (ViewBag.user != null)
         {
             if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
             {
@@ -41,7 +41,7 @@
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редагуввати</a>
                 }
             }
-        }
+        } *@
         <a class="btn btn-info" asp-action="Index">Вернутся</a>
     </div>
     <style>

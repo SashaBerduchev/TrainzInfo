@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,11 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class UserTrainzPhotoesController : Controller
+    public class UserTrainzPhotoesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public UserTrainzPhotoesController(ApplicationContext context)
+        public UserTrainzPhotoesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -28,11 +29,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             List<UserTrainzPhoto> photo = await _context.UserTrainzPhotos.Where(x=>x.Stations.id == id ).ToListAsync();
             return View(photo);
         }
@@ -62,12 +59,8 @@ namespace TrainzInfo.Controllers
         public IActionResult Create()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-
+             
+           
             return View();
         }
 
@@ -78,38 +71,14 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,UserName,Email,Marshrute,Type,BaseInfo,Imgsrc")] UserTrainzPhoto userTrainzPhoto)
         {
-            string username = "";
-            int userid = 0;
-            var useremail = "";
+            
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                username = user.Name;
-                userid = user.Id;
-                useremail = user.Email;
-            }
 
-            string email = useremail;
-            userTrainzPhoto.Email = email;
+            
             userTrainzPhoto.DateTime = DateTime.Now;
             _context.Add(userTrainzPhoto);
             await _context.SaveChangesAsync();
             TempData["UserTrainId"] = _context.UserTrainzPhotos.ToList().Count();
-            try
-            {
-                MailMessage m = new MailMessage("sashaberduchev24@ukr.net", userTrainzPhoto.Email);
-                m.Body = userTrainzPhoto.Userid.Name + "Ваша публикация опубликована";
-                SmtpClient smtp = new SmtpClient("smtp.ukr.net", 2525);
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new NetworkCredential("sashaberduchev24", "1GFxClluVF5q1xd1");
-                smtp.Send(m);
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e.ToString());
-            }
             return RedirectToAction(nameof(AddImageForm));
 
         }
@@ -182,11 +151,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
             if (id == null)
             {
                 return NotFound();

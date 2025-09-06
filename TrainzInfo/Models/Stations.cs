@@ -23,7 +23,6 @@ namespace TrainzInfo.Models
         public string DopImgSrcThd { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
-        public Users Users { get; set; }    
         public UkrainsRailways UkrainsRailways { get; set; }
         public Oblast Oblasts { get; set; }
         public City Citys { get; set; }

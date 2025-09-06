@@ -18,7 +18,6 @@ namespace TrainzInfo.Models
         public string BaseInfo { get; set; }
         public byte[] Image { get; set; }
         public string ImageType { get; set; }
-        public Users Userid { get; set; }
         public Stations Stations { get; set; }
     }
 }

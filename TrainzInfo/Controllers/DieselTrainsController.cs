@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,12 @@ using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class DieselTrainsController : Controller
+    public class DieselTrainsController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public DieselTrainsController(ApplicationContext context)
+        public DieselTrainsController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            :base(userManager)
         {
             _context = context;
         }
@@ -32,13 +34,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogWright("Get user by IP: " + remoteIpAddres);
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            LoggingExceptions.LogWright("User from DB: " + (user != null).ToString());
-            LoggingExceptions.LogWright("User is valid: " + (user != null && user.Status == "true").ToString());
+             
 
             LoggingExceptions.LogWright("Check session for filters");
             if (HttpContext.Session.GetString("ModelDiesel") is not null)
@@ -136,11 +132,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> IndexDepot(int? id, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
 
             List<DieselTrains> diesel = new List<DieselTrains>();
             IQueryable<DieselTrains> query = _context.DieselTrains.Include(x => x.DepotList)
@@ -179,12 +171,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-
+            
             if (id == null)
             {
                 return NotFound();
@@ -209,13 +196,7 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Get user by IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            LoggingExceptions.LogWright("User from DB: " + (user != null).ToString());
-            LoggingExceptions.LogWright("User is valid: " + (user != null && user.Status == "true").ToString());
+             
             LoggingExceptions.LogWright("Get lists for dropdowns");
             List<SuburbanTrainsInfo> subrbanTrains = new List<SuburbanTrainsInfo>();
             List<DepotList> depots = new List<DepotList>();
@@ -250,17 +231,13 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("Id,NumberTrain")] DieselTrains dieselTrains, string? Model, string? Depot)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+            
 
             if (ModelState.IsValid)
             {
                 dieselTrains.DepotList = await _context.Depots.Where(x => x.Name == Depot).FirstOrDefaultAsync();
                 dieselTrains.SuburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == Model).FirstOrDefaultAsync();
-                dieselTrains.Users = user;
+                
                 _context.Add(dieselTrains);
                 await _context.SaveChangesAsync();
                 DieselTrains diesel = await _context.DieselTrains.Where(x => x.NumberTrain == dieselTrains.NumberTrain && x.SuburbanTrainsInfo.Model == dieselTrains.SuburbanTrainsInfo.Model).FirstOrDefaultAsync();
@@ -374,11 +351,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             if (id == null)
             {
                 return NotFound();
@@ -400,11 +373,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,NumberTrain")] DieselTrains dieselTrains)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
             if (id != dieselTrains.Id)
             {
                 return NotFound();
@@ -437,11 +407,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             if (id == null)
             {
                 return NotFound();
@@ -463,11 +430,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+          
             var dieselTrains = await _context.DieselTrains.FindAsync(id);
             if (dieselTrains != null)
             {
@@ -481,11 +444,8 @@ namespace TrainzInfo.Controllers
         private bool DieselTrainsExists(int id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             return _context.DieselTrains.Any(e => e.Id == id);
         }
     }

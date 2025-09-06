@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class TrainsController : Controller
+    public class TrainsController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public TrainsController(ApplicationContext context)
+        public TrainsController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager)
         {
             _context = context;
         }
@@ -95,11 +97,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> UpdateInfo()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
 
             List<Train> trains = await _context.Trains.ToListAsync();
             List<Train> trainsupdate = new List<Train>();
@@ -108,7 +107,7 @@ namespace TrainzInfo.Controllers
                 item.TypeOfPassTrain = await _context.TypeOfPassTrains.Where(x => x.Type.Contains(item.Type)).FirstOrDefaultAsync();
                 item.From = await _context.Stations.Where(x => x.Name == item.StationFrom).FirstOrDefaultAsync();
                 item.To = await _context.Stations.Where(x => x.Name == item.StationFrom).FirstOrDefaultAsync();
-                item.User = user;
+                
                 trainsupdate.Add(item);
             }
             _context.Trains.UpdateRange(trainsupdate);
@@ -120,11 +119,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             List<Train> trains = new List<Train>();
             if (number == null && from == null && to == null)
             {
@@ -168,11 +163,6 @@ namespace TrainzInfo.Controllers
                 return NotFound();
             }
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
 
             List<TrainsShadule> stations = await _context.TrainsShadule.Where(x => x.Train == train).ToListAsync();
             ViewBag.stations = stations;
@@ -183,11 +173,7 @@ namespace TrainzInfo.Controllers
         public IActionResult Create()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
             SelectList city = new SelectList(_context.Stations.OrderBy(x => x.Name).Select(x => x.Name).ToList());
             ViewBag.city = city;
             SelectList type = new SelectList(_context.TypeOfPassTrains.Select(x => x.Type).ToList());

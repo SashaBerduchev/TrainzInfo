@@ -1,27 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NuGet.ContentModel;
 using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class CitiesController : Controller
+    public class CitiesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public CitiesController(ApplicationContext context)
+        public CitiesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager)
         {
             _context = context;
         }
@@ -146,12 +148,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> CreateStationsDone(string? Olast, string? Filia )
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
             
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
             List<City> cities = await _context.Cities.Where(x => x.Oblast == Olast).ToListAsync();
             List<Stations> stations = new List<Stations>();
             for (int i = 0; i < cities.Count; i++)
@@ -173,12 +170,9 @@ namespace TrainzInfo.Controllers
             //_context.RemoveRange(_context.Cities);
             //_context.SaveChanges();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
+             
             List<City> city = await _context.Cities.ToListAsync();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+            
             if(oblast != null)
             {
                 city = city.Where(x => x.Oblasts == _context.Oblasts.Where(x=>x.Name == oblast).FirstOrDefault()).OrderBy(x => x.Oblasts.Name).ToList();
@@ -197,11 +191,7 @@ namespace TrainzInfo.Controllers
         public void DownloadActionOblast([FromBody] string? content)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+
             try
             {
                 Trace.WriteLine(content);
@@ -234,11 +224,8 @@ namespace TrainzInfo.Controllers
         public  void DownloadActionCity([FromBody] string? content)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+             
+           
             try
             {
                 Trace.WriteLine(content);
@@ -269,22 +256,14 @@ namespace TrainzInfo.Controllers
         public async Task<List<City>> GetCitiesAction()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+            
             return await _context.Cities.ToListAsync();
         }
         // GET: Cities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+            
             if (id == null)
             {
                 return NotFound();
@@ -303,11 +282,7 @@ namespace TrainzInfo.Controllers
         public void CreateAction([FromBody] string data)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+             
             City city = JsonConvert.DeserializeObject<City>(data);
             _context.Cities.Add(city);
             _context.SaveChanges();
@@ -332,11 +307,7 @@ namespace TrainzInfo.Controllers
         {
 
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+            
             if (ModelState.IsValid)
             {
                 List<City> cityexist = await _context.Cities.ToListAsync();
@@ -384,11 +355,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("id,Name, Oblast, IsStationExist")] City city)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+             
+           
             if (id != city.id)
             {
                 return NotFound();
@@ -429,11 +397,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users userlog = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (userlog != null && userlog.Status == "true")
-            {
-                ViewBag.user = userlog;
-            }
+             
+           
             if (id == null)
             {
                 return NotFound();

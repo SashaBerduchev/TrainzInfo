@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,12 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class MainImagesController : Controller
+    public class MainImagesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public MainImagesController(ApplicationContext context)
+        public MainImagesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+        : base(userManager)
         {
             _context = context;
         }

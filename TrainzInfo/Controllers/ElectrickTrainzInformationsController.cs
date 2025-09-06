@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,12 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class ElectrickTrainzInformationsController : Controller
+    public class ElectrickTrainzInformationsController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public ElectrickTrainzInformationsController(ApplicationContext context)
+        public ElectrickTrainzInformationsController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            :base(userManager)
         {
             _context = context;
         }

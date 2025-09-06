@@ -35,7 +35,7 @@
                      src="@Url.Action("GetImage", "RailwayUsersPhotoes",
                         new { item.id })" />
             </div>
-            <div class="row" style="font-size: 20px; position: relative; left: 15px "><p>Автор: </p><a asp-controller="Users" asp-action="Details" asp-route-id="@item.Users"><p>@item.Users.Name</p></a></div>
+            
             @if(item.Stations != null)
             {
                 <div style="font-size:20px"><p>Станція:</p><p>@item.Stations.Name</p></div>
@@ -43,7 +43,7 @@
             <div style="font-size:20px"><p>Інформація про фото: </p><p>@item.Information</p></div>
             <div>
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Детально</a>
-                @if (ViewBag.user != null)
+               @*  @if (ViewBag.user != null)
                 {
                     if (ViewBag.user.Role == "Reader" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                     {
@@ -53,7 +53,7 @@
                         }
 
                     }
-                }
+                } *@
 
             </div>
         </div>

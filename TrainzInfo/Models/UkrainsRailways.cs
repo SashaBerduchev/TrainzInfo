@@ -19,6 +19,5 @@ namespace TrainzInfo.Models
         public ICollection<DepotList> DepotLists { get; set; }
         public ICollection<Stations> Stations { get; set; }
         public ICollection<StationsShadule> stationsShadules { get; set; }
-        public Users Users { get; set; }
     }
 }

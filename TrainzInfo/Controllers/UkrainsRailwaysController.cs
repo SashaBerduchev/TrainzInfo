@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,11 @@ using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class UkrainsRailwaysController : Controller
+    public class UkrainsRailwaysController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public UkrainsRailwaysController(ApplicationContext context)
+        public UkrainsRailwaysController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -37,12 +38,8 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Try get user by ip address");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogWright("User IP - " + remoteIpAddres);
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                LoggingExceptions.LogWright("User is find - " + user.Name);
-                ViewBag.user = user;
-            }
+             
+           
             LoggingExceptions.LogWright("Try get UkrainsRailways list");
             List<UkrainsRailways> UkrainsRailways = await _context.UkrainsRailways.ToListAsync();
             LoggingExceptions.LogWright("UkrainsRailways list getted - " + UkrainsRailways.Count.ToString());
@@ -55,19 +52,7 @@ namespace TrainzInfo.Controllers
             List<UkrainsRailways> ukrainsRailways = await _context.UkrainsRailways.ToListAsync();
             List<UkrainsRailways> ukrainsUpdate = new List<UkrainsRailways>();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            foreach (var item in ukrainsRailways)
-            {
-                if (user != null && user.Status == "true")
-                {
-                    item.Users = user;
-                }
-                ukrainsUpdate.Add(item);
-            }
+           
             _context.UkrainsRailways.UpdateRange(ukrainsUpdate);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -142,11 +127,8 @@ namespace TrainzInfo.Controllers
             }
 
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+          
 
             var ukrainsRailways = await _context.UkrainsRailways
                 .FirstOrDefaultAsync(m => m.id == id);
@@ -177,12 +159,6 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,Name,Information,Photo")] UkrainsRailways ukrainsRailways)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-                ukrainsRailways.Users = user;
-            }
             if (ModelState.IsValid)
             {
                 _context.Add(ukrainsRailways);

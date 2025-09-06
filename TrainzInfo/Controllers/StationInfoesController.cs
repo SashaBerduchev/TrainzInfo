@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,10 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class StationInfoesController : Controller
+    public class StationInfoesController : BaseController
     {
         private readonly ApplicationContext _context;
-        public StationInfoesController(ApplicationContext context)
+        public StationInfoesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -62,7 +63,7 @@ namespace TrainzInfo.Controllers
 
                 Stations stations = await _context.Stations.Include(x => x.Citys)
                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
+                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
                 stations.StationInfo = stationInfo;
                 _context.Stations.Update(stations);
                 _context.Add(stationInfo);
@@ -108,7 +109,7 @@ namespace TrainzInfo.Controllers
                     _context.Update(stationInfo);
                     Stations stations = await _context.Stations.Include(x => x.Citys)
                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
+                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
                     stations.StationInfo = stationInfo;
                     _context.Stations.Update(stations);
                     await _context.SaveChangesAsync();

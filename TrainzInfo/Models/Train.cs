@@ -9,7 +9,6 @@ namespace TrainzInfo.Models
     public class Train
     {
         public int id { get; set; }
-        public Users User { get; set; }
         [Required(ErrorMessage ="Уведіть номер")]
         public int Number { get; set; }
         [Required(ErrorMessage = "Вкажіть станцію початку руху")]

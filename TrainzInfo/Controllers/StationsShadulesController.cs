@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,11 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class StationsShadulesController : Controller
+    public class StationsShadulesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public StationsShadulesController(ApplicationContext context)
+        public StationsShadulesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
         }
@@ -24,11 +25,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(string? station)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+          
             ViewBag.station = station;
             List<StationsShadule> stationsShadule = await _context.StationsShadules.Include(x=>x.UkrainsRailways).Include(x=>x.Train).Include(x=>x.Stations)
                 .Where(x => x.Station == station && x.IsUsing == false).OrderBy(x=>x.TimeOfArrive).ToListAsync();

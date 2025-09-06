@@ -30,7 +30,6 @@ namespace TrainzInfo.Models
         public Plants PlantsCreate { get; set; }
         public Plants PlantsKvr { get; set; }
         public SuburbanTrainsInfo Trains { get; set; }
-        public Users Users { get; set; }    
         public ElectrickTrainzInformation ElectrickTrainzInformation { get; set; }
     }
 }

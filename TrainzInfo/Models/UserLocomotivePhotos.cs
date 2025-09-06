@@ -19,7 +19,6 @@ namespace TrainzInfo.Models
         public DateTime DateTime { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
-        public Users User { get; set; }
         public Locomotive Locomotive { get; set; }
     }
 }

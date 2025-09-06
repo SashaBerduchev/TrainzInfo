@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,12 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class MetroStationsController : Controller
+    public class MetroStationsController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public MetroStationsController(ApplicationContext context)
+        public MetroStationsController(ApplicationContext context, UserManager<IdentityUser> userManager)
+        : base(userManager)
         {
             _context = context;
             Trace.WriteLine(this);

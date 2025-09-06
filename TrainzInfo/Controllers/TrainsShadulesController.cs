@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,12 @@ using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
 {
-    public class TrainsShadulesController : Controller
+    public class TrainsShadulesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public TrainsShadulesController(ApplicationContext context)
+        public TrainsShadulesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+        : base(userManager)
         {
             _context = context;
         }
@@ -80,7 +82,7 @@ namespace TrainzInfo.Controllers
                                 LoggingExceptions.WorkLog(trainaddshad.NameStation);
                                 Stations stations = await _context.Stations.Include(x => x.Citys)
                                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();
+                                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();
                                 UkrainsRailways rails = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
                                 trainaddshad.Train = train;
                                 trainaddshad.Stations = stations;
@@ -177,11 +179,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+           
             if(id is null && TempData["TrainNumber"] is not null)
             {
                 id = Convert.ToInt32(TempData["TrainNumber"].ToString());
@@ -281,7 +279,7 @@ namespace TrainzInfo.Controllers
                 Train train = await _context.Trains.Where(x=>x.Number == Convert.ToInt32(trainsShadule.NumberTrain)).FirstOrDefaultAsync();
                 Stations stations = await _context.Stations.Include(x => x.Citys)
                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                        .Include(x => x.Metro).Include(x => x.Users).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainsShadule.NameStation).FirstOrDefaultAsync();
+                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainsShadule.NameStation).FirstOrDefaultAsync();
                 UkrainsRailways rails = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
                 trainsShadule.Train = train;
                 trainsShadule.Stations = stations;
@@ -354,7 +352,7 @@ namespace TrainzInfo.Controllers
                 {
                     Stations stations = await _context.Stations.Include(x=>x.Citys)
                         .Include(x=>x.Oblasts).Include(x=>x.UkrainsRailways).Include(x=>x.railwayUsersPhotos)
-                        .Include(x=>x.Metro).Include(x=>x.Users).Include(x=>x.StationInfo).Include(x=>x.StationsShadules).Where(x=>x.Name == trainsShadule.NameStation).FirstOrDefaultAsync();
+                        .Include(x=>x.Metro).Include(x=>x.StationInfo).Include(x=>x.StationsShadules).Where(x=>x.Name == trainsShadule.NameStation).FirstOrDefaultAsync();
                     trainsShadule.Stations = stations;
                     Train train = await _context.Trains.Where(x=>x.Number == Convert.ToInt32(trainsShadule.NumberTrain)).FirstOrDefaultAsync();
                     trainsShadule.Train = train;

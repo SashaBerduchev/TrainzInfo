@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,12 @@ using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class MetroesController : Controller
+    public class MetroesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public MetroesController(ApplicationContext context)
+        public MetroesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+        : base(userManager)
         {
             _context = context;
         }
@@ -23,11 +25,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
 
             return View(await _context.Metros.ToListAsync());
         }
@@ -36,11 +35,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+          
             if (id == null)
             {
                 return NotFound();
@@ -60,11 +56,8 @@ namespace TrainzInfo.Controllers
         public IActionResult Create()
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+           
             return View();
         }
 
@@ -76,11 +69,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,Name,Information,Photo")] Metro metro)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+          
             if (ModelState.IsValid)
             {
                 _context.Add(metro);
@@ -94,11 +84,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+            
             if (id == null)
             {
                 return NotFound();

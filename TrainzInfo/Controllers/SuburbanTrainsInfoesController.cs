@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class SuburbanTrainsInfoesController : Controller
+    public class SuburbanTrainsInfoesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public SuburbanTrainsInfoesController(ApplicationContext context)
+        public SuburbanTrainsInfoesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            :base(userManager)
         {
             _context = context;
         }

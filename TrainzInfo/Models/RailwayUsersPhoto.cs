@@ -8,7 +8,6 @@ namespace TrainzInfo.Models
     public class RailwayUsersPhoto
     {
         public int id { get; set; }
-        public Users Users { get; set; }
         public string Information { get; set; }
         public byte[] Image { get; set; }
         public string ImageType { get; set; }

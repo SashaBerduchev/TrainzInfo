@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
 namespace TrainzInfo.Controllers
 {
-    public class IpAdressesController : Controller
+    public class IpAdressesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public IpAdressesController(ApplicationContext context)
+        public IpAdressesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            :base(userManager)
         {
             _context = context;
         }
@@ -22,7 +24,7 @@ namespace TrainzInfo.Controllers
         // GET: IpAdresses
         public async Task<IActionResult> Index()
         {
-            List<Users> Users = await _context.User.ToListAsync();
+            
             return View(await _context.IpAdresses.OrderByDescending(x=>x.Date).ToListAsync());
         }
 

@@ -15,14 +15,16 @@ using Newtonsoft.Json;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using Microsoft.AspNetCore.Identity;
 
 namespace TrainzInfo.Controllers
 {
-    public class NewsInfoesController : Controller
+    public class NewsInfoesController : BaseController
     {
         private readonly ApplicationContext _context;
 
-        public NewsInfoesController(ApplicationContext context)
+        public NewsInfoesController(ApplicationContext context, UserManager<IdentityUser> userManager)
+        : base(userManager)
         {
             _context = context;
         }
@@ -43,25 +45,20 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
 
             if (id == null)
             {
                 return NotFound();
             }
-
-            var newsInfo = await _context.NewsInfos.Include(x=>x.Users).Include(x=>x.NewsComments)
+            NewsInfo news = await _context.NewsInfos
+                .Include(x => x.NewsComments)
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (newsInfo == null)
+            if (news == null)
             {
                 return NotFound();
             }
-            ViewBag.count = newsInfo.NewsComments.Count();
-            return View(newsInfo);
+            ViewBag.count = news.NewsComments.Count();
+            return View(news);
         }
 
         // GET: NewsInfoes/Create
@@ -146,19 +143,8 @@ namespace TrainzInfo.Controllers
             List<NewsInfo> news = await _context.NewsInfos.ToListAsync();
             List<NewsInfo> newsupdate = new List<NewsInfo>();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
-            foreach (var item in news)
-            {
-                if (user != null && user.Status == "true")
-                {
-                    item.Users = user;
-                }
-                newsupdate.Add(item);
-            }
+             
+            
             _context.NewsInfos.UpdateRange(newsupdate);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -169,23 +155,17 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Create([Bind("id,NameNews,BaseNewsInfo,NewsInfoAll")] NewsInfo newsInfo)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            Users user = _context.User.Where(x => x.IpAddress.Contains(remoteIpAddres)).FirstOrDefault();
-            if (user != null && user.Status == "true")
-            {
-                ViewBag.user = user;
-            }
+             
+            
             try
             {
                 newsInfo.DateTime = DateOnly.FromDateTime(DateTime.Now);
-                if (user != null && user.Status == "true")
-                {
-                    newsInfo.Users = user;
-                }
+               
                 _context.NewsInfos.Add(newsInfo);
                 _context.SaveChanges();
                 NewsInfo news = _context.NewsInfos.Where(x => x.NameNews == newsInfo.NameNews).FirstOrDefault();
                 TempData["NewsId"] = news.id;
-                SendMessage(newsInfo.NameNews, user, remoteIpAddres);
+                
                 return RedirectToAction(nameof(AddImageForm));
             }
             catch (Exception exp)
@@ -202,10 +182,7 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
-        private void SendMessage(string nameNews, Users user, string remoteIpAddres)
-        {
-            Mail.SendMessageNews(nameNews, remoteIpAddres, user);
-        }
+        
 
         public async Task<FileContentResult> GetImage(int id)
         {

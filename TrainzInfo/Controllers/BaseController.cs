@@ -8,6 +8,7 @@ namespace TrainzInfo.Controllers
     public class BaseController : Controller
     {
         protected readonly UserManager<IdentityUser> _userManager;
+        protected IdentityUser _identityUser;
 
         public BaseController(UserManager<IdentityUser> userManager)
         {
@@ -22,7 +23,7 @@ namespace TrainzInfo.Controllers
             {
                 // Логування або інші дії
                 LoggingExceptions.LogWright("User found - " + user.UserName + " " + user.Email);
-
+                this._identityUser = user;
                 ViewBag.CurrentUser = user;
             }
 
