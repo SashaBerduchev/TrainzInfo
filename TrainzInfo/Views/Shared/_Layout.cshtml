@@ -77,7 +77,56 @@
         </main>
     </div>
 
-    <!-- Скрипти -->
+  
+
+    <footer class="border-top text-light mt-5" style="background: #0d1b2a;">
+    <div class="container py-4">
+        <div class="row">
+            <!-- Лого та короткий опис -->
+            <div class="col-md-4 mb-3">
+                <h5 class="fw-bold text-warning">TrainzInfo</h5>
+                <p class="small text-secondary">
+                    Довідкова інформація про поїзди, розклади та залізничні новини України.
+                </p>
+            </div>
+
+            <!-- Швидкі посилання -->
+            <div class="col-md-4 mb-3">
+                <h6 class="fw-bold text-light">Навігація</h6>
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-secondary" href="/">Головна</a></li>
+                    <li><a class="text-decoration-none text-secondary" href="/trains">Поїзди</a></li>
+                    <li><a class="text-decoration-none text-secondary" href="/stations">Станції</a></li>
+                    <li><a class="text-decoration-none text-secondary" href="/news">Новини</a></li>
+                    <li><a class="text-decoration-none text-secondary" href="/contacts">Контакти</a></li>
+                </ul>
+            </div>
+
+            <!-- Контакти та соцмережі -->
+            <div class="col-md-4 mb-3">
+                <h6 class="fw-bold text-light">Зв’язатися з нами</h6>
+                <p class="small text-secondary mb-1">Email: <a href="mailto:info@trainzinfo.com.ua" class="text-decoration-none text-warning">info@trainzinfo.com.ua</a></p>
+                <p class="small text-secondary mb-3">Телефон: +380 (XX) XXX-XX-XX</p>
+
+                <div>
+                    <a href="https://t.me/your_channel" target="_blank" class="me-2 text-warning"><i class="bi bi-telegram fs-5"></i></a>
+                    <a href="https://facebook.com/yourpage" target="_blank" class="me-2 text-warning"><i class="bi bi-facebook fs-5"></i></a>
+                    <a href="https://twitter.com/yourpage" target="_blank" class="text-warning"><i class="bi bi-twitter fs-5"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary" />
+
+        <!-- Нижня частина -->
+        <div class="d-flex justify-content-between align-items-center">
+            <p class="small mb-0 text-secondary">&copy; @DateTime.Now.Year TrainzInfo. Усі права захищені.</p>
+            <p class="small mb-0 text-secondary">Зроблено з ❤️ для подорожуючих</p>
+        </div>
+    </div>
+</footer>
+
+  <!-- Скрипти -->
     <!-- 1. jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
@@ -91,6 +140,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <script src="~/js/apiscript.js"></script>
+
 
     @RenderSection("Scripts", required: false)
 </body>
