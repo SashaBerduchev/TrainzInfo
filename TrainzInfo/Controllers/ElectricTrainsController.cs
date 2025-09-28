@@ -44,9 +44,10 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
             IQueryable<ElectricTrain> query;
             List<ElectricTrain> electricTrains = new List<ElectricTrain>();
-            query = _context.Electrics.Include(x => x.PlantsCreate).Include(x => x.PlantsKvr).Include(x => x.ElectrickTrainzInformation)
-                    .Include(x => x.DepotList).Include(x => x.City).Include(x => x.Trains)
-                    .Include(x => x.DepotList.UkrainsRailway)
+            query = _context.Electrics.Include(x => x.PlantsCreate)
+                    .Include(x => x.PlantsKvr)
+                    .Include(x => x.City).Include(x => x.Trains).Include(x => x.DepotList)
+                        .ThenInclude(x => x.UkrainsRailway)
                     .Include(x => x.ElectrickTrainzInformation).AsQueryable();
             query = query.Include(x=>x.City.Oblasts).Where(x => true);
             if (Depot != null)

@@ -56,9 +56,13 @@ namespace TrainzInfo.Controllers
             
             LoggingExceptions.LogWright("Start query DieselTrains");
             List<DieselTrains> diesel = new List<DieselTrains>();
-            IQueryable<DieselTrains> query = _context.DieselTrains.Include(x => x.DepotList)
-                .Include(x => x.SuburbanTrainsInfo).Include(x => x.DepotList.UkrainsRailway)
-                .Include(x => x.DepotList.City).Include(x => x.DepotList.City.Oblasts).AsQueryable();
+            IQueryable<DieselTrains> query = _context.DieselTrains
+                .Include(x => x.DepotList)
+                    .ThenInclude(x => x.UkrainsRailway)
+                    .Include(x => x.DepotList.City)
+                    .ThenInclude(x => x.Oblasts)
+                .Include(x => x.SuburbanTrainsInfo)
+                .AsQueryable();
 
             LoggingExceptions.LogWright("Apply filters");
             if (Model is not null)

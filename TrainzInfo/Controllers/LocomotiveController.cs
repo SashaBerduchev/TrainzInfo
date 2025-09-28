@@ -84,9 +84,13 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Запит інформації");
             List<Locomotive> locomotives = new List<Locomotive>();
             IQueryable<Locomotive> query = _context.Locomotives
-                .Include(x => x.DepotList).Include(x => x.DepotList.City).Include(x => x.Locomotive_Series)
+                .Include(x => x.DepotList)
+                    .ThenInclude(x => x.UkrainsRailway)
+                .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                .Include(x => x.Locomotive_Series)
                 .Include(x => x.UserLocomotivesPhoto).Include(x => x.LocomotiveBaseInfo)
-                .Include(x => x.DepotList.UkrainsRailway)
+                
                 .Include(x => x.DepotList.City.Oblasts).AsQueryable().AsNoTracking();
 
             query = query.Where(x => true);
