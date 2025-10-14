@@ -21,7 +21,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public TrainsShadulesController(ApplicationContext context, UserManager<IdentityUser> userManager)
-        : base(userManager)
+            : base(userManager, context)
         {
             _context = context;
         }
@@ -79,7 +79,7 @@ namespace TrainzInfo.Controllers
                                 }
                                 Train train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainaddshad.NumberTrain)).FirstOrDefaultAsync();
                                 stationnotexist = trainaddshad.NameStation;
-                                LoggingExceptions.WorkLog(trainaddshad.NameStation);
+                                LoggingExceptions.AddExcelExeptions(trainaddshad.NameStation);
                                 Stations stations = await _context.Stations.Include(x => x.Citys)
                                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
                                         .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();

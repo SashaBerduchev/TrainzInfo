@@ -22,7 +22,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public DieselTrainsController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
         }
@@ -59,8 +59,9 @@ namespace TrainzInfo.Controllers
             IQueryable<DieselTrains> query = _context.DieselTrains
                 .Include(x => x.DepotList)
                     .ThenInclude(x => x.UkrainsRailway)
-                    .Include(x => x.DepotList.City)
-                    .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .ThenInclude(x=>x.Oblasts)
                 .Include(x => x.SuburbanTrainsInfo)
                 .AsQueryable();
 
@@ -100,11 +101,11 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
             LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
-            diesel = await query.Skip((page - 1) * pageSize)
-               .Take(pageSize) // <-- використання Take()
-               .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
-               .Take(pageSize).ToQueryString());
+            query = query.Skip((page - 1) * pageSize)
+                .Take(pageSize); // <-- використання Take()
+
+            LoggingExceptions.LogWright("Get stations for page: " + query.ToQueryString());
+            diesel = await query.ToListAsync();
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
             UpdateFilter(diesel);

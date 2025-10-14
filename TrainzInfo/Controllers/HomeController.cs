@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
         
         public HomeController(ILogger<HomeController> logger, ApplicationContext context, UserManager<IdentityUser> userManager)
-            : base(userManager)
+            : base(userManager, context)
         {
             Trace.WriteLine(this);
             _logger = logger;
@@ -36,10 +36,6 @@ namespace TrainzInfo.Controllers
 
         public async Task<IActionResult> CopyNews()
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-             
-            
-           
             List<NewsInfo> news = await _context.NewsInfos.ToListAsync();
             List<NewsInfo> newsInfos = new List<NewsInfo>();
             for (int i = 0; i < news.Count; i++)
@@ -144,32 +140,7 @@ namespace TrainzInfo.Controllers
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Index));
             LoggingExceptions.LogStart();
-            var useragent = Request.Headers;
             LoggingExceptions.LogWright("Find user IP");
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            LoggingExceptions.LogWright("User IP - " + remoteIpAddres);
-            var ipaddres = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).FirstOrDefault();
-            Trace.WriteLine(_context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).Select(x => x.IpAddres).ToQueryString());
-            LoggingExceptions.LogWright("Find user IP in DB");
-            if (ipaddres == null || ipaddres == "")
-            {
-                IpAdresses ipAdresses = new IpAdresses
-                {
-                    IpAddres = remoteIpAddres,
-                    Date = DateTime.Now
-                };
-                _context.IpAdresses.Add(ipAdresses);
-                LoggingExceptions.LogWright("Save new IP");
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                IpAdresses ipaddreslocal = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
-                ipaddreslocal.Date = DateTime.Now;
-                _context.IpAdresses.Update(ipaddreslocal);
-                LoggingExceptions.LogWright("IP is find");
-                await _context.SaveChangesAsync();
-            }
             LoggingExceptions.LogWright("Try to find user");
             var user = await _userManager.GetUserAsync(User);
 

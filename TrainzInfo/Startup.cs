@@ -8,7 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Localization;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 
@@ -17,7 +19,8 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = true;
+        public static bool START_IN_PROD_DB = false;
+        static string _connectionString = "";
 
         public Startup(IConfiguration configuration)
         {
@@ -83,7 +86,7 @@ namespace TrainzInfo
             services.AddControllersWithViews();
             Mail mail = new Mail();
             LoggingExceptions.LogFinish();
-
+            _connectionString = connection;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,6 +141,13 @@ namespace TrainzInfo
                 var serviceProvider = scope.ServiceProvider;
                 CreateRoles(serviceProvider).Wait();
             }
+            var supportedCultures = new[] { new CultureInfo("uk-UA") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("uk-UA"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
             LoggingExceptions.LogFinish();
 
         }
@@ -176,6 +186,11 @@ namespace TrainzInfo
         public static bool GetConfig()
         {
             return DEBUG_MODE;
+        }
+
+        public static string GetConnectionString()
+        {
+            return _connectionString;
         }
     }
 }

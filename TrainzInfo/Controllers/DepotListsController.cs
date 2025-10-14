@@ -21,54 +21,29 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public DepotListsController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
             Trace.WriteLine(this);
         }
 
-        [HttpPost]
-        public void DownloadActionDepot([FromBody] string? content)
-        {
-            try
-            {
-                Trace.WriteLine(content);
-                DepotList depotList = JsonConvert.DeserializeObject<DepotList>(content);
-                _context.Depots.Add(depotList);
-                _context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                string trace = e.ToString();
-                try
-                {
-                    FileStream fileStreamLog = new FileStream(@"Exception.log", FileMode.Append);
-                    for (int i = 0; i < trace.Length; i++)
-                    {
-                        byte[] array = Encoding.Default.GetBytes(trace.ToString());
-                        fileStreamLog.Write(array, 0, array.Length);
-                    }
-
-                    fileStreamLog.Close();
-                }
-                catch (Exception exp)
-                {
-                    Trace.WriteLine(exp.ToString());
-                }
-            }
-        }
         // GET: DepotLists
         public async Task<IActionResult> Index(int? uzname)
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            
             if (uzname == null)
             {
                 uzname =Convert.ToInt32(TempData["uzfilia"]);
             }
-            UkrainsRailways ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).FirstOrDefaultAsync();
-            ViewBag.Filia = ukrains.Name;
-            List<DepotList> depots = await _context.Depots.Where(x => x.UkrainsRailway.id == uzname).Include(x => x.UkrainsRailway).Include(x => x.Locomotives).Include(x => x.ElectricTrains).Include(x => x.DieselTrains).Include(x => x.City).ToListAsync();
+            string ukrains = await _context.UkrainsRailways.Where(x => x.id == uzname).Select(x=>x.Name).FirstOrDefaultAsync();
+            ViewBag.Filia = ukrains;
+            List<DepotList> depots = await _context.Depots
+                .Include(x => x.UkrainsRailway)
+                .Include(x => x.Locomotives)
+                .Include(x => x.ElectricTrains)
+                .Include(x => x.DieselTrains)
+                .Include(x => x.City)
+                .Where(x => x.UkrainsRailway.id == uzname)
+                .ToListAsync();
             return View(depots);
         }
 

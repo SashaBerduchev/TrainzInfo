@@ -17,7 +17,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public Locomotive_seriesController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
         }

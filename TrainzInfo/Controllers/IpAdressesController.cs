@@ -16,7 +16,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public IpAdressesController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> Index()
         {
             
-            return View(await _context.IpAdresses.OrderByDescending(x=>x.Date).ToListAsync());
+            return View(await _context.IpAdresses.OrderByDescending(x=>x.DateUpdate).ToListAsync());
         }
 
         // GET: IpAdresses/Details/5

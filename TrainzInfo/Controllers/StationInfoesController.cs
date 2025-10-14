@@ -14,7 +14,7 @@ namespace TrainzInfo.Controllers
     public class StationInfoesController : BaseController
     {
         private readonly ApplicationContext _context;
-        public StationInfoesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
+        public StationInfoesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager, context)
         {
             _context = context;
         }

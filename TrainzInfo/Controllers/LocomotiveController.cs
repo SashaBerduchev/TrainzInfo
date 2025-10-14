@@ -24,7 +24,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public LocomotiveController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            : base(userManager)
+            : base(userManager, context)
         {
             _context = context;
             Trace.WriteLine(this);

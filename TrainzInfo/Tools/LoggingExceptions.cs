@@ -34,14 +34,30 @@ namespace TrainzInfo.Tools
             StandartLogFile(startStandartLogStr + " - " + "Finish");
             startStandartLogStr = "";
         }
+
+        public static void SQLLogging(string log)
+        {
+            try
+            {
+                string logstr = "------Start log------- \n" + log + "\n -------End Log--------" + "\n" + "\n";
+                Trace.WriteLine(logstr);
+                Console.WriteLine(logstr);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog, FileMode.Append);
+                byte[] array = Encoding.Default.GetBytes(logstr.ToString());
+                fileStreamLog.Write(array, 0, array.Length);
+                fileStreamLog.Close();
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                AddException(e.ToString());
+            }
+        }
         public static void LogWright(string log)
         {
             StandartLogFile(startStandartLogStr + " - " + log);
         }
-        public static void StandartLogErrWright(string errlog)
-        {
-            StandartLogFile(startStandartLogStr + " - " + "Exception: " + errlog);
-        }
+        
         private static void StandartLogFile(string logmessage)
         {
             logmessage = DateTime.Now.ToString() + " - " + logmessage + "\n";
@@ -92,72 +108,7 @@ namespace TrainzInfo.Tools
             }
 
         }
-        public static void EFLog(string log)
-        {
-            //Trace.WriteLine("------Start log------- \n" + log + "\n -------EndLog--------\n");
-            //Console.WriteLine(log);
-            //try
-            //{
-            //    string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-            //    FileStream fileStreamLog = new FileStream(folderlog + "\\" + StandartLog, FileMode.Append);
-            //    for (int i = 0; i < standartlogging.Length; i++)
-            //    {
-            //        byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-            //        fileStreamLog.Write(array, 0, array.Length);
-            //    }
-            //    fileStreamLog.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Trace.WriteLine("------Start log------- \n" + ex.Message + "\n -------EndLog--------\n");
-            //    Console.WriteLine(ex.Message);
-            //}
-            WriteSqlLog(log);
-            ErrorLogEF(log);
-
-        }
-
-
-        public static void WorkLog(string log)
-        {
-            try
-            {
-                if (log.Contains("Executing DbCommand"))
-                {
-                    string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " +  worklog, FileMode.Append);
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                    fileStreamLog.Close();
-                }
-            }
-            catch (System.Exception exp)
-            {
-                Console.WriteLine(exp.StackTrace);
-            }
-        }
-
-        private static void WriteSqlLog(string log)
-        {
-            try
-            {
-                if (log.Contains("Executing DbCommand"))
-                {
-                    string standartlogging = "------Start log------- \n" + log + "\n -------EndLog--------\n" + "\n";
-                    Trace.Write(standartlogging);
-                    Console.WriteLine(standartlogging);
-                    FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog, FileMode.Append);
-                    byte[] array = Encoding.Default.GetBytes(standartlogging.ToString());
-                    fileStreamLog.Write(array, 0, array.Length);
-                    fileStreamLog.Close();
-                }
-            }
-            catch (System.Exception exp)
-            {
-                Console.WriteLine(exp.StackTrace);
-            }
-        }
-
+        
         private static void ErrorLogEF(string log)
         {
             if (log.Contains("Exception"))

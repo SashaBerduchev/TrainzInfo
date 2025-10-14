@@ -22,7 +22,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public TrainsController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            : base(userManager)
+            : base(userManager, context)
         {
             _context = context;
         }

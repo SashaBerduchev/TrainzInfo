@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public ElectricTrainsController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
         }

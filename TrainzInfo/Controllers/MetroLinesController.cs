@@ -19,7 +19,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public MetroLinesController(ApplicationContext context, UserManager<IdentityUser> userManager)
-            :base(userManager)
+            :base(userManager, context)
         {
             _context = context;
             Trace.WriteLine(this);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using TrainzInfo.Data;
 using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
@@ -14,12 +15,13 @@ namespace TrainzInfo.Controllers
 
         //private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
-            :base(userManager)
+        private readonly ApplicationContext _context;
+        public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationContext context)
+            :base(userManager, context)
         {
             //_userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         // GET: Admin/Users

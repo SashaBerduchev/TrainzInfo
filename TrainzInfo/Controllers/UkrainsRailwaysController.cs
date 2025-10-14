@@ -21,7 +21,7 @@ namespace TrainzInfo.Controllers
     {
         private readonly ApplicationContext _context;
 
-        public UkrainsRailwaysController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
+        public UkrainsRailwaysController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager, context)
         {
             _context = context;
         }

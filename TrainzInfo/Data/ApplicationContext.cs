@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
@@ -17,7 +18,10 @@ namespace TrainzInfo.Data
         {
             if (Startup.GetConfig() == true)
             {
-                optionsBuilder.LogTo(LoggingExceptions.EFLog);
+                optionsBuilder
+                    .UseSqlServer(Startup.GetConnectionString())
+                    .LogTo(LoggingExceptions.SQLLogging, LogLevel.Information) // лог у консоль
+                    .EnableSensitiveDataLogging(); 
             }
             
         }

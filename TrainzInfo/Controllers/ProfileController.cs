@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TrainzInfo.Data;
 using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers
@@ -9,8 +10,7 @@ namespace TrainzInfo.Controllers
     public class ProfileController : BaseController
     {
 
-        public ProfileController(UserManager<IdentityUser> userManager)
-             : base(userManager)
+        public ProfileController(UserManager<IdentityUser> userManager, ApplicationContext context) : base(userManager, context)
         {
 
         }

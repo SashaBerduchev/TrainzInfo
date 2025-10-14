@@ -18,7 +18,7 @@ namespace TrainzInfo.Controllers
         private readonly ApplicationContext _context;
 
         public MainImagesController(ApplicationContext context, UserManager<IdentityUser> userManager)
-        : base(userManager)
+            : base(userManager, context)
         {
             _context = context;
         }

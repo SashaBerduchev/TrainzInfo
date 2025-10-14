@@ -16,7 +16,7 @@ namespace TrainzInfo.Controllers
     {
         private readonly ApplicationContext _context;
 
-        public StationsShadulesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager)
+        public StationsShadulesController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager, context)
         {
             _context = context;
         }
