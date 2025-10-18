@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Localization;
@@ -19,7 +18,7 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = false;
+        public static bool START_IN_PROD_DB = true;
         static string _connectionString = "";
 
         public Startup(IConfiguration configuration)

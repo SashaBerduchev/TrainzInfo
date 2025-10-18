@@ -94,7 +94,7 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("Set session LastOblast: " + Oblast);
                 HttpContext.Session.SetString("LastOblast", Oblast);
             }
-            int pageSize = 20;
+            int pageSize = 10;
             LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
@@ -263,7 +263,7 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("Filter by oblast: " + Oblast);
                 query = query.Where(x => x.Oblasts.Name == Oblast);
             }
-            int pageSize = 20;
+            int pageSize = 10;
             LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
@@ -309,14 +309,26 @@ namespace TrainzInfo.Controllers
             Stations stations = new Stations();
             IQueryable query =  _context.Stations
                 .Include(x => x.UkrainsRailways)
-                .Include(x => x.Oblasts).Include(x => x.Citys).Include(x => x.StationInfo)
-                .Include(x => x.railwayUsersPhotos).Where(x => x.Name == name);
+                    .ThenInclude(x=>x.DepotLists)
+                        .ThenInclude(x=>x.Locomotives)
+                    .ThenInclude(x=>x.DepotList)
+                        .ThenInclude(x=>x.ElectricTrains)
+                    .ThenInclude(x=>x.DepotList)
+                        .ThenInclude(x=>x.DieselTrains)
+                .Include(x => x.Oblasts)
+                .Include(x => x.Citys)
+                    .ThenInclude(x=>x.Oblasts)
+                .Include(x => x.StationInfo)
+                .Include(x => x.railwayUsersPhotos)
+                .Where(x => x.Name == name);
+           
+            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
+            stations = await query.Cast<Stations>().FirstOrDefaultAsync();
+
             if (stations == null)
             {
                 return NotFound();
             }
-            LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
-            stations = await query.Cast<Stations>().FirstOrDefaultAsync();
             LoggingExceptions.LogWright("Get station id: " + stations.id.ToString());
             LoggingExceptions.LogFinish();
             return View(stations);
