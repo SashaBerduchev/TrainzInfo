@@ -60,10 +60,17 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get stations from DB");
             List<Stations> stations = new List<Stations>();
             LoggingExceptions.LogWright("Create query");
-            IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
-                .Include(x => x.Oblasts).Include(x=>x.Citys).Include(x => x.UkrainsRailways)
+            IQueryable<Stations> query = _context.Stations
+                .Include(x => x.Citys)
+                    .ThenInclude(x=>x.Oblasts)
+                .Include(x => x.Oblasts)
+                .Include(x=>x.Citys)
+                .Include(x => x.UkrainsRailways)
+                    .ThenInclude(x=>x.DepotLists)
                 .Include(x => x.railwayUsersPhotos)
-                .OrderBy(x => x.Name).Distinct().AsQueryable().AsNoTracking(); ;
+                .Include(x=>x.StationsShadules)
+                    .ThenInclude(x=>x.Train)
+                .OrderBy(x => x.Name).Distinct().AsQueryable().AsNoTracking();
 
             LoggingExceptions.LogWright("Check filials");
             if (FilialsName is not null)
@@ -93,12 +100,12 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
             LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
-            stations = await query.Skip((page - 1) * pageSize)
-               .Take(pageSize) // <-- використання Take()
-               .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
-               .Take(pageSize).ToQueryString());
+            query = query.Skip((page - 1) * pageSize)
+               .Take(pageSize); // <-- використання Take()
 
+            LoggingExceptions.LogWright("Get stations for page: " + query.ToQueryString());
+
+            stations = await query.ToListAsync();
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
             UpdateFilter(stations);
@@ -230,10 +237,16 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get stations from DB");
             List<Stations> stations = new List<Stations>();
             IQueryable<Stations> query = _context.Stations.Include(x => x.Citys)
-                .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x=>x.Citys)
-                .Include(x => x.railwayUsersPhotos).Include(x => x.StationInfo)
-                .OrderBy(x => x.Name).AsQueryable();
-           
+                    .ThenInclude(x => x.Oblasts)
+                .Include(x => x.Oblasts)
+                .Include(x => x.Citys)
+                .Include(x => x.UkrainsRailways)
+                    .ThenInclude(x => x.DepotLists)
+                .Include(x => x.railwayUsersPhotos)
+                .Include(x => x.StationsShadules)
+                    .ThenInclude(x => x.Train)
+                .OrderBy(x => x.Name).Distinct().AsQueryable();
+
             LoggingExceptions.LogWright("Check filials");
             if (FilialsName != null)
             {
@@ -256,12 +269,12 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
             LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
-            stations = await query.Skip((page - 1) * pageSize)
-               .Take(pageSize) // <-- використання Take()
-               .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
-               .Take(pageSize).ToQueryString());
+            query = query.Skip((page - 1) * pageSize)
+               .Take(pageSize); // <-- використання Take()
 
+            LoggingExceptions.LogWright("Get stations for page: " + query.ToQueryString());
+
+            stations = await query.ToListAsync();
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
             LoggingExceptions.LogWright("Get stations count: " + stations.Count.ToString());
@@ -294,7 +307,8 @@ namespace TrainzInfo.Controllers
            
             LoggingExceptions.LogWright("Get station by name: " + name);
             Stations stations = new Stations();
-            IQueryable query =  _context.Stations.Include(x => x.UkrainsRailways)
+            IQueryable query =  _context.Stations
+                .Include(x => x.UkrainsRailways)
                 .Include(x => x.Oblasts).Include(x => x.Citys).Include(x => x.StationInfo)
                 .Include(x => x.railwayUsersPhotos).Where(x => x.Name == name);
             if (stations == null)
