@@ -541,7 +541,8 @@ namespace TrainzInfo.Controllers
                 {
                     Name = stations.Name,
                     Image = stations.Image,
-                    ImageMimeTypeOfData = stations.ImageMimeTypeOfData
+                    ImageMimeTypeOfData = stations.ImageMimeTypeOfData,
+                    CreatedAt = DateTime.UtcNow
                 };
                 _context.StationImages.Add(stationImages);
             }
@@ -555,7 +556,7 @@ namespace TrainzInfo.Controllers
             TempData["FiliasStation"] = railway.Name;
 
             LoggingExceptions.LogFinish();
-            return RedirectToAction("AddImageForm", "StationImages", new { id = stations.id });
+            return RedirectToAction("AddImageForm", "StationImages", new { id = stationImages.id });
 
 
             //return View(stations);
@@ -730,6 +731,8 @@ namespace TrainzInfo.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var stations = await _context.Stations.FindAsync(id);
+            _context.StationInfos.RemoveRange(_context.StationInfos.Where(x => x.Name == stations.Name));
+            _context.StationImages.RemoveRange(_context.StationImages.Where(x => x.Name == stations.Name));
             _context.Stations.Remove(stations);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(IndexAll));

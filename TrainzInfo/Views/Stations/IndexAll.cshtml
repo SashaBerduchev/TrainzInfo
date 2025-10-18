@@ -79,7 +79,7 @@
                                 Фотографії користувачів
                             </a>
                         }
-                        @if (ViewBag.user != null && (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin"))
+                        @if (User != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin")))
                         {
                             <a class="btn btn-outline-info mb-2 w-100" asp-action="AddImageForm" asp-route-id="@item.id">
                                 Додати зображення

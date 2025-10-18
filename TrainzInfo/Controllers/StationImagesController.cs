@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers
         // GET: StationImages
         public async Task<IActionResult> Index()
         {
-            return View(await _context.StationImages.ToListAsync());
+            return View(await _context.StationImages.OrderBy(x=>x.CreatedAt).ToListAsync());
         }
 
 
