@@ -7,15 +7,16 @@
 <h1 class="mb-4 text-center">Станції</h1>
 <h2 class="mb-3 text-center">@ViewBag.Filia</h2>
 
-@if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
+@if (User != null && User.IsInRole("Superadmin"))
 {
     <a class="btn btn-lg btn-outline-secondary mb-3" asp-controller="RailwayUsersPhotoes" asp-action="Index">
         Фотографії користувачів
     </a>
+    <a class="btn btn-lg btn-outline-secondary mb-3" asp-action="UpdateImages">Оновлення зображень</a>
 }
 
 <p class="mb-3">
-    @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin"))
+    @if (User != null && (User.IsInRole("Publisher") || User.IsInRole("Superadmin") || User.IsInRole("Admin")))
     {
         <a class="btn btn-dark" asp-action="Create">Додати</a>
     }
@@ -49,7 +50,7 @@
                     <!-- Картинка -->
                     <div class="col-12 col-md-4">
                         <img class="img-fluid rounded-start"
-                             src="@Url.Action("GetImage", "Stations", new { item.id })"
+                             src="@Url.Action("GetImage", "StationImages", new { item.id })"
                              alt="Станція" />
                     </div>
 

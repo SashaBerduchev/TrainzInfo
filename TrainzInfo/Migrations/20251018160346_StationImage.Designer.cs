@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20251018160346_StationImage")]
+    partial class StationImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -796,7 +799,12 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Stationsid")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
+
+                    b.HasIndex("Stationsid");
 
                     b.ToTable("StationImages");
                 });
@@ -877,9 +885,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StationImagesid")
-                        .HasColumnType("int");
-
                     b.Property<int?>("StationInfoid")
                         .HasColumnType("int");
 
@@ -893,8 +898,6 @@ namespace TrainzInfo.Migrations
                     b.HasIndex("Metroid");
 
                     b.HasIndex("Oblastsid");
-
-                    b.HasIndex("StationImagesid");
 
                     b.HasIndex("StationInfoid");
 
@@ -1380,6 +1383,13 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
                 });
 
+            modelBuilder.Entity("TrainzInfo.Models.StationImages", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Stations", null)
+                        .WithMany("StationImages")
+                        .HasForeignKey("Stationsid");
+                });
+
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
                 {
                     b.HasOne("TrainzInfo.Models.City", "Citys")
@@ -1394,10 +1404,6 @@ namespace TrainzInfo.Migrations
                         .WithMany("Stations")
                         .HasForeignKey("Oblastsid");
 
-                    b.HasOne("TrainzInfo.Models.StationImages", "StationImages")
-                        .WithMany()
-                        .HasForeignKey("StationImagesid");
-
                     b.HasOne("TrainzInfo.Models.StationInfo", "StationInfo")
                         .WithMany()
                         .HasForeignKey("StationInfoid");
@@ -1411,8 +1417,6 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Metro");
 
                     b.Navigation("Oblasts");
-
-                    b.Navigation("StationImages");
 
                     b.Navigation("StationInfo");
 
@@ -1546,6 +1550,8 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
                 {
+                    b.Navigation("StationImages");
+
                     b.Navigation("StationsShadules");
 
                     b.Navigation("railwayUsersPhotos");

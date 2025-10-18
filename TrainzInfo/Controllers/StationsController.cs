@@ -35,16 +35,16 @@ namespace TrainzInfo.Controllers
             _context.SaveChanges();
         }
         // GET: Stations
-        public async Task<IActionResult> Index(string? FilialsName, string? NameStation, string? Oblast, int page =1)
+        public async Task<IActionResult> Index(string? FilialsName, string? NameStation, string? Oblast, int page = 1)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Index));
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Enter Index stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             LoggingExceptions.LogWright("Get user by IP: " + remoteIpAddres);
-             
+
             LoggingExceptions.LogWright("Get last filter from session");
-           
+
             if (HttpContext.Session.GetString("LastFilial") is not null)
             {
                 FilialsName = HttpContext.Session.GetString("LastFilial").ToString();
@@ -62,14 +62,15 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Create query");
             IQueryable<Stations> query = _context.Stations
                 .Include(x => x.Citys)
-                    .ThenInclude(x=>x.Oblasts)
+                    .ThenInclude(x => x.Oblasts)
                 .Include(x => x.Oblasts)
-                .Include(x=>x.Citys)
+                .Include(x => x.Citys)
                 .Include(x => x.UkrainsRailways)
-                    .ThenInclude(x=>x.DepotLists)
+                    .ThenInclude(x => x.DepotLists)
                 .Include(x => x.railwayUsersPhotos)
-                .Include(x=>x.StationsShadules)
-                    .ThenInclude(x=>x.Train)
+                .Include(x => x.StationsShadules)
+                    .ThenInclude(x => x.Train)
+                .Include(x => x.StationImages)
                 .OrderBy(x => x.Name).Distinct().AsQueryable().AsNoTracking();
 
             LoggingExceptions.LogWright("Check filials");
@@ -80,21 +81,21 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("Set session LastFilial: " + FilialsName);
                 HttpContext.Session.SetString("LastFilial", FilialsName);
             }
-            if(NameStation is not null)
+            if (NameStation is not null)
             {
                 LoggingExceptions.LogWright("Filter by station name: " + NameStation);
                 query = query.Where(x => x.Name == NameStation);
                 LoggingExceptions.LogWright("Set session LastStation: " + NameStation);
                 HttpContext.Session.SetString("LastStation", NameStation);
             }
-            if(Oblast is not null)
+            if (Oblast is not null)
             {
                 LoggingExceptions.LogWright("Filter by oblast: " + Oblast);
                 query = query.Where(x => x.Oblasts.Name == Oblast);
                 LoggingExceptions.LogWright("Set session LastOblast: " + Oblast);
                 HttpContext.Session.SetString("LastOblast", Oblast);
             }
-            int pageSize = 10;
+            int pageSize = 20;
             LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
@@ -120,11 +121,11 @@ namespace TrainzInfo.Controllers
             List<string> filias = new List<string>();
             List<string> stationsnames = new List<string>();
             oblasts.Add("");
-            oblasts.AddRange(stations.AsParallel().OrderBy(x=>x.Oblasts.Name).Select(x => x.Oblasts.Name).Distinct().ToList());
+            oblasts.AddRange(stations.AsParallel().OrderBy(x => x.Oblasts.Name).Select(x => x.Oblasts.Name).Distinct().ToList());
             filias.Add("");
-            filias.AddRange(stations.AsParallel().OrderBy(x=>x.UkrainsRailways.Name).Select(x => x.UkrainsRailways.Name).Distinct().ToList());
+            filias.AddRange(stations.AsParallel().OrderBy(x => x.UkrainsRailways.Name).Select(x => x.UkrainsRailways.Name).Distinct().ToList());
             stationsnames.Add("");
-            stationsnames.AddRange(stations.AsParallel().OrderBy(x=>x.Name).Select(x=>x.Name).Distinct().ToList());
+            stationsnames.AddRange(stations.AsParallel().OrderBy(x => x.Name).Select(x => x.Name).Distinct().ToList());
             ViewBag.oblast = new SelectList(oblasts);
             ViewBag.Filias = new SelectList(filias);
             ViewBag.stations = new SelectList(stationsnames);
@@ -217,9 +218,9 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogWright("Enter IndexAll stations");
             LoggingExceptions.LogWright("Get user by IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-             
+
             LoggingExceptions.LogWright("Get user by IP: " + remoteIpAddres);
-           
+
             LoggingExceptions.LogWright("Get last filter from session");
             if (HttpContext.Session.GetString("LastFilial") is not null)
             {
@@ -245,6 +246,7 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.railwayUsersPhotos)
                 .Include(x => x.StationsShadules)
                     .ThenInclude(x => x.Train)
+                .Include(x => x.StationImages)
                 .OrderBy(x => x.Name).Distinct().AsQueryable();
 
             LoggingExceptions.LogWright("Check filials");
@@ -258,12 +260,12 @@ namespace TrainzInfo.Controllers
                 LoggingExceptions.LogWright("Filter by station name: " + NameStation);
                 query = query.Where(x => x.Name == NameStation);
             }
-            if(Oblast != null)
+            if (Oblast != null)
             {
                 LoggingExceptions.LogWright("Filter by oblast: " + Oblast);
                 query = query.Where(x => x.Oblasts.Name == Oblast);
             }
-            int pageSize = 10;
+            int pageSize = 20;
             LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
             LoggingExceptions.LogWright("Get total count: " + count.ToString());
@@ -303,25 +305,28 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Enter Details stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-             
-           
+
+
             LoggingExceptions.LogWright("Get station by name: " + name);
             Stations stations = new Stations();
-            IQueryable query =  _context.Stations
+            IQueryable query = _context.Stations
                 .Include(x => x.UkrainsRailways)
-                    .ThenInclude(x=>x.DepotLists)
-                        .ThenInclude(x=>x.Locomotives)
-                    .ThenInclude(x=>x.DepotList)
-                        .ThenInclude(x=>x.ElectricTrains)
-                    .ThenInclude(x=>x.DepotList)
-                        .ThenInclude(x=>x.DieselTrains)
+                    .ThenInclude(x => x.DepotLists)
+                        .ThenInclude(d => d.Locomotives)
+                .Include(x => x.UkrainsRailways)
+                    .ThenInclude(x => x.DepotLists)
+                        .ThenInclude(d => d.ElectricTrains)
+                .Include(x => x.UkrainsRailways)
+                    .ThenInclude(x => x.DepotLists)
+                        .ThenInclude(d => d.DieselTrains)
                 .Include(x => x.Oblasts)
                 .Include(x => x.Citys)
-                    .ThenInclude(x=>x.Oblasts)
+                    .ThenInclude(x => x.Oblasts)
                 .Include(x => x.StationInfo)
                 .Include(x => x.railwayUsersPhotos)
+                .Include(x => x.StationImages)
                 .Where(x => x.Name == name);
-           
+
             LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
             stations = await query.Cast<Stations>().FirstOrDefaultAsync();
 
@@ -341,10 +346,10 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Enter Create stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-             
-           
+
+
             LoggingExceptions.LogWright("Get related data from DB");
-            IQueryable<Oblast> queryObl = _context.Oblasts.OrderBy(x => x.Name).AsQueryable(); 
+            IQueryable<Oblast> queryObl = _context.Oblasts.OrderBy(x => x.Name).AsQueryable();
             IQueryable<UkrainsRailways> queryFil = _context.UkrainsRailways.AsQueryable();
             string filialsName = "";
             string oblastName = "";
@@ -353,7 +358,7 @@ namespace TrainzInfo.Controllers
             {
                 LoggingExceptions.LogWright("Get last filial from session: " + HttpContext.Session.GetString("LastFilial").ToString());
                 filialsName = HttpContext.Session.GetString("LastFilial").ToString();
-                
+
             }
             if (HttpContext.Session.GetString("LastOblast") is not null)
             {
@@ -364,12 +369,12 @@ namespace TrainzInfo.Controllers
             List<string> oblasts = new List<string>();
             oblasts.Add("");
             LoggingExceptions.LogWright("Execute query: " + queryObl.ToQueryString());
-            oblasts.AddRange(await queryObl.Select(x=>x.Name).ToListAsync());
+            oblasts.AddRange(await queryObl.Select(x => x.Name).ToListAsync());
             SelectList oblast = new SelectList(oblasts);
             List<string> fillias = new List<string>();
             fillias.Add("");
             LoggingExceptions.LogWright("Execute query: " + queryFil.ToQueryString());
-            fillias.AddRange( await queryFil.Select(x => x.Name).ToListAsync());
+            fillias.AddRange(await queryFil.Select(x => x.Name).ToListAsync());
             SelectList uz = new SelectList(fillias);
             ViewBag.oblast = oblast;
             ViewBag.uz = uz;
@@ -391,96 +396,98 @@ namespace TrainzInfo.Controllers
             return View(nameof(Index));
         }
 
-        public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
-        {
-            if (id != null)
-                if (uploads != null)
-                {
-                    Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
-                    byte[] p1 = null;
-                    using (var fs1 = uploads.OpenReadStream())
-                    using (var ms1 = new MemoryStream())
-                    {
-                        fs1.CopyTo(ms1);
-                        p1 = ms1.ToArray();
-                    }
-                    station.ImageMimeTypeOfData = uploads.ContentType;
-                    station.Image = p1;
-                    _context.Stations.Update(station);
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
-                }
+        //public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
+        //{
+        //    if (id != null)
+        //        if (uploads != null)
+        //        {
+        //            Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
+        //            byte[] p1 = null;
+        //            using (var fs1 = uploads.OpenReadStream())
+        //            using (var ms1 = new MemoryStream())
+        //            {
+        //                fs1.CopyTo(ms1);
+        //                p1 = ms1.ToArray();
+        //            }
+        //            station.ImageMimeTypeOfData = uploads.ContentType;
+        //            station.Image = p1;
+        //            _context.Stations.Update(station);
+        //            _context.SaveChanges();
+        //            return RedirectToAction(nameof(Index));
+        //        }
 
-            return RedirectToAction(nameof(Index));
-        }
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        public IActionResult AddImageForm(int? id)
-        {
-            Stations stations;
-            if (id == null)
-            {
-                string stationId = TempData["Stationid"].ToString();
-                if (stationId == null)
-                {
-                    return NotFound();
-                }
-                stations = _context.Stations.Where(x => x.id == Convert.ToInt32(stationId)).FirstOrDefault();
-            }
-            else
-            {
-                stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
-            }
+        //public IActionResult AddImageForm(int? id)
+        //{
+        //    Stations stations;
+        //    if (id == null)
+        //    {
+        //        string stationId = TempData["Stationid"].ToString();
+        //        if (stationId == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        stations = _context.Stations.Where(x => x.id == Convert.ToInt32(stationId)).FirstOrDefault();
+        //    }
+        //    else
+        //    {
+        //        stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
+        //    }
 
-            if (stations == null)
-            {
-                return NotFound();
-            }
-            return View(stations);
-        }
+        //    if (stations == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(stations);
+        //}
 
-        public async Task<FileContentResult> GetImage(int id)
-        {
-            Stations station = await _context.Stations
-                .FirstOrDefaultAsync(g => g.id == id);
-            
-            try
-            {
-                
-                if (station != null)
-                {
-                    
-                    using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
-                    {
-                        int h = 450;
-                        int w = 500;
-                        using (Image img = Image.Load(ms))
-                        {
+        //public async Task<FileContentResult> GetImage(int id)
+        //{
+        //    Stations station = await _context.Stations
+        //        .FirstOrDefaultAsync(g => g.id == id);
 
-                            img.Mutate(x => x.Resize(w, h));
-                            using (MemoryStream ms2 = new MemoryStream())
-                            {
-                                img.SaveAsJpeg(ms2);
-                                station.Image = ms2.ToArray();
-                            }; 
-                        }
-                    }
-                    
-                    var file = File(station.Image, station.ImageMimeTypeOfData);
-                    return file;
-                }
-                else
-                {
-                    return null;
-                }
+        //    try
+        //    {
 
-            }catch (Exception exp)
-            {
-                LoggingExceptions.LogWright("Exception: " + exp.ToString());
-                LoggingExceptions.AddException(exp.ToString());
-            }
-            LoggingExceptions.LogFinish();
-            return null;
-        }
+        //        if (station != null)
+        //        {
+
+        //            using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
+        //            {
+        //                int h = 450;
+        //                int w = 500;
+        //                using (Image img = Image.Load(ms))
+        //                {
+
+        //                    img.Mutate(x => x.Resize(w, h));
+        //                    using (MemoryStream ms2 = new MemoryStream())
+        //                    {
+        //                        img.SaveAsJpeg(ms2);
+        //                        station.Image = ms2.ToArray();
+        //                    }
+        //                    ;
+        //                }
+        //            }
+
+        //            var file = File(station.Image, station.ImageMimeTypeOfData);
+        //            return file;
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //        }
+
+        //    }
+        //    catch (Exception exp)
+        //    {
+        //        LoggingExceptions.LogWright("Exception: " + exp.ToString());
+        //        LoggingExceptions.AddException(exp.ToString());
+        //    }
+        //    LoggingExceptions.LogFinish();
+        //    return null;
+        //}
         public async Task<FileContentResult> GetImageDetails(int id)
         {
             Stations station = await _context.Stations
@@ -506,50 +513,92 @@ namespace TrainzInfo.Controllers
             LoggingExceptions.LogInit(this.ToString(), nameof(Create));
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Enter Create stations");
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            
+
+            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
+
             LoggingExceptions.LogWright("Get related data from DB");
-            Oblast oblast = await _context.Oblasts.Where(x => x.Name == stations.Oblast).FirstOrDefaultAsync();
-            City city = await _context.Cities.Where(x => x.Name == stations.City).FirstOrDefaultAsync();
-            UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(x => x.Name == stations.Railway).FirstOrDefaultAsync();
+
+            var oblast = await _context.Oblasts.FirstOrDefaultAsync(x => x.Name == stations.Oblast);
+            var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == stations.City);
+            var railway = await _context.UkrainsRailways.FirstOrDefaultAsync(x => x.Name == stations.Railway);
+
+            if (oblast == null || city == null || railway == null)
+            {
+                LoggingExceptions.LogWright("One of related entities not found");
+                return BadRequest("Invalid related data");
+            }
+
             stations.Citys = city;
             stations.Oblasts = oblast;
-            stations.UkrainsRailways = ukrainsRailways;
+            stations.UkrainsRailways = railway;
+
             LoggingExceptions.LogWright("Add stations to DB");
-            _context.Add(stations);
+            StationImages stationImages = await _context.StationImages
+                .FirstOrDefaultAsync(x => x.Name == stations.Name);
+            if(stationImages== null)
+            {
+                stationImages = new StationImages
+                {
+                    Name = stations.Name,
+                    Image = stations.Image,
+                    ImageMimeTypeOfData = stations.ImageMimeTypeOfData
+                };
+                _context.StationImages.Add(stationImages);
+            }
+             stations.StationImages = stationImages;
+            _context.Stations.Add(stations);
+
             await _context.SaveChangesAsync();
-            
-            if(ukrainsRailways.Stations == null)
-            {
-                ukrainsRailways.Stations = new List<Stations>();
-            }
-            if(city.Stations == null)
-            {
-                city.Stations = new List<Stations>();
-            }
-            if(oblast.Stations == null)
-            {
-                oblast.Stations = new List<Stations>();
-            }
-            ukrainsRailways.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
-            LoggingExceptions.LogWright("Add stations to related data");
-            city.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
-            oblast.Stations.Add(await _context.Stations.Where(x => x.Name == stations.Name).FirstOrDefaultAsync());
-            
-            _context.UkrainsRailways.Update(ukrainsRailways);
-            _context.Cities.Update(city);
-            _context.Oblasts.Update(oblast);
-            
+
             LoggingExceptions.LogWright("Save all changes to DB");
-            await _context.SaveChangesAsync();
-            TempData["Stationid"] = await _context.Stations.Where(x => x.Name == stations.Name).Select(x=>x.id).FirstOrDefaultAsync();
-            TempData["FiliasStation"] = stations.UkrainsRailways.Name;
+            TempData["Stationid"] = stations.id;
+            TempData["FiliasStation"] = railway.Name;
+
             LoggingExceptions.LogFinish();
-            return RedirectToAction(nameof(AddImageForm));
+            return RedirectToAction("AddImageForm", "StationImages", new { id = stations.id });
+
 
             //return View(stations);
         }
 
+
+        public async Task<IActionResult> UpdateImages()
+        {
+            LoggingExceptions.LogInit(this.ToString(), nameof(UpdateImages));
+            LoggingExceptions.LogStart();
+
+            LoggingExceptions.LogWright("Get all stations from DB");
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            foreach (var item in stations)
+            {
+                // Пропускаємо, якщо вже мігрували зображення
+                LoggingExceptions.LogWright("Check station: " + item.Name);
+                if (item.StationImages != null || item.Image == null)
+                    continue;
+
+                LoggingExceptions.LogWright("Migrate image for station: " + item.Name);
+                var stationImage = new StationImages
+                {
+                    Name = item.Name,
+                    Image = item.Image,
+                    ImageMimeTypeOfData = item.ImageMimeTypeOfData
+                };
+
+                // Зв’язуємо об’єкти
+                item.StationImages = stationImage;
+                LoggingExceptions.LogWright("Link StationImages to Stations for station: " + item.Name);
+                // Очищаємо старі дані
+                item.Image = null;
+                item.ImageMimeTypeOfData = null;
+
+                // EF сам відстежує зміни, Update() не потрібен
+                _context.StationImages.Add(stationImage);
+            }   
+            LoggingExceptions.LogWright("Save all changes to DB");
+            await _context.SaveChangesAsync();
+            LoggingExceptions.LogFinish();
+            return RedirectToAction(nameof(IndexAll));
+        }
         // GET: Stations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -617,11 +666,11 @@ namespace TrainzInfo.Controllers
                 stationold.Citys = citynew;
                 stationold.Oblasts = oblastnew;
                 stationold.UkrainsRailways = ukrainsRailwaysnew;
-                if(citynew.Stations == null)
+                if (citynew.Stations == null)
                 {
                     citynew.Stations = new List<Stations>();
                 }
-                if(oblastnew.Stations == null)
+                if (oblastnew.Stations == null)
                 {
                     oblastnew.Stations = new List<Stations>();
                 }

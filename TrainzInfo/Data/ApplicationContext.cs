@@ -53,6 +53,7 @@ namespace TrainzInfo.Data
         public DbSet<MetroLines> MetroLines { get; set; }
         public DbSet<TrainsShadule> TrainsShadule { get; set; }
         public DbSet<DieselTrains> DieselTrains { get; set; }
+        public DbSet<StationImages> StationImages { get; set; }
 
     }
 
