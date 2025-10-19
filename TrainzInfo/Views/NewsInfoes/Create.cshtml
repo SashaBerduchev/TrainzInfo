@@ -20,12 +20,12 @@
             </div>
             <div class="form-group">
                 @Html.DisplayName("Коротка частина новини")
-                <textarea id="BaseNews" asp-for="BaseNewsInfo" class="form-control"></textarea>
+                <textarea asp-for="BaseNewsInfo" class="form-control wide" rows="8" data-editor></textarea>
                 <span asp-validation-for="BaseNewsInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 @Html.DisplayName("Повна новина")
-                <textarea id="NewsInfoAll" asp-for="NewsInfoAll" class="form-control"></textarea>
+                <textarea asp-for="NewsInfoAll" class="form-control wide" rows="8" data-editor></textarea>
                 <span asp-validation-for="NewsInfoAll" class="text-danger"></span>
             </div>
             @*<div class="form-group">
@@ -40,39 +40,13 @@
         </form>
     </div>
 </div>
-<style>
-    #BaseNews {
-        width: 800px;
-        height: 500px;
-    }
-</style>
-<style>
-    #NameNews {
-        width: 700px;
-        height: 50px;
-    }
-</style>
-<style>
-    #NewsInfoAll {
-        width: 800px;
-        height: 700px;
-    }
-</style>
-<style>
-    #News {
-        width: 600px;
-        height: 100px;
-    }
-</style>
-<style>
-    body {
-        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
-    }
-</style>
+<
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/ckeditor5/ckeditor.js"></script>
+    <script src="~/js/editor-init.js"></script>
 }

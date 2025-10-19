@@ -299,7 +299,7 @@ namespace TrainzInfo.Controllers
             return stations;
         }
         // GET: Stations/Details/5
-        public async Task<IActionResult> Details(string? name)
+        public async Task<IActionResult> Details(int? id)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(Details));
             LoggingExceptions.LogStart();
@@ -307,7 +307,7 @@ namespace TrainzInfo.Controllers
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
 
-            LoggingExceptions.LogWright("Get station by name: " + name);
+            LoggingExceptions.LogWright("Get station by id: " + id);
             Stations stations = new Stations();
             IQueryable query = _context.Stations
                 .Include(x => x.UkrainsRailways)
@@ -325,7 +325,7 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.StationInfo)
                 .Include(x => x.railwayUsersPhotos)
                 .Include(x => x.StationImages)
-                .Where(x => x.Name == name);
+                .Where(x => x.id == id);
 
             LoggingExceptions.LogWright("Execute query: " + query.ToQueryString());
             stations = await query.Cast<Stations>().FirstOrDefaultAsync();
@@ -382,127 +382,7 @@ namespace TrainzInfo.Controllers
             return View();
         }
 
-        public async Task<IActionResult> DeleteStations()
-        {
-            List<Stations> stations = await _context.Stations.ToListAsync();
-            for (int i = 0; i < stations.Count; i++)
-            {
-                if (stations[i].Image == null)
-                {
-                    _context.Stations.Remove(stations[i]);
-                    _context.SaveChanges();
-                }
-            }
-            return View(nameof(Index));
-        }
-
-        //public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
-        //{
-        //    if (id != null)
-        //        if (uploads != null)
-        //        {
-        //            Stations station = await _context.Stations.Where(x => x.id == id).FirstOrDefaultAsync();
-        //            byte[] p1 = null;
-        //            using (var fs1 = uploads.OpenReadStream())
-        //            using (var ms1 = new MemoryStream())
-        //            {
-        //                fs1.CopyTo(ms1);
-        //                p1 = ms1.ToArray();
-        //            }
-        //            station.ImageMimeTypeOfData = uploads.ContentType;
-        //            station.Image = p1;
-        //            _context.Stations.Update(station);
-        //            _context.SaveChanges();
-        //            return RedirectToAction(nameof(Index));
-        //        }
-
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //public IActionResult AddImageForm(int? id)
-        //{
-        //    Stations stations;
-        //    if (id == null)
-        //    {
-        //        string stationId = TempData["Stationid"].ToString();
-        //        if (stationId == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        stations = _context.Stations.Where(x => x.id == Convert.ToInt32(stationId)).FirstOrDefault();
-        //    }
-        //    else
-        //    {
-        //        stations = _context.Stations.Where(x => x.id == id).FirstOrDefault();
-        //    }
-
-        //    if (stations == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(stations);
-        //}
-
-        //public async Task<FileContentResult> GetImage(int id)
-        //{
-        //    Stations station = await _context.Stations
-        //        .FirstOrDefaultAsync(g => g.id == id);
-
-        //    try
-        //    {
-
-        //        if (station != null)
-        //        {
-
-        //            using (MemoryStream ms = new MemoryStream(station.Image, 0, station.Image.Length))
-        //            {
-        //                int h = 450;
-        //                int w = 500;
-        //                using (Image img = Image.Load(ms))
-        //                {
-
-        //                    img.Mutate(x => x.Resize(w, h));
-        //                    using (MemoryStream ms2 = new MemoryStream())
-        //                    {
-        //                        img.SaveAsJpeg(ms2);
-        //                        station.Image = ms2.ToArray();
-        //                    }
-        //                    ;
-        //                }
-        //            }
-
-        //            var file = File(station.Image, station.ImageMimeTypeOfData);
-        //            return file;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        LoggingExceptions.LogWright("Exception: " + exp.ToString());
-        //        LoggingExceptions.AddException(exp.ToString());
-        //    }
-        //    LoggingExceptions.LogFinish();
-        //    return null;
-        //}
-        public async Task<FileContentResult> GetImageDetails(int id)
-        {
-            Stations station = await _context.Stations
-                .FirstOrDefaultAsync(g => g.id == id);
-
-            if (station != null)
-            {
-                var file = File(station.Image, station.ImageMimeTypeOfData);
-                return file;
-            }
-            else
-            {
-                return null;
-            }
-        }
+       
         // POST: Stations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -547,6 +427,20 @@ namespace TrainzInfo.Controllers
                 _context.StationImages.Add(stationImages);
             }
              stations.StationImages = stationImages;
+
+            StationInfo stationInfo = await _context.StationInfos
+                .FirstOrDefaultAsync(x => x.Name == stations.Name);
+            if(stationInfo == null)
+            {
+                stationInfo = new StationInfo
+                {
+                    Name = stations.Name,
+                    BaseInfo = "",
+                    AllInfo = ""
+                };
+                _context.StationInfos.Add(stationInfo);
+            }
+            stations.StationInfo = stationInfo;
             _context.Stations.Add(stations);
 
             await _context.SaveChangesAsync();
@@ -562,7 +456,35 @@ namespace TrainzInfo.Controllers
             //return View(stations);
         }
 
+        public async Task<IActionResult> DeleteStations()
+        {
+            List<Stations> stations = await _context.Stations.ToListAsync();
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (stations[i].Image == null)
+                {
+                    _context.Stations.Remove(stations[i]);
+                    _context.SaveChanges();
+                }
+            }
+            return View(nameof(Index));
+        }
 
+        public async Task<FileContentResult> GetImageDetails(int id)
+        {
+            Stations station = await _context.Stations
+                .FirstOrDefaultAsync(g => g.id == id);
+
+            if (station != null)
+            {
+                var file = File(station.Image, station.ImageMimeTypeOfData);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public async Task<IActionResult> UpdateImages()
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(UpdateImages));
@@ -582,8 +504,10 @@ namespace TrainzInfo.Controllers
                 {
                     Name = item.Name,
                     Image = item.Image,
-                    ImageMimeTypeOfData = item.ImageMimeTypeOfData
+                    ImageMimeTypeOfData = item.ImageMimeTypeOfData,
+                    CreatedAt = DateTime.UtcNow
                 };
+                _context.StationImages.Add(stationImage);
 
                 // Зв’язуємо об’єкти
                 item.StationImages = stationImage;
@@ -593,8 +517,30 @@ namespace TrainzInfo.Controllers
                 item.ImageMimeTypeOfData = null;
 
                 // EF сам відстежує зміни, Update() не потрібен
-                _context.StationImages.Add(stationImage);
-            }   
+            }
+            foreach (var item in stations)
+            {
+                // Пропускаємо, якщо вже мігрували зображення
+                LoggingExceptions.LogWright("Check station: " + item.Name);
+                if (item.StationInfo != null)
+                    continue;
+
+                LoggingExceptions.LogWright("Migrate image for station: " + item.Name);
+                StationInfo stationInfo = new StationInfo
+                {
+                    Name = item.Name,
+                    BaseInfo = "",
+                    AllInfo = ""
+                };
+                _context.StationInfos.Add(stationInfo);
+
+                // Зв’язуємо об’єкти
+                item.StationInfo = stationInfo;
+                LoggingExceptions.LogWright("Link StationImages to Stations for station: " + item.Name);
+                
+
+                // EF сам відстежує зміни, Update() не потрібен
+            }
             LoggingExceptions.LogWright("Save all changes to DB");
             await _context.SaveChangesAsync();
             LoggingExceptions.LogFinish();

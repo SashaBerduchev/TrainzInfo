@@ -1,83 +1,107 @@
 ﻿@model TrainzInfo.Models.NewsInfo
 
 @{
-    ViewData["Title"] = @Model.NameNews;
+    ViewData["Title"] = Model.NameNews;
 }
-<h1 style="background-color:aliceblue; padding:20px">@Model.NameNews</h1>
-@* <h2 style="background-color:aliceblue; padding:10px">Автор - @Model.Users.Name</h2> *@
-<head>
-    <meta charset="utf-8">
-    <title>Фон</title>
-    <style>
-        body {
-            background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
-        }
-    </style>
-</head>
-<div style="background-color:aliceblue">
-    <hr />
-    <div style="position:relative; left:20px">
-        <dl class="row">
-            <dd class="col-sm-10">
-                @*@Html.DisplayFor(model => model.Imgsrc)*@
-                @if (Model.NewsImage == null)
-                {
-                    <img src="@Model.Imgsrc" width="350" height="350">
-                }
-                else
-                {
-                    <img class="img-thumbnail" width="350" height="350"
-                         src="@Url.Action("GetImage", "NewsInfoes",
-                        new { Model.id })" />
-                }
-            </dd>
-            <dt class="col-sm-2">
-                @*@Html.DisplayNameFor(model => model.NameNews)*@
-            </dt>
-            <dd class="col-sm-10" style="        font-size: 25px
-">
-                @Html.DisplayFor(model => model.NameNews)
-            </dd>
-            <dt class="col-sm-2">
-                @*@Html.DisplayNameFor(model => model.BaseNewsInfo)*@
-            </dt>
-            <dd class="col-sm-10" style="        font-size: 25px
-">
-                @Html.DisplayFor(model => model.BaseNewsInfo)
-            </dd>
-            <dt class="col-sm-2">
-                @*@Html.DisplayNameFor(model => model.NewsInfoAll)*@
-            </dt>
-            <dd class="col-sm-10" style="font-size: 25px">
-                @Html.DisplayFor(model => model.NewsInfoAll)
-            </dd>
-        </dl>
-    </div>
-    @if (ViewBag.user != null)
-    {
-        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Create" asp-route-id="@Model.id">Коментувати</a>
-        <a class="btn btn-info" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">Коментарі + @Convert.ToString(ViewBag.count)</a>
-    }
 
-    @if (ViewBag.user != null)
-    {
-        if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
-        {
-            if (Model != null)
+<!-- Заголовок новини -->
+<h1 class="news-page-title">@Model.NameNews</h1>
+
+<!-- Основна картка новини -->
+<div class="news-detail-card card shadow-sm mb-5">
+    <div class="row g-4 align-items-start">
+        <!-- Картинка -->
+        <div class="col-md-4 text-center">
+            @if (Model.NewsImage == null)
             {
-                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model.id">Редагуввати информацию</a>
-                <a class="btn btn-outline-info" asp-action="AddImageForm" asp-route-id="@Model.id">Добавить картинку</a>
+                <img src="@Model.Imgsrc" class="img-fluid rounded news-detail-img" alt="Новина">
             }
             else
             {
-                <meta http-equiv="refresh" content="900">
+                <img src="@Url.Action("GetImage", "NewsInfoes", new { Model.id })"
+                     class="img-fluid rounded news-detail-img"
+                     alt="Новина">
             }
-        }
-    }
+        </div>
+
+        <!-- Текстова частина -->
+        <div class="col-md-8">
+            <dl class="row mb-3">
+                <dt class="col-sm-3">Назва</dt>
+                <dd class="col-sm-9 news-text">@Html.DisplayFor(model => model.NameNews)</dd>
+
+                <dt class="col-sm-3">Коротко</dt>
+                <dd class="col-sm-9 news-text">@Html.DisplayFor(model => model.BaseNewsInfo)</dd>
+
+                <dt class="col-sm-3">Повна інформація</dt>
+                <dd class="col-sm-9 news-text">@Html.DisplayFor(model => model.NewsInfoAll)</dd>
+            </dl>
+
+            <!-- Кнопки -->
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                @if (ViewBag.user != null)
+                {
+                    <a class="btn btn-info btn-sm" asp-controller="NewsComments" asp-action="Create" asp-route-id="@Model.id">Коментувати</a>
+                    <a class="btn btn-info btn-sm" asp-controller="NewsComments" asp-action="Index" asp-route-idnews="@Model.id">
+                        Коментарі + @Convert.ToString(ViewBag.count)
+                    </a>
+                }
+
+                @if (ViewBag.user != null && (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher"))
+                {
+                    <a class="btn btn-outline-info btn-sm" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
+                    <a class="btn btn-outline-info btn-sm" asp-action="AddImageForm" asp-route-id="@Model.id">Додати картинку</a>
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Кастомний стиль -->
 <style>
-        row {
-            background: #c7b39b url(@Model.Imgsrc); /* Цвет фона и путь к файлу */
-            color: #fff; /* Цвет текста */
+    /* Заголовок сторінки */
+    .news-page-title {
+        background-color: aliceblue;
+        padding: 25px 20px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Карточка новини */
+    .news-detail-card {
+        background-color: #f9faff;
+        border-radius: 12px;
+        padding: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .news-detail-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
+
+    /* Картинка новини */
+    .news-detail-img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* Текст всередині dl */
+    .news-text {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    /* Кнопки */
+    .btn-sm {
+        min-width: 130px;
+    }
+
 </style>

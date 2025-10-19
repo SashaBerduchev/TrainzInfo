@@ -15,17 +15,18 @@
             <input type="hidden" asp-for="id" />
             <div class="form-group">
                 @Html.DisplayName("Станція")
-                <input type="text" id="cities" asp-for="Name" placeholder="Почніть вводити назву станції" class="form-control" />
+                <input type="text" id="cities" asp-for="Name" readonly class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group wide">
                 @Html.DisplayName("Коротка інформація")
-                <textarea style="width:1000px; height:500px;" asp-for="BaseInfo" class="form-control"></textarea>
+                <textarea asp-for="BaseInfo" class="form-control wide" rows="8" data-editor></textarea>
                 <span asp-validation-for="BaseInfo" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group wide">
                 @Html.DisplayName("Основна інформація")
-                <textarea style="width:1000px; height:500px;" asp-for="AllInfo" class="form-control"></textarea>
+                <textarea asp-for="AllInfo" class="form-control wide" rows="8" data-editor></textarea>
                 <span asp-validation-for="AllInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -35,10 +36,11 @@
     </div>
 </div>
 
-
-<style>
-    body {
-        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-</style>
+    <script src="~/lib/ckeditor5/ckeditor.js"></script>
+    <script src="~/js/editor-init.js"></script>
 
+}

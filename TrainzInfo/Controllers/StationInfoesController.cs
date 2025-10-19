@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 
@@ -60,29 +58,22 @@ namespace TrainzInfo.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                Stations stations = await _context.Stations.Include(x => x.Citys)
-                        .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
-                stations.StationInfo = stationInfo;
-                _context.Stations.Update(stations);
                 _context.Add(stationInfo);
-                _context.Stations.Update(stations);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Index));
             }
             return View(stationInfo);
         }
 
         // GET: StationInfoes/Edit/5
-        public async Task<IActionResult> Edit(string? name)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (name == null || name == "")
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var stationInfo = await _context.StationInfos.FirstOrDefaultAsync(x=>x.Name == name);
+            var stationInfo = await _context.StationInfos.FirstOrDefaultAsync(x=>x.id == id);
             if (stationInfo == null)
             {
                 return NotFound();
@@ -106,12 +97,7 @@ namespace TrainzInfo.Controllers
             {
                 try
                 {
-                    _context.Update(stationInfo);
-                    Stations stations = await _context.Stations.Include(x => x.Citys)
-                        .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
-                        .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.Metro).Include(x => x.StationsShadules).Where(x => x.Name == stationInfo.Name).FirstOrDefaultAsync();
-                    stations.StationInfo = stationInfo;
-                    _context.Stations.Update(stations);
+                    _context.StationInfos.Update(stationInfo);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -125,7 +111,8 @@ namespace TrainzInfo.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Create));
+                int stationid = await _context.Stations.Where(x => x.Name == stationInfo.Name).Select(x=>x.id).FirstOrDefaultAsync();
+                return RedirectToAction("Details", "Stations", new { id = stationid });
             }
             return View(stationInfo);
         }

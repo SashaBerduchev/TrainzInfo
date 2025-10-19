@@ -128,6 +128,21 @@ namespace TrainzInfo.Controllers
                 return null;
             }
         }
+        public FileContentResult GetBackground()
+        {
+            MainImages images = _context.MainImages
+                .FirstOrDefault(g => g.Name == "Background");
+
+            if (images != null)
+            {
+                var file = File(images.Image, images.ImageType);
+                return file;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         // GET: MainImages/Edit/5
         public async Task<IActionResult> Edit(int? id)

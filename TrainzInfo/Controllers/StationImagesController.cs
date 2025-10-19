@@ -113,7 +113,33 @@ namespace TrainzInfo.Controllers
             return null;
         }
 
+        public async Task<FileContentResult> GetImageDetails(int id)
+        {
+            StationImages stationImages = await _context.StationImages
+                .FirstOrDefaultAsync(g => g.id == id);
 
+            try
+            {
+
+                if (stationImages != null)
+                {
+
+                    var file = File(stationImages.Image, stationImages.ImageMimeTypeOfData);
+                    return file;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception exp)
+            {
+                LoggingExceptions.AddException(exp.ToString());
+            }
+            LoggingExceptions.LogFinish();
+            return null;
+        }
 
         // GET: StationImages/Details/5
         public async Task<IActionResult> Details(int? id)

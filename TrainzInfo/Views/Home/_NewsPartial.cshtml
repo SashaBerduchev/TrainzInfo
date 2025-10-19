@@ -22,10 +22,10 @@
                     <div class="col-md-8">
                         <div class="text-muted">@info.DateTime.ToString()</div>
                         <h3>@info.NameNews</h3>
-                        <p>@info.BaseNewsInfo</p>
+                        <p>@Html.Raw(info.BaseNewsInfo)</p>
                         <a class="btn btn-info btn_news" asp-controller="NewsInfoes" asp-action="Details" asp-route-id="@info.id">Дивитися новину</a>
 
-                        @if (ViewBag.user != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin") || User.IsInRole("Publisher")))
+                        @if (User != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin") || User.IsInRole("Publisher")))
                         {
                             <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Додати зображення</a>
                             <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@info.id">Видалити</a>

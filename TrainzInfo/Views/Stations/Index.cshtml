@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Станції";
 }
+<link rel="stylesheet" href="~/css/station-ingo.css" />
 
 <h1 class="mb-4 text-center">Станції</h1>
 <h2 class="mb-3 text-center">@ViewBag.Filia</h2>
@@ -48,8 +49,8 @@
                 <div class="row g-0">
                     <!-- Картинка -->
                     <div class="col-12 col-md-4">
-                        <img class="img-fluid rounded-start"
-                             src="@Url.Action("GetImage", "StationImages", new { item.id })"
+                        <img class=" station-img img-fluid rounded-start"
+                             src="@Url.Action("GetImage", "StationImages", new { item.StationImages.id })"
                              alt="Станція" />
                     </div>
 
@@ -65,11 +66,15 @@
                     </div>
 
                     <!-- Кнопки -->
+                    
                     <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-                        <a class="btn btn-info mb-2 w-100" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">
-                            Розклад по станції
-                        </a>
-                        <a class="btn btn-primary mb-2 w-100" asp-action="Details" asp-route-name="@item.Name">
+                        @if (item.StationsShadules != null)
+                        {
+                            <a class="btn btn-info mb-2 w-100" asp-controller="StationsShadules" asp-action="Index" asp-route-station="@item.Name">
+                                Розклад по станції
+                            </a>
+                        }
+                        <a class="btn btn-primary mb-2 w-100" asp-action="Details" asp-route-id="@item.id">
                             Інформація
                         </a>
                         @if (item.railwayUsersPhotos != null)
@@ -150,18 +155,6 @@
 </nav>
 
 <style>
-    body {
-        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
-    }
+   
 
-    td {
-        background: #6a5eff; /* Цвет фона */
-        position: center;
-        padding: 5px; /* Поля в ячейках */
-        opacity: 1.9; /* Полупрозрачность таблицы */
-        filter: alpha(Opacity=50); /* Для IE */
-        width: 700px;
-        color: white;
-        text-decoration: solid;
-    }
 </style>
