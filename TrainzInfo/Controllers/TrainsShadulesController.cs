@@ -178,16 +178,25 @@ namespace TrainzInfo.Controllers
         // GET: TrainsShadules
         public async Task<IActionResult> Index(int? id)
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-           
+            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Find train schaduler");
             if(id is null && TempData["TrainNumber"] is not null)
             {
                 id = Convert.ToInt32(TempData["TrainNumber"].ToString());
             }
+            LoggingExceptions.LogWright("Train id - " + id.ToString());
             Train train = await _context.Trains.Where(x => x.id == id).FirstOrDefaultAsync();
             ViewBag.traininfo = train;
             List<TrainsShadule> shadule = new List<TrainsShadule>();
-            shadule = await _context.TrainsShadule.Include(x => x.Stations).Include(x=>x.Train).Where(x => x.NumberTrain == train.Number.ToString()).ToListAsync();
+            IQueryable<TrainsShadule> queryable = _context.TrainsShadule
+                .Include(x => x.Stations)
+                .Include(x => x.Train)
+                .Where(x => x.NumberTrain == train.Number.ToString()).AsQueryable();
+
+            LoggingExceptions.LogWright("Get list of schaduler - " + queryable.ToQueryString());
+            shadule = await queryable.ToListAsync();
+            LoggingExceptions.LogFinish();
             return View(shadule);
         }
 

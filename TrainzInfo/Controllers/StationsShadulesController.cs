@@ -28,8 +28,16 @@ namespace TrainzInfo.Controllers
              
           
             ViewBag.station = station;
-            List<StationsShadule> stationsShadule = await _context.StationsShadules.Include(x=>x.UkrainsRailways).Include(x=>x.Train).Include(x=>x.Stations)
-                .Where(x => x.Station == station && x.IsUsing == false).OrderBy(x=>x.TimeOfArrive).ToListAsync();
+            List<StationsShadule> stationsShadule = await _context.StationsShadules
+                .Include(x=>x.UkrainsRailways)
+                .Include(x=>x.Train)
+                    .ThenInclude(x=>x.TypeOfPassTrain)
+                .Include(x=>x.Stations)
+                    .ThenInclude(x=>x.Citys)
+                        .ThenInclude(x=>x.Oblasts)
+                .Where(x => x.Station == station && x.IsUsing == false)
+                .OrderBy(x=>x.TimeOfArrive)
+                .ToListAsync();
             return View(stationsShadule);
         }
         public async Task<List<StationsShadule>> IndexAction()

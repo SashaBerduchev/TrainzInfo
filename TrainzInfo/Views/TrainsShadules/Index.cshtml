@@ -44,7 +44,7 @@
                     <td style="font-size:18px">
                         @if (item.Stations is not null)
                         {
-                            <a asp-controller="Stations" asp-action="Details" asp-route-name="@item.Stations.Name">
+                            <a asp-controller="Stations" asp-action="Details" asp-route-id="@item.Stations.id">
                                 @Html.DisplayFor(modelItem => item.NameStation)
                             </a>
                         }
