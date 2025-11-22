@@ -1,0 +1,156 @@
+﻿@page "/locomotives"
+@using TrainzInfoWebGW.DTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+<h1 class="mb-4 text-center">Локомотиви</h1>
+
+@if (isLoading)
+{
+    <p class="text-center">Завантаження...</p>
+}
+else
+{
+    <div class="mb-3">
+        @if (IsLogged)
+        {
+            <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
+        }
+    </div>
+
+    <!-- Фільтри -->
+    <div class="row g-2 mb-3">
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedFilia">
+                <option value="">Всі філії</option>
+                @foreach (var f in FiliaList)
+                {
+                    <option value="@f">@f</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedDepot">
+                <option value="">Всі депо</option>
+                @foreach (var d in DepotList)
+                {
+                    <option value="@d">@d</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedSeria">
+                <option value="">Всі серії</option>
+                @foreach (var s in SeriaList)
+                {
+                    <option value="@s">@s</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
+    </div>
+
+    <!-- Список локомотивів -->
+    <div class="row">
+        @foreach (var item in FilteredLocomotives)
+        {
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-4">
+                            <img class="img-fluid rounded-start"
+                                 src="@item.ImgSrc"
+                                 alt="Локомотив" />
+                        </div>
+                        <div class="col-12 col-md-5 p-3">
+                            <h5>@item.Seria №@item.Number</h5>
+                            <p><b>Філія:</b> @item.Filia</p>
+                            <p><b>Депо:</b> @item.Depot</p>
+                            <p><b>Область:</b> @item.Oblast</p>
+                            <p><b>Місто:</b> @item.City</p>
+                            <p><b>Максимальна швидкість:</b> @item.Speed км/год</p>
+                        </div>
+                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                            <button class="btn btn-outline-info mb-2" @onclick="() => ViewDetails(item.Id)">Детальна інформація</button>
+                            <button class="btn btn-outline-success mb-2" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">Фото користувачів</button>
+
+                            @if (IsAdminOrPublisher)
+                            {
+                                <button class="btn btn-outline-primary mb-2" @onclick="() => EditLocomotive(item.Id)">Редагувати</button>
+                            }
+
+                            @if (IsAdmin)
+                            {
+                                <button class="btn btn-outline-warning mb-2" @onclick="() => AddImage(item.Id)">Додати зображення</button>
+                                <button class="btn btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">Видалити</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<LocomotiveDTO> locomotives = new();
+    private List<LocomotiveDTO> FilteredLocomotives = new();
+
+    private bool isLoading = true;
+
+    private string SelectedFilia = "";
+    private string SelectedDepot = "";
+    private string SelectedSeria = "";
+
+    private List<string> FiliaList = new();
+    private List<string> DepotList = new();
+    private List<string> SeriaList = new();
+
+    // Симуляція авторизації
+    private bool IsLogged => true;
+    private bool IsAdmin => true;
+    private bool IsAdminOrPublisher => true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантажуємо локомотиви з API
+        List<LocomotiveDTO> locomotiveDTOs = await Http.GetFromJsonAsync<List<LocomotiveDTO>>("api/locomotives/getlocomotives");
+        locomotives = locomotiveDTOs;
+
+        FilteredLocomotives = locomotives;
+
+        FiliaList = locomotives.Select(l => l.Filia).Distinct().ToList();
+        DepotList = locomotives.Select(l => l.Depot).Distinct().ToList();
+        SeriaList = locomotives.Select(l => l.Seria).Distinct().ToList();
+
+        isLoading = false;
+    }
+
+    private void ApplyFilter()
+    {
+        FilteredLocomotives = locomotives
+            .Where(l =>
+                (string.IsNullOrEmpty(SelectedFilia) || l.Filia == SelectedFilia) &&
+                (string.IsNullOrEmpty(SelectedDepot) || l.Depot == SelectedDepot) &&
+                (string.IsNullOrEmpty(SelectedSeria) || l.Seria == SelectedSeria)
+            ).ToList();
+    }
+
+    private void ClearFilter()
+    {
+        SelectedFilia = SelectedDepot = SelectedSeria = "";
+        FilteredLocomotives = locomotives;
+    }
+
+    private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/{id}");
+    private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
+    private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
+    private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
+    private void DeleteLocomotive(int id) { /* TODO: реалізація видалення */ }
+    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+}

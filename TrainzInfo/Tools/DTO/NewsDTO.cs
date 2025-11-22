@@ -1,4 +1,6 @@
-﻿namespace TrainzInfoWebGW.DTO
+﻿using System;
+
+namespace TrainzInfo.Tools.DTO
 {
     public class NewsDTO
     {

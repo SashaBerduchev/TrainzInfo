@@ -83,6 +83,15 @@ namespace TrainzInfo
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             services.AddControllersWithViews();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
             Mail mail = new Mail();
             LoggingExceptions.LogFinish();
             _connectionString = connection;
@@ -110,6 +119,7 @@ namespace TrainzInfo
             app.UseStaticFiles();
             LoggingExceptions.LogWright("Try use routing");
             app.UseRouting();
+            app.UseCors();
             LoggingExceptions.LogWright("Try use authorization");
             app.UseAuthentication();
             app.UseAuthorization();
@@ -147,6 +157,7 @@ namespace TrainzInfo
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
+            
             LoggingExceptions.LogFinish();
 
         }
