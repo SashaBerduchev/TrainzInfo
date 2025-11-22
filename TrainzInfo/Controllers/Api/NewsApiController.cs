@@ -30,26 +30,30 @@ namespace TrainzInfo.Controllers.Api
         }
         [Produces("application/json")]
         [HttpGet("getnews")]
-        public async Task<ActionResult<List<NewsInfo>>> GetNews()
+        public async Task<ActionResult<List<NewsInfo>>> GetNews(int page = 1)
         {
+            int pageSize = 10;
             try
             {
                 LoggingExceptions.LogInit("NewsApiController", "GetNews");
                 LoggingExceptions.LogStart();
                 LoggingExceptions.LogWright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
-                     .Select(n => new NewsDTO
-                     {
-                         id = n.id,
-                         NameNews = n.NameNews,
-                         BaseNewsInfo = n.BaseNewsInfo,
-                         NewsInfoAll = n.NewsInfoAll,
-                         //NewsImage = n.NewsImage,
-                         DateTime = n.DateTime.ToString("yyyy-MM-dd"), // або формат за потребою
-                         NewsImage = n.NewsImage != null
-                                ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.NewsImage)}"
-                                : null
-                     }).ToListAsync();
+                    .OrderByDescending(n => n.DateTime)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(n => new NewsDTO
+                    {
+                        id = n.id,
+                        NameNews = n.NameNews,
+                        BaseNewsInfo = n.BaseNewsInfo,
+                        NewsInfoAll = n.NewsInfoAll,
+                        DateTime = n.DateTime.ToString("yyyy-MM-dd"),
+                        NewsImage = n.NewsImage != null
+                            ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.NewsImage)}"
+                            : null
+                    })
+                    .ToListAsync();
 
                 return Ok(newsDTOs);
             }

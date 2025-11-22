@@ -1,11 +1,9 @@
 ﻿@page "/"
 @using TrainzInfoWebGW.DTO
 @inject HttpClient Http
+@inject IJSRuntime JS
 
-<PageTitle>Головна</PageTitle>
-
-<h1>TrainzInfo</h1>
-
+<PageTitle>TrainzInfo</PageTitle>
 
 <h1 class="display-4 text-center mb-4">Ласкаво просимо на сайт TrainzInfo!</h1>
 
@@ -33,7 +31,7 @@
            style="max-width:400px; margin:auto;" />
 </div>
 
-<div class="mt-4">
+<div class="mt-4" id="newsContainer">
     @if (allNews == null)
     {
         <p class="text-center">Завантаження...</p>
@@ -62,27 +60,56 @@
                 </div>
             }
         </div>
+
+        @if (isLoading)
+        {
+            <p class="text-center text-secondary mt-2">Завантаження ще новин...</p>
+        }
     }
 </div>
 
 @code {
-    private List<NewsDTO>? allNews;
-    private List<NewsDTO>? filteredNews;
+    private List<NewsDTO> allNews = new();
+    private List<NewsDTO> filteredNews = new();
     private string searchText = string.Empty;
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadNews();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addScrollListener", DotNetObjectReference.Create(this));
+    }
+
+    private async Task LoadNews()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
         try
         {
-            allNews = await Http.GetFromJsonAsync<List<NewsDTO>>("api/news/getnews");
-            // Тимчасово з локального JSON
-            filteredNews = allNews;
+            var newItems = await Http.GetFromJsonAsync<List<NewsDTO>>($"api/news/getnews?page={currentPage}");
+            if (newItems == null || newItems.Count == 0)
+            {
+                allLoaded = true;
+            }
+            else
+            {
+                allNews.AddRange(newItems);
+                FilterNews(); // оновлюємо відфільтровані новини
+                currentPage++;
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine("Помилка завантаження новин: " + ex.Message);
-            filteredNews = new List<NewsDTO>();
         }
+
+        isLoading = false;
         StateHasChanged();
     }
 
@@ -90,7 +117,7 @@
     {
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            filteredNews = allNews;
+            filteredNews = allNews.ToList();
         }
         else
         {
@@ -108,5 +135,11 @@
             searchText = value;
             FilterNews();
         }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadNews();
     }
 }

@@ -24,13 +24,15 @@ namespace TrainzInfo.Controllers.Api
 
         [Produces("application/json")]
         [HttpGet("getlocomotives")]
-        public async Task<ActionResult<List<Locomotive>>> GetLocomotives()
+        public async Task<ActionResult<List<Locomotive>>> GetLocomotives(int page = 1)
         {
             try
             {
                 LoggingExceptions.LogInit("LocomotivesApiController", "GetLocomotives");
                 LoggingExceptions.LogStart();
                 LoggingExceptions.LogWright("Start Get GetLocomotives");
+                int pageSize = 10;
+
                 var locoDTO = await _context.Locomotives
                     .Include(d => d.DepotList)
                         .ThenInclude(c => c.City)
@@ -38,6 +40,8 @@ namespace TrainzInfo.Controllers.Api
                     .Include(u => u.DepotList)
                         .ThenInclude(ur => ur.UkrainsRailway)
                     .Include(ls => ls.Locomotive_Series)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .Select(n => new LocmotiveDTO
                      {
                          Id = n.id,

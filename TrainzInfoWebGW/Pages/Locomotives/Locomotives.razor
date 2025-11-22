@@ -2,6 +2,7 @@
 @using TrainzInfoWebGW.DTO
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 <h1 class="mb-4 text-center">Локомотиви</h1>
 
 @if (isLoading)
@@ -101,7 +102,9 @@ else
     private List<LocomotiveDTO> locomotives = new();
     private List<LocomotiveDTO> FilteredLocomotives = new();
 
-    private bool isLoading = true;
+    private bool isLoading = false;
+    private int currentPage = 1;
+    private bool allLoaded = false;
 
     private string SelectedFilia = "";
     private string SelectedDepot = "";
@@ -116,21 +119,44 @@ else
     private bool IsAdmin => true;
     private bool IsAdminOrPublisher => true;
 
+    
+
     protected override async Task OnInitializedAsync()
     {
-        // Завантажуємо локомотиви з API
-        List<LocomotiveDTO> locomotiveDTOs = await Http.GetFromJsonAsync<List<LocomotiveDTO>>("api/locomotives/getlocomotives");
-        locomotives = locomotiveDTOs;
-
-        FilteredLocomotives = locomotives;
-
-        FiliaList = locomotives.Select(l => l.Filia).Distinct().ToList();
-        DepotList = locomotives.Select(l => l.Depot).Distinct().ToList();
-        SeriaList = locomotives.Select(l => l.Seria).Distinct().ToList();
-
-        isLoading = false;
+        await LoadNews();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API  
     }
 
+    private async Task LoadNews()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
+        try
+        {
+            var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>($"api/locomotives/getlocomotives?page={currentPage}");
+            if (locomotiveItems == null || locomotiveItems.Count == 0)
+            {
+                allLoaded = true;
+            }
+            else
+            {
+                locomotives.AddRange(locomotiveItems);
+                ApplyFilter(); // оновлюємо відфільтровані новини
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження новин: " + ex.Message);
+        }
+
+        isLoading = false;
+        StateHasChanged();
+    }
     private void ApplyFilter()
     {
         FilteredLocomotives = locomotives
@@ -153,4 +179,10 @@ else
     private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
     private void DeleteLocomotive(int id) { /* TODO: реалізація видалення */ }
     private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadNews();
+    }
 }

@@ -33,7 +33,7 @@ namespace TrainzInfo
             LoggingExceptions.LogInit("Startup", nameof(ConfigureServices));
             LoggingExceptions.LogStart();
             LoggingExceptions.LogWright("Try add services");
-            services.AddControllersWithViews();
+            services.AddControllers();
             string connection = "";
             string trace = "";
             LoggingExceptions.LogWright("Try add DB context");
@@ -82,7 +82,9 @@ namespace TrainzInfo
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
+            //services.AddRazorPages();
+            services.AddControllers(); // API
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
@@ -126,15 +128,21 @@ namespace TrainzInfo
             LoggingExceptions.LogWright("Try use session");
             app.UseSession();
             LoggingExceptions.LogWright("Try use endpoints");
+            
             app.UseEndpoints(endpoints =>
             {
                 // Спочатку MVC контролери
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-                // Потім Razor Pages
-                endpoints.MapRazorPages();
+                //// Потім Razor Pages
+                //endpoints.MapRazorPages();
+
+                // API маршрути
+                endpoints.MapControllers();
+                // Fallback на Blazor WASM
+                endpoints.MapFallbackToFile("index.html");
             });
 
             var endpointDataSource = app.ApplicationServices.GetRequiredService<EndpointDataSource>();
@@ -157,6 +165,7 @@ namespace TrainzInfo
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
+            
             
             LoggingExceptions.LogFinish();
 
