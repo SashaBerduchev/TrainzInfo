@@ -1,0 +1,99 @@
+﻿@page "/"
+@using TrainzClient.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h1 class="display-4 text-center mb-4">Ласкаво просимо на сайт TrainzInfo!</h1>
+
+<div class="text-center">
+    <div class="maincardpage">
+        <div class="main_text">
+            Сайт ТреінзІнфо присвячується любителям залізничного транспорту...
+        </div>
+
+        <div class="btn_main_panel">
+            <NavLink class="btn btn-info btn_news" href="/locomotives" style="width:160px; margin:10px;">Локомотиви</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/electric" style="width:160px; margin:10px;">Електропоїзди</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/diesel" style="width:160px; margin:10px;">Дизель-поїзди</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/stations" style="width:160px; margin:10px;">Станції</NavLink>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <input @bind="searchText"
+           @bind:event="oninput"
+           type="text"
+           class="form-control"
+           placeholder="Пошук новин..."
+           style="max-width:400px; margin:auto;" />
+</div>
+
+<!-- СПИСОК НОВИН -->
+<div class="mt-4">
+    @if (filteredNews == null)
+    {
+        <p class="text-center">Завантаження...</p>
+    }
+    else if (filteredNews.Count == 0)
+    {
+        <p class="text-center text-secondary">Нічого не знайдено.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var news in filteredNews)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>@news.NameNews</h5>
+                            <p>@news.BaseNewsInfo</p>
+
+                            <NavLink class="btn btn-primary btn-sm"
+                                     href="@($"/news/{news.id}")">
+                                Детальніше
+                            </NavLink>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    List<NewsInfo>? allNews;
+    List<NewsInfo>? filteredNews;
+
+    string searchText = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // витягуємо новини з API — ТАК ТРЕБА У BLZOR WASM
+        allNews = await Http.GetFromJsonAsync<List<NewsInfo>>("api/news");
+
+        filteredNews = allNews;
+    }
+
+    private void FilterNews()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            filteredNews = allNews;
+        else
+            filteredNews = allNews
+                .Where(x => x.NameNews.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    // викликається при наборі в input
+    private string SearchText
+    {
+        get => searchText;
+        set
+        {
+            searchText = value;
+            FilterNews();
+        }
+    }
+}

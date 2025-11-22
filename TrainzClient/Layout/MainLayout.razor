@@ -1,0 +1,127 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container d-flex justify-content-between align-items-center flex-wrap">
+
+                <!-- Логотип -->
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img class="img-fluid rounded" style="max-height:80px;"
+                         src="images/MainPhoto.jpg" alt="Logo" />
+                </a>
+
+                <!-- Бургер -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Меню -->
+                <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+                    <ul class="navbar-nav d-flex flex-wrap justify-content-center" style="gap:12px;">
+
+                        <li class="nav-item">
+                            <NavLink class="btn btn-primary text-white" href="/uz">
+                                Українська Залізниця
+                            </NavLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <NavLink class="btn btn-primary text-white" href="/trains">
+                                Графік поїздів
+                            </NavLink>
+                        </li>
+
+                        @if (isLogged)
+                        {
+                            <li class="nav-item">
+                                <NavLink class="btn btn-outline-primary" href="/profile">
+                                    Мій профіль
+                                </NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="btn btn-outline-danger" @onclick="Logout">
+                                    Вийти
+                                </button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <NavLink class="btn btn-outline-primary" href="/login">Вхід</NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="btn btn-outline-primary" href="/register">Реєстрація</NavLink>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-3">
+        <main>
+            @Body
+        </main>
+    </div>
+
+    <footer class="border-top text-light mt-5" style="background: #0d1b2a;">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold text-warning">TrainzInfo</h5>
+                    <p class="small text-secondary">
+                        Довідкова інформація про поїзди, розклади та залізничні новини України.
+                    </p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold text-light">Навігація</h6>
+                    <ul class="list-unstyled">
+                        <li><NavLink class="text-secondary text-decoration-none" href="/">Головна</NavLink></li>
+                        <li><NavLink class="text-secondary text-decoration-none" href="/trains">Поїзди</NavLink></li>
+                        <li><NavLink class="text-secondary text-decoration-none" href="/stations">Станції</NavLink></li>
+                        <li><NavLink class="text-secondary text-decoration-none" href="/news">Новини</NavLink></li>
+                        <li><NavLink class="text-secondary text-decoration-none" href="/contacts">Контакти</NavLink></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold text-light">Зв’язатися з нами</h6>
+                    <p class="small text-secondary mb-1">
+                        Email:
+                        <a href="mailto:info@trainzinfo.com.ua" class="text-warning">info@trainzinfo.com.ua</a>
+                    </p>
+                    <p class="small text-secondary mb-3">Телефон: +380 (XX) XXX-XX-XX</p>
+
+                    <div>
+                        <a href="#" target="_blank" class="me-2 text-warning"><i class="bi bi-telegram fs-5"></i></a>
+                        <a href="#" target="_blank" class="me-2 text-warning"><i class="bi bi-facebook fs-5"></i></a>
+                        <a href="#" target="_blank" class="text-warning"><i class="bi bi-twitter fs-5"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary" />
+
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="small mb-0 text-secondary">&copy; @DateTime.Now.Year TrainzInfo</p>
+                <p class="small mb-0 text-secondary">Зроблено з ❤️ для подорожуючих</p>
+            </div>
+        </div>
+    </footer>
+</div>
+
+
+@code {
+    bool isLogged = false;
+
+    void Logout()
+    {
+        // TODO: Реалізувати логіку виходу
+    }
+}

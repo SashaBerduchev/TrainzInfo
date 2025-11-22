@@ -118,16 +118,36 @@ namespace TrainzInfo.Controllers
         // GET: Trains
         public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
-            var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-             
+            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Try get remote IP address");
             List<Train> trains = new List<Train>();
-            if (number == null && from == null && to == null)
+            IQueryable<Train> query = _context.Trains
+                .Include(x => x.TrainsShadules)
+                    .ThenInclude(x => x.Stations)
+                .Include(x => x.StationsShadules)
+                .Include(x => x.TypeOfPassTrain)
+                .OrderBy(x => x.Number)
+                .Where(x=>x.IsUsing == true);
+            
+            LoggingExceptions.LogWright("User IP - " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            if (number != null)
             {
-                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).OrderBy(x => x.Number).Where(x=>x.IsUsing == false).ToListAsync();
-            }else if(number is not null)
-            {
-                trains = await _context.Trains.Include(x => x.TrainsShadules).Include(x => x.TypeOfPassTrain).Where(x=>x.Number == number && x.IsUsing == false).OrderBy(x => x.Number).ToListAsync();
+                LoggingExceptions.LogWright("Try filter by number - " + number.ToString());
+                query = query.Where(x => x.Number == number);
             }
+            if (!string.IsNullOrEmpty(from))
+            {
+                LoggingExceptions.LogWright("Try filter by from - " + from);
+                query = query.Where(x => x.StationFrom == from);
+            }
+            if (!string.IsNullOrEmpty(to))
+            {
+                LoggingExceptions.LogWright("Try filter by to - " + to);
+                query = query.Where(x => x.StationTo == to);
+            }
+            LoggingExceptions.LogWright("Execute query - " + query.ToQueryString());
+            trains = await query.ToListAsync();
             ViewBag.number = new SelectList(trains.Select(x => x.Number));
             ViewBag.from = new SelectList(trains.Select(x => x.StationFrom));
             ViewBag.to = new SelectList(trains.Select(x => x.StationTo));
@@ -135,18 +155,7 @@ namespace TrainzInfo.Controllers
             return View(trains);
         }
 
-        public async Task<List<Train>> IndexAction()
-        {
-            List<Train> trains = await _context.Trains.ToListAsync();
-            return trains;
-        }
-        [HttpPost]
-        public void CreateAction([FromBody] string data)
-        {
-            Train train = JsonConvert.DeserializeObject<Train>(data);
-            _context.Add(train);
-            _context.SaveChanges();
-        }
+      
 
         // GET: Trains/Details/5
         public async Task<IActionResult> Details(int? number)
@@ -157,6 +166,10 @@ namespace TrainzInfo.Controllers
             }
 
             var train = await _context.Trains
+                .Include(x => x.TypeOfPassTrain)
+                .Include(x => x.TrainsShadules)
+                    .ThenInclude(x => x.Stations)
+                .Include(x => x.StationsShadules)
                 .FirstOrDefaultAsync(m => m.Number == number);
             if (train == null)
             {
@@ -164,7 +177,7 @@ namespace TrainzInfo.Controllers
             }
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            List<TrainsShadule> stations = await _context.TrainsShadule.Where(x => x.Train == train).ToListAsync();
+            List<TrainsShadule> stations = train.TrainsShadules.ToList();
             ViewBag.stations = stations;
             return View(train);
         }

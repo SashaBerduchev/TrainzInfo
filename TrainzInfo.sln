@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29911.84
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainzInfo", "TrainzInfo\TrainzInfo.csproj", "{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoWebGW", "TrainzInfoWebGW\TrainzInfoWebGW.csproj", "{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98FBFFE5-5D6A-4AF2-A7D5-29128266FCC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
