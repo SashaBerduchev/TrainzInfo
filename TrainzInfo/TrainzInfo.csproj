@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="GetImage.ico" />
+    <!--<Content Include="GetImage.ico" />-->
+	<ProjectReference Include="..\TrainzInfoWebGW\TrainzInfoWebGW.csproj" />
   </ItemGroup>
 
   <ItemGroup>

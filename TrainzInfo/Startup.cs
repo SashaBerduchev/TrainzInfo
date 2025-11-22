@@ -18,7 +18,7 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = false;
+        public static bool START_IN_PROD_DB = true;
         static string _connectionString = "";
 
         public Startup(IConfiguration configuration)
@@ -108,6 +108,7 @@ namespace TrainzInfo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseHttpsRedirection();
             }
             else
             {
@@ -116,7 +117,7 @@ namespace TrainzInfo
                 app.UseHsts();
             }
             LoggingExceptions.LogWright("Try use HTTPS redirection");
-            app.UseHttpsRedirection();
+            
             LoggingExceptions.LogWright("Try use static files");
             app.UseStaticFiles();
             LoggingExceptions.LogWright("Try use routing");
