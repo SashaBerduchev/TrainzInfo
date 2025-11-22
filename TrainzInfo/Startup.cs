@@ -119,6 +119,7 @@ namespace TrainzInfo
             LoggingExceptions.LogWright("Try use HTTPS redirection");
             
             LoggingExceptions.LogWright("Try use static files");
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
             LoggingExceptions.LogWright("Try use routing");
             app.UseRouting();
