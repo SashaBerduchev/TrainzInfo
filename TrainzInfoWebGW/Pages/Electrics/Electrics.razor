@@ -1,8 +1,8 @@
 ﻿@page "/electric-trains"
 @using TrainzInfoWebGW.DTO
-
 @inject NavigationManager Nav
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <h1 class="mb-4 text-center">Електропоїзди</h1>
 
@@ -45,20 +45,20 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" id="trainsContainer">
     @if (FilteredTrains != null)
     {
         @foreach (var train in FilteredTrains)
         {
             <div class="col-12 mb-4 train-card">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm fade-in">
                     <div class="row g-0">
                         <div class="col-12 col-md-4">
                             <img class="img-fluid rounded-start" src="@train.Image" alt="@train.Name" />
                         </div>
                         <div class="col-12 col-md-5 p-3">
                             <h5>@train.Name - @train.Model</h5>
-                            <p><b>Депо:</b> @train.Name</p>
+                            <p><b>Депо:</b> @train.DepotList</p>
                             <p><b>Філія:</b> @train.UkrainsRailway</p>
                             <p><b>Область:</b> @train.Oblast</p>
                             <p><b>Місто:</b> @train.City</p>
@@ -85,7 +85,6 @@
 </div>
 
 @code {
-    // Дані
     private List<ElectricTrainDTO> ElectricTrains { get; set; } = new();
     private List<ElectricTrainDTO> FilteredTrains { get; set; } = new();
 
@@ -95,12 +94,16 @@
     private string SelectedDepot { get; set; } = "";
     private string SelectedName { get; set; } = "";
 
-    // Авторизація
+    private UserDto CurrentUser { get; set; }
+
     private bool IsSuperAdmin => CurrentUser?.Role == "Superadmin";
-    private bool IsPublisherOrAdminOrSuperAdmin => CurrentUser != null &&
+    private bool IsPublisherOrAdminOrSuperAdmin =>
+        CurrentUser != null &&
         (CurrentUser.Role == "Publisher" || CurrentUser.Role == "Admin" || CurrentUser.Role == "Superadmin");
 
-    private UserDto CurrentUser { get; set; } = null; // Заповнити після логіну
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,26 +113,40 @@
         {
             CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
         }
-        else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+
+        // Завантаження першої сторінки електропоїздів
+        await LoadTrains();
+
+        // Підписка на JS скрол
+        await JS.InvokeVoidAsync("addElectricsScrollListener", DotNetObjectReference.Create(this));
+    }
+
+    private async Task LoadTrains()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
+        var trainsPage = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>($"api/electrictrains/get-electrics?page={currentPage}");
+        if (trainsPage == null || trainsPage.Count == 0)
         {
-            // Користувач не авторизований
-            CurrentUser = null;
-            // Можеш перенаправити на Login або показати повідомлення
-            // Nav.NavigateTo("authentication/login");
+            allLoaded = true;
         }
         else
         {
-            // Інша помилка
-            Console.WriteLine($"Помилка при отриманні профілю: {response.StatusCode}");
+            ElectricTrains.AddRange(trainsPage);
+            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            currentPage++;
+
+            // Додаємо невелику паузу для плавного появлення
+            foreach (var t in trainsPage)
+            {
+                await Task.Delay(50);
+                StateHasChanged();
+            }
         }
 
-        // Завантаження електропоїздів
-        ElectricTrains = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>("api/electrictrains/get-electrics");
-        FilteredTrains = ElectricTrains;
-
-        // Заповнення фільтрів
-        Depots = ElectricTrains.Select(t => t.DepotList).Distinct().ToList();
-        Names = ElectricTrains.Select(t => t.Name).Distinct().ToList();
+        isLoading = false;
     }
 
     private void ApplyFilter()
@@ -146,4 +163,10 @@
     private void ViewDetails(int id) => Nav.NavigateTo($"/electrictrains/{id}");
     private void EditTrain(int id) => Nav.NavigateTo($"/electrictrains/edit/{id}");
     private void DeleteTrain(int id) { /* TODO: видалення */ }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadTrains();
+    }
 }

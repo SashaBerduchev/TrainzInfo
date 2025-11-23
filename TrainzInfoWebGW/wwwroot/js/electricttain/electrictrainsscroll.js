@@ -1,11 +1,18 @@
-﻿window.addScrollListener = function (dotnetHelper) {
-    const container = document.getElementById('newsContainer');
+﻿window.addElectricsScrollListener = function (dotnetHelper) {
+    const container = document.getElementById('trainsContainer');
+
+    if (!container) {
+        console.error("❌ trainsContainer not found!");
+        return;
+    }
 
     function revealCards() {
-        const cards = container.querySelectorAll('.news-card');
+        const cards = container.querySelectorAll('.train-card');
         const windowBottom = window.innerHeight + window.scrollY;
 
         cards.forEach(card => {
+            if (!card) return;
+
             if (!card.classList.contains('visible')) {
                 const cardTop = card.getBoundingClientRect().top + window.scrollY;
                 if (windowBottom > cardTop + 100) {
@@ -21,16 +28,18 @@
         const clientHeight = document.documentElement.clientHeight;
 
         if (scrollTop + clientHeight >= scrollHeight - 50) {
-            dotnetHelper.invokeMethodAsync('OnScrollNearBottom');
+            if (dotnetHelper) {
+                dotnetHelper.invokeMethodAsync('OnScrollNearBottom');
+            } else {
+                console.error("❌ dotnetHelper is null");
+            }
         }
 
         revealCards();
     });
 
-    // Перевірка на старті
     revealCards();
 
-    // Слідкуємо за новими картками
     const observer = new MutationObserver(revealCards);
     observer.observe(container, { childList: true, subtree: true });
 };

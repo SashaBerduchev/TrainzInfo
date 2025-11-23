@@ -22,10 +22,11 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-electrics")]
-        public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics()
+        public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1)
         {
             LoggingExceptions.LogInit(this.ToString(), nameof(GetElectrics));
             LoggingExceptions.LogStart();
+            int pageSize = 5;
             try
             {
                 LoggingExceptions.LogWright("Loading electrics");
@@ -40,6 +41,8 @@ namespace TrainzInfo.Controllers.Api
                         .ThenInclude(o => o.UkrainsRailway)
                     .Include(t => t.Trains)
                     .Include(e => e.ElectrickTrainzInformation)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .Select(x => new ElectricTrainDTO
                     {
                         id = x.id,
