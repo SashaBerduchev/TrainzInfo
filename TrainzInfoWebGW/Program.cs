@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TrainzInfoWebGW;
 
-bool DEBUG_MODE = false;
+bool DEBUG_MODE = true;
 string conntring = "";
 if(DEBUG_MODE == true)
 {

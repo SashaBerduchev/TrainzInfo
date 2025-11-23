@@ -1,0 +1,149 @@
+﻿@page "/electric-trains"
+@using TrainzInfoWebGW.DTO
+
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<h1 class="mb-4 text-center">Електропоїзди</h1>
+
+@if (IsSuperAdmin)
+{
+    <b>Кількість записів: @ElectricTrains?.Count</b>
+}
+
+<div class="mb-3">
+    @if (IsPublisherOrAdminOrSuperAdmin)
+    {
+        <button class="btn btn-info mb-2" @onclick="@CreateTrain">Створити електропоїзд</button>
+        <button class="btn btn-info mb-2" @onclick="@ViewTrainModels">Моделі електропоїздів</button>
+        <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
+    }
+</div>
+
+<!-- Фільтри -->
+<div class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedDepot">
+            <option value="">Всі депо</option>
+            @foreach (var depot in Depots)
+            {
+                <option value="@depot">@depot</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedName">
+            <option value="">Всі назви</option>
+            @foreach (var name in Names)
+            {
+                <option value="@name">@name</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+</div>
+
+<div class="row">
+    @if (FilteredTrains != null)
+    {
+        @foreach (var train in FilteredTrains)
+        {
+            <div class="col-12 mb-4 train-card">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-4">
+                            <img class="img-fluid rounded-start" src="@train.Image" alt="@train.Name" />
+                        </div>
+                        <div class="col-12 col-md-5 p-3">
+                            <h5>@train.Name - @train.Model</h5>
+                            <p><b>Депо:</b> @train.Name</p>
+                            <p><b>Філія:</b> @train.UkrainsRailway</p>
+                            <p><b>Область:</b> @train.Oblast</p>
+                            <p><b>Місто:</b> @train.City</p>
+                            <p><b>Максимальна швидкість:</b> @train.MaxSpeed км/год</p>
+                        </div>
+                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                            <button class="btn btn-info mb-2" @onclick="() => ViewDetails(train.id)">Детально</button>
+
+                            @if (IsSuperAdmin)
+                            {
+                                <button class="btn btn-success mb-2" @onclick="() => EditTrain(train.id)">Редагувати</button>
+                                <button class="btn btn-danger" @onclick="() => DeleteTrain(train.id)">Видалити</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center">Завантаження...</p>
+    }
+</div>
+
+@code {
+    // Дані
+    private List<ElectricTrainDTO> ElectricTrains { get; set; } = new();
+    private List<ElectricTrainDTO> FilteredTrains { get; set; } = new();
+
+    private List<string> Depots { get; set; } = new();
+    private List<string> Names { get; set; } = new();
+
+    private string SelectedDepot { get; set; } = "";
+    private string SelectedName { get; set; } = "";
+
+    // Авторизація
+    private bool IsSuperAdmin => CurrentUser?.Role == "Superadmin";
+    private bool IsPublisherOrAdminOrSuperAdmin => CurrentUser != null &&
+        (CurrentUser.Role == "Publisher" || CurrentUser.Role == "Admin" || CurrentUser.Role == "Superadmin");
+
+    private UserDto CurrentUser { get; set; } = null; // Заповнити після логіну
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантаження користувача
+        var response = await Http.GetAsync("api/profile/getprofile");
+        if (response.IsSuccessStatusCode)
+        {
+            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            // Користувач не авторизований
+            CurrentUser = null;
+            // Можеш перенаправити на Login або показати повідомлення
+            // Nav.NavigateTo("authentication/login");
+        }
+        else
+        {
+            // Інша помилка
+            Console.WriteLine($"Помилка при отриманні профілю: {response.StatusCode}");
+        }
+
+        // Завантаження електропоїздів
+        ElectricTrains = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>("api/electrictrains/get-electrics");
+        FilteredTrains = ElectricTrains;
+
+        // Заповнення фільтрів
+        Depots = ElectricTrains.Select(t => t.DepotList).Distinct().ToList();
+        Names = ElectricTrains.Select(t => t.Name).Distinct().ToList();
+    }
+
+    private void ApplyFilter()
+    {
+        FilteredTrains = ElectricTrains
+            .Where(t => (string.IsNullOrEmpty(SelectedDepot) || t.DepotList == SelectedDepot) &&
+                        (string.IsNullOrEmpty(SelectedName) || t.Name == SelectedName))
+            .ToList();
+    }
+
+    private void CreateTrain() => Nav.NavigateTo("/electrictrains/create");
+    private void ViewTrainModels() => Nav.NavigateTo("/suburbantrainsinfoes");
+    private void UpdateData() => Nav.NavigateTo("/electrictrains/updateindex");
+    private void ViewDetails(int id) => Nav.NavigateTo($"/electrictrains/{id}");
+    private void EditTrain(int id) => Nav.NavigateTo($"/electrictrains/edit/{id}");
+    private void DeleteTrain(int id) { /* TODO: видалення */ }
+}
