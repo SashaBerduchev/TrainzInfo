@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TrainzInfo/appsettings.json
 /TrainzInfo/Startup.cs
+/TrainzInfo/appsettings.json
