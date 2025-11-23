@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject NavigationManager Nav
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">TrainzInfoWebGW</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -26,10 +28,46 @@
             </NavLink>
         </div>
     </nav>
+     <!-- Блок авторизації -->
+            <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item d-flex align-items-center">
+                            <button class="btn btn-outline-primary"
+                                    @onclick="Profile">
+                                Мій профіль
+                            </button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="btn btn-outline-danger"
+                                    @onclick="Logout">
+                                Вийти
+                            </button>
+                        </li>
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-primary"
+                                    @onclick="Login">
+                                Вхід
+                            </button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="btn btn-outline-primary"
+                                    @onclick="Register">
+                                Реєстрація
+                            </button>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
 </div>
 
 @code {
-    private bool isNavCollapsed = true;
+    private bool isNavCollapsed = false;
 
     private void ToggleNavMenu()
     {
@@ -43,6 +81,15 @@
 
     private void CollapseNav()
     {
-        isNavCollapsed = true;
+        isNavCollapsed = false;
     }
+
+    private void Logout()
+    {
+        // Якщо є сторінка logout → на неї
+        Nav.NavigateTo("logout", forceLoad: true);
+    }
+    private void Register() => Nav.NavigateTo($"/register/");
+    private void Login() => Nav.NavigateTo($"/login/");
+    private void Profile() => Nav.NavigateTo($"/profile/");
 }

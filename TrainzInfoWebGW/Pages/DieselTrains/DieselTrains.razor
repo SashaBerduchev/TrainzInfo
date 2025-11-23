@@ -1,0 +1,206 @@
+﻿@page "/diesel-trains"
+@using TrainzInfoWebGW.DTO
+@inject HttpClient Http
+@inject NavigationManager Nav;
+@inject IJSRuntime JS
+
+<h1 class="mb-4 text-center">Дизель-поїзди</h1>
+
+@if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
+{
+    <button class="btn btn-info mb-3" @onclick="CreateDieselTrain">Створити</button>
+}
+
+<div class="row g-2 mb-3">
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var f in filias)
+            {
+                <option value="@f">@f</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedOblast">
+            <option value="">Всі області</option>
+            @foreach (var o in oblasts)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedDepo">
+            <option value="">Всі депо</option>
+            @foreach (var d in depos)
+            {
+                <option value="@d">@d</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedModel">
+            <option value="">Всі моделі</option>
+            @foreach (var m in models)
+            {
+                <option value="@m">@m</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 mt-2">
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+</div>
+
+<button class="btn btn-secondary mb-3" @onclick="ClearFilter">Скинути фільтр</button>
+
+<div class="row" id="dieselContainer">
+    @if (dieselTrains == null)
+    {
+        <p class="text-center">Завантаження...</p>
+    }
+    else if (!filteredTrains.Any())
+    {
+        <p class="text-center text-secondary">Нічого не знайдено.</p>
+    }
+    else
+    {
+        @foreach (var item in filteredTrains)
+        {
+            <div class="col-12 mb-4 diesel-card">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-4">
+                            <img class="img-fluid rounded-start"
+                                 src="@item.Image"
+                                 alt="Дизель-поїзд" />
+                        </div>
+                        <div class="col-12 col-md-5 p-3">
+                            <h5>@item.Name — №@item.NumberTrain</h5>
+                            <p><b>Депо:</b> @item.DepotList</p>
+                            <p><b>Філія:</b> @item.Filia</p>
+                            <p><b>Область:</b> @item.</p>
+                            <p><b>Місто:</b> @item.City</p>
+                        </div>
+                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                            <NavLink class="btn btn-info mb-2" href="@($"/diesel-trains/details/{item.Id}")">Детально</NavLink>
+
+                            @if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
+                            {
+                                <NavLink class="btn btn-outline-warning mb-2" href="@($"/diesel-trains/add-image/{item.Id}")">Додати зображення</NavLink>
+                                <NavLink class="btn btn-success mb-2" href="@($"/diesel-trains/edit/{item.Id}")">Редагувати</NavLink>
+                                <button class="btn btn-danger" @onclick="() => DeleteTrain(item.Id)">Видалити</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private List<DieselTrainsDTO> dieselTrains = new();
+    private List<DieselTrainsDTO> filteredTrains = new();
+    private UserDto currentUser;
+
+    private string selectedFilia;
+    private string selectedOblast;
+    private string selectedDepo;
+    private string selectedModel;
+
+    private List<string> filias = new();
+    private List<string> oblasts = new();
+    private List<string> depos = new();
+    private List<string> models = new();
+
+    private UserDto CurrentUser { get; set; }
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync("api/profile/getprofile");
+        if (response.IsSuccessStatusCode)
+        {
+            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
+        }
+
+        await Load();
+        
+        filteredTrains = dieselTrains.ToList();
+
+        // Завантаження даних для фільтрів
+        filias = await Http.GetFromJsonAsync<List<string>>("api/diesels/filias");
+        oblasts = await Http.GetFromJsonAsync<List<string>>("api/diesels/oblasts");
+        depos = await Http.GetFromJsonAsync<List<string>>("api/diesels/depos");
+        models = await Http.GetFromJsonAsync<List<string>>("api/diesels/models");
+
+        // JS для анімації
+        await JS.InvokeVoidAsync("addDieselsScrollListener", DotNetObjectReference.Create(this));
+    }
+
+    public async Task Load()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
+        var dieselPage = await Http.GetFromJsonAsync<List<DieselTrainsDTO>>("api/diesels/gettrains");
+        if (dieselPage == null || dieselPage.Count == 0)
+        {
+            allLoaded = true;
+        }
+        else
+        {
+            dieselTrains.AddRange(dieselPage);
+            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            currentPage++;
+
+            // Додаємо невелику паузу для плавного появлення
+            foreach (var t in dieselPage)
+            {
+                await Task.Delay(50);
+                StateHasChanged();
+            }
+        }
+
+        isLoading = false;
+    }
+    private void ApplyFilter()
+    {
+        filteredTrains = dieselTrains.Where(t =>
+            (string.IsNullOrEmpty(selectedFilia) || t.Filia == selectedFilia) &&
+            (string.IsNullOrEmpty(selectedOblast) || t.Oblast == selectedOblast) &&
+            (string.IsNullOrEmpty(selectedDepo) || t.DepotList == selectedDepo) &&
+            (string.IsNullOrEmpty(selectedModel) || t.Name == selectedModel)
+        ).ToList();
+    }
+
+    private void ClearFilter()
+    {
+        selectedFilia = selectedOblast = selectedDepo = selectedModel = null;
+        filteredTrains = dieselTrains.ToList();
+    }
+
+    private void CreateDieselTrain()
+    {
+        // Навігація на створення
+        Nav.NavigateTo("/diesel-trains/create");
+    }
+
+    private void DeleteTrain(int id)
+    {
+        // Виклик API на видалення
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await Load();
+    }
+
+}

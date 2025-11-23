@@ -9,42 +9,7 @@
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
 
-             <!-- Блок авторизації -->
-            <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
-                <AuthorizeView>
-                    <Authorized>
-                        <li class="nav-item d-flex align-items-center">
-                            <button class="btn btn-outline-primary"
-                                    @onclick="Profile">
-                                Мій профіль
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="btn btn-outline-danger"
-                                    @onclick="Logout">
-                                Вийти
-                            </button>
-                        </li>
-                    </Authorized>
-
-                    <NotAuthorized>
-                        <li class="nav-item">
-                            <button class="btn btn-outline-primary"
-                                    @onclick="Login">
-                                Вхід
-                            </button>
-                        </li>
-
-                        <li class="nav-item">
-                            <button class="btn btn-outline-primary"
-                                    @onclick="Register">
-                                Реєстрація
-                            </button>
-                        </li>
-                    </NotAuthorized>
-                </AuthorizeView>
-            </ul>
+            
         </div>
 
         <article class="content px-4">
@@ -66,12 +31,5 @@
     private void ExpandNav() => isNavCollapsed = false;
     private void CollapseNav() => isNavCollapsed = true;
 
-    private void Logout()
-    {
-        // Якщо є сторінка logout → на неї
-        Nav.NavigateTo("logout", forceLoad: true);
-    }
-    private void Register() => Nav.NavigateTo($"/register/");
-    private void Login() => Nav.NavigateTo($"/login/");
-    private void Profile() => Nav.NavigateTo($"/profile/");
+    
 }
