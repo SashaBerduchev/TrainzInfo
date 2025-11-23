@@ -1,0 +1,41 @@
+﻿@page "/login"
+@using static System.Net.WebRequestMethods
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Авторизація</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <input @bind="loginModel.Email" placeholder="Email" class="form-control" />
+    <input @bind="loginModel.Password" placeholder="Пароль" type="password" class="form-control" />
+
+    <button class="btn btn-primary mt-2">Увійти</button>
+</EditForm>
+
+@code {
+    LoginModel loginModel = new();
+
+    async Task HandleLogin()
+    {
+        var result = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+        if (result.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            var message = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(message);
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+}

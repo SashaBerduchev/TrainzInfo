@@ -1,0 +1,13 @@
+﻿.nav-container {
+    width: 60px; /* згорнуте меню */
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+    .nav-container.expanded {
+        width: 200px; /* розгорнуте меню */
+    }
+
+    .nav-container .nav-link {
+        white-space: nowrap;
+    }

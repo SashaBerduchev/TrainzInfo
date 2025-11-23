@@ -1,0 +1,41 @@
+﻿@page "/profile"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+
+<h3>Мій профіль</h3>
+
+@code {
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            userName = user.Identity.Name;
+        }
+        else
+        {
+            // якщо не авторизований, редірект на логін
+            Nav.NavigateTo("/login");
+        }
+    }
+}
+<div class="card mt-3" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Користувач: @userName</h5>
+        <p class="card-text">Тут можна показати інші деталі користувача.</p>
+        <button class="btn btn-danger" @onclick="Logout">Вийти</button>
+    </div>
+</div>
+
+@code {
+    private void Logout()
+    {
+        // редірект на сторінку логіну або виходу через Identity
+        Nav.NavigateTo("/Identity/Account/Logout");
+    }
+}

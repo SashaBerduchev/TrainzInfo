@@ -7,7 +7,8 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+<div class="nav-container @(isNavCollapsed ? "collapsed" : "expanded")"
+     @onmouseenter="ExpandNav" @onmouseleave="CollapseNav">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -28,12 +29,20 @@
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private bool isNavCollapsed = true;
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        isNavCollapsed = !isNavCollapsed;
+    }
+
+    private void ExpandNav()
+    {
+        isNavCollapsed = false;
+    }
+
+    private void CollapseNav()
+    {
+        isNavCollapsed = true;
     }
 }
