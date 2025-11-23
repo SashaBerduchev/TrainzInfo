@@ -1,8 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager Nav
 <div class="page">
-    <div class="sidebar @(isNavCollapsed ? "collapsed" : "expanded")"
-         @onmouseenter="ExpandNav" @onmouseleave="CollapseNav">
+    <div class="sidebar">
         <NavMenu />
     </div>
 
