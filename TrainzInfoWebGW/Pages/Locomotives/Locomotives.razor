@@ -12,7 +12,7 @@
 else
 {
     <div class="mb-3">
-        @if (IsLogged)
+        @if (IsAdmin)
         {
             <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
         }
@@ -57,10 +57,10 @@ else
     </div>
 
     <!-- Список локомотивів -->
-    <div class="row">
+    <div class="row" id="locomotiveContainer">
         @foreach (var item in FilteredLocomotives)
         {
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-4 loco-card">
                 <div class="card shadow-sm">
                     <div class="row g-0">
                         <div class="col-12 col-md-4">
@@ -116,34 +116,38 @@ else
 
     // Симуляція авторизації
     private bool IsLogged => true;
-    private bool IsAdmin => true;
-    private bool IsAdminOrPublisher => true;
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
 
-    
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadNews();
+        await Load();
         // Підписка на скрол через JS
-        await JS.InvokeVoidAsync("addScrollListener", DotNetObjectReference.Create(this));
+        await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
         // Завантажуємо локомотиви з API  
     }
 
-    private async Task LoadNews()
+    private async Task Load()
     {
         if (isLoading || allLoaded) return;
 
         isLoading = true;
-
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
         try
         {
             var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>($"api/locomotives/getlocomotives?page={currentPage}");
             if (locomotiveItems == null || locomotiveItems.Count == 0)
             {
+                
                 allLoaded = true;
             }
             else
             {
+                FiliaList.AddRange(locomotiveItems.AsParallel().Select(l => l.Filia).Distinct().OrderBy(f => f).ToList());
+                DepotList.AddRange(locomotiveItems.AsParallel().Select(l => l.Depot).Distinct().OrderBy(d => d).ToList());
+                SeriaList.AddRange(locomotiveItems.AsParallel().Select(l => l.Seria).Distinct().OrderBy(s => s).ToList());
                 locomotives.AddRange(locomotiveItems);
                 ApplyFilter(); // оновлюємо відфільтровані новини
                 currentPage++;
@@ -151,10 +155,11 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Помилка завантаження новин: " + ex.Message);
+            Console.WriteLine("Помилка завантаження локомотивів: " + ex.Message);
         }
 
         isLoading = false;
+        await ChechRoles();
         StateHasChanged();
     }
     private void ApplyFilter()
@@ -165,6 +170,28 @@ else
                 (string.IsNullOrEmpty(SelectedDepot) || l.Depot == SelectedDepot) &&
                 (string.IsNullOrEmpty(SelectedSeria) || l.Seria == SelectedSeria)
             ).ToList();
+    }
+
+    private async Task ChechRoles()
+    {
+        UserDto user = new UserDto();
+        var response = await Http.GetAsync($"api/auth/getauthuser");
+        if (response.IsSuccessStatusCode)
+        {
+            user = await response.Content.ReadFromJsonAsync<UserDto>();
+        }
+        if(user.Role == "Publisher")
+        {
+            IsAdminOrPublisher = true;
+        }
+        if(user.Role == "Admin")
+        {
+            IsAdmin = true;
+        }
+        if (user.Role == "Superadmin")
+        {
+            IsAdmin = true;
+        }
     }
 
     private void ClearFilter()
@@ -183,6 +210,6 @@ else
     [JSInvokable]
     public async Task OnScrollNearBottom()
     {
-        await LoadNews();
+        await Load();
     }
 }

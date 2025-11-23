@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TrainzInfo.Data;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DTO;
 
 namespace TrainzInfo.Controllers.Api
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthApiController : Controller
+    public class AuthApiController : BaseController
     {
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
 
-        public AuthApiController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AuthApiController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ApplicationContext context)
+            : base(userManager, context)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -51,6 +54,36 @@ namespace TrainzInfo.Controllers.Api
         {
             await signInManager.SignOutAsync();
             return Ok();
+        }
+
+
+        [HttpGet("getauthuser")]
+        public async Task<ActionResult<UserDto>> GetAuthuser()
+        {
+            LoggingExceptions.LogInit(this.ToString(), nameof(GetAuthuser));
+            LoggingExceptions.LogStart();
+            LoggingExceptions.LogWright("Get authenticated user info");
+            var user = _userManager.GetUserAsync(User).Result;
+            if (user != null)
+            {
+                UserDto userDto = new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Role = (await _userManager.GetRolesAsync(user)).Count > 0 ? (await _userManager.GetRolesAsync(user))[0] : "User",
+                    IsAuthenticated = User.Identity.IsAuthenticated
+                };
+                LoggingExceptions.LogFinish();
+                return Ok(userDto);
+            }
+            else
+            {
+                LoggingExceptions.LogWright("User not found!");
+                LoggingExceptions.LogFinish();
+                return BadRequest();
+            }
+
         }
 
         public record RegisterDto(string Email, string Password);
