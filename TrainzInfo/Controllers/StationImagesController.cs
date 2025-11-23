@@ -92,7 +92,7 @@ namespace TrainzInfo.Controllers
                                 img.SaveAsJpeg(ms2);
                                 stationImages.Image = ms2.ToArray();
                             }
-                            ;
+                            
                         }
                     }
 

@@ -1,0 +1,222 @@
+﻿@page "/stations"
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+
+<h1 class="text-center mb-3">Станції</h1>
+
+@if (!string.IsNullOrEmpty(CurrentFilia))
+{
+    <h2 class="text-center mb-4">@CurrentFilia</h2>
+}
+
+<!-- Фільтри -->
+<div class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var f in Filias)
+            {
+                <option value="@f">@f</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedOblast">
+            <option value="">Всі області</option>
+            @foreach (var o in Oblasts)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedName">
+            <option value="">Всі станції</option>
+            @foreach (var s in StationNames)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12 mt-2">
+        <button class="btn btn-info w-100" @onclick="LoadStations">Відобразити</button>
+    </div>
+</div>
+
+<button class="btn btn-secondary mb-4" @onclick="ClearFilter">Скинути фільтр</button>
+
+<!-- Список станцій -->
+<div class="row" id="stationsContainer">
+    @if(isLoading == true)
+    {
+        <p>Завантажуємо</p>
+    }
+    else if (StationsList.Count == 0)
+    {
+        <p>Нічого не знайдено…</p>
+    }
+
+    @foreach (var item in StationsList)
+    {
+        <div class="col-12 mb-4 station-card">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+
+                    <!-- Картинка -->
+                    <div class="col-12 col-md-4">
+                        <img class="station-img"
+                             src="@item.StationImages"
+                             alt="station" />
+                    </div>
+
+                    <!-- Інформація -->
+                    <div class="col-12 col-md-5 p-3">
+                        <h5>@item.Name</h5>
+                        <p><b>Область:</b> @item.Oblasts</p>
+                        <p><b>Місто:</b> @item.Citys</p>
+                        <p><b>Філія:</b> @item.UkrainsRailways</p>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+@* 
+                        @if (item.HasSchedule)
+                        {
+                            <a class="btn btn-info mb-2 w-100" href="/station-schedule/@item.Name">
+                                Розклад по станції
+                            </a>
+                        } *@
+
+                        <a class="btn btn-primary mb-2 w-100" href="/station/@item.id">
+                            Інформація
+                        </a>
+
+                        @* @if (item.HasUsersPhotos)
+                        {
+                            <a class="btn btn-warning mb-2 w-100" href="/users-photos/@item.Id">
+                                Фотографії користувачів
+                            </a>
+                        } *@
+
+                        <!-- Рольова логіка при потребі -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@* <style>
+    body {
+        background: url(https://klike.net/uploads/posts/2020-04/1586763576_18.jpg);
+    }
+</style> *@
+
+@code {
+    List<StationsDTO> StationsList = new();
+    List<string> Filias = new();
+    List<string> Oblasts = new();
+    List<string> StationNames = new();
+    private UserDto CurrentUser { get; set; }
+
+    string SelectedFilia = "";
+    string SelectedOblast = "";
+    string SelectedName = "";
+
+    string CurrentFilia = "";
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStations();
+
+        var response = await Http.GetAsync("api/profile/getprofile");
+        if (response.IsSuccessStatusCode)
+        {
+            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
+        }
+
+        Filias = await Http.GetFromJsonAsync<List<string>>("api/stations/get-filias");
+        Oblasts = await Http.GetFromJsonAsync<List<string>>("api/stations/get-oblasts");
+        StationNames = await Http.GetFromJsonAsync<List<string>>("api/stations/get-station-names");
+
+        await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
+    }
+
+    protected async Task LoadStations()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+
+        var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>($"api/stations/get-stations?page={currentPage}");
+        if (stationsPage == null || stationsPage.Count == 0)
+        {
+            allLoaded = true;
+        }
+        else
+        {
+            StationsList.AddRange(stationsPage);
+            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            currentPage++;
+            StateHasChanged();
+        }
+
+        isLoading = false;
+    }
+
+    protected void ApplyFilter()
+    {
+        IEnumerable<StationsDTO> filtered = StationsList;
+        if (!string.IsNullOrEmpty(SelectedFilia))
+        {
+            filtered = filtered.Where(s => s.UkrainsRailways == SelectedFilia);
+            CurrentFilia = SelectedFilia;
+        }
+        else
+        {
+            CurrentFilia = "";
+        }
+        if (!string.IsNullOrEmpty(SelectedOblast))
+        {
+            filtered = filtered.Where(s => s.Oblasts == SelectedOblast);
+        }
+        if (!string.IsNullOrEmpty(SelectedName))
+        {
+            filtered = filtered.Where(s => s.Name == SelectedName);
+        }
+        StationsList = filtered.ToList();
+    }
+    
+    void ClearFilter()
+    {
+        SelectedFilia = "";
+        SelectedOblast = "";
+        SelectedName = "";
+        currentPage = 1;
+
+        _ = LoadStations();
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadStations();
+    }
+
+}

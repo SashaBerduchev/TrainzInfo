@@ -1,0 +1,6 @@
+﻿.station-img {
+    width: 100%;
+    height: 250px; /* Фіксована висота */
+    object-fit: cover; /* Обрізає, але не спотворює */
+    border-radius: 8px; /* Як у картки */
+}
