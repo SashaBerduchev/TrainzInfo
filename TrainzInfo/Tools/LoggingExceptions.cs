@@ -21,15 +21,15 @@ namespace TrainzInfo.Tools
 
         static string startStandartLogStr = "";
 
-        public static void LogInit(string nameClass, string nameMethod)
+        public static void Init(string nameClass, string nameMethod)
         {
             startStandartLogStr = nameClass + " - " + nameMethod;
         }
-        public static void LogStart()
+        public static void Start()
         {
             StandartLogFile(startStandartLogStr + " - " + "Start");
         }
-        public static void LogFinish()
+        public static void Finish()
         {
             StandartLogFile(startStandartLogStr + " - " + "Finish");
             startStandartLogStr = "";
@@ -53,7 +53,7 @@ namespace TrainzInfo.Tools
                 AddException(e.ToString());
             }
         }
-        public static void LogWright(string log)
+        public static void Wright(string log)
         {
             StandartLogFile(startStandartLogStr + " - " + log);
         }

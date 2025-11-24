@@ -35,13 +35,13 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains
         public async Task<IActionResult> Index(string Name, string Depot, int page = 1)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Start index electric trains");
+            LoggingExceptions.Init(this.ToString(), nameof(Index));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Start index electric trains");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
             
-            LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
+            LoggingExceptions.Wright("Get user by ip adress: " + remoteIpAddres);
             IQueryable<ElectricTrain> query;
             List<ElectricTrain> electricTrains = new List<ElectricTrain>();
             query = _context.Electrics.Include(x => x.PlantsCreate)
@@ -58,21 +58,21 @@ namespace TrainzInfo.Controllers
             {
                 query = query.Where(x => x.Name == Name);
             }
-            LoggingExceptions.LogWright("Apply filters: " + query.ToQueryString());
+            LoggingExceptions.Wright("Apply filters: " + query.ToQueryString());
             int pageSize = 20;
-            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            LoggingExceptions.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
             electricTrains = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Finish();
             UpdateFilter(electricTrains);
             return View(electricTrains);
         }
@@ -108,21 +108,21 @@ namespace TrainzInfo.Controllers
             }
             //List<DepotList> depotLists = await _context.Depots.ToListAsync();
             //List<City> city = await _context.Cities.ToListAsync();
-            LoggingExceptions.LogWright("Apply filters: " + query.ToQueryString());
+            LoggingExceptions.Wright("Apply filters: " + query.ToQueryString());
             int pageSize = 20;
-            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            LoggingExceptions.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
             electrics = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Finish();
             UpdateFilter(electrics);
             return View(electrics);
         }
@@ -398,24 +398,24 @@ namespace TrainzInfo.Controllers
         // GET: ElectricTrains/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Edit));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Start edit electric train");
+            LoggingExceptions.Init(this.ToString(), nameof(Edit));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Start edit electric train");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
-            LoggingExceptions.LogWright("Get user by ip adress: " + remoteIpAddres);
+            LoggingExceptions.Wright("Get user by ip adress: " + remoteIpAddres);
            
             if (id == null)
             {
                 return NotFound();
             }
-            LoggingExceptions.LogWright("Get electric train by id: " + id);
+            LoggingExceptions.Wright("Get electric train by id: " + id);
             var electricTrain = await _context.Electrics.FindAsync(id);
             if (electricTrain == null)
             {
                 return NotFound();
             }
-            LoggingExceptions.LogWright("Electric train found: " + electricTrain.Name);
+            LoggingExceptions.Wright("Electric train found: " + electricTrain.Name);
             
             SelectList depots = new SelectList(_context.Depots.Where(x => x.Name.Contains("РПЧ")).Select(x => x.Name).ToList());
             ViewBag.depots = depots;
@@ -423,8 +423,8 @@ namespace TrainzInfo.Controllers
             ViewBag.plants = plants;
             SelectList models = new SelectList(_context.SuburbanTrainsInfos.Select(x => x.Model).ToList());
             ViewBag.models = models;
-            LoggingExceptions.LogWright("Edit electric train view prepared");
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Wright("Edit electric train view prepared");
+            LoggingExceptions.Finish();
             return View(electricTrain);
         }
 
@@ -435,7 +435,7 @@ namespace TrainzInfo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,Name, Model, MaxSpeed,Imgsrc, DepotTrain, LastKvr, CreatedTrain, PlantCreate, PlantKvr, User")] ElectricTrain electricTrain)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Edit));
+            LoggingExceptions.Init(this.ToString(), nameof(Edit));
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             
             if (id != electricTrain.id)
@@ -445,13 +445,13 @@ namespace TrainzInfo.Controllers
 
             //if (ModelState.IsValid)
             //{
-            LoggingExceptions.LogWright("Start edit electric train: " + electricTrain.Name);
+            LoggingExceptions.Wright("Start edit electric train: " + electricTrain.Name);
             try
             {
-                LoggingExceptions.LogWright("Get depot city");
+                LoggingExceptions.Wright("Get depot city");
                 var depocity = _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).Select(x => x.City.Name).FirstOrDefault();
                 electricTrain.DepotCity = depocity;
-                LoggingExceptions.LogWright("Get electric train by id: " + electricTrain.id);
+                LoggingExceptions.Wright("Get electric train by id: " + electricTrain.id);
                 ElectricTrain train = _context.Electrics.Where(x => x.id == electricTrain.id).FirstOrDefault();
                 DepotList depot = await _context.Depots.Where(x => x.Name == electricTrain.DepotTrain).FirstOrDefaultAsync();
                 DepotList olddepo = electricTrain.DepotList;
@@ -459,7 +459,7 @@ namespace TrainzInfo.Controllers
                 {
                     olddepo.ElectricTrains.Remove(train);
                 }
-                LoggingExceptions.LogWright("Update old depot list");
+                LoggingExceptions.Wright("Update old depot list");
                 _context.Depots.Update(olddepo);
                 train.Name = electricTrain.Name;
                 train.Model = electricTrain.Model;
@@ -473,13 +473,13 @@ namespace TrainzInfo.Controllers
                 train.DepotList = depot;
                 train.City = await _context.Cities.Where(x => x.Name == electricTrain.DepotCity).FirstOrDefaultAsync();
              
-                LoggingExceptions.LogWright("Update plants");
+                LoggingExceptions.Wright("Update plants");
                 train.PlantsCreate = await _context.Plants.Where(x => x.Name == train.PlantCreate).FirstOrDefaultAsync();
                 train.PlantsKvr = await _context.Plants.Where(x => x.Name == train.PlantKvr).FirstOrDefaultAsync();
                 _context.Update(train);
-                LoggingExceptions.LogWright("Save changes");
+                LoggingExceptions.Wright("Save changes");
                 await _context.SaveChangesAsync();
-                LoggingExceptions.LogWright("Get suburban info");
+                LoggingExceptions.Wright("Get suburban info");
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == electricTrain.Name).FirstOrDefaultAsync();
                 if (suburbanTrainsInfo.ElectricTrain == null)
                 {
@@ -489,14 +489,14 @@ namespace TrainzInfo.Controllers
                 {
                     depot.ElectricTrains = new List<ElectricTrain>();
                 }
-                LoggingExceptions.LogWright("Update depot list");
+                LoggingExceptions.Wright("Update depot list");
                 depot.ElectricTrains.Add(train);
                 suburbanTrainsInfo.ElectricTrain.Add(train);
                 _context.SuburbanTrainsInfos.Update(suburbanTrainsInfo);
                 _context.Depots.Update(depot);
-                LoggingExceptions.LogWright("Save changes");
+                LoggingExceptions.Wright("Save changes");
                 await _context.SaveChangesAsync();
-                LoggingExceptions.LogWright("Electric train edited successfully: " + electricTrain.Name);
+                LoggingExceptions.Wright("Electric train edited successfully: " + electricTrain.Name);
                 //SendMessage(userlog);
 
             }

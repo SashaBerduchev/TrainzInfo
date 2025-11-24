@@ -118,9 +118,9 @@ namespace TrainzInfo.Controllers
         // GET: Trains
         public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Try get remote IP address");
+            LoggingExceptions.Init(this.ToString(), nameof(Index));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Try get remote IP address");
             List<Train> trains = new List<Train>();
             IQueryable<Train> query = _context.Trains
                 .Include(x => x.TrainsShadules)
@@ -130,23 +130,23 @@ namespace TrainzInfo.Controllers
                 .OrderBy(x => x.Number)
                 .Where(x=>x.IsUsing == true);
             
-            LoggingExceptions.LogWright("User IP - " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            LoggingExceptions.Wright("User IP - " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             if (number != null)
             {
-                LoggingExceptions.LogWright("Try filter by number - " + number.ToString());
+                LoggingExceptions.Wright("Try filter by number - " + number.ToString());
                 query = query.Where(x => x.Number == number);
             }
             if (!string.IsNullOrEmpty(from))
             {
-                LoggingExceptions.LogWright("Try filter by from - " + from);
+                LoggingExceptions.Wright("Try filter by from - " + from);
                 query = query.Where(x => x.StationFrom == from);
             }
             if (!string.IsNullOrEmpty(to))
             {
-                LoggingExceptions.LogWright("Try filter by to - " + to);
+                LoggingExceptions.Wright("Try filter by to - " + to);
                 query = query.Where(x => x.StationTo == to);
             }
-            LoggingExceptions.LogWright("Execute query - " + query.ToQueryString());
+            LoggingExceptions.Wright("Execute query - " + query.ToQueryString());
             trains = await query.ToListAsync();
             ViewBag.number = new SelectList(trains.Select(x => x.Number));
             ViewBag.from = new SelectList(trains.Select(x => x.StationFrom));

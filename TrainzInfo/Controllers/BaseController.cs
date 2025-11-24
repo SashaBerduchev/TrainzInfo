@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers
             if (user != null)
             {
                 // Логування або інші дії
-                LoggingExceptions.LogWright("User found - " + user.UserName + " " + user.Email);
+                LoggingExceptions.Wright("User found - " + user.UserName + " " + user.Email);
                 this._identityUser = user;
                 ViewBag.CurrentUser = user;
             }

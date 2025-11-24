@@ -40,32 +40,32 @@ namespace TrainzInfo.Tools
         }
         public static void SendMail(string body, IdentityUser user)
         {
-            LoggingExceptions.LogInit("Mail", nameof(SendMessageNews));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Try find user email");
+            LoggingExceptions.Init("Mail", nameof(SendMessageNews));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Try find user email");
             
             try
             {
-                LoggingExceptions.LogWright("Try send email to " + user.Email);
+                LoggingExceptions.Wright("Try send email to " + user.Email);
                 MailMessage m = new MailMessage(_sendemail, user.Email);
                 m.Body = body;
-                LoggingExceptions.LogWright("Create message body " + m.Body);
+                LoggingExceptions.Wright("Create message body " + m.Body);
                 SmtpClient smtp = new SmtpClient(_host, _port);
-                LoggingExceptions.LogWright("Create SMTP client " + smtp);
+                LoggingExceptions.Wright("Create SMTP client " + smtp);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential(_sendemail, _sendpassword);
                 smtp.EnableSsl = true;
-                LoggingExceptions.LogWright("Try send email");
+                LoggingExceptions.Wright("Try send email");
                 smtp.Send(m);
             }
             catch (Exception exp)
             {
-                LoggingExceptions.LogWright("Error send email to " + user.Email);
-                LoggingExceptions.LogWright(exp.ToString());
+                LoggingExceptions.Wright("Error send email to " + user.Email);
+                LoggingExceptions.Wright(exp.ToString());
                 Trace.WriteLine(exp.ToString());
                 LoggingExceptions.AddException(exp.ToString());
             }
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Finish();
         }
     }
 }

@@ -35,9 +35,9 @@ namespace TrainzInfo.Controllers.Api
             int pageSize = 10;
             try
             {
-                LoggingExceptions.LogInit("NewsApiController", "GetNews");
-                LoggingExceptions.LogStart();
-                LoggingExceptions.LogWright("Start Get NewsInfos with Comments");
+                LoggingExceptions.Init("NewsApiController", "GetNews");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
                     .OrderByDescending(n => n.DateTime)
                     .Skip((page - 1) * pageSize)
@@ -60,13 +60,13 @@ namespace TrainzInfo.Controllers.Api
             catch (System.Exception ex)
             {
                 LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.LogWright(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
 
         }

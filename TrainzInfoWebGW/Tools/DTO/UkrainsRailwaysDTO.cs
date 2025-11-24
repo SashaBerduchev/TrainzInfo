@@ -1,4 +1,4 @@
-﻿namespace TrainzInfoWebGW.DTO
+﻿namespace TrainzInfoWebGW.Tools.DTO
 {
     public class UkrainsRailwaysDTO
     {

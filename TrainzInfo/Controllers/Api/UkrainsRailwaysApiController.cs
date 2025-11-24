@@ -26,8 +26,8 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.LogInit("UkrainsRailwaysApiController", "GetRailways");
-                LoggingExceptions.LogStart();
+                LoggingExceptions.Init("UkrainsRailwaysApiController", "GetRailways");
+                LoggingExceptions.Start();
                 LoggingExceptions.SQLLogging("Get all Ukrains Railways - api/railways/railways");
                 var railways = await _context.UkrainsRailways
                     .Select(x => new UkrainsRailwaysDTO
@@ -46,12 +46,12 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 LoggingExceptions.AddException($"GetRailways - {ex.Message} - {ex.InnerException}");
-                LoggingExceptions.LogWright($"GetRailways - {ex.Message} - {ex.InnerException}");
+                LoggingExceptions.Wright($"GetRailways - {ex.Message} - {ex.InnerException}");
                 return BadRequest();
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
     }

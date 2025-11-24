@@ -109,7 +109,7 @@ namespace TrainzInfo.Controllers
             {
                 LoggingExceptions.AddException(exp.ToString());
             }
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Finish();
             return null;
         }
 
@@ -137,7 +137,7 @@ namespace TrainzInfo.Controllers
             {
                 LoggingExceptions.AddException(exp.ToString());
             }
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Finish();
             return null;
         }
 

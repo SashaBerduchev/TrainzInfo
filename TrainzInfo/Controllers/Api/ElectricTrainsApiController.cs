@@ -24,12 +24,12 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("get-electrics")]
         public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(GetElectrics));
-            LoggingExceptions.LogStart();
+            LoggingExceptions.Init(this.ToString(), nameof(GetElectrics));
+            LoggingExceptions.Start();
             int pageSize = 5;
             try
             {
-                LoggingExceptions.LogWright("Loading electrics");
+                LoggingExceptions.Wright("Loading electrics");
                 IQueryable query = _context
                     .Electrics
                     .Include(d => d.DepotList)
@@ -70,19 +70,19 @@ namespace TrainzInfo.Controllers.Api
                         ElectrickTrainzInformation = x.ElectrickTrainzInformation.AllInformation
                     })
                     .AsQueryable();
-                LoggingExceptions.LogWright("Electrics loaded query: " + query.ToQueryString());
+                LoggingExceptions.Wright("Electrics loaded query: " + query.ToQueryString());
                 List<ElectricTrainDTO> electrics = await query.Cast<ElectricTrainDTO>().ToListAsync();
                 return Ok(electrics);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
-                LoggingExceptions.LogWright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
     }

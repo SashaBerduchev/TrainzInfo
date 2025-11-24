@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@using TrainzInfoWebGW.Tools.DTO
 @using static System.Net.WebRequestMethods
 @inject HttpClient Http
 @inject NavigationManager Navigation
@@ -13,11 +14,23 @@
     <input @bind="registerModel.ConfirmPassword" placeholder="Підтвердіть пароль" type="password" class="form-control" />
 
     <button class="btn btn-primary mt-2">Реєстрація</button>
+    @if (registerErrors.Count > 0)
+    {
+        <div class="alert alert-danger mt-2">
+            <ul>
+                @foreach (var error in registerErrors)
+                {
+                    <li>@error.Description</li>
+                }
+            </ul>
+        </div>
+    }
 </EditForm>
 
 @code {
     RegisterModel registerModel = new();
 
+    List<RegisterErrorsDTO> registerErrors = new();
     async Task HandleRegister()
     {
         var result = await Http.PostAsJsonAsync("api/auth/register", registerModel);
@@ -30,6 +43,7 @@
         {
             var message = await result.Content.ReadAsStringAsync();
             Console.WriteLine(message);
+            registerErrors = await result.Content.ReadFromJsonAsync<List<RegisterErrorsDTO>>();
         }
     }
 

@@ -15,11 +15,11 @@ namespace TrainzInfo
         public static void Main(string[] args)
         {
             LoggingExceptions.CreateFolder();
-            LoggingExceptions.LogInit("Program", nameof(Main));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Try create host builder");
+            LoggingExceptions.Init("Program", nameof(Main));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Try create host builder");
             CreateHostBuilder(args).Build().Run();
-            LoggingExceptions.LogWright("Host builder created");
+            LoggingExceptions.Wright("Host builder created");
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

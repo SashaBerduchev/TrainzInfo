@@ -28,9 +28,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.LogInit("LocomotivesApiController", "GetLocomotives");
-                LoggingExceptions.LogStart();
-                LoggingExceptions.LogWright("Start Get GetLocomotives");
+                LoggingExceptions.Init("LocomotivesApiController", "GetLocomotives");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get GetLocomotives");
                 int pageSize = 10;
 
                 var locoDTO = await _context.Locomotives
@@ -61,13 +61,13 @@ namespace TrainzInfo.Controllers.Api
             } catch (Exception ex)
             {
                 LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.LogWright(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 

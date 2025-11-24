@@ -33,17 +33,17 @@ namespace TrainzInfo.Controllers
         // GET: UkrainsRailways
         public async Task<IActionResult> Index()
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Try get user by ip address");
+            LoggingExceptions.Init(this.ToString(), nameof(Index));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Try get user by ip address");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            LoggingExceptions.LogWright("User IP - " + remoteIpAddres);
+            LoggingExceptions.Wright("User IP - " + remoteIpAddres);
              
            
-            LoggingExceptions.LogWright("Try get UkrainsRailways list");
+            LoggingExceptions.Wright("Try get UkrainsRailways list");
             List<UkrainsRailways> UkrainsRailways = await _context.UkrainsRailways.ToListAsync();
-            LoggingExceptions.LogWright("UkrainsRailways list getted - " + UkrainsRailways.Count.ToString());
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Wright("UkrainsRailways list getted - " + UkrainsRailways.Count.ToString());
+            LoggingExceptions.Finish();
             return View(UkrainsRailways);
         }
 

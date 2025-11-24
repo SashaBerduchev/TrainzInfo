@@ -30,13 +30,13 @@ namespace TrainzInfo.Controllers
         // GET: DieselTrains
         public async Task<IActionResult> Index(string? Filia, string? Oblast, string? Depo, string? Model, int page = 1)
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Index));
-            LoggingExceptions.LogStart();
+            LoggingExceptions.Init(this.ToString(), nameof(Index));
+            LoggingExceptions.Start();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            LoggingExceptions.LogWright("Get user by IP: " + remoteIpAddres);
+            LoggingExceptions.Wright("Get user by IP: " + remoteIpAddres);
              
 
-            LoggingExceptions.LogWright("Check session for filters");
+            LoggingExceptions.Wright("Check session for filters");
             if (HttpContext.Session.GetString("ModelDiesel") is not null)
             {
                 Model = HttpContext.Session.GetString("ModelDiesel").ToString();
@@ -54,7 +54,7 @@ namespace TrainzInfo.Controllers
                 Depo = HttpContext.Session.GetString("DepoDiesel").ToString();
             }
             
-            LoggingExceptions.LogWright("Start query DieselTrains");
+            LoggingExceptions.Wright("Start query DieselTrains");
             List<DieselTrains> diesel = new List<DieselTrains>();
             IQueryable<DieselTrains> query = _context.DieselTrains
                 .Include(x => x.DepotList)
@@ -65,52 +65,52 @@ namespace TrainzInfo.Controllers
                 .Include(x => x.SuburbanTrainsInfo)
                 .AsQueryable();
 
-            LoggingExceptions.LogWright("Apply filters");
+            LoggingExceptions.Wright("Apply filters");
             if (Model is not null)
             {
-                LoggingExceptions.LogWright("Filter by Model: " + Model);
+                LoggingExceptions.Wright("Filter by Model: " + Model);
                 query = query.Where(x => x.SuburbanTrainsInfo.Model.Contains(Model));
-                LoggingExceptions.LogWright("Set session ModelDiesel: " + Model);
+                LoggingExceptions.Wright("Set session ModelDiesel: " + Model);
                 HttpContext.Session.SetString("ModelDiesel", Model);
             }
             if (Filia is not null)
             {
-                LoggingExceptions.LogWright("Filter by Filia: " + Filia);
+                LoggingExceptions.Wright("Filter by Filia: " + Filia);
                 query = query.Where(x => x.DepotList.UkrainsRailway.Name == Filia);
-                LoggingExceptions.LogWright("Set session FiliaDiesel: " + Filia);
+                LoggingExceptions.Wright("Set session FiliaDiesel: " + Filia);
                 HttpContext.Session.SetString("FiliaDiesel", Filia);
             }
             if (Oblast is not null)
             {
-                LoggingExceptions.LogWright("Filter by Oblast: " + Oblast); 
+                LoggingExceptions.Wright("Filter by Oblast: " + Oblast); 
                 query = query.Where(x => x.DepotList.City.Oblasts.Name == Oblast);
-                LoggingExceptions.LogWright("Set session OblastDiesel: " + Oblast);
+                LoggingExceptions.Wright("Set session OblastDiesel: " + Oblast);
                 HttpContext.Session.SetString("OblastDiesel", Oblast);
             }
             if (Depo is not null)
             {
-                LoggingExceptions.LogWright("Filter by Depo: " + Depo);
+                LoggingExceptions.Wright("Filter by Depo: " + Depo);
                 query = query.Where(x => x.DepotList.Name == Depo);
-                LoggingExceptions.LogWright("Set session DepoDiesel: " + Depo); 
+                LoggingExceptions.Wright("Set session DepoDiesel: " + Depo); 
                 HttpContext.Session.SetString("DepoDiesel", Depo);
             }
 
             int pageSize = 20;
-            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            LoggingExceptions.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
             query = query.Skip((page - 1) * pageSize)
                 .Take(pageSize); // <-- використання Take()
 
-            LoggingExceptions.LogWright("Get stations for page: " + query.ToQueryString());
+            LoggingExceptions.Wright("Get stations for page: " + query.ToQueryString());
             diesel = await query.ToListAsync();
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
             UpdateFilter(diesel);
-            LoggingExceptions.LogWright("Return view with data");
-            LoggingExceptions.LogFinish();
+            LoggingExceptions.Wright("Return view with data");
+            LoggingExceptions.Finish();
             return View(diesel);
         }
 
@@ -151,15 +151,15 @@ namespace TrainzInfo.Controllers
             }
 
             int pageSize = 20;
-            LoggingExceptions.LogWright("Set page size: " + pageSize.ToString());
+            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.LogWright("Get total count: " + count.ToString());
+            LoggingExceptions.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.LogWright("Get total pages: " + totalPages.ToString());
+            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
             diesel = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.LogWright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
@@ -197,29 +197,29 @@ namespace TrainzInfo.Controllers
         // GET: DieselTrains/Create
         public async Task<IActionResult> Create()
         {
-            LoggingExceptions.LogInit(this.ToString(), nameof(Create));
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("Get user by IP");
+            LoggingExceptions.Init(this.ToString(), nameof(Create));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Get user by IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
-            LoggingExceptions.LogWright("Get lists for dropdowns");
+            LoggingExceptions.Wright("Get lists for dropdowns");
             List<SuburbanTrainsInfo> subrbanTrains = new List<SuburbanTrainsInfo>();
             List<DepotList> depots = new List<DepotList>();
             IQueryable<SuburbanTrainsInfo> suburbanQuery = _context.SuburbanTrainsInfos.AsQueryable();
             IQueryable<DepotList> depotQuery = _context.Depots.AsQueryable();
             if (HttpContext.Session.GetString("ModelDiesel") is not null)
             {
-                LoggingExceptions.LogWright("Filter by Model from session: " + HttpContext.Session.GetString("ModelDiesel").ToString());
+                LoggingExceptions.Wright("Filter by Model from session: " + HttpContext.Session.GetString("ModelDiesel").ToString());
                 suburbanQuery = suburbanQuery.Where(x => x.Model == HttpContext.Session.GetString("ModelDiesel").ToString());
             }
             if (HttpContext.Session.GetString("DepoDiesel") is not null)
             {
-                LoggingExceptions.LogWright("Filter by Depo from session: " + HttpContext.Session.GetString("DepoDiesel").ToString());
+                LoggingExceptions.Wright("Filter by Depo from session: " + HttpContext.Session.GetString("DepoDiesel").ToString());
                 depotQuery = depotQuery.Where(x => x.Name == HttpContext.Session.GetString("DepoDiesel").ToString());
             }
-            LoggingExceptions.LogWright("Execute query: " + suburbanQuery.ToQueryString());
+            LoggingExceptions.Wright("Execute query: " + suburbanQuery.ToQueryString());
             subrbanTrains = await suburbanQuery.ToListAsync();
-            LoggingExceptions.LogWright("Execute query: " + depotQuery.Where(x => x.Name.Contains("РПЧ")).ToQueryString());
+            LoggingExceptions.Wright("Execute query: " + depotQuery.Where(x => x.Name.Contains("РПЧ")).ToQueryString());
             depots = await depotQuery.Where(x => x.Name.Contains("РПЧ")).ToListAsync();
             SelectList suburbanList = new SelectList(subrbanTrains.Select(x => x.Model).Distinct());
             SelectList depotList = new SelectList(depots.Select(x => x.Name).Distinct());

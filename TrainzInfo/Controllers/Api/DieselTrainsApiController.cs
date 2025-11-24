@@ -22,9 +22,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("gettrains")]
         public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrains(int page = 1)
         {
-            LoggingExceptions.LogInit("DieselTrainsApiController", "GetDieselTrains");
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("GetDieselTrains API called");
+            LoggingExceptions.Init("DieselTrainsApiController", "GetDieselTrains");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("GetDieselTrains API called");
             try
             {
                 int pageCount = 10;
@@ -53,82 +53,82 @@ namespace TrainzInfo.Controllers.Api
                         ImageMimeTypeOfData = dt.ImageMimeTypeOfData
                     })
                     .AsQueryable();
-                LoggingExceptions.LogWright("GetDieselTrains API finished bu query: " + diesels.ToQueryString());
+                LoggingExceptions.Wright("GetDieselTrains API finished bu query: " + diesels.ToQueryString());
                 List<DieselTrainsDTO> dieselTrains = await diesels.ToListAsync();
                 return Ok(dieselTrains);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException("GetDieselTrains API error: " + ex.Message);
-                LoggingExceptions.LogWright("GetDieselTrains API error: " + ex.Message);
+                LoggingExceptions.Wright("GetDieselTrains API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 
         [HttpGet("filias")]
         public async Task<ActionResult<IEnumerable<string>>> GetFilias()
         {
-            LoggingExceptions.LogInit("DieselTrainsApiController", "GetFilias");
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("GetFilias API called");
+            LoggingExceptions.Init("DieselTrainsApiController", "GetFilias");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("GetFilias API called");
             try
             {
                 var filias = await _contesxt.UkrainsRailways
                     .Select(ur => ur.Name)
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.LogWright("GetFilias API finished");
+                LoggingExceptions.Wright("GetFilias API finished");
                 return Ok(filias);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException("GetFilias API error: " + ex.Message);
-                LoggingExceptions.LogWright("GetFilias API error: " + ex.Message);
+                LoggingExceptions.Wright("GetFilias API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 
         [HttpGet("oblasts")]
         public async Task<ActionResult<IEnumerable<string>>> GetOblasts()
         {
-            LoggingExceptions.LogInit("DieselTrainsApiController", "GetOblasts");
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("GetOblasts API called");
+            LoggingExceptions.Init("DieselTrainsApiController", "GetOblasts");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("GetOblasts API called");
             try
             {
                 var oblasts = await _contesxt.Oblasts
                     .Select(o => o.Name)
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.LogWright("GetOblasts API finished");
+                LoggingExceptions.Wright("GetOblasts API finished");
                 return Ok(oblasts);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException("GetOblasts API error: " + ex.Message);
-                LoggingExceptions.LogWright("GetOblasts API error: " + ex.Message);
+                LoggingExceptions.Wright("GetOblasts API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 
         [HttpGet("depos")]
         public async Task<ActionResult<IEnumerable<string>>> GetDepos()
         {
-            LoggingExceptions.LogInit("DieselTrainsApiController", "GetDepos");
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("GetDepos API called");
+            LoggingExceptions.Init("DieselTrainsApiController", "GetDepos");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("GetDepos API called");
             try
             {
                 var depos = await _contesxt.Depots
@@ -136,45 +136,45 @@ namespace TrainzInfo.Controllers.Api
                     .Select(dl => dl.Name)                    
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.LogWright("GetDepos API finished");
+                LoggingExceptions.Wright("GetDepos API finished");
                 return Ok(depos);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException("GetDepos API error: " + ex.Message);
-                LoggingExceptions.LogWright("GetDepos API error: " + ex.Message);
+                LoggingExceptions.Wright("GetDepos API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 
         [HttpGet("models")]
         public async Task<ActionResult<IEnumerable<string>>> GetModels()
         {
-            LoggingExceptions.LogInit("DieselTrainsApiController", "GetModels");
-            LoggingExceptions.LogStart();
-            LoggingExceptions.LogWright("GetModels API called");
+            LoggingExceptions.Init("DieselTrainsApiController", "GetModels");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("GetModels API called");
             try
             {
                 var models = await _contesxt.SuburbanTrainsInfos
                     .Select(sti => sti.Model)
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.LogWright("GetModels API finished");
+                LoggingExceptions.Wright("GetModels API finished");
                 return Ok(models);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException("GetModels API error: " + ex.Message);
-                LoggingExceptions.LogWright("GetModels API error: " + ex.Message);
+                LoggingExceptions.Wright("GetModels API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.LogFinish();
+                LoggingExceptions.Finish();
             }
         }
 
