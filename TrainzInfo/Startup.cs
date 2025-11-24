@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,9 +10,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Localization;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.JWT;
 
 namespace TrainzInfo
 {
@@ -94,6 +95,15 @@ namespace TrainzInfo
                           .AllowAnyHeader();
                 });
             });
+
+            var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            services.AddSingleton(jwtSettings);
+            services.AddSingleton<JwtService>(sp =>
+            {
+                var settings = sp.GetRequiredService<JwtSettings>();
+                return new JwtService(settings.Secret, settings.Issuer);
+            });
+
             Mail mail = new Mail();
             LoggingExceptions.Finish();
             _connectionString = connection;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DTO;
+using TrainzInfo.Tools.JWT;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -15,12 +16,14 @@ namespace TrainzInfo.Controllers.Api
     {
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly JwtService jwtService;
 
-        public AuthApiController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ApplicationContext context)
+        public AuthApiController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ApplicationContext context, JwtService jwtService)
             : base(userManager, context)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.jwtService = jwtService;
         }
 
 
@@ -62,9 +65,9 @@ namespace TrainzInfo.Controllers.Api
                 if (!result.Succeeded)
                     return Unauthorized("Invalid login");
 
-                //var token = jwtService.GenerateToken(dto.Email);
+                var token = jwtService.GenerateToken(dto.Email);
                 LoggingExceptions.Finish();
-                return Ok();
+                return Ok(token);
 
             }
             catch (System.Exception ex)

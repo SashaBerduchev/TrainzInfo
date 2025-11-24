@@ -1,0 +1,24 @@
+﻿@page "/logout"
+
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<h3>Вихід з системи...</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // 1️⃣ Видаляємо токен
+        await LocalStorage.RemoveItemAsync("authToken");
+
+        // 2️⃣ Оновлюємо стан авторизації
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            customAuth.MarkUserAsLoggedOut();
+        }
+
+        // 3️⃣ Перенаправляємо на головну
+        Navigation.NavigateTo("/");
+    }
+}

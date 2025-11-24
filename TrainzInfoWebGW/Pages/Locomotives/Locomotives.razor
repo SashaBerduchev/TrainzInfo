@@ -1,8 +1,9 @@
 ﻿@page "/locomotives"
-@using TrainzInfoWebGW.Tools.DTO
+@using System.Security.Claims
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
 <h1 class="mb-4 text-center">Локомотиви</h1>
 
 @if (isLoading)
@@ -174,23 +175,30 @@ else
 
     private async Task CheckRoles()
     {
-        UserDto user = new UserDto();
-        var response = await Http.GetAsync($"api/auth/getauthuser");
-        if (response.IsSuccessStatusCode)
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
         {
-            user = await response.Content.ReadFromJsonAsync<UserDto>();
-        }
-        if(user.Role == "Publisher")
-        {
-            IsAdminOrPublisher = true;
-        }
-        if(user.Role == "Admin")
-        {
-            IsAdmin = true;
-        }
-        if (user.Role == "Superadmin")
-        {
-            IsAdmin = true;
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                
+            }
+            else
+            {
+                
+            }
         }
     }
 
