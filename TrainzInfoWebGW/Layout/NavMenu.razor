@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using TrainzInfoWebGW.Tools
 @using TrainzInfoWebGW.Tools.DTO
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient Http
 @inject NavigationManager Nav
-
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">TrainzInfoWebGW</a>
@@ -40,38 +40,27 @@
     </nav>
 
     <!-- Блок авторизації -->
+
     <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
-        <CascadingAuthenticationState>
-            <AuthorizeView>
-                <Authorized>
-                    <li class="nav-item d-flex align-items-center">
-                        <button class="btn btn-outline-primary" @onclick="Profile">
-                            Мій профіль
-                        </button>
-                    </li>
-
-                    <li class="nav-item">
-                        <button class="btn btn-outline-danger" @onclick="Logout">
-                            Вийти
-                        </button>
-                    </li>
-                </Authorized>
-
-                <NotAuthorized>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-primary" @onclick="Login">
-                            Вхід
-                        </button>
-                    </li>
-
-                    <li class="nav-item">
-                        <button class="btn btn-outline-primary" @onclick="Register">
-                            Реєстрація
-                        </button>
-                    </li>
-                </NotAuthorized>
-            </AuthorizeView>
-        </CascadingAuthenticationState>
+        <p>IsAuthenticated: @isAuthenticated</p>
+        <AuthorizeView>
+            <Authorized>
+                <li class="nav-item d-flex align-items-center">
+                    <button class="btn btn-outline-primary" @onclick="Profile">Мій профіль</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-outline-danger" @onclick="Logout">Вийти</button>
+                </li>
+            </Authorized>
+            <NotAuthorized>
+                <li class="nav-item">
+                    <button class="btn btn-outline-primary" @onclick="Login">Вхід</button>
+                </li>
+                <li class="nav-item">
+                    <button class="btn btn-outline-primary" @onclick="Register">Реєстрація</button>
+                </li>
+            </NotAuthorized>
+        </AuthorizeView>
     </ul>
 </div>
 
@@ -79,32 +68,26 @@
     private bool isNavCollapsed = false;
     List<UkrainsRailwaysDTO> railways = new();
     private AuthenticationState? authState;
+
+    [CascadingParameter] private Task<AuthenticationState> AuthStateTask { get; set; }
+    private bool isAuthenticated;
+
     protected override async Task OnInitializedAsync()
     {
-        // Завантаження даних
-        try
-        {
-            railways = await Http.GetFromJsonAsync<List<UkrainsRailwaysDTO>>("api/railways/railways");
-            AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
-
-            // Отримати початковий стан
-            authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Помилка завантаження даних: " + ex.Message);
-            railways = new List<UkrainsRailwaysDTO>();
-        }
+        AuthStateProvider.AuthenticationStateChanged += AuthStateChanged;
+        await((CustomAuthStateProvider)AuthStateProvider).CheckAuthenticationAsync();
     }
-    private async void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+
+    private async void AuthStateChanged(Task<AuthenticationState> task)
     {
-        authState = await task;
-        StateHasChanged(); // Примусово перерендерити компонент
+        var authState = await task;
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+        StateHasChanged(); // перемальовує компонент
     }
 
     public void Dispose()
     {
-        AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+        AuthStateProvider.AuthenticationStateChanged -= AuthStateChanged;
     }
 
     private void ToggleNavMenu() => isNavCollapsed = !isNavCollapsed;

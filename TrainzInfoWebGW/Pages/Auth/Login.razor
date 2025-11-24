@@ -1,7 +1,11 @@
 ﻿@page "/login"
-@using static System.Net.WebRequestMethods
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using TrainzInfoWebGW.Tools
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
 
 <h3>Авторизація</h3>
 
@@ -9,11 +13,12 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <input @bind="loginModel.Email" placeholder="Email" class="form-control" />
-    <input @bind="loginModel.Password" placeholder="Пароль" type="password" class="form-control" />
+    <input @bind="loginModel.Email" placeholder="Email" class="form-control mb-2" />
+    <input @bind="loginModel.Password" placeholder="Пароль" type="password" class="form-control mb-2" />
 
-    <button class="btn btn-primary mt-2">Увійти</button>
-    @if (LoginError!= "")
+    <button class="btn btn-primary">Увійти</button>
+
+    @if (!string.IsNullOrEmpty(LoginError))
     {
         <div class="alert alert-danger mt-2">
             @LoginError
@@ -21,27 +26,48 @@
     }
 </EditForm>
 
-
 @code {
-    LoginModel loginModel = new();
-    string LoginError = ""; 
-    async Task HandleLogin()
-    {
-        var result = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+    private LoginModel loginModel = new();
+    private string LoginError = "";
 
-        if (result.IsSuccessStatusCode)
+    private async Task HandleLogin()
+    {
+        try
         {
-            Navigation.NavigateTo("/");
+            // Викликаємо API для логіну
+            var result = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+            if (result.IsSuccessStatusCode)
+            {
+                // Припустимо, сервер повертає JWT токен як рядок
+                var token = await result.Content.ReadAsStringAsync();
+
+                // Зберігаємо токен у LocalStorage
+                await LocalStorage.SetItemAsync("authToken", token);
+
+                // Оновлюємо стан авторизації у CustomAuthStateProvider
+                if (AuthStateProvider is CustomAuthStateProvider customAuthProvider)
+                {
+                    await customAuthProvider.CheckAuthenticationAsync();
+                }
+
+                // Переходимо на головну
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                var message = await result.Content.ReadAsStringAsync();
+                LoginError = message;
+                Console.WriteLine(message);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            var message = await result.Content.ReadAsStringAsync();
-            LoginError = message;
-            Console.WriteLine(message);
+            LoginError = "Помилка під час логіну: " + ex.Message;
         }
     }
 
-    public class LoginModel
+    private class LoginModel
     {
         public string Email { get; set; } = "";
         public string Password { get; set; } = "";

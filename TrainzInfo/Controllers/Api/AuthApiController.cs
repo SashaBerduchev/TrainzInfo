@@ -62,6 +62,7 @@ namespace TrainzInfo.Controllers.Api
                 if (!result.Succeeded)
                     return Unauthorized("Invalid login");
 
+                //var token = jwtService.GenerateToken(dto.Email);
                 LoggingExceptions.Finish();
                 return Ok();
 
