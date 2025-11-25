@@ -141,7 +141,7 @@ else
             var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>($"api/locomotives/getlocomotives?page={currentPage}");
             if (locomotiveItems == null || locomotiveItems.Count == 0)
             {
-                
+
                 allLoaded = true;
             }
             else
@@ -194,11 +194,11 @@ else
 
                 IsAdmin = roles.Contains("Admin");
                 IsAdmin = roles.Contains("Superadmin");
-                
+
             }
             else
             {
-                
+
             }
         }
     }
@@ -213,8 +213,8 @@ else
     private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
     private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
     private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
-    private void DeleteLocomotive(int id) { /* TODO: реалізація видалення */ }
-    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+    private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete-locomotive/{id}");
+    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create-locomotive");
 
     [JSInvokable]
     public async Task OnScrollNearBottom()

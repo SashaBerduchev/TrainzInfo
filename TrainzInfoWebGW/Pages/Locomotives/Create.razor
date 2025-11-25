@@ -1,0 +1,139 @@
+﻿@page "/locomotives/create-locomotive"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h4>Локомотиви</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@locomotive" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- Серія -->
+            <div class="form-group">
+                <label>Серія (наприклад ДС3, ЧС4)</label>
+                <div class="form-inline">
+                    <InputSelect @bind-Value="locomotive.Seria" class="form-control">
+                        @foreach (var item in SeriaList)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </InputSelect>
+                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
+                </div>
+            </div>
+
+            <!-- Номер -->
+            <div class="form-group">
+                <label>Номер (приклад 001, 002)</label>
+                <InputText @bind-Value="locomotive.Number" class="form-control" />
+            </div>
+
+            <!-- Депо -->
+            <div class="form-group">
+                <label>Депо</label>
+                <InputSelect @bind-Value="locomotive.Depot" class="form-control">
+                    @foreach (var item in DepotList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <!-- Конструкційна швидкість -->
+            <div class="form-group">
+                <label>Конструкційна швидкість</label>
+                <InputNumber @bind-Value="locomotive.Speed" class="form-control" />
+            </div>
+
+            <!-- Завантаження картинки -->
+            <div class="form-group">
+                <label>Завантажити картинку</label>
+                <InputFile OnChange="HandleFileSelected" />
+                @if (!string.IsNullOrEmpty(imagePreview))
+                {
+                    <div class="mt-2">
+                        <img src="@imagePreview" alt="preview" width="150" />
+                    </div>
+                }
+            </div>
+            <!-- Кнопка -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Створити</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@if (errors is not null)
+{
+    <H3>"Помилка збереження, зверністься до адміністратора";</H3>
+    <div class="alert alert-danger mt-2">
+        <p>@errors</p>
+    </div>
+}
+
+
+<div>
+    <NavLink href="/locomotives">Back to List</NavLink>
+</div>
+
+@code {
+    private LocomotiveDTO locomotive = new LocomotiveDTO();
+
+    // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
+    private List<string> SeriaList = new List<string>();
+    private List<string> DepotList = new List<string>();
+    private string imagePreview;
+    private string errors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        // Підписка на скрол через JS
+        //await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API
+    }
+
+    private async Task Load()
+    {
+        SeriaList.Add("Виберіть серію");
+        DepotList.Add("Виберіть депо");
+        // Імітація завантаження даних — в реальному випадку виклик API
+        var series = await Http.GetFromJsonAsync<List<string>>("api/locomotives/getseries");
+        var depots = await Http.GetFromJsonAsync<List<string>>("api/locomotives/getdepots");
+        SeriaList.AddRange(series ?? new List<string>());
+        DepotList.AddRange(depots ?? new List<string>());
+    }
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/locomotives/create", locomotive);
+        if (result.IsSuccessStatusCode)
+        {
+            // Тут можна викликати сервіс, який додає локомотив в базу через API
+            Console.WriteLine($"Додано локомотив: {locomotive.Seria} {locomotive.Number}");
+            // Після успіху — навігація назад
+            Navigation.NavigateTo("/locomotives");
+        }
+        else
+        {
+            errors = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Помилка: {errors}");
+        }
+        
+
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        // Зберігаємо у модель для відправки на сервер
+        locomotive.ImgSrc = imagePreview;
+    }
+}
