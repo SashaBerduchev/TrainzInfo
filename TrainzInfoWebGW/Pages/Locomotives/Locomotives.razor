@@ -209,11 +209,11 @@ else
         FilteredLocomotives = locomotives;
     }
 
-    private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/{id}");
+    private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");
     private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
     private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
     private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
-    private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete-locomotive/{id}");
+    private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete/{id}");
     private void AddLocomotive() => Nav.NavigateTo("/locomotives/create-locomotive");
 
     [JSInvokable]

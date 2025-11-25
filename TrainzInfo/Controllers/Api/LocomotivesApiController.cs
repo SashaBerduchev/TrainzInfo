@@ -172,5 +172,84 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Finish();
             }
         }
+
+        [HttpGet("getlocomotive/{id}")]
+        public async Task<ActionResult<LocmotiveDTO>> GetLocomotive(int id)
+        {
+            try
+            {
+                LoggingExceptions.Init("LocomotivesApiController", "GetLocomotive");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get GetLocomotive");
+                var locomotive = await _context.Locomotives
+                    .Include(d => d.DepotList)
+                        .ThenInclude(c => c.City)
+                            .ThenInclude(o => o.Oblasts)
+                    .Include(u => u.DepotList)
+                        .ThenInclude(ur => ur.UkrainsRailway)
+                    .Include(ls => ls.Locomotive_Series)
+                    .FirstOrDefaultAsync(n => n.id == id);
+                if (locomotive == null)
+                {
+                    return NotFound();
+                }
+                var locoDTO = new LocmotiveDTO
+                {
+                    Id = locomotive.id,
+                    Number = locomotive.Number,
+                    Speed = locomotive.Speed,
+                    Depot = locomotive.DepotList.Name,
+                    City = locomotive.DepotList.City.Name,
+                    Oblast = locomotive.DepotList.City.Oblasts.Name,
+                    Filia = locomotive.DepotList.UkrainsRailway.Name,
+                    Seria = locomotive.Locomotive_Series.Seria,
+                    ImgSrc = locomotive.Image != null
+                                ? $"data:{locomotive.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Image)}"
+                                : null,
+                };
+                return Ok(locoDTO);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpDelete("deleteapprove/{id}")]
+        public async Task<ActionResult> DeleteLocomotive(int id)
+        {
+            try
+            {
+                LoggingExceptions.Init("LocomotivesApiController", "DeleteLocomotive");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Delete DeleteLocomotive");
+                var locomotive = await _context.Locomotives.FindAsync(id);
+                if (locomotive == null)
+                {
+                    return NotFound();
+                }
+                _context.Locomotives.Remove(locomotive);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
     }
 }
