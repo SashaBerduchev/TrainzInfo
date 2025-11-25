@@ -1,5 +1,4 @@
 ﻿@page "/locomotives"
-@using System.Security.Claims
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -214,7 +213,7 @@ else
     private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
     private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
     private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete/{id}");
-    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create-locomotive");
+    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
 
     [JSInvokable]
     public async Task OnScrollNearBottom()

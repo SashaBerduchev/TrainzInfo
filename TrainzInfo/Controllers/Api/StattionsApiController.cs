@@ -24,7 +24,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-stations")]
-        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1)
+        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1, string filia = null, string name = null, string oblast = null)
         {
             LoggingExceptions.Init(this.ToString(), nameof(GetStations));
             LoggingExceptions.Start();
@@ -34,7 +34,7 @@ namespace TrainzInfo.Controllers.Api
             LoggingExceptions.Wright("Getting stations from database");
             try
             {
-                var stations = await _context.Stations
+                IQueryable<Stations> query = _context.Stations
                        .Include(s => s.StationInfo)
                        .Include(s => s.Oblasts)
                        .Include(s => s.Citys)
@@ -43,27 +43,40 @@ namespace TrainzInfo.Controllers.Api
                        .Include(s => s.UkrainsRailways)
                        .Skip((page - 1) * pageSize)
                        .Take(pageSize)
-                       .ToListAsync();
+                       .AsQueryable();
+                if (!string.IsNullOrEmpty(filia))
+                {
+                    query = query.Where(s => s.UkrainsRailways.Name == filia);
+                }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(s => s.Name.Contains(name));
+                }
+                if (!string.IsNullOrEmpty(oblast))
+                {
+                    query = query.Where(s => s.Oblasts.Name == oblast);
+                }
+                var stations = await query.Cast<Stations>().ToListAsync();
 
                 // Після завантаження — формуємо DTO
                 var result = stations.AsParallel().Select(station => new StationsDTO
-                {
-                    id = station.id,
-                    Name = station.Name,
-                    DopImgSrc = station.DopImgSrc,
-                    DopImgSrcSec = station.DopImgSrcSec,
-                    DopImgSrcThd = station.DopImgSrcThd,
-                    ImageMimeTypeOfData = station.ImageMimeTypeOfData,
-                    UkrainsRailways = station.UkrainsRailways?.Name,
-                    Oblasts = station.Oblasts?.Name,
-                    Citys = station.Citys?.Name,
-                    StationInfo = station.StationInfo?.BaseInfo,
-                    Metro = station.Metro?.Name,
-                    StationImages = getSlowImage(station) // тепер МОЖНА
-                }).ToList();
+            {
+                id = station.id,
+                Name = station.Name,
+                DopImgSrc = station.DopImgSrc,
+                DopImgSrcSec = station.DopImgSrcSec,
+                DopImgSrcThd = station.DopImgSrcThd,
+                ImageMimeTypeOfData = station.ImageMimeTypeOfData,
+                UkrainsRailways = station.UkrainsRailways?.Name,
+                Oblasts = station.Oblasts?.Name,
+                Citys = station.Citys?.Name,
+                StationInfo = station.StationInfo?.BaseInfo,
+                Metro = station.Metro?.Name,
+                StationImages = getSlowImage(station) // тепер МОЖНА
+            }).ToList();
 
                 LoggingExceptions.Wright("Stations successfully retrieved from database");
-                
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -159,6 +172,31 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("getcitys")]
+        public async Task<ActionResult> GetCitys()
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(GetCitys));
+            LoggingExceptions.Start();
+            try
+            {
+                var citys = await _context.Cities
+                    .Select(c => c.Name)
+                    .ToListAsync();
+                LoggingExceptions.Wright("Citys successfully retrieved from database");
+                return Ok(citys);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error retrieving citys: {ex.Message}");
+                LoggingExceptions.Wright("Error retrieving citys: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
         [HttpGet("get-station-names")]
         public async Task<ActionResult> GetStationNames()
         {
@@ -184,5 +222,72 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpPost("create")]
+        public async Task<ActionResult> CreateStation([FromBody] StationsDTO stationDto)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(CreateStation));
+            LoggingExceptions.Start();
+            try
+            {
+                LoggingExceptions.Wright("Creating new station in database");
+                Stations stationsCheck = await _context.Stations.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
+                if (stationsCheck != null)
+                {
+                    LoggingExceptions.Wright("Station with the same name already exists in database");
+                    return BadRequest("Станція вже є");
+                }
+
+                var station = new Stations
+                {
+                    Name = stationDto.Name,
+                    City = stationDto.Citys,
+                    Citys = await _context.Cities.FirstOrDefaultAsync(c => c.Name == stationDto.Citys),
+                    Oblast = stationDto.Oblasts,
+                    Oblasts = await _context.Oblasts.FirstOrDefaultAsync(o => o.Name == stationDto.Oblasts),
+                    UkrainsRailways = await _context.UkrainsRailways.FirstOrDefaultAsync(u => u.Name == stationDto.UkrainsRailways),
+                    Railway = stationDto.UkrainsRailways,
+                    DopImgSrc = stationDto.DopImgSrc,
+                    DopImgSrcSec = stationDto.DopImgSrcSec,
+                    DopImgSrcThd = stationDto.DopImgSrcThd,
+                    ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
+                    Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null
+                };
+
+                LoggingExceptions.Wright("Checking for existing station images in database");
+                StationImages stationImages = await _context.StationImages.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
+                if (stationImages != null)
+                {
+                    LoggingExceptions.Wright("Station with the same name already exists in database");
+                    station.StationImages = stationImages;
+                }
+                else
+                {
+                    station.StationImages = new StationImages
+                    {
+                        Name = stationDto.Name,
+                        Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null,
+                        ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                }
+
+
+                _context.Stations.Add(station);
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("Station successfully created in database");
+                return Ok(new { station.id });
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error creating station: {ex.Message}");
+                LoggingExceptions.Wright("Error creating station: " + ex.Message);
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+
+        }
     }
 }
