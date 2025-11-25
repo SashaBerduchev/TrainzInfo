@@ -17,6 +17,10 @@
         {
             customAuth.MarkUserAsLoggedOut();
         }
+        if (AuthStateProvider is CustomAuthStateProvider customAuthProvider)
+        {
+            await customAuthProvider.CheckAuthenticationAsync();
+        }
 
         // 3️⃣ Перенаправляємо на головну
         Navigation.NavigateTo("/");

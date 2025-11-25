@@ -94,7 +94,7 @@
     private void ExpandNav() => isNavCollapsed = false;
     private void CollapseNav() => isNavCollapsed = false;
 
-    private void Logout() => Nav.NavigateTo("logout", forceLoad: true);
+    private void Logout() => Nav.NavigateTo("logout");
     private void Register() => Nav.NavigateTo($"/register/");
     private void Login() => Nav.NavigateTo($"/login/");
     private void Profile() => Nav.NavigateTo($"/profile/");
