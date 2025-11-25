@@ -39,10 +39,12 @@ namespace TrainzInfoWebGW.Tools
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_user)));
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             // Завжди повертаємо не null
-            return Task.FromResult(new AuthenticationState(_user));
+            //return Task.FromResult(new AuthenticationState(_user));
+            await CheckAuthenticationAsync(); // ВАЖЛИВО!
+            return new AuthenticationState(_user);
         }
 
         public async Task CheckAuthenticationAsync()

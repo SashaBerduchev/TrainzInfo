@@ -14,16 +14,16 @@ namespace TrainzInfo.Controllers.Api
     [ApiController]
     public class AuthApiController : BaseController
     {
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly JwtService jwtService;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly JwtService _jwtService;
 
         public AuthApiController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ApplicationContext context, JwtService jwtService)
             : base(userManager, context)
         {
-            this.signInManager = signInManager;
-            this.userManager = userManager;
-            this.jwtService = jwtService;
+            this._signInManager = signInManager;
+            this._userManager = userManager;
+            this._jwtService = jwtService;
         }
 
 
@@ -35,7 +35,7 @@ namespace TrainzInfo.Controllers.Api
 
             LoggingExceptions.Wright("Register user");
             var user = new IdentityUser { UserName = dto.Email, Email = dto.Email };
-            var result = await userManager.CreateAsync(user, dto.Password);
+            var result = await _userManager.CreateAsync(user, dto.Password);
             LoggingExceptions.Wright(result.ToString());
             if (!result.Succeeded)
             {
@@ -55,38 +55,25 @@ namespace TrainzInfo.Controllers.Api
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Login));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Login user");
-            try
-            {
-                var result = await signInManager.PasswordSignInAsync(dto.Email, dto.Password, true, false);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                return Unauthorized("User not found");
 
-                if (!result.Succeeded)
-                    return Unauthorized("Invalid login");
+            var passOk = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+            if (!passOk.Succeeded)
+                return Unauthorized("Invalid login");
 
-                var token = jwtService.GenerateToken(dto.Email);
-                LoggingExceptions.Finish();
-                return Ok(token);
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtService.GenerateToken(user, roles);
 
-            }
-            catch (System.Exception ex)
-            {
-                LoggingExceptions.Wright("Exception: " + ex.Message);
-                LoggingExceptions.Finish();
-                return BadRequest("An error occurred during login.");
-            }
-            finally
-            {
-                LoggingExceptions.Finish();
-            }
+            return Ok(token);
 
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return Ok();
         }
 
@@ -96,27 +83,35 @@ namespace TrainzInfo.Controllers.Api
         {
             LoggingExceptions.Init(this.ToString(), nameof(GetAuthuser));
             LoggingExceptions.Start();
-            LoggingExceptions.Wright("Get authenticated user info");
-            var user = _userManager.GetUserAsync(User).Result;
-            if (user != null)
+
+            LoggingExceptions.Wright("Try find user");
+            var email = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized();
+
+            var user = await _userManager.GetUserAsync(User);
+            
+            if (user == null)
             {
-                UserDto userDto = new UserDto
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Role = (await _userManager.GetRolesAsync(user)).Count > 0 ? (await _userManager.GetRolesAsync(user))[0] : "User",
-                    IsAuthenticated = User.Identity.IsAuthenticated
-                };
+                LoggingExceptions.Wright("User NOT FOUND");
                 LoggingExceptions.Finish();
-                return Ok(userDto);
+                return Unauthorized();
             }
-            else
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var dto = new UserDto
             {
-                LoggingExceptions.Wright("User not found!");
-                LoggingExceptions.Finish();
-                return BadRequest();
-            }
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                Role = roles.FirstOrDefault() ?? "User",
+                IsAuthenticated = true
+            };
+
+            LoggingExceptions.Finish();
+            return Ok(dto);
 
         }
 
