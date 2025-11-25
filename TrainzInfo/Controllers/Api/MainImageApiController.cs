@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Tools;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -19,19 +20,25 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getimage")]
         public async Task<ActionResult> GetImage(string name = null)
         {
-            if(name== null)
+            LoggingExceptions.Init("MainImageApiController", "GetImage");
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright($"GetImage called with name: {name}");
+            if (name == null)
                 return BadRequest();
 
+            var mainImage = await _context.MainImages
+                .Where(x => x.Name == name)
+                .FirstOrDefaultAsync();
 
-            var mainImage = await _context.MainImages.Where(x=>x.Name == name).FirstOrDefaultAsync();
-            if (mainImage == null || mainImage.ImageType == null)
-            {
+            if (mainImage == null || mainImage.Image == null || mainImage.ImageType == null)
                 return NotFound();
-            }
-            return Ok(mainImage.Image != null
-                       ? $"data:{mainImage.ImageType};base64,{Convert.ToBase64String(mainImage.Image)}"
-                       : null);
-        }
 
+            LoggingExceptions.Wright($"Image found: {mainImage.Name}, Type: {mainImage.ImageType}, Size: {mainImage.Image.Length} bytes");
+            LoggingExceptions.Finish();
+            // Повертаємо байти прямо, а не Base64
+            return File(mainImage.Image, mainImage.ImageType);
+
+        }
     }
 }

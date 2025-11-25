@@ -146,11 +146,11 @@ else
             }
             else
             {
-                FiliaList.AddRange(locomotiveItems.AsParallel().Select(l => l.Filia).Distinct().OrderBy(f => f).ToList());
-                DepotList.AddRange(locomotiveItems.AsParallel().Select(l => l.Depot).Distinct().OrderBy(d => d).ToList());
-                SeriaList.AddRange(locomotiveItems.AsParallel().Select(l => l.Seria).Distinct().OrderBy(s => s).ToList());
                 locomotives.AddRange(locomotiveItems);
                 ApplyFilter(); // оновлюємо відфільтровані новини
+                FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getfilias"));
+                //DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getdepots"));
+                // SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getserias"));
                 currentPage++;
             }
         }

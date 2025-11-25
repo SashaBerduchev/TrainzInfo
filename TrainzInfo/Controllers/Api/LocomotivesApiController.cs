@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using TrainzInfo.Tools.DTO;
 
 namespace TrainzInfo.Controllers.Api
 {
+    [ApiController]
     [Route("api/locomotives")]
     public class LocomotivesApiController : Controller
     {
@@ -107,6 +109,8 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Start();
                 LoggingExceptions.Wright("Start Get GetDepots");
                 var depots = await _context.Depots
+                    .Where(x => x.Name.Contains("ТЧ"))
+                    .OrderBy(x => x.Name)
                     .Select(x => x.Name)
                     .ToListAsync();
                 return Ok(depots);
@@ -132,6 +136,8 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Init("LocomotivesApiController", "CreateLocomotive");
                 LoggingExceptions.Start();
                 LoggingExceptions.Wright("Start Post CreateLocomotive");
+
+
                 var locomotive = new Locomotive
                 {
                     Number = locomotiveDTO.Number,
@@ -145,6 +151,16 @@ namespace TrainzInfo.Controllers.Api
                     Seria = locomotiveDTO.Seria
                 };
 
+                LoggingExceptions.Wright("Try find locomotoive if exist");
+                Locomotive locomotiveExit = await _context.Locomotives
+                    .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)
+                    .FirstOrDefaultAsync();
+                if (locomotiveExit is not null)
+                {
+                    LoggingExceptions.Wright("Locomotoive is exist");
+                    LoggingExceptions.Finish();
+                    return BadRequest("Локомотив з такою серією та номером вже існує.");
+                }
                 LoggingExceptions.Wright("Parse image");
                 if (!string.IsNullOrEmpty(locomotiveDTO.ImgSrc))
                 {
@@ -207,12 +223,14 @@ namespace TrainzInfo.Controllers.Api
                                 ? $"data:{locomotive.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Image)}"
                                 : null,
                 };
+                LoggingExceptions.Finish();
                 return Ok(locoDTO);
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException(ex.ToString());
                 LoggingExceptions.Wright(ex.ToString());
+                LoggingExceptions.Finish();
                 return BadRequest(ex.ToString());
                 throw;
             }
@@ -223,6 +241,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpDelete("deleteapprove/{id}")]
+        [Authorize(Roles = "Superadmin, Admin")]
         public async Task<ActionResult> DeleteLocomotive(int id)
         {
             try
@@ -237,13 +256,104 @@ namespace TrainzInfo.Controllers.Api
                 }
                 _context.Locomotives.Remove(locomotive);
                 await _context.SaveChangesAsync();
+                LoggingExceptions.Finish();
                 return Ok();
             }
             catch (Exception ex)
             {
                 LoggingExceptions.AddException(ex.ToString());
                 LoggingExceptions.Wright(ex.ToString());
+                LoggingExceptions.Finish();
                 return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpGet("getfilias")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<string>>> GetFilias()
+        {
+            try
+            {
+                LoggingExceptions.Init("LocomotivesApiController", "GetFilias");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get GetFilias");
+                var filias = await _context.UkrainsRailways
+                    .OrderBy(x => x.Name)
+                    .Select(x => x.Name)
+                    .ToListAsync();
+                LoggingExceptions.Finish();
+                return Ok(filias);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpGet("getserias")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<string>>> GetSerias()
+        {
+            try
+            {
+                LoggingExceptions.Init("LocomotivesApiController", "GetSerias");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get GetSerias");
+                var serias = await _context.Locomotive_Series
+                    .OrderBy(x => x.Seria)
+                    .Select(x => x.Seria)
+                    .ToListAsync();
+                LoggingExceptions.Finish();
+                return Ok(serias);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpGet("getdepots")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<string>>> GetDepotsList()
+        {
+            try
+            {
+                LoggingExceptions.Init("LocomotivesApiController", "GetDepotsList");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get GetDepotsList");
+                var depots = await _context.Depots
+                    .Where(x => x.Name.Contains("ТЧ"))
+                    .OrderBy(x => x.Name)
+                    .Select(x => x.Name)
+                    .ToListAsync();
+                LoggingExceptions.Finish();
+                return Ok(depots);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
                 throw;
             }
             finally
