@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +55,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
@@ -79,6 +82,7 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpGet("getauthuser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDto>> GetAuthuser()
         {
             LoggingExceptions.Init(this.ToString(), nameof(GetAuthuser));
@@ -86,7 +90,7 @@ namespace TrainzInfo.Controllers.Api
 
             LoggingExceptions.Wright("Try find user");
             var email = User.Identity?.Name;
-
+            LoggingExceptions.Wright($"User email: {email}");
             if (string.IsNullOrEmpty(email))
                 return Unauthorized();
 
