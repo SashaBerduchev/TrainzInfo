@@ -15,7 +15,7 @@
             <!-- Назва новини -->
             <div class="form-group">
                 <label>Назва новини</label>
-                <InputText @bind-Value="news.NameNews" class="form-control" />
+                <textarea id="editorName"></textarea>
             </div>
 
             <!-- Короткий опис (CKEditor) -->
@@ -68,11 +68,14 @@
         if (firstRender)
         {
             // Ініціалізація CKEditor через JS Interop
-            await JS.InvokeVoidAsync("initCKEditor", "editorBase", DotNetObjectReference.Create(this), "SetBaseNewsInfo");
-            await JS.InvokeVoidAsync("initCKEditor", "editorFull", DotNetObjectReference.Create(this), "SetNewsInfoAll");
+            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorBase", DotNetObjectReference.Create(this), "SetBaseNewsInfo");
+            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorFull", DotNetObjectReference.Create(this), "SetNewsInfoAll");
+            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorName", DotNetObjectReference.Create(this), "SetNewsName");
         }
     }
 
+    [JSInvokable]
+    public void SetNewsName(string value) => news.NameNews = value;
     [JSInvokable]
     public void SetBaseNewsInfo(string value) => news.BaseNewsInfo = value;
 

@@ -1,4 +1,4 @@
-﻿window.initCKEditor = (textareaId, dotNetHelper, methodName, initialData) => {
+﻿window.initCKEditorForCreateNews = (textareaId, dotNetHelper, methodName, initialData) => {
     const el = document.querySelector(`#${textareaId}`);
     if (!el) return;
 

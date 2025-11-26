@@ -18,7 +18,7 @@ else
 
         <div class="form-group">
             <label>Назва новини</label>
-            <InputText @bind-Value="news.NameNews" class="form-control" />
+            <textarea @ref="editorNewsName"></textarea>
         </div>
 
         <div class="form-group mt-2">
@@ -52,6 +52,14 @@ else
             <div class="alert alert-danger mt-2">@errors</div>
         }
     </EditForm>
+
+    if (errors != null)
+    {
+        <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+        <div class="alert alert-danger mt-2">
+            <p>@errors</p>
+        </div>
+    }
 }
 
 @code {
@@ -61,6 +69,10 @@ else
     private string imagePreview;
     private ElementReference editorShortRef;
     private ElementReference editorFullRef;
+    private ElementReference editorNewsName;
+    private bool editorShortInitialized = false;
+    private bool editorFullInitialized = false;
+    private bool editoNameNewsInitialized = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,17 +88,56 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && news != null)
+        if (firstRender) return;
+        if (!editorShortInitialized && news != null)
         {
-            await Task.Delay(2); // чекаємо рендеру DOM
-            var dotNetRef = DotNetObjectReference.Create(this);
-
-            await JS.InvokeVoidAsync("initCKEditor", editorShortRef, dotNetRef, "SetBaseNewsInfo", news?.BaseNewsInfo ?? "");
-            await JS.InvokeVoidAsync("initCKEditor", editorFullRef, dotNetRef, "SetNewsInfoAll", news?.NewsInfoAll ?? "");
+            await InitEditorsAsync();
         }
 
     }
+    private async Task InitEditorsAsync()
+    {
+        var dotNetRef = DotNetObjectReference.Create(this);
 
+        // Short description
+        if (!editoNameNewsInitialized)
+        {
+            await JS.InvokeVoidAsync(
+                "initCKEditorForEditNews",
+                editorNewsName,
+                dotNetRef,
+                "SetNameNews",
+                news?.NameNews ?? string.Empty);
+            editoNameNewsInitialized = true;
+        }
+
+        // Short description
+        if (!editorShortInitialized)
+        {
+            await JS.InvokeVoidAsync(
+                "initCKEditorForEditNews",
+                editorShortRef,
+                dotNetRef,
+                "SetBaseNewsInfo",
+                news?.BaseNewsInfo ?? string.Empty);
+            editorShortInitialized = true;
+        }
+
+        // Full text
+        if (!editorFullInitialized)
+        {
+            await JS.InvokeVoidAsync(
+                "initCKEditorForEditNews",
+                editorFullRef,
+                dotNetRef,
+                "SetNewsInfoAll",
+                news?.NewsInfoAll ?? string.Empty);
+            editorFullInitialized = true;
+        }
+    }
+
+    [JSInvokable]
+    public void SetNameNews(string value) => news.NameNews = value;
 
     [JSInvokable]
     public void SetBaseNewsInfo(string value) => news.BaseNewsInfo = value;
@@ -98,9 +149,9 @@ else
     {
         try
         {
-            var result = await Http.PutAsJsonAsync("api/news/edit", news);
+            var result = await Http.PostAsJsonAsync("api/news/edit", news);
             if (result.IsSuccessStatusCode)
-                Navigation.NavigateTo("/news");
+                Navigation.NavigateTo("/");
             else
                 errors = await result.Content.ReadAsStringAsync();
         }

@@ -49,7 +49,7 @@
                     <div class="card shadow-sm">
                         <img src="@news.NewsImage" class="card-img-top" alt="@news.NameNews" />
                         <div class="card-body">
-                            <h5>@news.NameNews</h5>
+                            <h5>@((MarkupString)news.NameNews)</h5>
                             @((MarkupString)news.BaseNewsInfo)
                             <NavLink class="btn btn-primary btn-sm"
                                      href="@($"/news/details/{news.id}")">
