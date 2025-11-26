@@ -1,0 +1,122 @@
+﻿@page "/news/edit/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<h1>Редагувати новину</h1>
+<hr />
+
+@if (news == null)
+{
+    <p>Завантаження даних...</p>
+}
+else
+{
+    <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Назва новини</label>
+            <InputText @bind-Value="news.NameNews" class="form-control" />
+        </div>
+
+        <div class="form-group mt-2">
+            <label>Короткий опис</label>
+            <textarea @ref="editorShortRef"></textarea>
+        </div>
+
+        <div class="form-group mt-2">
+            <label>Повний текст</label>
+            <textarea @ref="editorFullRef"></textarea>
+        </div>
+
+        <div class="form-group mt-2">
+            <label>Завантажити картинку</label>
+            <InputFile OnChange="HandleFileSelected" />
+            @if (!string.IsNullOrEmpty(imagePreview))
+            {
+                <div class="mt-2">
+                    <img src="@imagePreview" alt="preview" width="150" class="img-thumbnail" />
+                </div>
+            }
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <button type="button" class="btn btn-secondary" @onclick="GoBack">Назад</button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errors))
+        {
+            <div class="alert alert-danger mt-2">@errors</div>
+        }
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private NewsDTO news;
+    private string errors;
+    private string imagePreview;
+    private ElementReference editorShortRef;
+    private ElementReference editorFullRef;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/geteditnews/{Id}");
+        }
+        catch (Exception ex)
+        {
+            errors = ex.Message;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && news != null)
+        {
+            await Task.Delay(2); // чекаємо рендеру DOM
+            var dotNetRef = DotNetObjectReference.Create(this);
+
+            await JS.InvokeVoidAsync("initCKEditor", editorShortRef, dotNetRef, "SetBaseNewsInfo", news?.BaseNewsInfo ?? "");
+            await JS.InvokeVoidAsync("initCKEditor", editorFullRef, dotNetRef, "SetNewsInfoAll", news?.NewsInfoAll ?? "");
+        }
+
+    }
+
+
+    [JSInvokable]
+    public void SetBaseNewsInfo(string value) => news.BaseNewsInfo = value;
+
+    [JSInvokable]
+    public void SetNewsInfoAll(string value) => news.NewsInfoAll = value;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var result = await Http.PutAsJsonAsync("api/news/edit", news);
+            if (result.IsSuccessStatusCode)
+                Navigation.NavigateTo("/news");
+            else
+                errors = await result.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
+            errors = ex.Message;
+        }
+    }
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        news.NewsImage = imagePreview;
+        news.ImageMimeTypeOfData = file.ContentType;
+    }
+    private void GoBack() => Navigation.NavigateTo("/");
+}

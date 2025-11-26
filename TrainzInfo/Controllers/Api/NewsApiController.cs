@@ -148,6 +148,34 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("geteditnews/{id}")]
+        public async Task<ActionResult<NewsInfo>> GetEditNews(int id)
+        {
+            try
+            {
+                LoggingExceptions.Init("NewsApiController", "GetEditNews");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get Edit NewsInfo");
+                var news = await _context.NewsInfos.FindAsync(id);
+                if (news == null)
+                {
+                    return NotFound();
+                }
+                return Ok(news);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
         [HttpPost("edit")]
         public async Task<ActionResult> EditNews([FromBody] NewsInfo newsInfo)
         {
