@@ -49,7 +49,7 @@
 
                 @if (ViewBag.user != null && (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher"))
                 {
-                    <a class="btn btn-outline-info btn-sm" asp-action="Edit" asp-route-id="@Model.id">Редагувати інформацію</a>
+                    <a class="btn btn-outline-info btn-sm" asp-action="edit" asp-route-id="@Model.id">Редагувати інформацію</a>
                     <a class="btn btn-outline-info btn-sm" asp-action="AddImageForm" asp-route-id="@Model.id">Додати картинку</a>
                 }
             </div>

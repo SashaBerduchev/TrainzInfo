@@ -53,7 +53,7 @@
                                 {
                                     if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher")
                                     {
-                                        <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                                        <a class="btn btn-success btn-sm" asp-action="edit" asp-route-id="@item.id">Редагувати</a>
                                     }
                                 }
                                 @if (item.Locomotives != null && item.Locomotives.Count > 0)

@@ -87,7 +87,7 @@
                             <a class="btn btn-outline-info mb-2 w-100" asp-action="AddImageForm" asp-route-id="@item.id">
                                 Додати зображення
                             </a>
-                            <a class="btn btn-danger w-100" asp-action="Delete" asp-route-id="@item.id">
+                            <a class="btn btn-danger w-100" asp-action="delete/{id}" asp-route-id="@item.id">
                                 Видалити
                             </a>
                         }

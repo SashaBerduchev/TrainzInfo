@@ -32,10 +32,10 @@
                     <div class="station-meta">@item.ImageMimeTypeOfData</div>
 
                     <div class="station-actions">
-                        <a asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                        <a asp-action="edit" asp-route-id="@item.id">Редагувати</a>
                         <a asp-action="AddImageForm" asp-route-id="@item.id">Додати фото</a>
                         <a asp-action="Details" asp-route-id="@item.id">Деталі</a>
-                        <a asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                        <a asp-action="delete/{id}" asp-route-id="@item.id">Видалити</a>
                     </div>
                 </div>
             </div>

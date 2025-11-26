@@ -45,7 +45,7 @@
         {
             @if (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
             {
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.id">Редагуввати</a>
+                <a class="btn btn-success" asp-action="edit" asp-route-id="@Model.id">Редагуввати</a>
 
             }
         }

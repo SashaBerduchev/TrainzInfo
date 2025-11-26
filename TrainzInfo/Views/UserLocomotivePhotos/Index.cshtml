@@ -36,8 +36,8 @@
         {
             if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Reader")
             {
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Редагуввати</a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                <a class="btn btn-success" asp-action="edit" asp-route-id="@item.Id">Редагуввати</a>
+                <a class="btn btn-danger" asp-action="delete/{id}" asp-route-id="@item.Id">Удалить</a>
             }
         }
     </div>

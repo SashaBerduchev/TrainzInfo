@@ -333,7 +333,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteStation(int id)
         {
             LoggingExceptions.Init(this.ToString(), nameof(DeleteStation));

@@ -58,8 +58,8 @@
     (User.IsInRole("Publisher") || User.IsInRole("Admin") || User.IsInRole("Superadmin")))
     {
         <div class="d-flex flex-wrap gap-2 mb-4">
-            <a class="btn btn-info" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати поточну інформацію</a>
-            <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="Edit" asp-route-id="@Model.StationInfo.id">Додати додаткову інформацію</a>
+            <a class="btn btn-info" target="_blank" asp-action="edit" asp-route-id="@Model.id">Редагувати поточну інформацію</a>
+            <a class="btn btn-info" target="_blank" asp-controller="StationInfoes" asp-action="edit" asp-route-id="@Model.StationInfo.id">Додати додаткову інформацію</a>
         </div>
     }
 

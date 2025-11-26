@@ -59,8 +59,8 @@
 
                         @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
                         {
-                            <a class="btn btn-success mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                            <a class="btn btn-success mb-2" asp-action="edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-danger" asp-action="delete/{id}" asp-route-id="@item.id">Видалити</a>
                         }
                     </div>
                 </div>

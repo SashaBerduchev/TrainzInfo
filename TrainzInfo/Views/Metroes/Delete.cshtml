@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.Metro
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "delete/{id}";
 }
 
 <!DOCTYPE html>
@@ -38,9 +38,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="delete/{id}">
         <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="delete/{id}" class="btn btn-danger" /> |
         <a asp-action="Index">Назад на главную</a>
     </form>
 </div>

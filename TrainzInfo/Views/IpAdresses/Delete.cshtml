@@ -1,7 +1,7 @@
 ﻿@model TrainzInfo.Models.IpAdresses
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "delete/{id}";
 }
 
 <h1>Delete</h1>
@@ -19,9 +19,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="delete/{id}">
         <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="delete/{id}" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

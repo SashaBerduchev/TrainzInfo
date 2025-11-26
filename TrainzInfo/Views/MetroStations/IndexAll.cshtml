@@ -44,9 +44,9 @@
                     </td>
                     <td>
                         <a class="btn btn-light" asp-action="AddImageForm" asp-route-id="@item.id">Добавить картинку</a>
-                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.id">Редагуввати</a> |
+                        <a class="btn btn-success" asp-action="edit" asp-route-id="@item.id">Редагуввати</a> |
                         <a class="btn btn-info" asp-action="Details" asp-route-id="@item.id">Информация</a> |
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                        <a class="btn btn-danger" asp-action="delete/{id}" asp-route-id="@item.id">Удалить</a>
                     </td>
                 </tr>
             }

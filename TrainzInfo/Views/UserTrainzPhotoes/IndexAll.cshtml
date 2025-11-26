@@ -50,9 +50,9 @@
                 @Html.DisplayFor(modelItem => item.BaseInfo)
             </td>
             <td>
-                <a class="btn btn-success  asp-action="Edit" asp-route-id="@item.id">Изменить</a> 
+                <a class="btn btn-success  asp-action="edit" asp-route-id="@item.id">Изменить</a> 
                 <a class="btn btn-info"  asp-action="Details" asp-route-id="@item.id">Инфо</a> 
-                <a class="btn btn-dark"  asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <a class="btn btn-dark"  asp-action="delete/{id}" asp-route-id="@item.id">Удалить</a>
             </td>
         </tr>
         }

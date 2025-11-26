@@ -37,7 +37,7 @@
             <div style="font-size:20px"><p>Информация о фото:</p><p>@item.Information</p></div>
             <div>
                 <a class="btn btn-info" asp-controller="RailwayUsersPhotoes" asp-action="Allow" asp-route-id="@item.id">Разрешить</a>
-                <a class="btn btn-danger" asp-controller="RailwayUsersPhotoes" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                <a class="btn btn-danger" asp-controller="RailwayUsersPhotoes" asp-action="delete/{id}" asp-route-id="@item.id">Удалить</a>
 
             </div>
         </div>

@@ -56,7 +56,7 @@
                         }
                         @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
                         {
-                            <a class="btn btn-success btn-sm d-block w-100 mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                            <a class="btn btn-success btn-sm d-block w-100 mb-2" asp-action="edit" asp-route-id="@item.id">Редагувати</a>
                             <a class="btn btn-outline-danger btn-sm d-block w-100 mb-2"
                                asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">
                                 Додати розклад
@@ -90,7 +90,7 @@
                 }
                 @if (ViewBag.user != null && ViewBag.user.Role == "Superadmin")
                 {
-                    <a class="btn btn-success btn-sm w-100 mb-2" asp-action="Edit" asp-route-id="@item.id">Редагувати</a>
+                    <a class="btn btn-success btn-sm w-100 mb-2" asp-action="edit" asp-route-id="@item.id">Редагувати</a>
                     <a class="btn btn-outline-danger btn-sm w-100"
                        asp-controller="TrainsShadules" asp-action="Create" asp-route-numbertr="@item.Number">
                         Додати розклад

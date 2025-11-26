@@ -42,8 +42,8 @@
         @if (ViewBag.user != null && (ViewBag.user.Role == "Publisher" || ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin"))
         {
             <a class="btn btn-info w-100 w-md-auto" asp-action="AddImageForm" asp-route-id="@Model.id">Додати картинку</a>
-            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="Edit" asp-route-name="@Model.Name">Змінити загальну інформацію</a>
-            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-action="Edit" asp-route-id="@Model.id">Редагувати дані поїзда</a>
+            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-controller="SuburbanTrainsInfoes" asp-action="edit" asp-route-name="@Model.Name">Змінити загальну інформацію</a>
+            <a class="btn btn-info w-100 w-md-auto" target="_blank" asp-action="edit" asp-route-id="@Model.id">Редагувати дані поїзда</a>
         }
     </div>
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DTO;
 
@@ -13,10 +14,10 @@ namespace TrainzInfo.Controllers.Api
     [Route("api/diesels")]
     public class DieselTrainsApiController : Controller
     {
-        private readonly ApplicationContext _contesxt;
+        private readonly ApplicationContext _context;
         public DieselTrainsApiController(ApplicationContext context)
         {
-            _contesxt = context;
+            _context = context;
         }
 
         [HttpGet("gettrains")]
@@ -28,7 +29,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 int pageCount = 10;
-                IQueryable<DieselTrainsDTO> diesels = _contesxt.DieselTrains
+                IQueryable<DieselTrainsDTO> diesels = _context.DieselTrains
                     .Include(dt => dt.DepotList)
                         .ThenInclude(dl => dl.City)
                             .ThenInclude(c => c.Oblasts)
@@ -77,7 +78,7 @@ namespace TrainzInfo.Controllers.Api
             LoggingExceptions.Wright("GetFilias API called");
             try
             {
-                var filias = await _contesxt.UkrainsRailways
+                var filias = await _context.UkrainsRailways
                     .Select(ur => ur.Name)
                     .Distinct()
                     .ToListAsync();
@@ -104,7 +105,7 @@ namespace TrainzInfo.Controllers.Api
             LoggingExceptions.Wright("GetOblasts API called");
             try
             {
-                var oblasts = await _contesxt.Oblasts
+                var oblasts = await _context.Oblasts
                     .Select(o => o.Name)
                     .Distinct()
                     .ToListAsync();
@@ -131,9 +132,9 @@ namespace TrainzInfo.Controllers.Api
             LoggingExceptions.Wright("GetDepos API called");
             try
             {
-                var depos = await _contesxt.Depots
+                var depos = await _context.Depots
                     .Where(x => x.Name.Contains("РПЧ"))
-                    .Select(dl => dl.Name)                    
+                    .Select(dl => dl.Name)
                     .Distinct()
                     .ToListAsync();
                 LoggingExceptions.Wright("GetDepos API finished");
@@ -159,7 +160,7 @@ namespace TrainzInfo.Controllers.Api
             LoggingExceptions.Wright("GetModels API called");
             try
             {
-                var models = await _contesxt.SuburbanTrainsInfos
+                var models = await _context.SuburbanTrainsInfos
                     .Select(sti => sti.Model)
                     .Distinct()
                     .ToListAsync();
@@ -178,5 +179,99 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateDieselTrain([FromBody] DieselTrainsDTO dieselTrainDto)
+        {
+            LoggingExceptions.Init("DieselTrainsApiController", "CreateDieselTrain");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("CreateDieselTrain API called");
+            try
+            {
+                var dieselTrain = new DieselTrains
+                {
+                    NumberTrain = dieselTrainDto.NumberTrain,
+                    // Set other properties as needed
+                };
+                await _context.DieselTrains.AddAsync(dieselTrain);
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("CreateDieselTrain API finished");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException("CreateDieselTrain API error: " + ex.Message);
+                LoggingExceptions.Wright("CreateDieselTrain API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+
+        [HttpPost("edit")]
+        public async Task<IActionResult> EditDieselTrain([FromBody] DieselTrainsDTO dieselTrainDto)
+        {
+            LoggingExceptions.Init("DieselTrainsApiController", "EditDieselTrain");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("EditDieselTrain API called");
+            try
+            {
+                var dieselTrain = await _context.DieselTrains.FindAsync(dieselTrainDto.Id);
+                if (dieselTrain == null)
+                {
+                    LoggingExceptions.Wright("EditDieselTrain API: Diesel train not found");
+                    return NotFound();
+                }
+                dieselTrain.NumberTrain = dieselTrainDto.NumberTrain;
+                // Update other properties as needed
+                _context.DieselTrains.Update(dieselTrain);
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("EditDieselTrain API finished");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException("EditDieselTrain API error: " + ex.Message);
+                LoggingExceptions.Wright("EditDieselTrain API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteDieselTrain(int id)
+        {
+            LoggingExceptions.Init("DieselTrainsApiController", "DeleteDieselTrain");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("DeleteDieselTrain API called");
+            try
+            {
+                var dieselTrain = await _context.DieselTrains.FindAsync(id);
+                if (dieselTrain == null)
+                {
+                    LoggingExceptions.Wright("DeleteDieselTrain API: Diesel train not found");
+                    return NotFound();
+                }
+                _context.DieselTrains.Remove(dieselTrain);
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("DeleteDieselTrain API finished");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException("DeleteDieselTrain API error: " + ex.Message);
+                LoggingExceptions.Wright("DeleteDieselTrain API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
     }
 }

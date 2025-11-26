@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DTO;
 
@@ -78,6 +79,115 @@ namespace TrainzInfo.Controllers.Api
             {
                 LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
                 LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpPost("create")]
+        public async Task<ActionResult> Create([FromBody] ElectricTrainDTO trainDTO)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(Create));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Create electric train");
+            try
+            {
+                ElectricTrain electricTrain = new ElectricTrain
+                {
+                    Name = trainDTO.Name,
+                    Model = trainDTO.Model,
+                    MaxSpeed = trainDTO.MaxSpeed,
+                    DepotTrain = trainDTO.DepotTrain,
+                    DepotCity = trainDTO.DepotCity,
+                    LastKvr = DateOnly.Parse(trainDTO.LastKvr),
+                    CreatedTrain = DateOnly.Parse(trainDTO.CreatedTrain),
+                    PlantCreate = trainDTO.PlantCreate,
+                    PlantKvr = trainDTO.PlantKvr,
+                    Image = !string.IsNullOrEmpty(trainDTO.Image)
+                                ? Convert.FromBase64String(trainDTO.Image.Split(',')[1])
+                                : null,
+                    ImageMimeTypeOfData = trainDTO.ImageMimeTypeOfData,
+                    IsProof = trainDTO.IsProof
+                };
+                _context.Electrics.Add(electricTrain);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
+                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpPost("edit")]
+        public async Task<ActionResult> Edit([FromBody] ElectricTrainDTO electricTrainDTO)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(Edit));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Edit electric train");
+            try
+            {
+                ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
+                electricTrain.DepotList = await _context.Depots.Where(d => d.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
+                electricTrain.City = await _context.Cities.Where(c => c.Name == electricTrainDTO.City).FirstOrDefaultAsync();
+                electricTrain.PlantsCreate = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsCreate).FirstOrDefaultAsync();
+                electricTrain.PlantsKvr = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsKvr).FirstOrDefaultAsync();
+                electricTrain.Trains = await _context.SuburbanTrainsInfos.Where(t => t.BaseInfo == electricTrainDTO.TrainsInfo).FirstOrDefaultAsync();
+                electricTrain.ElectrickTrainzInformation = await _context.ElectrickTrainzInformation.Where(e => e.AllInformation == electricTrainDTO.ElectrickTrainzInformation).FirstOrDefaultAsync();
+                electricTrain.Name = electricTrainDTO.Name;
+                electricTrain.Model = electricTrainDTO.Model;
+                electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
+                electricTrain.DepotTrain = electricTrainDTO.DepotTrain;
+                electricTrain.DepotCity = electricTrainDTO.DepotCity;
+                electricTrain.LastKvr = DateOnly.Parse(electricTrainDTO.LastKvr);
+                electricTrain.CreatedTrain = DateOnly.Parse(electricTrainDTO.CreatedTrain);
+                electricTrain.PlantCreate = electricTrainDTO.PlantCreate;
+                _context.Electrics.Update(electricTrain);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(Delete));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Delete electric train");
+            try
+            {
+                ElectricTrain electricTrain = await _context.Electrics.FindAsync(id);
+                if (electricTrain == null)
+                {
+                    return NotFound();
+                }
+                _context.Electrics.Remove(electricTrain);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
+                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally

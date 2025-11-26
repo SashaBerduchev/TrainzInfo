@@ -72,8 +72,8 @@
                             {
                                 if (ViewBag.user.Role == "Superadmin" || ViewBag.user.Role == "Admin")
                                 {
-                                    <a class="btn btn-success" asp-controller="TrainzStations" asp-action="Edit" asp-route-id="@item.id">Редагуввати</a>
-                                    <a class="btn btn-danger" asp-controller="TrainzStations" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
+                                    <a class="btn btn-success" asp-controller="TrainzStations" asp-action="edit" asp-route-id="@item.id">Редагуввати</a>
+                                    <a class="btn btn-danger" asp-controller="TrainzStations" asp-action="delete/{id}" asp-route-id="@item.id">Удалить</a>
                                 }
                             }
                         </td>
@@ -89,7 +89,7 @@
     {
         @if (ViewBag.user.Role == "Admin" || ViewBag.user.Role == "Superadmin")
         {
-            <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.id">Редагуввати</a>
+            <a class="btn btn-outline-secondary" asp-action="edit" asp-route-id="@Model.id">Редагуввати</a>
             @*<a asp-action="Index">Back to List</a>*@
         }
     }

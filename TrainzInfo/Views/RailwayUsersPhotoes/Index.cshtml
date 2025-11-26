@@ -49,7 +49,7 @@
                     {
                         if (ViewBag.user.Id == item.Users.Id)
                         {
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Видалити</a>
+                            <a class="btn btn-danger" asp-action="delete/{id}" asp-route-id="@item.id">Видалити</a>
                         }
 
                     }

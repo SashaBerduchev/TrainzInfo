@@ -28,7 +28,7 @@
                         @if (User != null && (User.IsInRole("Superadmin") || User.IsInRole("Admin") || User.IsInRole("Publisher")))
                         {
                             <a class="btn btn-outline-info btn_news" asp-controller="NewsInfoes" asp-action="AddImageForm" asp-route-id="@info.id">Додати зображення</a>
-                            <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="Delete" asp-route-id="@info.id">Видалити</a>
+                            <a class="btn btn-danger" asp-controller="NewsInfoes" asp-action="delete/{id}" asp-route-id="@info.id">Видалити</a>
                         }
                     </div>
                 </div>

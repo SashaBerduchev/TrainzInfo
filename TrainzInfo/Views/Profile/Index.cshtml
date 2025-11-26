@@ -5,7 +5,7 @@
 <p><strong>Логін:</strong> @Model.UserName</p>
 <p><strong>Email:</strong> @Model.Email</p>
 <p><strong>Id:</strong> @Model.Id</p>
-<a class="btn btn-success" asp-action="Edit">Редагувати</a>
+<a class="btn btn-success" asp-action="edit">Редагувати</a>
 
 
 @if (User != null && (User.IsInRole("Superadmin")))
