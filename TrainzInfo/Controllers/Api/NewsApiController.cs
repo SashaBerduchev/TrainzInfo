@@ -73,16 +73,26 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> CreateNews([FromBody] NewsInfo newsInfo)
+        public async Task<ActionResult> CreateNews([FromBody] NewsDTO newsInfo)
         {
             try
             {
                 LoggingExceptions.Init("NewsApiController", "CreateNews");
                 LoggingExceptions.Start();
                 LoggingExceptions.Wright("Start Create NewsInfo");
-                newsInfo.DateTime = DateOnly.FromDateTime(DateTime.Now);
-                _context.NewsInfos.Add(newsInfo);
+
+                NewsInfo newNews = new NewsInfo
+                {
+                    NameNews = newsInfo.NameNews,
+                    BaseNewsInfo = newsInfo.BaseNewsInfo,
+                    NewsInfoAll = newsInfo.NewsInfoAll,
+                    DateTime = DateOnly.FromDateTime(DateTime.Now),
+                    NewsImage = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
+                    ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null
+                };
+                _context.NewsInfos.Add(newNews);
                 await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("NewsInfo Created Successfully");
                 return Ok();
             }
             catch (Exception ex)

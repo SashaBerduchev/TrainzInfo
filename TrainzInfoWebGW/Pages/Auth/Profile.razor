@@ -12,7 +12,8 @@
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-
+        await CheckRoles();
+        StateHasChanged();
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             userName = user.Identity.Name;
@@ -24,18 +25,63 @@
         }
     }
 }
+
+
 <div class="card mt-3" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title">Користувач: @userName</h5>
         <p class="card-text">Тут можна показати інші деталі користувача.</p>
         <button class="btn btn-danger" @onclick="Logout">Вийти</button>
+        @if (IsAdmin)
+        {
+            <button class="btn btn-info" @onclick="CreateNews">Створити новину</button>
+        }
+    </div>
+    <div>
     </div>
 </div>
 
 @code {
+    private bool IsAdmin { get; set; } = false;
+
     private void Logout()
     {
         // редірект на сторінку логіну або виходу через Identity
         Nav.NavigateTo("/Identity/Account/Logout");
+    }
+
+    private void CreateNews()
+    {
+        Nav.NavigateTo("/news/create");
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
     }
 }
