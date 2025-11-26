@@ -70,5 +70,96 @@ namespace TrainzInfo.Controllers.Api
             }
 
         }
+
+        [HttpPost("create")]
+        public async Task<ActionResult> CreateNews([FromBody] NewsInfo newsInfo)
+        {
+            try
+            {
+                LoggingExceptions.Init("NewsApiController", "CreateNews");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Create NewsInfo");
+                newsInfo.DateTime = DateOnly.FromDateTime(DateTime.Now);
+                _context.NewsInfos.Add(newsInfo);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpPost("edit")]
+        public async Task<ActionResult> EditNews([FromBody] NewsInfo newsInfo)
+        {
+            try
+            {
+                LoggingExceptions.Init("NewsApiController", "EditNews");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Edit NewsInfo");
+                var existingNews = await _context.NewsInfos.FindAsync(newsInfo.id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
+                existingNews.NameNews = newsInfo.NameNews;
+                existingNews.BaseNewsInfo = newsInfo.BaseNewsInfo;
+                existingNews.NewsInfoAll = newsInfo.NewsInfoAll;
+                existingNews.NewsImage = newsInfo.NewsImage;
+                existingNews.ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData;
+                _context.NewsInfos.Update(existingNews);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpDelete("delete")]
+        public async Task<ActionResult> DeleteNews(int id)
+        {
+            try
+            {
+                LoggingExceptions.Init("NewsApiController", "DeleteNews");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Delete NewsInfo");
+                var existingNews = await _context.NewsInfos.FindAsync(id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
+                _context.NewsInfos.Remove(existingNews);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
     }
 }

@@ -60,20 +60,20 @@ namespace TrainzInfo.Controllers.Api
 
                 // Після завантаження — формуємо DTO
                 var result = stations.AsParallel().Select(station => new StationsDTO
-            {
-                id = station.id,
-                Name = station.Name,
-                DopImgSrc = station.DopImgSrc,
-                DopImgSrcSec = station.DopImgSrcSec,
-                DopImgSrcThd = station.DopImgSrcThd,
-                ImageMimeTypeOfData = station.ImageMimeTypeOfData,
-                UkrainsRailways = station.UkrainsRailways?.Name,
-                Oblasts = station.Oblasts?.Name,
-                Citys = station.Citys?.Name,
-                StationInfo = station.StationInfo?.BaseInfo,
-                Metro = station.Metro?.Name,
-                StationImages = getSlowImage(station) // тепер МОЖНА
-            }).ToList();
+                {
+                    id = station.id,
+                    Name = station.Name,
+                    DopImgSrc = station.DopImgSrc,
+                    DopImgSrcSec = station.DopImgSrcSec,
+                    DopImgSrcThd = station.DopImgSrcThd,
+                    ImageMimeTypeOfData = station.ImageMimeTypeOfData,
+                    UkrainsRailways = station.UkrainsRailways?.Name,
+                    Oblasts = station.Oblasts?.Name,
+                    Citys = station.Citys?.Name,
+                    StationInfo = station.StationInfo?.BaseInfo,
+                    Metro = station.Metro?.Name,
+                    StationImages = getSlowImage(station) // тепер МОЖНА
+                }).ToList();
 
                 LoggingExceptions.Wright("Stations successfully retrieved from database");
 
@@ -288,6 +288,80 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Finish();
             }
 
+        }
+
+        [HttpPost("edit")]
+        public async Task<ActionResult> EditStation([FromBody] StationsDTO stationDto)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(EditStation));
+            LoggingExceptions.Start();
+            try
+            {
+                LoggingExceptions.Wright("Editing station in database");
+                var station = await _context.Stations
+                    .Include(s => s.StationImages)
+                    .FirstOrDefaultAsync(s => s.id == stationDto.id);
+                if (station == null)
+                {
+                    LoggingExceptions.Wright("Station not found in database");
+                    return NotFound("Станцію не знайдено");
+                }
+                station.Name = stationDto.Name;
+                station.DopImgSrc = stationDto.DopImgSrc;
+                station.DopImgSrcSec = stationDto.DopImgSrcSec;
+                station.DopImgSrcThd = stationDto.DopImgSrcThd;
+                station.ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData;
+                station.Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null;
+                if (station.StationImages != null)
+                {
+                    station.StationImages.Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null;
+                    station.StationImages.ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData;
+                }
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("Station successfully edited in database");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error editing station: {ex.Message}");
+                LoggingExceptions.Wright("Error editing station: " + ex.Message);
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpDelete("delete")]
+        public async Task<ActionResult> DeleteStation(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(DeleteStation));
+            LoggingExceptions.Start();
+            try
+            {
+                LoggingExceptions.Wright("Deleting station from database");
+                var station = await _context.Stations.FindAsync(id);
+                if (station == null)
+                {
+                    LoggingExceptions.Wright("Station not found in database");
+                    return NotFound("Станцію не знайдено");
+                }
+                _context.Stations.Remove(station);
+                await _context.SaveChangesAsync();
+                LoggingExceptions.Wright("Station successfully deleted from database");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error deleting station: {ex.Message}");
+                LoggingExceptions.Wright("Error deleting station: " + ex.Message);
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
         }
     }
 }
