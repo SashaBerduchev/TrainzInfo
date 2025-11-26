@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Globalization;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -56,7 +57,8 @@ namespace TrainzInfo
                     ValidIssuer = Configuration["JwtSettings:Issuer"],
                     ValidAudience = Configuration["JwtSettings:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(Configuration["JwtSettings:Secret"]))
+                        Encoding.UTF8.GetBytes(Configuration["JwtSettings:Secret"])),
+                    RoleClaimType = ClaimTypes.Role
                 };
             });
 

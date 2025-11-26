@@ -58,17 +58,27 @@ namespace TrainzInfo.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+            LoggingExceptions.Init(this.ToString(), nameof(Login));
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright("Start login");
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
+            {
+                LoggingExceptions.Wright("User not found");
+                LoggingExceptions.Finish();
                 return Unauthorized("User not found");
+            }
 
             var passOk = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+
             if (!passOk.Succeeded)
                 return Unauthorized("Invalid login");
 
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtService.GenerateToken(user, roles);
-
+            LoggingExceptions.Wright("Generated token: " + token);
+            LoggingExceptions.Finish();
             return Ok(token);
 
         }
