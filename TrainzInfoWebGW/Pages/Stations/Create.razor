@@ -57,6 +57,17 @@
                     }
                 </InputSelect>
             </div>
+            <!-- Завантаження картинки -->
+            <div class="form-group">
+                <label>Завантажити картинку</label>
+                <InputFile OnChange="HandleFileSelected" />
+                @if (!string.IsNullOrEmpty(imagePreview))
+                {
+                    <div class="mt-2">
+                        <img src="@imagePreview" alt="preview" width="150" />
+                    </div>
+                }
+            </div>
 
             <!-- Кнопка -->
             <div class="form-group">
@@ -84,7 +95,7 @@
     private List<string> OblastList = new List<string>();
     private CancellationTokenSource debounceCts;
     private string ErrorMessage = "";
-
+    private string imagePreview;
 
 
     protected override async Task OnInitializedAsync()
@@ -98,7 +109,7 @@
     private async Task HandleValidSubmit()
     {
         var response = await Http.PostAsJsonAsync("api/stations/create", stationsDTO);
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             Navigation.NavigateTo("/stations");
         }
@@ -154,4 +165,17 @@
         stationsDTO.Citys = city;
         filteredCitys.Clear();
     }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        imagePreview = $"data:{file.ContentType}s;base64,{Convert.ToBase64String(buffer)}";
+
+        // Зберігаємо у модель для відправки на сервер
+        stationsDTO.StationImages = imagePreview;
+        stationsDTO.ImageMimeTypeOfData = file.ContentType;
+    }
+
 }

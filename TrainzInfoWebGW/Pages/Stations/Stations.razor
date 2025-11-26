@@ -12,7 +12,12 @@
 {
     <h2 class="text-center mb-4">@CurrentFilia</h2>
 }
-
+<div class="mb-3">
+    @if (IsAdmin)
+    {
+        <button class="btn btn-info mb-2" @onclick="AddStation">Додати станцію</button>
+    }
+</div>
 <!-- Фільтри -->
 <div class="row g-2 mb-4">
     <div class="col-12 col-md-4">
@@ -52,12 +57,7 @@
 
 <button class="btn btn-secondary mb-4" @onclick="ClearFilter">Скинути фільтр</button>
 
-<div class="mb-3">
-    @if (IsAdmin)
-    {
-        <button class="btn btn-info mb-2" @onclick="AddStation">Додати станцію</button>
-    }
-</div>
+
 
 <!-- Список станцій -->
 <div class="row" id="stationsContainer">
@@ -101,12 +101,16 @@
                             </a>
                         } *@
 
-                        <a class="btn btn-primary mb-2 w-100" href="/station/details/@item.id">
+                        <a class="btn btn-primary mb-2 w-100" href="/stations/details/@item.id">
                             Інформація
                         </a>
-                        <a class="btn btn-outline-info mb-2 w-100" href="/station/edit/@item.id">
-                            Редагувати
-                        </a>
+                        @if (IsAdmin)
+                        {
+                            <a class="btn btn-outline-info mb-2 w-100" href="/stations/edit/@item.id">
+                                Редагувати
+                            </a>
+                        }
+                        
 
                         @* @if (item.HasUsersPhotos)
                         {

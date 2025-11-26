@@ -121,6 +121,47 @@ namespace TrainzInfo.Controllers.Api
             return null;
         }
 
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult> Details(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(Details));
+            LoggingExceptions.Start();
+            try
+            {
+                StationsDTO station = await _context.Stations
+                    .Where(s => s.id == id)
+                    .Select(s => new StationsDTO
+                    {
+                        id = s.id,
+                        Name = s.Name,
+                        DopImgSrc = s.DopImgSrc,
+                        DopImgSrcSec = s.DopImgSrcSec,
+                        DopImgSrcThd = s.DopImgSrcThd,
+                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
+                        UkrainsRailways = s.UkrainsRailways.Name,
+                        Oblasts = s.Oblasts.Name,
+                        Citys = s.Citys.Name,
+                        StationInfo = s.StationInfo.BaseInfo,
+                        Metro = s.Metro.Name,
+                        StationImages = s.StationImages.Image != null
+                                ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
+                                : null,
+                    })
+                    .FirstOrDefaultAsync();
+                LoggingExceptions.Wright("Station details successfully retrieved from database");
+                return Ok(station);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error retrieving station details: {ex.Message}");
+                LoggingExceptions.Wright("Error retrieving station details: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
 
         [HttpGet("get-filias")]
         public async Task<ActionResult> GetFilias()
@@ -155,6 +196,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 var oblasts = await _context.Oblasts
+                    .OrderBy(o => o.Name)
                     .Select(o => o.Name)
                     .ToListAsync();
                 LoggingExceptions.Wright("Oblasts successfully retrieved from database");
@@ -180,6 +222,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 var citys = await _context.Cities
+                    .OrderBy(c => c.Name)
                     .Select(c => c.Name)
                     .ToListAsync();
                 LoggingExceptions.Wright("Citys successfully retrieved from database");
@@ -265,7 +308,7 @@ namespace TrainzInfo.Controllers.Api
                     station.StationImages = new StationImages
                     {
                         Name = stationDto.Name,
-                        Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null,
+                        Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.StationImages.Split(',')[1]) : null,
                         ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
                         CreatedAt = DateTime.UtcNow
                     };
@@ -288,6 +331,43 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Finish();
             }
 
+        }
+
+        [HttpGet("getedit/{id}")]
+        public async Task<ActionResult> GetEditStation(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(GetEditStation));
+            LoggingExceptions.Start();
+            try
+            {
+                StationsDTO station = await _context.Stations
+                    .Where(s => s.id == id)
+                    .Select(s => new StationsDTO
+                    {
+                        id = s.id,
+                        Name = s.Name,
+                        DopImgSrc = s.DopImgSrc,
+                        DopImgSrcSec = s.DopImgSrcSec,
+                        DopImgSrcThd = s.DopImgSrcThd,
+                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
+                        StationImages = s.StationImages.Image != null
+                                ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
+                                : null,
+                    })
+                    .FirstOrDefaultAsync();
+                LoggingExceptions.Wright("Station edit details successfully retrieved from database");
+                return Ok(station);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException($"Error retrieving station edit details: {ex.Message}");
+                LoggingExceptions.Wright("Error retrieving station edit details: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
         }
 
         [HttpPost("edit")]

@@ -241,7 +241,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpDelete("deleteapprove/{id}")]
-        [Authorize(Roles = "Superadmin, Admin")]
+        //[Authorize(Roles = "Superadmin, Admin")]
         public async Task<ActionResult> DeleteLocomotive(int id)
         {
             try

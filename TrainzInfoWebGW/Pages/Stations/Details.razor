@@ -1,0 +1,157 @@
+﻿@page "/stations/details/{id:int}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<h1 class="news-page-title">@stations?.Name</h1>
+
+@if (stations != null)
+{
+    <div class="news-detail-card card shadow-sm mb-5">
+        <div class="row g-4 align-items-start">
+            <!-- Картинка -->
+            <div class="col-md-4 text-center">
+                @if (string.IsNullOrEmpty(stations.StationImages))
+                {
+                    <img src="@stations.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
+                }
+                else
+                {
+                    <img src="@stations.StationImages" class="card-img-top" alt="@stations.Name" />
+                }
+            </div>
+
+            <!-- Текстова частина -->
+            <div class="col-md-8">
+                <dl class="row mb-3">
+                    <dt class="col-sm-3">Назва</dt>
+                    <dd class="col-sm-9 news-text">@stations.Name</dd>
+
+                    <dt class="col-sm-3">Філія</dt>
+                    <dd class="col-sm-9 news-text">@stations.UkrainsRailways</dd>
+
+                    <dt class="col-sm-3">Місто</dt>
+                    <dd class="col-sm-9 news-text">@stations.Citys</dd>
+
+                    <dt class="col-sm-3">Область</dt>
+                    <dd class="col-sm-9 news-text">@stations.Oblasts</dd>
+
+                </dl>
+
+                <!-- Кнопки -->
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @* @if (CanComment != null)
+                    {
+                        <button class="btn btn-info btn-sm" @onclick="() => NavUserPhoto(stations.id)">Коментувати</button>
+                        <button class="btn btn-info btn-sm" @onclick="() => NavStationShad(stations.id)">
+                            Коментарі + @CommentCount
+                        </button>
+                    } *@
+
+                    @if (IsAdmin == true)
+                    {
+                        <button class="btn btn-outline-info btn-sm" @onclick="() => EditStation(stations.id)">Редагувати інформацію</button>
+                        <button class="btn btn-outline-info btn-sm" @onclick="() => AddImage(stations.id)">Додати картинку</button>
+                        <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteStation(stations.id)">Видалити станію</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Завантаження інформації...</p>
+}
+
+@if (ErrorMessage is not null)
+        {
+            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+            <div class="alert alert-danger mt-2">
+                        <p>@ErrorMessage</p>
+            </div>
+        }
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private string ErrorMessage;
+    private StationsDTO stations;
+    private UserDto CurrentUser; // або отримуй з авторизації
+
+    private bool IsAdmin = false;
+    private bool CanComment = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантажуємо новину
+        stations = await Http.GetFromJsonAsync<StationsDTO>($"api/stations/details/{Id}");
+
+        // Приклад: завантаження поточного користувача та кількості коментарів
+        // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
+        // CommentCount = await Http.GetFromJsonAsync<int>($"api/news/{Id}/comments/count");
+        await CheckRoles();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin") || roles.Contains("Publisher");
+
+                if (user.Identity.Name != null)
+                {
+                    CanComment = true;
+                }
+            }
+        }
+    } 
+
+    private void EditStation(int stationsId)
+    {
+        Navigation.NavigateTo($"/stations/edit/{stationsId}");
+    }
+
+    private void AddImage(int stationsId)
+    {
+        Navigation.NavigateTo($"/news/addimage/{stationsId}");
+    }
+    private void Back()
+    {
+        Navigation.NavigateTo($"/stations/");
+    }
+
+    private async Task DeleteStation(int id)
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити станцію?"))
+            return;
+
+        var response = await Http.DeleteAsync($"api/stations/delete/{Id}");
+
+        if (response.IsSuccessStatusCode)
+            Navigation.NavigateTo("/stations");
+
+        else
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+}
