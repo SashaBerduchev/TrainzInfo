@@ -2,7 +2,8 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
-
+@inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <h1 class="news-page-title">@news?.NameNews</h1>
 
@@ -26,7 +27,7 @@
             <div class="col-md-8">
                 <dl class="row mb-3">
                     <dt class="col-sm-3">Назва</dt>
-                    <dd class="col-sm-9 news-text">@news.NameNews</dd>
+                    <dd class="col-sm-9 news-text">@((MarkupString)news.NameNews)</dd>
 
                     <dt class="col-sm-3">Коротко</dt>
                     <dd class="col-sm-9 news-text">@((MarkupString)news.BaseNewsInfo)</dd>
@@ -103,12 +104,43 @@ else
                 IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin") || roles.Contains("Publisher");
 
                 if (user.Identity.Name != null)
-    {
+                {
                     CanComment = true;
                 }
             }
         }
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = new Uri(Nav.Uri);                            // полный URL, например https://app.com/news?id=42
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (!int.TryParse(query["id"], out int newsId))
+        {
+            // id не найден/не число – можно показать ошибку или перейти на другую страницу
+            return;
+        }
+
+        // 2️⃣ Загружаем новость по полученному id
+        var news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/{newsId}");
+
+        if (news == null) return; // ничего не найдено
+
+        // 3️⃣ Обновляем Open Graph‑теги через JS‑интероп
+        await JS.InvokeVoidAsync(
+            "og.setMetaTags",
+            news.NameNews,
+            // если BaseNewsInfo может быть null, берём часть от начала строки,
+            // иначе – саму строку (или обрезаем до 150 символов)
+            string.IsNullOrWhiteSpace(news.BaseNewsInfo)
+                ? ""
+                : news.BaseNewsInfo.Length > 150
+                    ? news.BaseNewsInfo[..150]
+                    : news.BaseNewsInfo,
+                    news.NewsImage
+        );
+    }
+
 
     private void NavigateToComment(int newsId)
     {

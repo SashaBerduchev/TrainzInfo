@@ -3,17 +3,25 @@
 
 <head>
 
-    <meta property="og:url" content="https://trainzinfo.com.ua">
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:site_name" content="trainzinfo" />
-    <meta property="og:title" content="TrainzInfo">
-    <meta property="og:description" content="Залізничний сайт">
-
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TrainzInfo</title>
+
+    <!-- Open Graph -->
+    <meta property="og:url" content="https://trainzinfo.com.ua/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="trainzinfo" />
+
+    <!-- Короткая информация, которую увидит мессенджер -->
+    <meta property="og:title" content="TrainzInfo – залізничний сайт" />
+    <meta property="og:description" content="Доступна інформація про потяги, станції, розклад тощо." />
+
+    <!-- Мини‑картинка (необязательно) -->
+    <meta property="og:image" content="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto" />
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+
     <base href="/" />
     <link rel="preload" id="webassembly" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -47,6 +55,7 @@
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script src="ckeditor5/ckeditor.min.js"></script>
     <a href="ckeditor5/ckeditor.js.map">ckeditor5/ckeditor.js.map</a>
+    <script src="js/og.js"></script>
     <script src="js/news/newsscroll.js"></script>
     <script src="js/news/shownews.js"></script>
     <script src="js/electricttain/electrictrainsscroll.js"></script>
