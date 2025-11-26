@@ -50,9 +50,9 @@
                         <img src="@news.NewsImage" class="card-img-top" alt="@news.NameNews" />
                         <div class="card-body">
                             <h5>@news.NameNews</h5>
-                            <p>@news.BaseNewsInfo</p>
+                            @((MarkupString)news.BaseNewsInfo)
                             <NavLink class="btn btn-primary btn-sm"
-                                     href="@($"/news/{news.id}")">
+                                     href="@($"/news/details/{news.id}")">
                                 Детальніше
                             </NavLink>
                         </div>

@@ -1,0 +1,99 @@
+﻿@page "/news/details/{id:int}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h1 class="news-page-title">@news?.NameNews</h1>
+
+@if (news != null)
+{
+    <div class="news-detail-card card shadow-sm mb-5">
+        <div class="row g-4 align-items-start">
+            <!-- Картинка -->
+            <div class="col-md-4 text-center">
+                @if (string.IsNullOrEmpty(news.NewsImage))
+                {
+                    <img src="@news.NewsImage" class="img-fluid rounded news-detail-img" alt="Новина" />
+                }
+                else
+                {
+                    <img src="@news.NewsImage" class="card-img-top" alt="@news.NameNews" />
+                }
+            </div>
+
+            <!-- Текстова частина -->
+            <div class="col-md-8">
+                <dl class="row mb-3">
+                    <dt class="col-sm-3">Назва</dt>
+                    <dd class="col-sm-9 news-text">@news.NameNews</dd>
+
+                    <dt class="col-sm-3">Коротко</dt>
+                    <dd class="col-sm-9 news-text">@((MarkupString)news.BaseNewsInfo)</dd>
+
+                    <dt class="col-sm-3">Повна інформація</dt>
+                    <dd class="col-sm-9 news-text">@((MarkupString)news.NewsInfoAll)</dd>
+                </dl>
+
+                <!-- Кнопки -->
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @if (CurrentUser != null)
+                    {
+                        <button class="btn btn-info btn-sm" @onclick="() => NavigateToComment(news.id)">Коментувати</button>
+                        <button class="btn btn-info btn-sm" @onclick="() => NavigateToComments(news.id)">
+                            Коментарі + @CommentCount
+                        </button>
+                    }
+
+                    @if (CurrentUser != null && (CurrentUser.Role == "Superadmin"
+                                    || CurrentUser.Role == "Admin"
+                                    || CurrentUser.Role == "Publisher"))
+                    {
+                        <button class="btn btn-outline-info btn-sm" @onclick="() => EditNews(news.id)">Редагувати інформацію</button>
+                        <button class="btn btn-outline-info btn-sm" @onclick="() => AddImage(news.id)">Додати картинку</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Завантаження новини...</p>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private NewsDTO news;
+    private UserDto CurrentUser; // або отримуй з авторизації
+    private int CommentCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантажуємо новину
+        news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/details/{Id}");
+
+        // Приклад: завантаження поточного користувача та кількості коментарів
+        // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
+        // CommentCount = await Http.GetFromJsonAsync<int>($"api/news/{Id}/comments/count");
+    }
+
+    private void NavigateToComment(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/create/{newsId}");
+    }
+
+    private void NavigateToComments(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/{newsId}");
+    }
+
+    private void EditNews(int newsId)
+    {
+        Navigation.NavigateTo($"/news/edit/{newsId}");
+    }
+
+    private void AddImage(int newsId)
+    {
+        Navigation.NavigateTo($"/news/addimage/{newsId}");
+    }
+}

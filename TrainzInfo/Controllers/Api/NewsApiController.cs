@@ -72,6 +72,46 @@ namespace TrainzInfo.Controllers.Api
 
         }
 
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<NewsDTO>> GetNewsDetails(int id)
+        {
+            try
+            {
+                LoggingExceptions.Init("NewsApiController", "GetNewsDetails");
+                LoggingExceptions.Start();
+                LoggingExceptions.Wright("Start Get NewsInfo Details with Comments");
+                var news = await _context.NewsInfos.FindAsync(id);
+                if (news == null)
+                {
+                    return NotFound();
+                }
+                var newsDTO = new NewsDTO
+                {
+                    id = news.id,
+                    NameNews = news.NameNews,
+                    BaseNewsInfo = news.BaseNewsInfo,
+                    NewsInfoAll = news.NewsInfoAll,
+                    DateTime = news.DateTime.ToString("yyyy-MM-dd"),
+                    NewsImage = news.NewsImage != null
+                        ? $"data:{news.ImageMimeTypeOfData};base64,{Convert.ToBase64String(news.NewsImage)}"
+                        : null
+                };
+                return Ok(newsDTO);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult> CreateNews([FromBody] NewsDTO newsInfo)
         {
