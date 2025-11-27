@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers.Api
                     NameNews = newsInfo.NameNews,
                     BaseNewsInfo = newsInfo.BaseNewsInfo,
                     NewsInfoAll = newsInfo.NewsInfoAll,
-                    DateTime = DateOnly.FromDateTime(DateTime.Now),
+                    DateTime = DateTime.Now,
                     NewsImage = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
                     ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null
                 };

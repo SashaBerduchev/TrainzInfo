@@ -14,7 +14,7 @@ namespace TrainzInfo.Models
         [Required]
         public string BaseNewsInfo { get; set; }
         public string NewsInfoAll { get; set; }
-        public DateOnly DateTime { get; set; }
+        public DateTime DateTime { get; set; }
         public string Imgsrc { get; set; }
         public byte[] NewsImage { get; set; }
         public string ImageMimeTypeOfData { get; set; }
