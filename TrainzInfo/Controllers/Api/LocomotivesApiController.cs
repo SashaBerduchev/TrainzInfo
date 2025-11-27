@@ -98,8 +98,10 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Init("LocomotivesApiController", "GetSeries");
                 LoggingExceptions.Start();
                 LoggingExceptions.Wright("Start Get GetSeries");
-                var series = await _context.Locomotive_Series
-                    .Select(x => x.Seria)
+                var series = await _context.Locomotives
+                    .Include(ls => ls.Locomotive_Series)
+                    .Select(x => x.Locomotive_Series.Seria)
+                    .Distinct()
                     .ToListAsync();
                 return Ok(series);
             }
@@ -124,10 +126,11 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Init("LocomotivesApiController", "GetDepots");
                 LoggingExceptions.Start();
                 LoggingExceptions.Wright("Start Get GetDepots");
-                var depots = await _context.Depots
-                    .Where(x => x.Name.Contains("ТЧ"))
-                    .OrderBy(x => x.Name)
-                    .Select(x => x.Name)
+                var depots = await _context.Locomotives
+                    .Include(d => d.DepotList)
+                    .OrderBy(x => x.DepotList.Name)
+                    .Select(x => x.DepotList.Name)
+                    .Distinct()
                     .ToListAsync();
                 return Ok(depots);
             }
@@ -310,35 +313,6 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.AddException(ex.ToString());
                 LoggingExceptions.Wright(ex.ToString());
                 
-                return BadRequest();
-                throw;
-            }
-            finally
-            {
-                LoggingExceptions.Finish();
-            }
-        }
-
-        [HttpGet("getserias")]
-        [Produces("application/json")]
-        public async Task<ActionResult<List<string>>> GetSerias()
-        {
-            try
-            {
-                LoggingExceptions.Init("LocomotivesApiController", "GetSerias");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetSerias");
-                var serias = await _context.Locomotive_Series
-                    .OrderBy(x => x.Seria)
-                    .Select(x => x.Seria)
-                    .ToListAsync();
-                LoggingExceptions.Finish();
-                return Ok(serias);
-            }
-            catch (Exception ex)
-            {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }

@@ -1,13 +1,22 @@
-﻿.nav-container {
-    width: 60px; /* згорнуте меню */
-    transition: width 0.3s ease;
-    overflow: hidden;
+﻿/* Файл: wwwroot/css/site.css (или любой подключенный файл) */
+
+/* 1️⃣ Общий layout */
+.layout {
+    display: flex;
 }
 
-    .nav-container.expanded {
-        width: 200px; /* розгорнуте меню */
-    }
+/* 2️⃣ Sidebar (с фиксированной шириной) */
+.sidebar {
+    width: 250px; /* полная ширина */
+    min-width: 250px; /* чтобы не сжималась при flex‑shrink */
+    background: #343a40;
+    color: white;
+    overflow: hidden;
+    transition: width .3s ease; /* плавный переход */
+    flex-shrink: 0; /* важно! иначе flex может занять 0 */
+}
 
-    .nav-container .nav-link {
-        white-space: nowrap;
+    /* 3️⃣ Свернутая версия – оставляем только заглушку (60px) */
+    .sidebar.collapsed {
+        width: 60px;
     }

@@ -1,4 +1,5 @@
 ﻿@page "/locomotives"
+@using System.Threading.Tasks
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -110,6 +111,8 @@ else
     private string SelectedDepot = "";
     private string SelectedSeria = "";
 
+    private bool isFilterLoad = false;
+
     private List<string> FiliaList = new();
     private List<string> DepotList = new();
     private List<string> SeriaList = new();
@@ -137,7 +140,13 @@ else
         IsAdminOrPublisher = false;
         try
         {
-            var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>($"api/locomotives/getlocomotives?page={currentPage}");
+            var url =
+               $"api/locomotives/getlocomotives?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedDepot) ? "" : $"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedSeria) ? "" : $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+            var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>(url);
             if (locomotiveItems == null || locomotiveItems.Count == 0)
             {
 
@@ -146,10 +155,15 @@ else
             else
             {
                 locomotives.AddRange(locomotiveItems);
-                ApplyFilter(); // оновлюємо відфільтровані новини
-                FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getfilias"));
-                DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getdepots"));
-                SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getserias"));
+                FilteredLocomotives = locomotiveItems;
+                //ApplyFilter(); // оновлюємо відфільтровані новини
+                if (!isFilterLoad)
+                {
+                    FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getfilias"));
+                    DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getdepots"));
+                    SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getseries"));
+                    isFilterLoad = true;
+                }
                 currentPage++;
             }
         }
@@ -162,14 +176,15 @@ else
         await CheckRoles();
         StateHasChanged();
     }
-    private void ApplyFilter()
+    private async Task ApplyFilter()
     {
-        FilteredLocomotives = locomotives
-            .Where(l =>
-                (string.IsNullOrEmpty(SelectedFilia) || l.Filia == SelectedFilia) &&
-                (string.IsNullOrEmpty(SelectedDepot) || l.Depot == SelectedDepot) &&
-                (string.IsNullOrEmpty(SelectedSeria) || l.Seria == SelectedSeria)
-            ).ToList();
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        locomotives.Clear();          // если хотите начать с нуля
+        await Load();                 // загружаем первую страницу
+
+        StateHasChanged();
     }
 
     private async Task CheckRoles()
@@ -202,10 +217,10 @@ else
         }
     }
 
-    private void ClearFilter()
+    private async Task ClearFilter()
     {
         SelectedFilia = SelectedDepot = SelectedSeria = "";
-        FilteredLocomotives = locomotives;
+        await Load();
     }
 
     private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");
