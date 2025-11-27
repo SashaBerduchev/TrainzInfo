@@ -5,7 +5,7 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<h1 class="news-page-title">@news?.NameNews</h1>
+<h1 class="news-page-title">@((MarkupString)news?.NameNews)</h1>
 
 @if (news != null)
 {

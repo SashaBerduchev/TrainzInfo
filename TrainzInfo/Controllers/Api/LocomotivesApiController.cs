@@ -26,7 +26,10 @@ namespace TrainzInfo.Controllers.Api
 
         [Produces("application/json")]
         [HttpGet("getlocomotives")]
-        public async Task<ActionResult<List<Locomotive>>> GetLocomotives(int page = 1)
+        public async Task<ActionResult<List<Locomotive>>> GetLocomotives([FromQuery] string filia,
+                [FromQuery] string depot,
+                [FromQuery] string seria,
+                [FromQuery] int page = 1)
         {
             try
             {
@@ -35,30 +38,43 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Wright("Start Get GetLocomotives");
                 int pageSize = 10;
 
-                var locoDTO = await _context.Locomotives
+                IQueryable<Locomotive> query = _context.Locomotives
                     .Include(d => d.DepotList)
                         .ThenInclude(c => c.City)
                             .ThenInclude(o => o.Oblasts)
                     .Include(u => u.DepotList)
                         .ThenInclude(ur => ur.UkrainsRailway)
                     .Include(ls => ls.Locomotive_Series)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(n => new LocmotiveDTO
-                    {
-                        Id = n.id,
-                        Number = n.Number,
-                        Speed = n.Speed,
-                        Depot = n.DepotList.Name,
-                        City = n.DepotList.City.Name,
-                        Oblast = n.DepotList.City.Oblasts.Name,
-                        Filia = n.DepotList.UkrainsRailway.Name,
-                        Seria = n.Locomotive_Series.Seria,
-                        ImgSrc = n.Image != null
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(filia))
+                    query = query.Where(l => l.DepotList.UkrainsRailway.Name == filia);
+
+                if (!string.IsNullOrWhiteSpace(depot))
+                    query = query.Where(l => l.Depot == depot);
+
+                if (!string.IsNullOrWhiteSpace(seria))
+                    query = query.Where(l => l.Seria == seria);
+
+                query = query.Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+
+                List<LocmotiveDTO> locoDTO = await query
+                .Select(n => new LocmotiveDTO
+                {
+                    Id = n.id,
+                    Number = n.Number,
+                    Speed = n.Speed,
+                    Depot = n.DepotList.Name,
+                    City = n.DepotList.City.Name,
+                    Oblast = n.DepotList.City.Oblasts.Name,
+                    Filia = n.DepotList.UkrainsRailway.Name,
+                    Seria = n.Locomotive_Series.Seria,
+                    ImgSrc = n.Image != null
                                 ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.Image)}"
                                 : null,
-                        // або формат за потребою
-                    }).ToListAsync();
+                    // або формат за потребою
+                }).ToListAsync();
                 return Ok(locoDTO);
             }
             catch (Exception ex)
@@ -332,7 +348,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpGet("getdepots")]
+        [HttpGet("getdepotslist")]
         [Produces("application/json")]
         public async Task<ActionResult<List<string>>> GetDepotsList()
         {
