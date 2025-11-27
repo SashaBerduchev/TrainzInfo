@@ -10,3 +10,9 @@
         filter: blur(0px);
         transform: translateY(0);
     }
+
+
+.placeholder-img {
+    height: 180px;
+    background-color: #f8f9fa;
+}

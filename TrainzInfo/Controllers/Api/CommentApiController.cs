@@ -58,6 +58,30 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+
+        [HttpGet("getnewscommentscount/{id}")]
+        public async Task<ActionResult> GetNewsCommentsCount(int id)
+        {
+            LoggingExceptions.Init("CommentApiController", "GetNewsComments");
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright($"Get news comments for news id={id}");
+            try
+            {
+                var count = await _context.NewsComments.CountAsync();
+                return Ok(count);
+            }
+            catch (System.Exception ex)
+            {
+                LoggingExceptions.AddException($"Error getting news comments for news id={id}: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
         [HttpPost("setcomment")]
         public async Task<ActionResult> SetComment([FromBody] CommentsDTO comment)
         {
@@ -80,6 +104,37 @@ namespace TrainzInfo.Controllers.Api
             catch (System.Exception ex)
             {
                 LoggingExceptions.AddException($"Error setting comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.Message}");
+                LoggingExceptions.Wright($"Exception: {ex.ToString()}");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                LoggingExceptions.Finish();
+            }
+        }
+
+        [HttpPost("create")]
+        public async Task<ActionResult> Create([FromBody] CommentsDTO comment)
+        {
+            LoggingExceptions.Init("CommentApiController", "Create");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright($"Create comment for news id={comment.NewsID} by author id={comment.AuthorEmail}");
+            try
+            {
+                NewsComments newComment = new NewsComments
+                {
+                    Comment = comment.Comment,
+                    DateTime = DateTime.Now,
+                    NewsInfo = await _context.NewsInfos.FindAsync(comment.NewsID),
+                    Author = await _context.Users.Where(x=>x.Email == comment.AuthorEmail).FirstOrDefaultAsync(),
+                };
+                _context.NewsComments.Add(newComment);
+                await _context.SaveChangesAsync();
+                return Ok(comment);
+            }
+            catch (System.Exception ex)
+            {
+                LoggingExceptions.AddException($"Error creating comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.ToString()}");
                 LoggingExceptions.Wright($"Exception: {ex.ToString()}");
                 return StatusCode(500, "Internal server error");
             }

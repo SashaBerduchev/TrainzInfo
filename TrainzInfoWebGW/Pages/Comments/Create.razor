@@ -1,0 +1,140 @@
+﻿@page "/newscomments/create/{id:int}"
+
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<h4>Новина @news.NameNews</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@comment" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- Текст комментария -->
+            <div class="form-group">
+                <label>Комментарий</label>
+                <textarea id="editorName"></textarea>
+            </div>
+
+            <!-- Кнопка отправки -->
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </div>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(errors))
+        {
+            <div class="alert alert-danger mt-3">
+                <h5>Помилка збереження:</h5>
+                <p>@errors</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code
+{
+    // DTO для комментария, который отправляем в API
+    private CommentsDTO comment = new CommentsDTO();
+
+    // Информация о новости (для заголовка)
+    private NewsDTO news = new NewsDTO();
+
+    // Флаги и данные пользователя
+    private bool IsAdmin = false;
+    private string nameuser = "";
+    private string mailuser = "";
+
+    [Parameter] public int id { get; set; }
+
+    private string errors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 1. Загружаем информацию о новости
+        news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/{id}");
+
+        // 2. Привязываем Id к модели комментария
+        comment.NewsID = id;
+
+        // 3. Проверяем роль/данные пользователя
+        await LoadUserInfo();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Инициализация CKEditor через JS‑Interop
+            await JS.InvokeVoidAsync(
+                "initCKEditorForCreateNews",
+                "editorName",
+                DotNetObjectReference.Create(this),
+                "SetComment");
+        }
+    }
+
+    [JSInvokable]
+    public void SetComment(string value) => comment.Comment = value;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await LoadUserInfo();
+            comment.Authorname = nameuser;
+            comment.AuthorEmail = nameuser;
+            comment.NewsID = id;
+            var result = await Http.PostAsJsonAsync("api/comments/create", comment);
+
+            if (result.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errors = await result.Content.ReadAsStringAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = ex.Message;
+        }
+    }
+
+    /// <summary>
+    /// Загружает данные о текущем пользователе и определяет роль.
+    /// </summary>
+    private async Task LoadUserInfo()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            await customAuth.CheckAuthenticationAsync();
+
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                // Имя пользователя
+                nameuser = user.Identity?.Name ?? "";
+
+                // E‑mail (если есть в claims)
+                mailuser = user.Claims
+                               .FirstOrDefault(c => c.Type == ClaimTypes.Email) ?
+                               .Value ?? "";
+
+                // Роли
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value);
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin");
+            }
+        }
+    }
+}

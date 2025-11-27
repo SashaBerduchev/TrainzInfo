@@ -655,6 +655,9 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -666,6 +669,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("NewsInfoid");
 
@@ -1368,9 +1373,15 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
                 {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
                     b.HasOne("TrainzInfo.Models.NewsInfo", "NewsInfo")
                         .WithMany("NewsComments")
                         .HasForeignKey("NewsInfoid");
+
+                    b.Navigation("Author");
 
                     b.Navigation("NewsInfo");
                 });

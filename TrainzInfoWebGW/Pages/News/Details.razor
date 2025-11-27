@@ -5,60 +5,83 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<h1 class="news-page-title">@((MarkupString)news?.NameNews)</h1>
+@*  Заголовок страницы новости *@
+<h1 class="news-page-title mb-4">@((MarkupString)news?.NameNews)</h1>
 
-@if (news != null)
+@if (news is not null)
 {
-    <div class="news-detail-card card shadow-sm mb-5">
-        <div class="row g-4 align-items-start">
-            <!-- Картинка -->
-            <div class="col-md-4 text-center">
-                @if (string.IsNullOrEmpty(news.NewsImage))
-                {
-                    <img src="@news.NewsImage" class="img-fluid rounded news-detail-img" alt="Новина" />
-                }
-                else
-                {
-                    <img src="@news.NewsImage" class="card-img-top" alt="@news.NameNews" />
-                }
-            </div>
+    <div class="card shadow-sm news-detail-card">
+        <!-- 1️⃣ Устанавливаем flex‑order:
+              при больших экранах картинка идёт справа (order-2),
+              но в mobile остаётся первой (order-1) -->
+        <div class="row g-4 g-lg-5 align-items-start">
 
-            <!-- Текстова частина -->
-            <div class="col-md-8">
-                <dl class="row mb-3">
-                    <dt class="col-sm-3">Назва</dt>
+            @*  Текстовая часть новости – первая колонка для мобильных, 
+            в больших экранах будет слева (order-1) *@
+            <section class="col-md-8 order-1 order-lg-2">
+                <dl class="row mb-4">
+
+                    <dt class="col-sm-3 fw-semibold text-secondary">Назва</dt>
                     <dd class="col-sm-9 news-text">@((MarkupString)news.NameNews)</dd>
 
-                    <dt class="col-sm-3">Коротко</dt>
+                    <dt class="col-sm-3 fw-semibold text-secondary">Коротко</dt>
                     <dd class="col-sm-9 news-text">@((MarkupString)news.BaseNewsInfo)</dd>
 
-                    <dt class="col-sm-3">Повна інформація</dt>
+                    <dt class="col-sm-3 fw-semibold text-secondary">Повна інформація</dt>
                     <dd class="col-sm-9 news-text">@((MarkupString)news.NewsInfoAll)</dd>
                 </dl>
 
-                <!-- Кнопки -->
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                    @if (CanComment == true)
+                <!-- 2️⃣ Кнопки действий -->
+                <div class="d-flex flex-wrap gap-2">
+                    @if (CanComment)
                     {
-                        <button class="btn btn-info btn-sm" @onclick="() => NavigateToComment(news.id)">Коментувати</button>
-                        <button class="btn btn-info btn-sm" @onclick="() => NavigateToComments(news.id)">
+                        <button class="btn btn-info btn-sm"
+                                @onclick="() => NavigateToComment(news.id)">
+                            Коментувати
+                        </button>
+                        <button class="btn btn-info btn-sm"
+                                @onclick="() => NavigateToComments(news.id)">
                             Коментарі + @CommentCount
                         </button>
                     }
-
-                    @if (IsAdmin == true)
+                    @if (IsAdmin)
                     {
-                        <button class="btn btn-outline-info btn-sm" @onclick="() => EditNews(news.id)">Редагувати інформацію</button>
-                        <button class="btn btn-outline-info btn-sm" @onclick="() => AddImage(news.id)">Додати картинку</button>
+                        <button class="btn btn-outline-info btn-sm"
+                                @onclick="() => EditNews(news.id)">
+                            Редагувати інформацію
+                        </button>
+                        <button class="btn btn-outline-info btn-sm"
+                                @onclick="() => AddImage(news.id)">
+                            Додати картинку
+                        </button>
                     }
                 </div>
-            </div>
+            </section>
+
+            @*  Картинка новости – вторая колонка, но order-2 на больших экранах 
+            (появляется справа), order-1 в мобильном режиме *@
+            <figure class="col-md-4 text-center mb-3 mb-md-0 order-2 order-lg-1">
+                @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                {
+                    <img src="@news.NewsImage"
+                         alt="@news.NameNews"
+                         class="img-fluid rounded news-detail-img" />
+                }
+                else
+                {
+                    <!-- placeholder, если картинки нет -->
+                    <div class="placeholder-img d-flex align-items-center justify-content-center">
+                        <span class="text-muted">Нет изображения</span>
+                    </div>
+                }
+            </figure>
+
         </div>
     </div>
 }
 else
 {
-    <p>Завантаження новини...</p>
+    <p class="text-muted">Завантаження новини…</p>
 }
 
 @code {
@@ -78,7 +101,7 @@ else
 
         // Приклад: завантаження поточного користувача та кількості коментарів
         // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
-        // CommentCount = await Http.GetFromJsonAsync<int>($"api/news/{Id}/comments/count");
+        CommentCount = await Http.GetFromJsonAsync<int>($"api/comments/getnewscommentscount/{Id}");
         await CheckRoles();
     }
 

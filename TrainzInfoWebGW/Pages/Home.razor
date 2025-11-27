@@ -31,10 +31,12 @@
            style="max-width:400px; margin:auto;" />
 </div>
 
+@*  Контейнер со списком новостей *@
 <div class="mt-4" id="newsContainer">
-    @if (allNews == null)
+
+    @if (allNews is null)
     {
-        <p class="text-center">Завантаження...</p>
+        <p class="text-center text-muted">Завантаження…</p>
     }
     else if (!filteredNews.Any())
     {
@@ -42,17 +44,32 @@
     }
     else
     {
-        <div class="row" id="newsContainer">
+        <div class="row g-3">
+
             @foreach (var news in filteredNews)
             {
-                <div class="col-md-4 mb-3 news-card">
-                    <div class="card shadow-sm">
-                        <img src="@news.NewsImage" class="card-img-top" alt="@news.NameNews" />
-                        <div class="card-body">
-                            <h5>@((MarkupString)news.NameNews)</h5>
-                            @((MarkupString)news.BaseNewsInfo)
-                            <NavLink class="btn btn-primary btn-sm"
-                                     href="@($"/news/details/{news.id}")">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm news-card">
+                        @*  Картинка новости – placeholder, если не задана *@
+                        @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                        {
+                            <img src="@news.NewsImage"
+                                 alt="@news.NameNews"
+                                 class="card-img-top img-fluid rounded" />
+                        }
+                        else
+                        {
+                            <div class="placeholder-img d-flex align-items-center justify-content-center">
+                                <span class="text-muted">Без картинки</span>
+                            </div>
+                        }
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-2">@((MarkupString)news.NameNews)</h5>
+                            <p class="card-text flex-grow-1">@((MarkupString)news.BaseNewsInfo)</p>
+
+                            <NavLink href="@($"/news/details/{news.id}")"
+                                     class="btn btn-primary btn-sm mt-auto">
                                 Детальніше
                             </NavLink>
                         </div>
@@ -63,7 +80,7 @@
 
         @if (isLoading)
         {
-            <p class="text-center text-secondary mt-2">Завантаження ще новин...</p>
+            <p class="text-center text-secondary mt-3">Завантаження ще новин…</p>
         }
     }
 </div>
