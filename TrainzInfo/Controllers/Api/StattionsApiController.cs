@@ -24,7 +24,10 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-stations")]
-        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1, string filia = null, string name = null, string oblast = null)
+        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1, 
+            [FromQuery] string filia = null,
+            [FromQuery] string name = null, 
+            [FromQuery] string oblast = null)
         {
             LoggingExceptions.Init(this.ToString(), nameof(GetStations));
             LoggingExceptions.Start();
@@ -56,7 +59,7 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(s => s.Oblasts.Name == oblast);
                 }
-                var stations = await query.Cast<Stations>().ToListAsync();
+                var stations = await query.ToListAsync();
 
                 // Після завантаження — формуємо DTO
                 var result = stations.AsParallel().Select(station => new StationsDTO

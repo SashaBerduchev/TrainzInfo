@@ -51,7 +51,7 @@
     </div>
 
     <div class="col-12 mt-2">
-        <button class="btn btn-info w-100" @onclick="LoadStations">Відобразити</button>
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
     </div>
 </div>
 
@@ -65,12 +65,12 @@
     {
         <p>Завантажуємо</p>
     }
-    else if (StationsList.Count == 0)
+    else if (stationsList.Count == 0)
     {
         <p>Нічого не знайдено…</p>
     }
 
-    @foreach (var item in StationsList)
+    @foreach (var item in stationsList)
     {
         <div class="col-12 mb-4 station-card">
             <div class="card shadow-sm">
@@ -130,12 +130,12 @@
 
 
 @code {
-    List<StationsDTO> StationsList = new();
+    List<StationsDTO> stationsList = new();
     List<string> Filias = new();
     List<string> Oblasts = new();
     List<string> StationNames = new();
     private UserDto CurrentUser { get; set; }
-
+    private bool isFilterLoad = false;
     string SelectedFilia = "";
     string SelectedOblast = "";
     string SelectedName = "";
@@ -155,16 +155,7 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadStations();
-
-        var response = await Http.GetAsync("api/profile/getprofile");
-        if (response.IsSuccessStatusCode)
-        {
-            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
-        }
-
-        Filias = await Http.GetFromJsonAsync<List<string>>("api/stations/get-filias");
-        Oblasts = await Http.GetFromJsonAsync<List<string>>("api/stations/get-oblasts");
-        StationNames = await Http.GetFromJsonAsync<List<string>>("api/stations/get-station-names");
+        
 
         await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
     }
@@ -176,55 +167,58 @@
         isLoading = true;
         IsAdmin = false;
         IsAdminOrPublisher = false;
-        var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>($"api/stations/get-stations?page={currentPage}&filia={SelectedFilia}&oblast={SelectedOblast}&name={SelectedName}");
+
+        var url =
+               $"api/stations/get-stations?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedName) ? "" : $"&name={Uri.EscapeDataString(SelectedName)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+        var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>(url);
+        
         if (stationsPage == null || stationsPage.Count == 0)
         {
             allLoaded = true;
         }
         else
         {
-            StationsList.AddRange(stationsPage);
-            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            stationsList.AddRange(stationsPage);
+            //ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
             currentPage++;
             StateHasChanged();
         }
         await CheckRoles();
+        if (!isFilterLoad)
+        {
+            Filias = await Http.GetFromJsonAsync<List<string>>("api/stations/get-filias");
+            Oblasts = await Http.GetFromJsonAsync<List<string>>("api/stations/get-oblasts");
+            StationNames = await Http.GetFromJsonAsync<List<string>>("api/stations/get-station-names");
+            isFilterLoad = true;
+        }
         isLoading = false;
     }
 
-    protected void ApplyFilter()
+    protected async Task ApplyFilter()
     {
-        IEnumerable<StationsDTO> filtered = StationsList;
-        if (!string.IsNullOrEmpty(SelectedFilia))
-        {
-            filtered = filtered.Where(s => s.UkrainsRailways == SelectedFilia);
-            currentPage=1;
-        }
-        else
-        {
-            CurrentFilia = "";
-        }
-        if (!string.IsNullOrEmpty(SelectedOblast))
-        {
-            filtered = filtered.Where(s => s.Oblasts == SelectedOblast);
-            currentPage = 1;
-        }
-        if (!string.IsNullOrEmpty(SelectedName))
-        {
-            filtered = filtered.Where(s => s.Name == SelectedName);
-            currentPage = 1;
-        }
-        StationsList = filtered.ToList();
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        stationsList.Clear();          // если хотите начать с нуля
+        await LoadStations();                 // загружаем первую страницу
+
+        StateHasChanged();
     }
     
-    void ClearFilter()
+    async Task ClearFilter()
     {
         SelectedFilia = "";
         SelectedOblast = "";
         SelectedName = "";
         currentPage = 1;
+        stationsList.Clear();
+        await LoadStations();
 
-        _ = LoadStations();
+        StateHasChanged();
     }
 
 
