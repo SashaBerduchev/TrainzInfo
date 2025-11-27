@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace TrainzInfo.Models
         [Required]
         public DateTime DateTime { get; set; }
         public NewsInfo NewsInfo { get; set; }
+        public IdentityUser Author { get; set; }
     }
 }
