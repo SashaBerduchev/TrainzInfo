@@ -1,0 +1,208 @@
+﻿@page "/trains/create"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h3>Поїзд</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@trainDTO" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- Назва станції -->
+            <div class="form-group">
+                <label>Номер поїзда</label>
+                <InputNumber @bind-Value="trainDTO.Number" class="form-control" />
+            </div>
+
+            <!-- Станція з автодоповненням -->
+               <div class="form-group position-relative">
+                <label>Станція прибуття</label>
+                <InputText Value="@stationFrom"
+                           ValueChanged="SelectStationsFrom"
+                           ValueExpression="() => stationFrom"
+                           class="form-control"
+                           placeholder="Почніть вводити станцію..."
+                           @oninput="OnInputChangedStationFrom" />
+
+                @if (filterstationsFrom?.Any() == true)
+                {
+                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
+                        @foreach (var item in filterstationsFrom)
+                        {
+                            <li class="list-group-item list-group-item-action"
+                                style="cursor:pointer;"
+                                @onclick="() => SelectStationsFrom(item)">
+                                @item
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <div class="form-group position-relative">
+                <label>Станція прибуття</label>
+                <InputText Value="@stationTo"
+                           ValueChanged="SelectStationsTo"
+                           ValueExpression="() => stationTo"
+                    class="form-control"
+                    placeholder="Почніть вводити станцію..."
+                    @oninput="OnInputChangedStationTo" />
+
+                @if (filterstationsTo?.Any() == true)
+                {
+                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
+                        @foreach (var item in filterstationsTo)
+                        {
+                            <li class="list-group-item list-group-item-action"
+                                style="cursor:pointer;"
+                                @onclick="() => SelectStationsTo(item)">
+                                @item
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="form-group">
+                <label>Тип поїзда</label>
+                <InputSelect @bind-Value="trainDTO.PassTrainType" class="form-control">
+                    @foreach (var item in TypesList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <!-- Кнопка -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Створити</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+@if (ErrorMessage != "")
+{
+    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+    <div class="alert alert-danger mt-2">
+        <p>@ErrorMessage</p>
+    </div>
+}
+
+
+@code {
+    private string ErrorMessage = "";
+    private TrainDTO trainDTO = new TrainDTO();
+    private List<string> filterstationsTo = new List<string>();
+    private List<string> stations = new List<string>();
+    private List<string> filterstationsFrom = new List<string>();
+    private CancellationTokenSource debounceCts;
+    private string stationFrom = "";
+    private string stationTo = "";
+    private List<string> TypesList = new List<string>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/getnamesstations");
+        TypesList = await Http.GetFromJsonAsync<List<string>>($"api/trains/gettypes");
+    }
+
+    private async Task OnInputChangedStationFrom(ChangeEventArgs e)
+    {
+        stationFrom = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(200, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(stationFrom))
+                {
+                    filterstationsFrom.Clear();
+                }
+                else
+                {
+                    filterstationsFrom = stations
+                        .Where(x => x.Contains(stationFrom, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/trains/create", trainDTO);
+        if (!result.IsSuccessStatusCode)
+        {
+            ErrorMessage = await result.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            Navigation.NavigateTo("/trains");
+        }
+    }
+
+    private async Task OnInputChangedStationTo(ChangeEventArgs e)
+    {
+        stationTo = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(200, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(stationTo))
+                {
+                    filterstationsTo.Clear();
+                }
+                else
+                {
+                    filterstationsTo = stations
+                        .Where(x => x.Contains(stationTo, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectStationsFrom(string item)
+    {
+        stationFrom = item;
+        trainDTO.StationFrom = stationFrom;
+        filterstationsFrom.Clear();
+    }
+
+    private void SelectStationsTo(string item)
+    {
+        stationTo = item;
+        trainDTO.StationTo = stationTo;
+        filterstationsTo.Clear();
+    }
+}
+

@@ -11,6 +11,7 @@ using TrainzInfo.Tools.DTO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
+using System.Collections.Generic;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -24,9 +25,9 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-stations")]
-        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1, 
+        public async Task<ActionResult<StationsDTO>> GetStations(int page = 1,
             [FromQuery] string filia = null,
-            [FromQuery] string name = null, 
+            [FromQuery] string name = null,
             [FromQuery] string oblast = null)
         {
             LoggingExceptions.Init(this.ToString(), nameof(GetStations));
@@ -448,6 +449,32 @@ namespace TrainzInfo.Controllers.Api
             {
                 LoggingExceptions.Finish();
             }
+        }
+
+
+
+        [HttpGet("getnamesstations")]
+        public async Task<ActionResult> GetStationNames(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(GetStationNames));
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright("Try loading");
+            try
+            {
+                List<string> stations = await _context.Stations
+                    .OrderBy(x => x.Name)
+                    .Select(x => x.Name).ToListAsync();
+
+                return Ok(stations);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.Wright(ex.ToString());
+                LoggingExceptions.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally { LoggingExceptions.Finish(); }
         }
     }
 }

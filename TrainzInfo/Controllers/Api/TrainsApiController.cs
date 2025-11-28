@@ -193,9 +193,9 @@ namespace TrainzInfo.Controllers.Api
                     Number = trainDTO.Number,
                     StationFrom = trainDTO.StationFrom,
                     StationTo = trainDTO.StationTo,
-                    Type = trainDTO.Type,
+                    Type = trainDTO.PassTrainType,
                     NameOfTrain = trainDTO.NameOfTrain,
-                    IsUsing = trainDTO.IsUsing,
+                    IsUsing = true,
                     TypeOfPassTrain = await _context.TypeOfPassTrains.FirstOrDefaultAsync(t => t.Type == trainDTO.PassTrainType)
                 };
                 _context.Trains.Add(newTrain);
@@ -325,5 +325,27 @@ namespace TrainzInfo.Controllers.Api
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("gettypes")]
+        public async Task<ActionResult> GetTypesTrains()
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(GetTypesTrains));
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright("Get types");
+            try
+            {
+                List<string> types = await _context.TypeOfPassTrains
+                    .Select(t => t.Type).ToListAsync();
+                LoggingExceptions.Wright("OK");
+                return Ok(types);
+            }catch(Exception ex)
+            {
+                LoggingExceptions.Wright(ex.ToString());
+                LoggingExceptions.AddException(ex.ToString());
+                return BadRequest(ex.ToString);
+            }finally { LoggingExceptions.Finish(); }
+        } 
+
     }
 }
