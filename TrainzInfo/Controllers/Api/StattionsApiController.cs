@@ -44,8 +44,6 @@ namespace TrainzInfo.Controllers.Api
                        .Include(s => s.StationImages)
                        .Include(s => s.Metro)
                        .Include(s => s.UkrainsRailways)
-                       .Skip((page - 1) * pageSize)
-                       .Take(pageSize)
                        .AsQueryable();
                 if (!string.IsNullOrEmpty(filia))
                 {
@@ -59,6 +57,11 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(s => s.Oblasts.Name == oblast);
                 }
+
+                query = query
+                    .OrderBy(s => s.id)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
                 var stations = await query.ToListAsync();
 
                 // Після завантаження — формуємо DTO

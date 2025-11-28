@@ -1,4 +1,4 @@
-﻿namespace TrainzInfo.Tools.DTO
+﻿namespace TrainzInfoWebGW.Tools.DTO
 {
     public class TrainDTO
     {

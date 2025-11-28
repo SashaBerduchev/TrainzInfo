@@ -1,0 +1,196 @@
+﻿@page "/trains"
+@using System.Threading.Tasks
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h1 class="text-center my-4">Призначені поїзди</h1>
+
+<AuthorizeView Roles="Superadmin">
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        <button class="btn btn-info" @onclick="() => AddTrain()">Додати поїзд</button>
+        @* <button class="btn btn-dark" @onclick="() => UpdateTrains>Оновити дані</button> *@
+        @* <button class="btn btn-info" @onclick="() => Nav.NavigateTo("/trains/addtrainexcel")">Додати поїзд з Excel</button>
+        <button class="btn btn-info" @onclick="() => Nav.NavigateTo("/trainsshadules/addstationexcel")">Додати графік з Excel</button> *@
+    </div>
+</AuthorizeView>
+
+<!-- Фільтр -->
+<div class="mb-4">
+    <div class="form-inline d-flex flex-wrap gap-2">
+        <select class="form-control" @bind="selectedNumber">
+            <option value="">Виберіть номер</option>
+            @foreach (var n in numbers)
+            {
+                <option value="@n">@n</option>
+            }
+        </select>
+        <select class="form-control" @bind="selectedFrom">
+            <option value="">Виберіть   станцію відправлення</option>
+            @foreach (var n in stations)
+            {
+                <option value="@n">@n</option>
+            }
+        </select>
+        <select class="form-control" @bind="selectedTo">
+            <option value="">Виберіть станцію прибуття </option>
+            @foreach (var n in stations)
+            {
+                <option value="@n">@n</option>
+            }
+        </select>
+
+        <button class="btn btn-info" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+    <div class="mt-2">
+        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
+    </div>
+</div>
+
+@if (trains == null)
+{
+    <p>Завантаження...</p>
+}
+else
+{
+    <!-- Таблиця для великих екранів -->
+    <div class="d-none d-md-block table-responsive mb-5">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Номер</th>
+                    <th>Прибуття</th>
+                    <th>Відправлення</th>
+                    <th>Тип поїзда</th>
+                    <th>Назва</th>
+                    <th class="text-center">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in trains)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Number</td>
+                        <td>@item.StationFrom</td>
+                        <td>@item.StationTo</td>
+                        <td>@item.PassTrainType</td>
+                        <td>@item.NameOfTrain</td>
+                        <td class="text-center">
+
+                            @if (item.TrainsShadulesCount > 0)
+                            {
+                                <button class="btn btn-info btn-sm d-block w-100 mb-2"
+                                        @onclick="@(() => Nav.NavigateTo($"/trains/shadule/{item.Id}"))">
+                                    Розклад
+                                </button>
+                            }
+
+                            <AuthorizeView Roles="Superadmin">
+                                <button class="btn btn-success btn-sm d-block w-100 mb-2"
+                                        @onclick="@(() => Nav.NavigateTo($"/trains/edit/{item.Id}"))">
+                                    Редагувати
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm d-block w-100 mb-2"
+                                        @onclick="@(() => Nav.NavigateTo($"/trainsshadules/create/{item.Number}"))">
+                                    Додати розклад
+                                </button>
+                            </AuthorizeView>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Картки для мобільних -->
+    <div class="d-block d-md-none">
+        @foreach (var item in trains)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Поїзд №@item.Number</h5>
+                    <p class="card-text mb-1"><b>Прибуття:</b> @item.StationFrom</p>
+                    <p class="card-text mb-1"><b>Відправлення:</b> @item.StationTo</p>
+                    <p class="card-text mb-1"><b>Тип:</b> @item.PassTrainType</p>
+                    <p class="card-text"><b>Назва:</b> @item.NameOfTrain</p>
+
+                    @if (item.TrainsShadulesCount > 0)
+                    {
+                        <button class="btn btn-info btn-sm w-100 mb-2"
+                                @onclick="@(() => Nav.NavigateTo($"/trains/shadule/{item.Id}"))">
+                            Розклад
+                        </button>
+                    }
+
+                    <AuthorizeView Roles="Superadmin">
+                        <button class="btn btn-success btn-sm w-100 mb-2"
+                                @onclick="@(() => Nav.NavigateTo($"/trains/edit/{item.Id}"))">
+                            Редагувати
+                        </button>
+
+                        <button class="btn btn-outline-danger btn-sm w-100"
+                                @onclick="@(() => Nav.NavigateTo($"/trainsshadules/create/{item.Number}"))">
+                            Додати розклад
+                        </button>
+                    </AuthorizeView>
+
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<TrainDTO>? trains;
+    private List<string> numbers = new();
+    private string? selectedNumber;
+    private string? selectedFrom;
+    private string? selectedTo;
+    private bool isAdmin = false;
+    private List<string> stations = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var url =
+               $"api/trains/gettrains?" +
+               $"{(string.IsNullOrWhiteSpace(selectedNumber) ? "" : $"&number={Uri.EscapeDataString(selectedNumber)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedFrom) ? "" : $"&stationFrom={Uri.EscapeDataString(selectedFrom)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedTo) ? "" : $"&stationTo={Uri.EscapeDataString(selectedTo)}")}";
+
+        Console.WriteLine("Loading trains from URL: " + url);
+        trains = await Http.GetFromJsonAsync<List<TrainDTO>>(url);
+
+        numbers.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getnumbers"));
+        stations.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getstations"));
+    }
+    private async Task ApplyFilter()
+    {
+        trains.Clear();          // если хотите начать с нуля
+        await Load();                 // загружаем первую страницу
+
+        StateHasChanged();
+    }
+
+    private async Task ClearFilter()
+    {
+        selectedNumber = string.Empty;
+        selectedFrom = string.Empty;
+        selectedTo = string.Empty;
+        await Load();
+
+        StateHasChanged();
+    }
+
+
+    public void AddTrain()
+    {
+        Nav.NavigateTo("/trains/addtrain");
+    }
+
+}
