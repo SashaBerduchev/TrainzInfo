@@ -13,10 +13,10 @@ namespace TrainzInfo.Controllers.Api
 {
     [ApiController]
     [Route("api/trains")]
-    public class TrainsController : Controller
+    public class TrainsApiController : Controller
     {
         private readonly ApplicationContext _context;
-        public TrainsController(ApplicationContext context)
+        public TrainsApiController(ApplicationContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetTrains([FromQuery] string number,
             [FromQuery] string stationFrom,
             [FromQuery] string stationTo)
-        { 
+        {
             LoggingExceptions.Init("TrainsController", "GetTrains");
             LoggingExceptions.Start();
             LoggingExceptions.Wright("Getting trains from database");
@@ -44,30 +44,30 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(t => t.Number == Convert.ToInt32(number));
                 }
-                if(!string.IsNullOrEmpty(stationFrom))
+                if (!string.IsNullOrEmpty(stationFrom))
                 {
                     query = query.Where(t => t.StationFrom == stationFrom);
                 }
-                if(!string.IsNullOrEmpty(stationTo))
+                if (!string.IsNullOrEmpty(stationTo))
                 {
                     query = query.Where(t => t.StationTo == stationTo);
                 }
                 List<Train> trains = await query
-                    .OrderBy(x=>x.Number)
+                    .OrderBy(x => x.Number)
                     .ToListAsync();
 
-               trainDTOs = trains.Select(x => new TrainDTO
-               {
-                   Id = x.id,
-                   Number = x.Number,
-                   StationFrom = x.StationFrom,
-                   StationTo = x.StationTo,
-                   Type = x.Type,
-                   NameOfTrain = x.NameOfTrain,
-                   IsUsing = x.IsUsing,
-                   PassTrainType = x.TypeOfPassTrain?.Type,
-                   TrainsShadulesCount = x.TrainsShadules.Count
-               }).ToList();
+                trainDTOs = trains.Select(x => new TrainDTO
+                {
+                    Id = x.id,
+                    Number = x.Number,
+                    StationFrom = x.StationFrom,
+                    StationTo = x.StationTo,
+                    Type = x.Type,
+                    NameOfTrain = x.NameOfTrain,
+                    IsUsing = x.IsUsing,
+                    PassTrainType = x.TypeOfPassTrain?.Type,
+                    TrainsShadulesCount = x.TrainsShadules.Count
+                }).ToList();
 
                 LoggingExceptions.Wright($"Successfully retrieved {trains.Count} trains.");
                 LoggingExceptions.Finish();
@@ -82,6 +82,51 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("gettrainbynumber")]
+        public async Task<ActionResult> GetTrainByNumber([FromQuery] int trainid)
+        {
+            LoggingExceptions.Init("TrainsController", "GetTrainByNumber");
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright($"Getting train with id =  {trainid} from database");
+            try
+            {
+                Train train = await _context.Trains
+                    .Include(x => x.TypeOfPassTrain)
+                    .Include(x => x.From)
+                    .Include(x => x.To)
+                    .Include(x => x.TrainsShadules)
+                    .Include(x => x.StationsShadules)
+                    .FirstOrDefaultAsync(t => t.id == trainid);
+                if (train == null)
+                {
+                    LoggingExceptions.Wright("Train not found");
+                    LoggingExceptions.Finish();
+                    return NotFound("Train not found");
+                }
+                TrainDTO trainDTO = new TrainDTO
+                {
+                    Id = train.id,
+                    Number = train.Number,
+                    StationFrom = train.StationFrom,
+                    StationTo = train.StationTo,
+                    Type = train.Type,
+                    NameOfTrain = train.NameOfTrain,
+                    IsUsing = train.IsUsing,
+                    PassTrainType = train.TypeOfPassTrain?.Type
+                };
+                LoggingExceptions.Wright("Successfully retrieved train.");
+                LoggingExceptions.Finish();
+                return Ok(trainDTO);
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.AddException(ex.ToString());
+                LoggingExceptions.Wright("Error retrieving train from database");
+                LoggingExceptions.Finish();
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("getnumbers")]
         public async Task<ActionResult> GetNumbers()
         {
@@ -91,7 +136,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 List<string> trainNumbers = await _context.Trains
-                    .OrderBy(x=>x.Number)
+                    .OrderBy(x => x.Number)
                     .Select(t => t.Number.ToString())
                     .Distinct()
                     .ToListAsync();

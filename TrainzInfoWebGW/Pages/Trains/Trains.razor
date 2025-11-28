@@ -2,6 +2,7 @@
 @using System.Threading.Tasks
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
 
 <h1 class="text-center my-4">Призначені поїзди</h1>
 
@@ -79,7 +80,7 @@ else
                             @if (item.TrainsShadulesCount > 0)
                             {
                                 <button class="btn btn-info btn-sm d-block w-100 mb-2"
-                                        @onclick="@(() => Nav.NavigateTo($"/trains/shadule/{item.Id}"))">
+                                        @onclick="@(() => Nav.NavigateTo($"/trains/shedule/{item.Id}"))">
                                     Розклад
                                 </button>
                             }
@@ -91,7 +92,7 @@ else
                                 </button>
 
                                 <button class="btn btn-outline-danger btn-sm d-block w-100 mb-2"
-                                        @onclick="@(() => Nav.NavigateTo($"/trainsshadules/create/{item.Number}"))">
+                                        @onclick="@(() => Nav.NavigateTo($"/trainsshedules/create/{item.Number}"))">
                                     Додати розклад
                                 </button>
                             </AuthorizeView>
@@ -118,7 +119,7 @@ else
                     @if (item.TrainsShadulesCount > 0)
                     {
                         <button class="btn btn-info btn-sm w-100 mb-2"
-                                @onclick="@(() => Nav.NavigateTo($"/trains/shadule/{item.Id}"))">
+                                @onclick="@(() => Nav.NavigateTo($"/trains/shedule/{item.Id}"))">
                             Розклад
                         </button>
                     }
@@ -149,10 +150,12 @@ else
     private string? selectedTo;
     private bool isAdmin = false;
     private List<string> stations = new();
+    private bool IsAdmin;
 
     protected override async Task OnInitializedAsync()
     {
         await Load();
+        await CheckRoles();
     }
 
     private async Task Load()
@@ -187,6 +190,35 @@ else
         StateHasChanged();
     }
 
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
 
     public void AddTrain()
     {

@@ -1,0 +1,131 @@
+﻿@page "/trains/shedule/{trainid:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3 class="fw-bold text-center mb-3">
+    Поїзд № @Train?.Number <br />
+    сполученням: @Train?.StationFrom – @Train?.StationTo
+</h3>
+
+<div class="mb-3">
+    @if (IsSuperadmin)
+    {
+        <button class="btn btn-info m-1" @onclick="AddStop">Додати зупинку</button>
+        <button class="btn btn-dark m-1" @onclick="UpdateInfo">Оновити дані</button>
+        <button class="btn btn-danger m-1" @onclick="DeleteSchedule">Видалити графік</button>
+    }
+</div>
+
+@if (Schedule is null)
+{
+    <p>Завантаження...</p>
+}
+else
+{
+    <!-- Таблиця для великих екранів -->
+    <div class="table-responsive d-none d-md-block">
+        <table class="table table-striped table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Назва станції</th>
+                    <th>Прибуття</th>
+                    <th>Відправлення</th>
+                    <th>Відстань</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Schedule)
+                {
+                    <tr>
+                        <td style="font-size:18px">
+                            <a @onclick="@(() => Nav.NavigateTo($"/stations/{item.StationId}"))">
+                                @item.NameStation
+                            </a>
+                        </td>
+                        <td>@item.Arrival</td>
+                        <td>@item.Departure</td>
+                        <td>@item.Distance</td>
+                        <td>
+                            @if (IsSuperadmin)
+                            {
+                                <button class="btn btn-success btn-sm"
+                                        @onclick="() => Edit(item.Id)">Редагувати</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Картки для мобільних -->
+    <div class="d-block d-md-none">
+        @foreach (var item in Schedule)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a @onclick="@(() => Nav.NavigateTo($"/stations/details/{item.StationId}"))">
+                            @item.NameStation
+                        </a>
+                    </h5>
+                    <p><b>Прибуття:</b> @item.Arrival</p>
+                    <p><b>Відправлення:</b> @item.Departure</p>
+                    <p><b>Відстань:</b> @item.Distance км</p>
+
+                    @if (IsSuperadmin)
+                    {
+                        <button class="btn btn-success btn-sm"
+                                @onclick="() => Edit(item.Id)">Редагувати</button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<button class="btn btn-info mt-3" @onclick="GoBack">До списку поїздів</button>
+
+@code {
+    [Parameter] public int trainid { get; set; }
+
+    private List<TrainsShedullerDTO> Schedule;
+    private TrainDTO Train;
+
+    private bool IsSuperadmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserRole();
+        await LoadTrain();
+        await LoadSchedule();
+    }
+
+    private async Task LoadUserRole()
+    {
+        var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = auth.User;
+
+        IsSuperadmin = user.IsInRole("Superadmin");
+    }
+
+    private async Task LoadTrain()
+    {
+        Train = await Http.GetFromJsonAsync<TrainDTO>($"api/trains/gettrainbynumber?trainid={trainid}");
+    }
+
+    private async Task LoadSchedule()
+    {
+        Schedule = await Http.GetFromJsonAsync<List<TrainsShedullerDTO>>(
+            $"api/trainsshaduller/getbytrain?trainid={trainid}"
+        );
+    }
+
+    void AddStop() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/add");
+    void UpdateInfo() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/update");
+    void DeleteSchedule() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/delete");
+    void Edit(int id) => Nav.NavigateTo($"/trainsshadule/edit/{id}");
+    void GoBack() => Nav.NavigateTo("/trains");
+}
