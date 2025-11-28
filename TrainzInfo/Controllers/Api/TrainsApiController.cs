@@ -153,6 +153,33 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("gettrainbuid/{id}")]
+        public async Task<ActionResult> GetTrainBuId(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(GetTrainBuId));
+            LoggingExceptions.Start();
+            LoggingExceptions.Wright("Get trainby idf: " + id);
+            try
+            {
+                TrainDTO train = await _context.Trains
+                    .Where(t => t.id == id)
+                    .Select(x => new TrainDTO
+                    {
+                        Id = x.id,
+                        Number = x.Number,
+                        StationFrom = x.StationFrom,
+                        StationTo = x.StationTo
+                    }).FirstOrDefaultAsync();
+                LoggingExceptions.Finish();
+                return Ok(train);
+            }catch(Exception ex)
+            {
+                LoggingExceptions.Wright("ERROR");
+                LoggingExceptions.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }finally { LoggingExceptions.Finish(); }
+        }
+
         [HttpGet("getstations")]
         public async Task<ActionResult> GetStations()
         {
@@ -196,7 +223,8 @@ namespace TrainzInfo.Controllers.Api
                     Type = trainDTO.PassTrainType,
                     NameOfTrain = trainDTO.NameOfTrain,
                     IsUsing = true,
-                    TypeOfPassTrain = await _context.TypeOfPassTrains.FirstOrDefaultAsync(t => t.Type == trainDTO.PassTrainType)
+                    TypeOfPassTrain = await _context.TypeOfPassTrains.Where(t => t.Type == trainDTO.PassTrainType).FirstOrDefaultAsync(),
+                    TrainsShadules = new List<TrainsShadule>()
                 };
                 _context.Trains.Add(newTrain);
                 await _context.SaveChangesAsync();

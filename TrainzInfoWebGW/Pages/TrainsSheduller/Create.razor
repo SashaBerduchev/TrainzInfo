@@ -1,0 +1,233 @@
+﻿@page "/trainsshedules/create/{id:int}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+
+<h3>Додати розклад до поїздаа:</h3>
+
+<!-- Таблиця для великих екранів -->
+<div class="table-responsive d-none d-md-block">
+    <table class="table table-striped table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Назва станції</th>
+                <th>Прибуття</th>
+                <th>Відправлення</th>
+                <th>Відстань</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in trainsShedullers)
+            {
+                <tr>
+                    <td style="font-size:18px">
+                        @item.NameStation
+                    </td>
+                    <td>@item.Arrival</td>
+                    <td>@item.Departure</td>
+                    <td>@item.Distance</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h5 class="mb-0">Додати станцію</h5>
+            </div>
+
+            <div class="card-body">
+                <EditForm Model="@trainsSheduller" OnValidSubmit="HandleValidSubmit">
+
+                    <!-- Станція -->
+                    <div class="mb-3 position-relative">
+                        <label class="form-label fw-bold">Станція</label>
+
+                        <InputText @bind-Value="station"
+                                   class="form-control"
+                                   placeholder="Почніть вводити назву..."
+                                   @oninput="OnInputChanged" />
+
+                        @if (filterStations?.Any() == true)
+                        {
+                            <ul class="list-group position-absolute w-100 shadow-sm"
+                                style="z-index:1000; max-height:180px; overflow-y:auto;">
+
+                                @foreach (var item in filterStations)
+                                {
+                                    <li class="list-group-item list-group-item-action"
+                                        style="cursor:pointer;"
+                                        @onclick="() => SelectStation(item)">
+                                        @item
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+
+                    <!-- Час прибуття -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Час прибуття</label>
+                        <input type="time"
+                               class="form-control"
+                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
+                               @onchange="OnChangeDeparture" />
+                    </div>
+
+                    <!-- Час відправки -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Час відправки</label>
+                        <input type="time"
+                               class="form-control"
+                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
+                               @onchange="OnChangeArrival" />
+                    </div>
+
+                    <!-- Кнопка зберегти -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" @onclick="HandleValidSubmit">
+                            💾 Зберегти станцію
+                        </button>
+                    </div>
+
+                </EditForm>
+            </div>
+        </div>
+
+        <!-- Кнопка Застосувати -->
+        <div class="d-grid mt-3">
+            <button type="button" class="btn btn-success btn-lg" @onclick="SaveChanges">
+                ✔ Застосувати зміни
+            </button>
+        </div>
+
+    </div>
+</div>
+
+@if (ErrorMessage!="")
+        {
+            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+            <div class="alert alert-danger mt-2">
+                        <p>@ErrorMessage</p>
+            </div>
+        }
+
+@code {
+    [Parameter] public int id { get; set; }
+    private TrainDTO train;
+    private TrainsShedullerDTO trainsSheduller;
+    private List<TrainsShedullerDTO> trainsShedullers = new List<TrainsShedullerDTO>();
+    private List<string> filterStations;
+    private string station;
+    private List<string> stations = new List<string>();
+    private string ErrorMessage = "";
+    private CancellationTokenSource debounceCts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trainsSheduller = new TrainsShedullerDTO();
+        await Loading();
+    }
+
+    public async Task Loading()
+    {
+        train = await Http.GetFromJsonAsync<TrainDTO>($"api/trains/gettrainbuid/{id}");
+        stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-station-names");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        trainsShedullers.Add(trainsSheduller);
+        StateHasChanged();
+        trainsSheduller = new TrainsShedullerDTO();
+    }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        station = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(200, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(station))
+                {
+                    filterStations.Clear();
+                }
+                else
+                {
+                    filterStations = stations
+                    .Where(x => x.Contains(station, StringComparison.OrdinalIgnoreCase))
+                    .Take(7)
+                    .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+
+
+    private void OnChangeDeparture(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var parsed))
+        {
+            trainsSheduller.Departure = parsed;
+        }
+    }
+
+    private void OnChangeArrival(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var parsed))
+        {
+            trainsSheduller.Arrival = parsed;
+        }
+    }
+
+    private void SelectStation(string item)
+    {
+        station = item;
+        trainsSheduller.NameStation = station;
+        filterStations.Clear();
+    }
+
+    private async Task SaveChanges()
+    {
+        TrainCreateRequest request = new TrainCreateRequest
+            {
+                Train = train,
+                TrainsShedullers = trainsShedullers
+            };
+
+        var response = await Http.PostAsJsonAsync("api/trainsshaduller/create", request);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/trains");
+        }
+        else
+        {
+            ErrorMessage = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    
+}
+

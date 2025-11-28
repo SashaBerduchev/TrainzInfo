@@ -105,7 +105,8 @@
     protected override async Task OnInitializedAsync()
     {
         stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/getnamesstations");
-        TypesList = await Http.GetFromJsonAsync<List<string>>($"api/trains/gettypes");
+        TypesList.Add("");
+        TypesList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/trains/gettypes"));
     }
 
     private async Task OnInputChangedStationFrom(ChangeEventArgs e)
