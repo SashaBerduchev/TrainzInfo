@@ -34,9 +34,9 @@
     <Folder Include="Logs\" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="..\TrainzInfoWebGW\TrainzInfoWebGW.csproj" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 
 </Project>
