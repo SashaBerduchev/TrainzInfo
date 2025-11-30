@@ -35,9 +35,9 @@ namespace TrainzInfo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            LoggingExceptions.Init("Startup", nameof(ConfigureServices));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try add services");
+            Log.Init("Startup", nameof(ConfigureServices));
+            Log.Start();
+            Log.Wright("Try add services");
             services.AddControllers();
 
             services.AddAuthentication(options =>
@@ -66,19 +66,19 @@ namespace TrainzInfo
 
             string connection = "";
             string trace = "";
-            LoggingExceptions.Wright("Try add DB context");
+            Log.Wright("Try add DB context");
             services.AddMemoryCache();
-            LoggingExceptions.Wright("Try add session");
+            Log.Wright("Try add session");
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            LoggingExceptions.Wright("Try add MVC");
+            Log.Wright("Try add MVC");
             services.AddMvc();
 
-            LoggingExceptions.Wright("Try find connection string");
+            Log.Wright("Try find connection string");
             if (DEBUG_MODE == true)
             {
                 if (START_IN_PROD_DB == false)
@@ -101,10 +101,10 @@ namespace TrainzInfo
             }
 
 
-            LoggingExceptions.Wright(trace);
+            Log.Wright(trace);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
-            LoggingExceptions.Wright("Try add identity");
+            Log.Wright("Try add identity");
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -136,16 +136,16 @@ namespace TrainzInfo
             });
 
             Mail mail = new Mail();
-            LoggingExceptions.Finish();
+            Log.Finish();
             _connectionString = connection;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            LoggingExceptions.Init("Startup", nameof(Configure));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try configure app");
+            Log.Init("Startup", nameof(Configure));
+            Log.Start();
+            Log.Wright("Try configure app");
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
@@ -157,23 +157,29 @@ namespace TrainzInfo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            LoggingExceptions.Wright("Try use HTTPS redirection");
+            Log.Wright("Try use HTTPS redirection");
             app.UseHttpsRedirection();
 
-            LoggingExceptions.Wright("Try use static files");
+            Log.Wright("Try use static files");
             app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    Log.Wright($"Serving file: {ctx.File.PhysicalPath}");
+                }
+            });
 
-            LoggingExceptions.Wright("Try use routing");
+            Log.Wright("Try use routing");
             app.UseRouting();
             app.UseCors();
 
-            LoggingExceptions.Wright("Try use authorization");
+            Log.Wright("Try use authorization");
             app.UseAuthentication();
             app.UseAuthorization();
-            LoggingExceptions.Wright("Try use session");
-            app.UseSession();
-            LoggingExceptions.Wright("Try use endpoints");
+            //Log.Wright("Try use session");
+            //app.UseSession();
+            Log.Wright("Try use endpoints");
             
             app.UseEndpoints(endpoints =>
             {
@@ -192,11 +198,11 @@ namespace TrainzInfo
             });
 
             var endpointDataSource = app.ApplicationServices.GetRequiredService<EndpointDataSource>();
-            LoggingExceptions.Wright("Try get all registered endpoints");
+            Log.Wright("Try get all registered endpoints");
             
             foreach (var endpoint in endpointDataSource.Endpoints)
             {
-                LoggingExceptions.Wright($"Registered endpoint: {endpoint.DisplayName}");
+                Log.Wright($"Registered endpoint: {endpoint.DisplayName}");
             }
 
             using (var scope = app.ApplicationServices.CreateScope())
@@ -213,7 +219,7 @@ namespace TrainzInfo
             });
             
             
-            LoggingExceptions.Finish();
+            Log.Finish();
 
         }
 

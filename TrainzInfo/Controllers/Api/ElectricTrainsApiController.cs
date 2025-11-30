@@ -25,12 +25,12 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("get-electrics")]
         public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetElectrics));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetElectrics));
+            Log.Start();
             int pageSize = 5;
             try
             {
-                LoggingExceptions.Wright("Loading electrics");
+                Log.Wright("Loading electrics");
                 IQueryable query = _context
                     .Electrics
                     .Include(d => d.DepotList)
@@ -71,28 +71,28 @@ namespace TrainzInfo.Controllers.Api
                         ElectrickTrainzInformation = x.ElectrickTrainzInformation.AllInformation
                     })
                     .AsQueryable();
-                LoggingExceptions.Wright("Electrics loaded query: " + query.ToQueryString());
+                Log.Wright("Electrics loaded query: " + query.ToQueryString());
                 List<ElectricTrainDTO> electrics = await query.Cast<ElectricTrainDTO>().ToListAsync();
                 return Ok(electrics);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
-                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] ElectricTrainDTO trainDTO)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Create));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Create electric train");
+            Log.Init(this.ToString(), nameof(Create));
+            Log.Start();
+            Log.Wright("Create electric train");
             try
             {
                 ElectricTrain electricTrain = new ElectricTrain
@@ -118,22 +118,22 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
-                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("edit")]
         public async Task<ActionResult> Edit([FromBody] ElectricTrainDTO electricTrainDTO)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Edit));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Edit electric train");
+            Log.Init(this.ToString(), nameof(Edit));
+            Log.Start();
+            Log.Wright("Edit electric train");
             try
             {
                 ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
@@ -157,22 +157,22 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
-                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Delete));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Delete electric train");
+            Log.Init(this.ToString(), nameof(Delete));
+            Log.Start();
+            Log.Wright("Delete electric train");
             try
             {
                 ElectricTrain electricTrain = await _context.Electrics.FindAsync(id);
@@ -186,13 +186,13 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
-                LoggingExceptions.Wright($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
     }

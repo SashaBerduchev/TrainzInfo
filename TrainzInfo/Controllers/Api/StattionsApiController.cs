@@ -30,12 +30,12 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string name = null,
             [FromQuery] string oblast = null)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetStations));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetStations));
+            Log.Start();
 
             int pageSize = 10;
 
-            LoggingExceptions.Wright("Getting stations from database");
+            Log.Wright("Getting stations from database");
             try
             {
                 IQueryable<Stations> query = _context.Stations
@@ -82,19 +82,19 @@ namespace TrainzInfo.Controllers.Api
                     StationImages = getSlowImage(station) // тепер МОЖНА
                 }).ToList();
 
-                LoggingExceptions.Wright("Stations successfully retrieved from database");
+                Log.Wright("Stations successfully retrieved from database");
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving stations: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving stations: " + ex.Message);
+                Log.AddException($"Error retrieving stations: {ex.Message}");
+                Log.Wright("Error retrieving stations: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -131,8 +131,8 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("details/{id}")]
         public async Task<ActionResult> Details(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Details));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(Details));
+            Log.Start();
             try
             {
                 StationsDTO station = await _context.Stations
@@ -155,135 +155,135 @@ namespace TrainzInfo.Controllers.Api
                                 : null,
                     })
                     .FirstOrDefaultAsync();
-                LoggingExceptions.Wright("Station details successfully retrieved from database");
+                Log.Wright("Station details successfully retrieved from database");
                 return Ok(station);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving station details: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving station details: " + ex.Message);
+                Log.AddException($"Error retrieving station details: {ex.Message}");
+                Log.Wright("Error retrieving station details: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpGet("get-filias")]
         public async Task<ActionResult> GetFilias()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetFilias));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetFilias));
+            Log.Start();
             try
             {
                 var filias = await _context.UkrainsRailways
                     .Select(f => f.Name)
                     .ToListAsync();
-                LoggingExceptions.Wright("Filias successfully retrieved from database");
+                Log.Wright("Filias successfully retrieved from database");
                 return Ok(filias);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving filias: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving filias: " + ex.Message);
+                Log.AddException($"Error retrieving filias: {ex.Message}");
+                Log.Wright("Error retrieving filias: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpGet("get-oblasts")]
         public async Task<ActionResult> GetOblasts()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetOblasts));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetOblasts));
+            Log.Start();
             try
             {
                 var oblasts = await _context.Oblasts
                     .OrderBy(o => o.Name)
                     .Select(o => o.Name)
                     .ToListAsync();
-                LoggingExceptions.Wright("Oblasts successfully retrieved from database");
+                Log.Wright("Oblasts successfully retrieved from database");
                 return Ok(oblasts);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving oblasts: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving oblasts: " + ex.Message);
+                Log.AddException($"Error retrieving oblasts: {ex.Message}");
+                Log.Wright("Error retrieving oblasts: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpGet("getcitys")]
         public async Task<ActionResult> GetCitys()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetCitys));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetCitys));
+            Log.Start();
             try
             {
                 var citys = await _context.Cities
                     .OrderBy(c => c.Name)
                     .Select(c => c.Name)
                     .ToListAsync();
-                LoggingExceptions.Wright("Citys successfully retrieved from database");
+                Log.Wright("Citys successfully retrieved from database");
                 return Ok(citys);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving citys: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving citys: " + ex.Message);
+                Log.AddException($"Error retrieving citys: {ex.Message}");
+                Log.Wright("Error retrieving citys: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpGet("get-station-names")]
         public async Task<ActionResult> GetStationNames()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetStationNames));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetStationNames));
+            Log.Start();
             try
             {
                 var stationNames = await _context.Stations
                     .Select(s => s.Name)
                     .ToListAsync();
-                LoggingExceptions.Wright("Station names successfully retrieved from database");
+                Log.Wright("Station names successfully retrieved from database");
                 return Ok(stationNames);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving station names: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving station names: " + ex.Message);
+                Log.AddException($"Error retrieving station names: {ex.Message}");
+                Log.Wright("Error retrieving station names: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> CreateStation([FromBody] StationsDTO stationDto)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(CreateStation));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(CreateStation));
+            Log.Start();
             try
             {
-                LoggingExceptions.Wright("Creating new station in database");
+                Log.Wright("Creating new station in database");
                 Stations stationsCheck = await _context.Stations.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
                 if (stationsCheck != null)
                 {
-                    LoggingExceptions.Wright("Station with the same name already exists in database");
+                    Log.Wright("Station with the same name already exists in database");
                     return BadRequest("Станція вже є");
                 }
 
@@ -303,11 +303,11 @@ namespace TrainzInfo.Controllers.Api
                     Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null
                 };
 
-                LoggingExceptions.Wright("Checking for existing station images in database");
+                Log.Wright("Checking for existing station images in database");
                 StationImages stationImages = await _context.StationImages.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
                 if (stationImages != null)
                 {
-                    LoggingExceptions.Wright("Station with the same name already exists in database");
+                    Log.Wright("Station with the same name already exists in database");
                     station.StationImages = stationImages;
                 }
                 else
@@ -324,18 +324,18 @@ namespace TrainzInfo.Controllers.Api
 
                 _context.Stations.Add(station);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Station successfully created in database");
+                Log.Wright("Station successfully created in database");
                 return Ok(new { station.id });
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error creating station: {ex.Message}");
-                LoggingExceptions.Wright("Error creating station: " + ex.Message);
+                Log.AddException($"Error creating station: {ex.Message}");
+                Log.Wright("Error creating station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
 
         }
@@ -343,8 +343,8 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getedit/{id}")]
         public async Task<ActionResult> GetEditStation(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetEditStation));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetEditStation));
+            Log.Start();
             try
             {
                 StationsDTO station = await _context.Stations
@@ -362,35 +362,35 @@ namespace TrainzInfo.Controllers.Api
                                 : null,
                     })
                     .FirstOrDefaultAsync();
-                LoggingExceptions.Wright("Station edit details successfully retrieved from database");
+                Log.Wright("Station edit details successfully retrieved from database");
                 return Ok(station);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error retrieving station edit details: {ex.Message}");
-                LoggingExceptions.Wright("Error retrieving station edit details: " + ex.Message);
+                Log.AddException($"Error retrieving station edit details: {ex.Message}");
+                Log.Wright("Error retrieving station edit details: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("edit")]
         public async Task<ActionResult> EditStation([FromBody] StationsDTO stationDto)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(EditStation));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(EditStation));
+            Log.Start();
             try
             {
-                LoggingExceptions.Wright("Editing station in database");
+                Log.Wright("Editing station in database");
                 var station = await _context.Stations
                     .Include(s => s.StationImages)
                     .FirstOrDefaultAsync(s => s.id == stationDto.id);
                 if (station == null)
                 {
-                    LoggingExceptions.Wright("Station not found in database");
+                    Log.Wright("Station not found in database");
                     return NotFound("Станцію не знайдено");
                 }
                 station.Name = stationDto.Name;
@@ -405,49 +405,49 @@ namespace TrainzInfo.Controllers.Api
                     station.StationImages.ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData;
                 }
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Station successfully edited in database");
+                Log.Wright("Station successfully edited in database");
                 return Ok();
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error editing station: {ex.Message}");
-                LoggingExceptions.Wright("Error editing station: " + ex.Message);
+                Log.AddException($"Error editing station: {ex.Message}");
+                Log.Wright("Error editing station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteStation(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(DeleteStation));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(DeleteStation));
+            Log.Start();
             try
             {
-                LoggingExceptions.Wright("Deleting station from database");
+                Log.Wright("Deleting station from database");
                 var station = await _context.Stations.FindAsync(id);
                 if (station == null)
                 {
-                    LoggingExceptions.Wright("Station not found in database");
+                    Log.Wright("Station not found in database");
                     return NotFound("Станцію не знайдено");
                 }
                 _context.Stations.Remove(station);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Station successfully deleted from database");
+                Log.Wright("Station successfully deleted from database");
                 return Ok();
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Error deleting station: {ex.Message}");
-                LoggingExceptions.Wright("Error deleting station: " + ex.Message);
+                Log.AddException($"Error deleting station: {ex.Message}");
+                Log.Wright("Error deleting station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -456,10 +456,10 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getnamesstations")]
         public async Task<ActionResult> GetStationNames(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetStationNames));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetStationNames));
+            Log.Start();
 
-            LoggingExceptions.Wright("Try loading");
+            Log.Wright("Try loading");
             try
             {
                 List<string> stations = await _context.Stations
@@ -470,11 +470,11 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.Wright(ex.ToString());
-                LoggingExceptions.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
                 return BadRequest(ex.ToString());
             }
-            finally { LoggingExceptions.Finish(); }
+            finally { Log.Finish(); }
         }
     }
 }

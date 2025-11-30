@@ -23,10 +23,10 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getnewscomments/{id}")]
         public async Task<ActionResult> GetNewsComments(int id)
         {
-            LoggingExceptions.Init("CommentApiController", "GetNewsComments");
-            LoggingExceptions.Start();
+            Log.Init("CommentApiController", "GetNewsComments");
+            Log.Start();
 
-            LoggingExceptions.Wright($"Get news comments for news id={id}");
+            Log.Wright($"Get news comments for news id={id}");
             try
             {
                 var comments = await _context.NewsComments
@@ -49,12 +49,12 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException($"Error getting news comments for news id={id}: {ex.Message}");
+                Log.AddException($"Error getting news comments for news id={id}: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -62,10 +62,10 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getnewscommentscount/{id}")]
         public async Task<ActionResult> GetNewsCommentsCount(int id)
         {
-            LoggingExceptions.Init("CommentApiController", "GetNewsComments");
-            LoggingExceptions.Start();
+            Log.Init("CommentApiController", "GetNewsComments");
+            Log.Start();
 
-            LoggingExceptions.Wright($"Get news comments for news id={id}");
+            Log.Wright($"Get news comments for news id={id}");
             try
             {
                 var count = await _context.NewsComments.CountAsync();
@@ -73,21 +73,21 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException($"Error getting news comments for news id={id}: {ex.Message}");
+                Log.AddException($"Error getting news comments for news id={id}: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("setcomment")]
         public async Task<ActionResult> SetComment([FromBody] CommentsDTO comment)
         {
-            LoggingExceptions.Init("CommentApiController", "SetComment");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright($"Set comment for news id={comment.NewsName} by author id={comment.AuthorEmail}");
+            Log.Init("CommentApiController", "SetComment");
+            Log.Start();
+            Log.Wright($"Set comment for news id={comment.NewsName} by author id={comment.AuthorEmail}");
             try
             {
                 NewsComments comments = new NewsComments
@@ -103,22 +103,22 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException($"Error setting comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.Message}");
-                LoggingExceptions.Wright($"Exception: {ex.ToString()}");
+                Log.AddException($"Error setting comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.Message}");
+                Log.Wright($"Exception: {ex.ToString()}");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] CommentsDTO comment)
         {
-            LoggingExceptions.Init("CommentApiController", "Create");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright($"Create comment for news id={comment.NewsID} by author id={comment.AuthorEmail}");
+            Log.Init("CommentApiController", "Create");
+            Log.Start();
+            Log.Wright($"Create comment for news id={comment.NewsID} by author id={comment.AuthorEmail}");
             try
             {
                 NewsComments newComment = new NewsComments
@@ -134,13 +134,13 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException($"Error creating comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.ToString()}");
-                LoggingExceptions.Wright($"Exception: {ex.ToString()}");
+                Log.AddException($"Error creating comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.ToString()}");
+                Log.Wright($"Exception: {ex.ToString()}");
                 return StatusCode(500, "Internal server error");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
     }

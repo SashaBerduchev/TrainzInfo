@@ -2,11 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace TrainzInfo.Tools
 {
-    public class LoggingExceptions
+    public class Log
     {
         static string folder = "Logs";
         static string folderlog = @"Logs";
@@ -21,6 +20,7 @@ namespace TrainzInfo.Tools
 
         static string startStandartLogStr = "";
 
+        private static readonly object _logLock = new object();
         public static void Init(string nameClass, string nameMethod)
         {
             startStandartLogStr = nameClass + " - " + nameMethod;
@@ -57,7 +57,7 @@ namespace TrainzInfo.Tools
         {
             StandartLogFile(startStandartLogStr + " - " + log);
         }
-        
+
         private static void StandartLogFile(string logmessage)
         {
             try
@@ -65,14 +65,19 @@ namespace TrainzInfo.Tools
                 logmessage = DateTime.Now.ToString() + " - " + logmessage + "\n";
                 Trace.WriteLine(logmessage);
                 Console.WriteLine(logmessage);
-                FileStream filestreamlog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + StandartLog, FileMode.Append);
-                byte[] array = Encoding.Default.GetBytes(logmessage.ToString());
-                filestreamlog.Write(array, 0, array.Length);
-                filestreamlog.Close();
+                string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + StandartLog);
+                lock (_logLock)
+                {
+                    using (var filestreamlog = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    using (var writer = new StreamWriter(filestreamlog, Encoding.UTF8))
+                    {
+                        writer.Write(logmessage);
+                    }
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                LoggingExceptions.AddException(e.ToString());
+                Log.AddException(e.ToString());
             }
         }
 
@@ -93,8 +98,8 @@ namespace TrainzInfo.Tools
             }
             catch (System.Exception exp)
             {
-                LoggingExceptions.AddException(exp.StackTrace);
-                LoggingExceptions.AddException(exp.ToString());
+                Log.AddException(exp.StackTrace);
+                Log.AddException(exp.ToString());
             }
         }
         public static void ConnLog(string log)
@@ -115,7 +120,7 @@ namespace TrainzInfo.Tools
             }
 
         }
-        
+
         private static void ErrorLogEF(string log)
         {
             if (log.Contains("Exception"))
@@ -157,7 +162,7 @@ namespace TrainzInfo.Tools
             {
                 string log = "------Start log------- \n" + exception + "\n -------EndLog--------";
                 string dir = folderlog + "\\" + log;
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" +  DateTime.Now.ToString("yyyy-MM-dd") + " - " + ExcelErrors, FileMode.Append);
+                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + ExcelErrors, FileMode.Append);
                 byte[] array = Encoding.Default.GetBytes(log.ToString());
                 fileStreamLog.Write(array, 0, array.Length);
                 Trace.WriteLine(log);
@@ -188,5 +193,6 @@ namespace TrainzInfo.Tools
                 Console.WriteLine(exp.StackTrace);
             }
         }
+
     }
 }

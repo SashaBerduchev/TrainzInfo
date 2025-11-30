@@ -79,7 +79,7 @@ namespace TrainzInfo.Controllers.OldControllers
                                 }
                                 Train train = await _context.Trains.Where(x => x.Number == Convert.ToInt32(trainaddshad.NumberTrain)).FirstOrDefaultAsync();
                                 stationnotexist = trainaddshad.NameStation;
-                                LoggingExceptions.AddExcelExeptions(trainaddshad.NameStation);
+                                Log.AddExcelExeptions(trainaddshad.NameStation);
                                 Stations stations = await _context.Stations.Include(x => x.Citys)
                                         .Include(x => x.Oblasts).Include(x => x.UkrainsRailways).Include(x => x.railwayUsersPhotos)
                                         .Include(x => x.Metro).Include(x => x.StationInfo).Include(x => x.StationsShadules).Where(x => x.Name == trainaddshad.NameStation).FirstOrDefaultAsync();
@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers.OldControllers
                     }
                     catch (Exception exp)
                     {
-                        LoggingExceptions.AddExcelExeptions(exp.ToString());
+                        Log.AddExcelExeptions(exp.ToString());
                         TempData["TrainNumber"] = "1";
                         TempData["alertMessage"] = "Станція не існує: " + stationnotexist;
                         ViewBag.error = "Станція не існує: " + stationnotexist;
@@ -178,14 +178,14 @@ namespace TrainzInfo.Controllers.OldControllers
         // GET: TrainsShadules
         public async Task<IActionResult> Index(int? id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Index));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Find train schaduler");
+            Log.Init(this.ToString(), nameof(Index));
+            Log.Start();
+            Log.Wright("Find train schaduler");
             if(id is null && TempData["TrainNumber"] is not null)
             {
                 id = Convert.ToInt32(TempData["TrainNumber"].ToString());
             }
-            LoggingExceptions.Wright("Train id - " + id.ToString());
+            Log.Wright("Train id - " + id.ToString());
             Train train = await _context.Trains.Where(x => x.id == id).FirstOrDefaultAsync();
             ViewBag.traininfo = train;
             List<TrainsShadule> shadule = new List<TrainsShadule>();
@@ -194,9 +194,9 @@ namespace TrainzInfo.Controllers.OldControllers
                 .Include(x => x.Train)
                 .Where(x => x.NumberTrain == train.Number.ToString()).AsQueryable();
 
-            LoggingExceptions.Wright("Get list of schaduler - " + queryable.ToQueryString());
+            Log.Wright("Get list of schaduler - " + queryable.ToQueryString());
             shadule = await queryable.ToListAsync();
-            LoggingExceptions.Finish();
+            Log.Finish();
             return View(shadule);
         }
 

@@ -24,9 +24,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("DepotsApiController", "GetDepots");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright($"GetDepots id={id}");
+                Log.Init("DepotsApiController", "GetDepots");
+                Log.Start();
+                Log.Wright($"GetDepots id={id}");
                 var depots = await _context.Depots.Where(d => d.id == id)
                     .Include(d => d.City)
                         .ThenInclude(c => c.Oblasts)
@@ -46,13 +46,13 @@ namespace TrainzInfo.Controllers.Api
                         DieselTrainsCount = x.DieselTrains.Count
                     })
                     .ToListAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(depots);
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException(ex.Message);
-                LoggingExceptions.Finish();
+                Log.AddException(ex.Message);
+                Log.Finish();
                 return BadRequest(ex.Message);
             }
         }
@@ -62,14 +62,14 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("DepotsApiController", "CreateDepot");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright($"CreateDepot Name={depotDto.Name}");
+                Log.Init("DepotsApiController", "CreateDepot");
+                Log.Start();
+                Log.Wright($"CreateDepot Name={depotDto.Name}");
                 var city = await _context.Cities.FirstOrDefaultAsync(c => c.Name == depotDto.City);
                 var railway = await _context.UkrainsRailways.FirstOrDefaultAsync(r => r.Name == depotDto.UkrainsRailways);
                 if (city == null || railway == null)
                 {
-                    LoggingExceptions.Wright("Invalid City or UkrainsRailways");
+                    Log.Wright("Invalid City or UkrainsRailways");
                     return BadRequest("Invalid City or UkrainsRailways");
                 }
                 DepotList depot = new DepotList
@@ -80,13 +80,13 @@ namespace TrainzInfo.Controllers.Api
                 };
                 _context.Depots.Add(depot);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(new { Message = "Depot created successfully", DepotId = depot.id });
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException(ex.Message);
-                LoggingExceptions.Finish();
+                Log.AddException(ex.Message);
+                Log.Finish();
                 return BadRequest(ex.Message);
             }
         }
@@ -96,24 +96,24 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("DepotsApiController", "DeleteDepot");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright($"DeleteDepot id={id}");
+                Log.Init("DepotsApiController", "DeleteDepot");
+                Log.Start();
+                Log.Wright($"DeleteDepot id={id}");
                 var depot = await _context.Depots.FindAsync(id);
                 if (depot == null)
                 {
-                    LoggingExceptions.Wright("Depot not found");
+                    Log.Wright("Depot not found");
                     return NotFound("Depot not found");
                 }
                 _context.Depots.Remove(depot);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(new { Message = "Depot deleted successfully" });
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException(ex.Message);
-                LoggingExceptions.Finish();
+                Log.AddException(ex.Message);
+                Log.Finish();
                 return BadRequest(ex.Message);
             }
         }
@@ -124,20 +124,20 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("DepotsApiController", "EditDepot");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright($"EditDepot id={depotDto.Id}");
+                Log.Init("DepotsApiController", "EditDepot");
+                Log.Start();
+                Log.Wright($"EditDepot id={depotDto.Id}");
                 var depot = await _context.Depots.FindAsync(depotDto.Id);
                 if (depot == null)
                 {
-                    LoggingExceptions.Wright("Depot not found");
+                    Log.Wright("Depot not found");
                     return NotFound("Depot not found");
                 }
                 var city = await _context.Cities.FirstOrDefaultAsync(c => c.Name == depotDto.City);
                 var railway = await _context.UkrainsRailways.FirstOrDefaultAsync(r => r.Name == depotDto.UkrainsRailways);
                 if (city == null || railway == null)
                 {
-                    LoggingExceptions.Wright("Invalid City or UkrainsRailways");
+                    Log.Wright("Invalid City or UkrainsRailways");
                     return BadRequest("Invalid City or UkrainsRailways");
                 }
                 depot.Name = depotDto.Name;
@@ -145,13 +145,13 @@ namespace TrainzInfo.Controllers.Api
                 depot.UkrainsRailway = railway;
                 _context.Depots.Update(depot);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(new { Message = "Depot updated successfully" });
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException(ex.Message);
-                LoggingExceptions.Finish();
+                Log.AddException(ex.Message);
+                Log.Finish();
                 return BadRequest(ex.Message);
             }
         }

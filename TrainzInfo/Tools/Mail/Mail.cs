@@ -40,32 +40,32 @@ namespace TrainzInfo.Tools
         }
         public static void SendMail(string body, IdentityUser user)
         {
-            LoggingExceptions.Init("Mail", nameof(SendMessageNews));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try find user email");
+            Log.Init("Mail", nameof(SendMessageNews));
+            Log.Start();
+            Log.Wright("Try find user email");
             
             try
             {
-                LoggingExceptions.Wright("Try send email to " + user.Email);
+                Log.Wright("Try send email to " + user.Email);
                 MailMessage m = new MailMessage(_sendemail, user.Email);
                 m.Body = body;
-                LoggingExceptions.Wright("Create message body " + m.Body);
+                Log.Wright("Create message body " + m.Body);
                 SmtpClient smtp = new SmtpClient(_host, _port);
-                LoggingExceptions.Wright("Create SMTP client " + smtp);
+                Log.Wright("Create SMTP client " + smtp);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new NetworkCredential(_sendemail, _sendpassword);
                 smtp.EnableSsl = true;
-                LoggingExceptions.Wright("Try send email");
+                Log.Wright("Try send email");
                 smtp.Send(m);
             }
             catch (Exception exp)
             {
-                LoggingExceptions.Wright("Error send email to " + user.Email);
-                LoggingExceptions.Wright(exp.ToString());
+                Log.Wright("Error send email to " + user.Email);
+                Log.Wright(exp.ToString());
                 Trace.WriteLine(exp.ToString());
-                LoggingExceptions.AddException(exp.ToString());
+                Log.AddException(exp.ToString());
             }
-            LoggingExceptions.Finish();
+            Log.Finish();
         }
     }
 }

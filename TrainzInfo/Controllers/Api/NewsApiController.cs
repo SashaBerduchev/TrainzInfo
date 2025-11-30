@@ -36,9 +36,9 @@ namespace TrainzInfo.Controllers.Api
             int pageSize = 10;
             try
             {
-                LoggingExceptions.Init("NewsApiController", "GetNews");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get NewsInfos with Comments");
+                Log.Init("NewsApiController", "GetNews");
+                Log.Start();
+                Log.Wright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
                     .OrderByDescending(n => n.DateTime)
                     .Skip((page - 1) * pageSize)
@@ -60,14 +60,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
 
         }
@@ -77,9 +77,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("NewsApiController", "GetNewsDetails");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get NewsInfo Details with Comments");
+                Log.Init("NewsApiController", "GetNewsDetails");
+                Log.Start();
+                Log.Wright("Start Get NewsInfo Details with Comments");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
                 {
@@ -100,14 +100,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -117,9 +117,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("NewsApiController", "CreateNews");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Create NewsInfo");
+                Log.Init("NewsApiController", "CreateNews");
+                Log.Start();
+                Log.Wright("Start Create NewsInfo");
 
                 NewsInfo newNews = new NewsInfo
                 {
@@ -132,19 +132,19 @@ namespace TrainzInfo.Controllers.Api
                 };
                 _context.NewsInfos.Add(newNews);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("NewsInfo Created Successfully");
+                Log.Wright("NewsInfo Created Successfully");
                 return Ok();
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -153,9 +153,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("NewsApiController", "GetEditNews");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get Edit NewsInfo");
+                Log.Init("NewsApiController", "GetEditNews");
+                Log.Start();
+                Log.Wright("Start Get Edit NewsInfo");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
                 {
@@ -165,14 +165,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -181,9 +181,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("NewsApiController", "EditNews");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Edit NewsInfo");
+                Log.Init("NewsApiController", "EditNews");
+                Log.Start();
+                Log.Wright("Start Edit NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(newsInfo.id);
                 if (existingNews == null)
                 {
@@ -200,14 +200,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest(ex.ToString());
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -216,9 +216,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("NewsApiController", "DeleteNews");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Delete NewsInfo");
+                Log.Init("NewsApiController", "DeleteNews");
+                Log.Start();
+                Log.Wright("Start Delete NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(id);
                 if (existingNews == null)
                 {
@@ -230,14 +230,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
     }

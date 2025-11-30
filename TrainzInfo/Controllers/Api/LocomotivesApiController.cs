@@ -33,9 +33,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetLocomotives");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetLocomotives");
+                Log.Init("LocomotivesApiController", "GetLocomotives");
+                Log.Start();
+                Log.Wright("Start Get GetLocomotives");
                 int pageSize = 10;
 
                 IQueryable<Locomotive> query = _context.Locomotives
@@ -79,14 +79,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -95,9 +95,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetSeries");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetSeries");
+                Log.Init("LocomotivesApiController", "GetSeries");
+                Log.Start();
+                Log.Wright("Start Get GetSeries");
                 var series = await _context.Locomotives
                     .Include(ls => ls.Locomotive_Series)
                     .Select(x => x.Locomotive_Series.Seria)
@@ -107,14 +107,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -123,9 +123,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetDepots");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetDepots");
+                Log.Init("LocomotivesApiController", "GetDepots");
+                Log.Start();
+                Log.Wright("Start Get GetDepots");
                 var depots = await _context.Locomotives
                     .Include(d => d.DepotList)
                     .OrderBy(x => x.DepotList.Name)
@@ -136,14 +136,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -152,9 +152,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "CreateLocomotive");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Post CreateLocomotive");
+                Log.Init("LocomotivesApiController", "CreateLocomotive");
+                Log.Start();
+                Log.Wright("Start Post CreateLocomotive");
 
 
                 var locomotive = new Locomotive
@@ -170,17 +170,17 @@ namespace TrainzInfo.Controllers.Api
                     Seria = locomotiveDTO.Seria
                 };
 
-                LoggingExceptions.Wright("Try find locomotoive if exist");
+                Log.Wright("Try find locomotoive if exist");
                 Locomotive locomotiveExit = await _context.Locomotives
                     .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)
                     .FirstOrDefaultAsync();
                 if (locomotiveExit is not null)
                 {
-                    LoggingExceptions.Wright("Locomotoive is exist");
-                    LoggingExceptions.Finish();
+                    Log.Wright("Locomotoive is exist");
+                    Log.Finish();
                     return BadRequest("Локомотив з такою серією та номером вже існує.");
                 }
-                LoggingExceptions.Wright("Parse image");
+                Log.Wright("Parse image");
                 if (!string.IsNullOrEmpty(locomotiveDTO.ImgSrc))
                 {
                     // Якщо рядок має формат "data:image/png;base64,....", треба відокремити сам base64
@@ -197,14 +197,14 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest(ex.ToString());
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -213,9 +213,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetLocomotive");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetLocomotive");
+                Log.Init("LocomotivesApiController", "GetLocomotive");
+                Log.Start();
+                Log.Wright("Start Get GetLocomotive");
                 var locomotive = await _context.Locomotives
                     .Include(d => d.DepotList)
                         .ThenInclude(c => c.City)
@@ -242,20 +242,20 @@ namespace TrainzInfo.Controllers.Api
                                 ? $"data:{locomotive.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Image)}"
                                 : null,
                 };
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(locoDTO);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.Finish();
                 return BadRequest(ex.ToString());
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -265,9 +265,9 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "DeleteLocomotive");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Delete DeleteLocomotive");
+                Log.Init("LocomotivesApiController", "DeleteLocomotive");
+                Log.Start();
+                Log.Wright("Start Delete DeleteLocomotive");
                 var locomotive = await _context.Locomotives.FindAsync(id);
                 if (locomotive == null)
                 {
@@ -275,20 +275,20 @@ namespace TrainzInfo.Controllers.Api
                 }
                 _context.Locomotives.Remove(locomotive);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok();
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.Finish();
                 return BadRequest(ex.ToString());
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -298,27 +298,27 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetFilias");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetFilias");
+                Log.Init("LocomotivesApiController", "GetFilias");
+                Log.Start();
+                Log.Wright("Start Get GetFilias");
                 var filias = await _context.UkrainsRailways
                     .OrderBy(x => x.Name)
                     .Select(x => x.Name)
                     .ToListAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(filias);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
@@ -328,27 +328,27 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
-                LoggingExceptions.Init("LocomotivesApiController", "GetDepotsList");
-                LoggingExceptions.Start();
-                LoggingExceptions.Wright("Start Get GetDepotsList");
+                Log.Init("LocomotivesApiController", "GetDepotsList");
+                Log.Start();
+                Log.Wright("Start Get GetDepotsList");
                 var depots = await _context.Depots
                     .Where(x => x.Name.Contains("ТЧ"))
                     .OrderBy(x => x.Name)
                     .Select(x => x.Name)
                     .ToListAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(depots);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
                 return BadRequest();
                 throw;
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
     }

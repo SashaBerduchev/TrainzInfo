@@ -20,7 +20,7 @@ namespace TrainzInfo.Data
             {
                 optionsBuilder
                     .UseSqlServer(Startup.GetConnectionString())
-                    .LogTo(LoggingExceptions.SQLLogging, LogLevel.Information) // лог у консоль
+                    .LogTo(Log.SQLLogging, LogLevel.Information) // лог у консоль
                     .EnableSensitiveDataLogging(); 
             }
             

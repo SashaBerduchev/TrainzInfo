@@ -21,10 +21,10 @@ namespace TrainzInfo.Tools.JWT
 
         public string GenerateToken(IdentityUser user, IList<string> roles)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GenerateToken));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GenerateToken));
+            Log.Start();
 
-            LoggingExceptions.Wright("Set claims");
+            Log.Wright("Set claims");
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -36,7 +36,7 @@ namespace TrainzInfo.Tools.JWT
             // Додаємо ролі
             foreach (var role in roles)
             {
-                LoggingExceptions.Wright($"Add role claim: {role}");
+                Log.Wright($"Add role claim: {role}");
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
@@ -50,8 +50,8 @@ namespace TrainzInfo.Tools.JWT
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds
             );
-            LoggingExceptions.Wright("Token generated successfully");
-            LoggingExceptions.Finish();
+            Log.Wright("Token generated successfully");
+            Log.Finish();
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

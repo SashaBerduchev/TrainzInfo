@@ -86,7 +86,7 @@ namespace TrainzInfo.Controllers.OldControllers
                     }
                     catch (Exception exp)
                     {
-                        LoggingExceptions.AddExcelExeptions(exp.ToString());
+                        Log.AddExcelExeptions(exp.ToString());
                         TempData["alertMessage"] = "Помилка імпорту";
                     }
                 }
@@ -118,9 +118,9 @@ namespace TrainzInfo.Controllers.OldControllers
         // GET: Trains
         public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Index));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try get remote IP address");
+            Log.Init(this.ToString(), nameof(Index));
+            Log.Start();
+            Log.Wright("Try get remote IP address");
             List<Train> trains = new List<Train>();
             IQueryable<Train> query = _context.Trains
                 .Include(x => x.TrainsShadules)
@@ -130,23 +130,23 @@ namespace TrainzInfo.Controllers.OldControllers
                 .OrderBy(x => x.Number)
                 .Where(x=>x.IsUsing == true);
             
-            LoggingExceptions.Wright("User IP - " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            Log.Wright("User IP - " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             if (number != null)
             {
-                LoggingExceptions.Wright("Try filter by number - " + number.ToString());
+                Log.Wright("Try filter by number - " + number.ToString());
                 query = query.Where(x => x.Number == number);
             }
             if (!string.IsNullOrEmpty(from))
             {
-                LoggingExceptions.Wright("Try filter by from - " + from);
+                Log.Wright("Try filter by from - " + from);
                 query = query.Where(x => x.StationFrom == from);
             }
             if (!string.IsNullOrEmpty(to))
             {
-                LoggingExceptions.Wright("Try filter by to - " + to);
+                Log.Wright("Try filter by to - " + to);
                 query = query.Where(x => x.StationTo == to);
             }
-            LoggingExceptions.Wright("Execute query - " + query.ToQueryString());
+            Log.Wright("Execute query - " + query.ToQueryString());
             trains = await query.ToListAsync();
             ViewBag.number = new SelectList(trains.Select(x => x.Number));
             ViewBag.from = new SelectList(trains.Select(x => x.StationFrom));

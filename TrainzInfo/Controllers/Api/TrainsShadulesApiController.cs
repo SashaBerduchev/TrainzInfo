@@ -26,12 +26,12 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getbytrain")]
         public async Task<ActionResult> GetShedullers([FromQuery] int trainid)
         {
-            LoggingExceptions.Init("TrainsShadulesApiController", "GetShedullers");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright($"Получение расписания по поезду с ID: {trainid}");
+            Log.Init("TrainsShadulesApiController", "GetShedullers");
+            Log.Start();
+            Log.Wright($"Получение расписания по поезду с ID: {trainid}");
             try
             {
-                LoggingExceptions.Wright("select from DB");
+                Log.Wright("select from DB");
                 List<TrainsShaduleDTO> trains = await _context.TrainsShadule
                     .Include(ts => ts.Stations)
                         .ThenInclude(s => s.Citys)
@@ -53,25 +53,25 @@ namespace TrainzInfo.Controllers.Api
                     })
                     .ToListAsync();
 
-                LoggingExceptions.Wright("Data successfully retrieved from DB");
+                Log.Wright("Data successfully retrieved from DB");
                 return Ok(trains);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException($"Ошибка получения расписания по поезду с ID: {trainid}. Exception: {ex}");
+                Log.AddException($"Ошибка получения расписания по поезду с ID: {trainid}. Exception: {ex}");
                 return BadRequest($"Ошибка получения расписания по поезду с ID: {trainid}");
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> SaveSchaduller([FromBody] TrainCreateRequest trainCreateRequest)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(SaveSchaduller));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(SaveSchaduller));
+            Log.Start();
 
             TrainDTO trainDTO = trainCreateRequest.Train;
             List<TrainsShaduleDTO> shadulesDTO = trainCreateRequest.TrainsShedullers;
@@ -119,23 +119,23 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                LoggingExceptions.Wright($"Failed to save {ex.Message}");
-                LoggingExceptions.AddException($"{ex.Message}");
+                Log.Wright($"Failed to save {ex.Message}");
+                Log.AddException($"{ex.Message}");
                 return BadRequest(ex.ToString());
             }
             finally
             {
-                LoggingExceptions.Finish();
+                Log.Finish();
             }
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteConfirm(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(DeleteConfirm));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(DeleteConfirm));
+            Log.Start();
 
-            LoggingExceptions.Wright("Start loading train adn schad");
+            Log.Wright("Start loading train adn schad");
             int trainid = id;
             try
             {
@@ -191,14 +191,14 @@ namespace TrainzInfo.Controllers.Api
                 }
                 await _context.SaveChangesAsync();
 
-                LoggingExceptions.Wright(result.ToString());
-                LoggingExceptions.Finish();
+                Log.Wright(result.ToString());
+                Log.Finish();
                 return Ok();
             }
             catch (Exception ex)
             {
-                LoggingExceptions.Wright(ex.ToString());
-                LoggingExceptions.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally

@@ -138,10 +138,10 @@ namespace TrainzInfo.Controllers.OldControllers
         }
         public async Task<IActionResult> Index(int page = 1)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Index));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Find user IP");
-            LoggingExceptions.Wright("Try to find user");
+            Log.Init(this.ToString(), nameof(Index));
+            Log.Start();
+            Log.Wright("Find user IP");
+            Log.Wright("Try to find user");
             var user = await _userManager.GetUserAsync(User);
 
             if (user != null)
@@ -150,23 +150,23 @@ namespace TrainzInfo.Controllers.OldControllers
                 // Наприклад, якщо створив клас ApplicationUser : IdentityUser з полем Status
                 // if (((ApplicationUser)user).Status == "true") { ... }
 
-                LoggingExceptions.Wright("User found - " + user.UserName + " " + user.Email);
+                Log.Wright("User found - " + user.UserName + " " + user.Email);
                 ViewBag.user = user;
             }
-            LoggingExceptions.Wright("Try to get news");
+            Log.Wright("Try to get news");
             List<NewsInfo> newsInfo = new List<NewsInfo>();
             IQueryable<NewsInfo> query =  _context.NewsInfos.OrderByDescending(x=>x.DateTime)
                 .Include(x=>x.NewsComments).AsQueryable().AsNoTracking();
             int pageSize = 10;
-            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
+            Log.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.Wright("Get total count: " + count.ToString());
+            Log.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
+            Log.Wright("Get total pages: " + totalPages.ToString());
             newsInfo = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            Log.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
@@ -175,7 +175,7 @@ namespace TrainzInfo.Controllers.OldControllers
             {
                 return PartialView("_NewsPartial", newsInfo);
             }
-            LoggingExceptions.Finish();
+            Log.Finish();
             return View(newsInfo);
         }
 

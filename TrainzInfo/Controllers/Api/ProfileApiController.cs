@@ -25,10 +25,10 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getprofile")]
         public async Task<ActionResult<IdentityUser>> GetProfile()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetProfile));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetProfile));
+            Log.Start();
 
-            LoggingExceptions.Wright("Find user");
+            Log.Wright("Find user");
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {

@@ -59,29 +59,29 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(string? Seria, string? Filia, string? Depot, int page = 1)
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            LoggingExceptions.Init(this.ToString(), "Index " + remoteIpAddres);
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), "Index " + remoteIpAddres);
+            Log.Start();
              
             
             if (HttpContext.Session.GetString("Seria") is not null)
             {
-                LoggingExceptions.Wright("Знайшли сесію Seria: " + HttpContext.Session.GetString("Seria").ToString());
+                Log.Wright("Знайшли сесію Seria: " + HttpContext.Session.GetString("Seria").ToString());
                 Seria = HttpContext.Session.GetString("Seria").ToString();
             }
 
             if (HttpContext.Session.GetString("Filia") is not null)
             {
-                LoggingExceptions.Wright("Знайшли сесію Filia: " + HttpContext.Session.GetString("Filia").ToString());
+                Log.Wright("Знайшли сесію Filia: " + HttpContext.Session.GetString("Filia").ToString());
                 Filia = HttpContext.Session.GetString("Filia").ToString();
             }
             if (HttpContext.Session.GetString("Depot") is not null)
             {
-                LoggingExceptions.Wright("Знайшли сесію Depot: " + HttpContext.Session.GetString("Depot").ToString());
+                Log.Wright("Знайшли сесію Depot: " + HttpContext.Session.GetString("Depot").ToString());
                 Depot = HttpContext.Session.GetString("Depot").ToString();
             }
             HttpContext.Session.Clear();
 
-            LoggingExceptions.Wright("Запит інформації");
+            Log.Wright("Запит інформації");
             List<Locomotive> locomotives = new List<Locomotive>();
             IQueryable<Locomotive> query = _context.Locomotives
                 .Include(x => x.DepotList)
@@ -95,47 +95,47 @@ namespace TrainzInfo.Controllers.OldControllers
 
             query = query.Where(x => true);
 
-            LoggingExceptions.Wright("Фільтр по філії, серії, депо");
+            Log.Wright("Фільтр по філії, серії, депо");
             if (Filia != null)
             {
-                LoggingExceptions.Wright("Фільтр по філії: " + Filia);
+                Log.Wright("Фільтр по філії: " + Filia);
                 query = query.Where(x => x.DepotList.UkrainsRailway.Name == Filia);
-                LoggingExceptions.Wright(query.ToQueryString());
-                LoggingExceptions.Wright("Зберегли сесію Filia: " + Filia);
+                Log.Wright(query.ToQueryString());
+                Log.Wright("Зберегли сесію Filia: " + Filia);
                 HttpContext.Session.SetString("Filia", Filia);
             }
             if (Seria != null)
             {
-                LoggingExceptions.Wright("Фільтр по серії: " + Seria);
+                Log.Wright("Фільтр по серії: " + Seria);
                 query = query.Where(x => x.Seria == Seria);
-                LoggingExceptions.Wright(query.ToQueryString());
+                Log.Wright(query.ToQueryString());
                 HttpContext.Session.SetString("Seria", Seria);
-                LoggingExceptions.Wright("Зберегли сесію Seria: " + Seria);
+                Log.Wright("Зберегли сесію Seria: " + Seria);
             }
             if (Depot != null)
             {
-                LoggingExceptions.Wright("Фільтр по депо: " + Depot);
+                Log.Wright("Фільтр по депо: " + Depot);
                 query = query.Where(x => x.DepotList.Name == Depot);
-                LoggingExceptions.Wright(query.ToQueryString());
+                Log.Wright(query.ToQueryString());
                 HttpContext.Session.SetString("Depot", Depot);
-                LoggingExceptions.Wright("Зберегли сесію Depot: " + Depot);
+                Log.Wright("Зберегли сесію Depot: " + Depot);
             }
             int pageSize = 20;
-            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
+            Log.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.Wright("Get total count: " + count.ToString());
+            Log.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
+            Log.Wright("Get total pages: " + totalPages.ToString());
             locomotives = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            Log.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
 
             UpdateFilter(locomotives);
-            LoggingExceptions.Finish();
+            Log.Finish();
             return View(locomotives);
         }
 
@@ -147,7 +147,7 @@ namespace TrainzInfo.Controllers.OldControllers
         private void UpdateFilter(List<Locomotive> locomotives)
         {
             //Сбор данных для фильтра
-            LoggingExceptions.Wright("Зібрали дані для фільтру");
+            Log.Wright("Зібрали дані для фільтру");
             List<string> filiasstr = new List<string>();
             filiasstr.Add("");
             filiasstr.AddRange(locomotives.AsParallel().Select(x => x.DepotList.UkrainsRailway.Name).Distinct().ToList());
@@ -158,11 +158,11 @@ namespace TrainzInfo.Controllers.OldControllers
             serieses.Add("");
             serieses.AddRange(locomotives.AsParallel().Select(x => x.Seria).Distinct().ToList());
             // Вываод на форму
-            LoggingExceptions.Wright("Вивід на форму");
+            Log.Wright("Вивід на форму");
             ViewBag.filia = new SelectList(filiasstr);
             ViewBag.seria = new SelectList(serieses);
             ViewBag.depot = new SelectList(depotsname);
-            LoggingExceptions.Finish();
+            Log.Finish();
         }
 
         public async Task<IActionResult> IndexDepot(int? id, int page = 1)
@@ -183,15 +183,15 @@ namespace TrainzInfo.Controllers.OldControllers
             }
 
             int pageSize = 20;
-            LoggingExceptions.Wright("Set page size: " + pageSize.ToString());
+            Log.Wright("Set page size: " + pageSize.ToString());
             int count = await query.CountAsync();
-            LoggingExceptions.Wright("Get total count: " + count.ToString());
+            Log.Wright("Get total count: " + count.ToString());
             int totalPages = (int)Math.Ceiling(count / (double)pageSize);
-            LoggingExceptions.Wright("Get total pages: " + totalPages.ToString());
+            Log.Wright("Get total pages: " + totalPages.ToString());
             locomotives = await query.Skip((page - 1) * pageSize)
                .Take(pageSize) // <-- використання Take()
                .ToListAsync();
-            LoggingExceptions.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
+            Log.Wright("Get stations for page: " + query.Skip((page - 1) * pageSize)
                .Take(pageSize).ToQueryString());
             ViewBag.PageIndex = page;
             ViewBag.TotalPages = totalPages;
@@ -218,9 +218,9 @@ namespace TrainzInfo.Controllers.OldControllers
         // GET: Locomotive/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Details));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            Log.Init(this.ToString(), nameof(Details));
+            Log.Start();
+            Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
            
 
@@ -228,17 +228,17 @@ namespace TrainzInfo.Controllers.OldControllers
             {
                 return NotFound();
             }
-            LoggingExceptions.Wright("Try find locomotive by id: " + id);
+            Log.Wright("Try find locomotive by id: " + id);
             var Locomotives = await _context.Locomotives.Include(x=>x.DepotList)
                 .Include(x=>x.DepotList.City).Include(x=>x.DepotList.City.Oblasts)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (Locomotives == null)
             {
-                LoggingExceptions.Wright("Locomotive not found");
+                Log.Wright("Locomotive not found");
                 return NotFound();
             }
-            LoggingExceptions.Wright("Locomotive found: " + Locomotives.Seria + " - " + Locomotives.Number);
-            LoggingExceptions.Finish();
+            Log.Wright("Locomotive found: " + Locomotives.Seria + " - " + Locomotives.Number);
+            Log.Finish();
             return View(Locomotives);
         }
 
@@ -246,39 +246,39 @@ namespace TrainzInfo.Controllers.OldControllers
         [Authorize(Roles = "Superadmin, Admin")]
         public async Task<IActionResult> Create()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Create));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            Log.Init(this.ToString(), nameof(Create));
+            Log.Start();
+            Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
-            LoggingExceptions.Wright("Try get series and depots for select list");
+            Log.Wright("Try get series and depots for select list");
             List<string> serieslist = new List<string>();
             List<string> depotlist = new List<string>();
-            LoggingExceptions.Wright("Try create query for series and depots");
+            Log.Wright("Try create query for series and depots");
             IQueryable<Locomotive_series> querySeria = _context.Locomotive_Series.OrderBy(x => x.Seria).AsQueryable();
-            LoggingExceptions.Wright("Try create query for depots");
+            Log.Wright("Try create query for depots");
             IQueryable<DepotList> queryDepot = _context.Depots
                 .Include(x => x.UkrainsRailway).OrderBy(x => x.Name).AsQueryable();
 
-            LoggingExceptions.Wright("Try filter by session");
+            Log.Wright("Try filter by session");
             if (HttpContext.Session.GetString("Seria") is not null)
             {
                 querySeria = querySeria.Where(x => x.Seria.Contains(HttpContext.Session.GetString("Seria").ToString()));
-                LoggingExceptions.Wright("Filter by session Seria: " + HttpContext.Session.GetString("Seria").ToString());
-                LoggingExceptions.Wright(querySeria.ToQueryString());
+                Log.Wright("Filter by session Seria: " + HttpContext.Session.GetString("Seria").ToString());
+                Log.Wright(querySeria.ToQueryString());
             }
 
             if (HttpContext.Session.GetString("Filia") is not null)
             {
                 queryDepot = queryDepot.Where(x => x.UkrainsRailway.Name.Contains(HttpContext.Session.GetString("Filia").ToString()));
-                LoggingExceptions.Wright("Filter by session Filia: " + HttpContext.Session.GetString("Filia").ToString());
-                LoggingExceptions.Wright(queryDepot.ToQueryString());
+                Log.Wright("Filter by session Filia: " + HttpContext.Session.GetString("Filia").ToString());
+                Log.Wright(queryDepot.ToQueryString());
             }
             if (HttpContext.Session.GetString("Depot") is not null)
             {
                 queryDepot = queryDepot.Where(x => x.Name.Contains(HttpContext.Session.GetString("Depot").ToString()));
-                LoggingExceptions.Wright("Filter by session Depot: " + HttpContext.Session.GetString("Depot").ToString());
-                LoggingExceptions.Wright(queryDepot.ToQueryString());
+                Log.Wright("Filter by session Depot: " + HttpContext.Session.GetString("Depot").ToString());
+                Log.Wright(queryDepot.ToQueryString());
             }
             serieslist.Add("");
             serieslist.AddRange(await querySeria.Select(x => x.Seria).ToListAsync());
@@ -288,7 +288,7 @@ namespace TrainzInfo.Controllers.OldControllers
             depotlist.AddRange(await queryDepot.Where(x => x.Name.Contains("ТЧ")).Select(x => x.Name).ToListAsync());
             SelectList depo = new SelectList(depotlist);
             ViewBag.Depo = depo;
-            LoggingExceptions.Finish();
+            Log.Finish();
             return View();
         }
 
@@ -299,22 +299,22 @@ namespace TrainzInfo.Controllers.OldControllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotive)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Create) + " POST");
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(Create) + " POST");
+            Log.Start();
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
           
-            LoggingExceptions.Wright("Try bind locomotive from form");
-            LoggingExceptions.Wright("Try find depot: " + locomotive.Depot);
+            Log.Wright("Try bind locomotive from form");
+            Log.Wright("Try find depot: " + locomotive.Depot);
             locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
-            LoggingExceptions.Wright("Try find series: " + locomotive.Seria);
+            Log.Wright("Try find series: " + locomotive.Seria);
             locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
-            LoggingExceptions.Wright("Try add locomotive to series and depot");
+            Log.Wright("Try add locomotive to series and depot");
             Locomotive_series locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
-            LoggingExceptions.Wright("Try add locomotive to series: " + locomotive_Series.Seria);
+            Log.Wright("Try add locomotive to series: " + locomotive_Series.Seria);
             DepotList depotList = locomotive.DepotList;
 
-            LoggingExceptions.Wright("Try add locomotive to depot: " + depotList.Name);
+            Log.Wright("Try add locomotive to depot: " + depotList.Name);
             if (locomotive_Series.Locomotives == null)
             {
                 locomotive_Series.Locomotives = new List<Locomotive>();
@@ -335,19 +335,19 @@ namespace TrainzInfo.Controllers.OldControllers
                 _context.Depots.Update(depotList);
             }
             locomotive.id = 0;
-            LoggingExceptions.Wright("Try save locomotive: " + locomotive.Seria + " - " + locomotive.Number);
+            Log.Wright("Try save locomotive: " + locomotive.Seria + " - " + locomotive.Number);
             _context.Add(locomotive);
             await _context.SaveChangesAsync();
             Locomotive locosaved = _context.Locomotives
                 .Include(x => x.DepotList).Include(x => x.DepotList.UkrainsRailway).
                 Include(x => x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
             int locid = locosaved.id;
-            LoggingExceptions.Wright("Find saved locomotive id: " + locid);
+            Log.Wright("Find saved locomotive id: " + locid);
             Mail.SendLocomotivesAddMessage(locosaved.Locomotive_Series.Seria + " - " + locosaved.Number, remoteIpAddres, _identityUser);
 
             TempData["LocomotiveId"] = locid;
             Trace.WriteLine(TempData);
-            LoggingExceptions.Finish();
+            Log.Finish();
 
             return RedirectToAction(nameof(AddImageForm));
 
@@ -355,15 +355,15 @@ namespace TrainzInfo.Controllers.OldControllers
 
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(AddImage));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            Log.Init(this.ToString(), nameof(AddImage));
+            Log.Start();
+            Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             if (id != null)
                 if (uploads != null)
                 {
-                    LoggingExceptions.Wright("Try find locomotive by id: " + id);
+                    Log.Wright("Try find locomotive by id: " + id);
                     Locomotive locomotive = await _context.Locomotives.Where(x => x.id == id).FirstOrDefaultAsync();
-                    LoggingExceptions.Wright("Try read image stream");
+                    Log.Wright("Try read image stream");
                     byte[] p1 = null;
                     using (var fs1 = uploads.OpenReadStream())
                     using (var ms1 = new MemoryStream())
@@ -372,9 +372,9 @@ namespace TrainzInfo.Controllers.OldControllers
                         p1 = ms1.ToArray();
                     }
                     Trace.WriteLine(uploads.ContentType.ToString());
-                    LoggingExceptions.Wright("Image content type: " + uploads.ContentType.ToString());
+                    Log.Wright("Image content type: " + uploads.ContentType.ToString());
                     Trace.WriteLine(p1);
-                    LoggingExceptions.Wright("Image size: " + p1.Length);
+                    Log.Wright("Image size: " + p1.Length);
                     locomotive.ImageMimeTypeOfData = uploads.ContentType;
                     locomotive.Image = p1;
                     using (MemoryStream ms = new MemoryStream(locomotive.Image, 0, locomotive.Image.Length))
@@ -404,13 +404,13 @@ namespace TrainzInfo.Controllers.OldControllers
                             //}
                         }
                     }
-                    LoggingExceptions.Wright("Try update locomotive with image");
+                    Log.Wright("Try update locomotive with image");
                     locomotive.DepotList = await _context.Depots.Where(x => x.Name == locomotive.Depot).FirstOrDefaultAsync();
                     locomotive.Locomotive_Series = await _context.Locomotive_Series.Where(x => x.Seria == locomotive.Seria).FirstOrDefaultAsync();
                     _context.Locomotives.Update(locomotive);
-                    LoggingExceptions.Wright("Try save changes to database");
+                    Log.Wright("Try save changes to database");
                     await _context.SaveChangesAsync();
-                    LoggingExceptions.Finish();
+                    Log.Finish();
                     return RedirectToAction(nameof(Index));
                 }
 

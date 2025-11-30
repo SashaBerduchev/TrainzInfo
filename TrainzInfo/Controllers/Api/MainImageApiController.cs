@@ -20,10 +20,10 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getimage")]
         public async Task<ActionResult> GetImage(string name = null)
         {
-            LoggingExceptions.Init("MainImageApiController", "GetImage");
-            LoggingExceptions.Start();
+            Log.Init("MainImageApiController", "GetImage");
+            Log.Start();
 
-            LoggingExceptions.Wright($"GetImage called with name: {name}");
+            Log.Wright($"GetImage called with name: {name}");
             if (name == null)
                 return BadRequest();
 
@@ -34,8 +34,8 @@ namespace TrainzInfo.Controllers.Api
             if (mainImage == null || mainImage.Image == null || mainImage.ImageType == null)
                 return NotFound();
 
-            LoggingExceptions.Wright($"Image found: {mainImage.Name}, Type: {mainImage.ImageType}, Size: {mainImage.Image.Length} bytes");
-            LoggingExceptions.Finish();
+            Log.Wright($"Image found: {mainImage.Name}, Type: {mainImage.ImageType}, Size: {mainImage.Image.Length} bytes");
+            Log.Finish();
             // Повертаємо байти прямо, а не Base64
             return File(mainImage.Image, mainImage.ImageType);
 

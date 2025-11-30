@@ -26,9 +26,9 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string stationFrom,
             [FromQuery] string stationTo)
         {
-            LoggingExceptions.Init("TrainsController", "GetTrains");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Getting trains from database");
+            Log.Init("TrainsController", "GetTrains");
+            Log.Start();
+            Log.Wright("Getting trains from database");
             List<TrainDTO> trainDTOs = new List<TrainDTO>();
             try
             {
@@ -69,15 +69,15 @@ namespace TrainzInfo.Controllers.Api
                     TrainsShadulesCount = x.TrainsShadules.Count
                 }).ToList();
 
-                LoggingExceptions.Wright($"Successfully retrieved {trains.Count} trains.");
-                LoggingExceptions.Finish();
+                Log.Wright($"Successfully retrieved {trains.Count} trains.");
+                Log.Finish();
                 return Ok(trainDTOs);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error retrieving trains from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error retrieving trains from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -85,9 +85,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("gettrainbynumber")]
         public async Task<ActionResult> GetTrainByNumber([FromQuery] int trainid)
         {
-            LoggingExceptions.Init("TrainsController", "GetTrainByNumber");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright($"Getting train with id =  {trainid} from database");
+            Log.Init("TrainsController", "GetTrainByNumber");
+            Log.Start();
+            Log.Wright($"Getting train with id =  {trainid} from database");
             try
             {
                 Train train = await _context.Trains
@@ -99,8 +99,8 @@ namespace TrainzInfo.Controllers.Api
                     .FirstOrDefaultAsync(t => t.id == trainid);
                 if (train == null)
                 {
-                    LoggingExceptions.Wright("Train not found");
-                    LoggingExceptions.Finish();
+                    Log.Wright("Train not found");
+                    Log.Finish();
                     return NotFound("Train not found");
                 }
                 TrainDTO trainDTO = new TrainDTO
@@ -114,15 +114,15 @@ namespace TrainzInfo.Controllers.Api
                     IsUsing = train.IsUsing,
                     PassTrainType = train.TypeOfPassTrain?.Type
                 };
-                LoggingExceptions.Wright("Successfully retrieved train.");
-                LoggingExceptions.Finish();
+                Log.Wright("Successfully retrieved train.");
+                Log.Finish();
                 return Ok(trainDTO);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error retrieving train from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error retrieving train from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -130,9 +130,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getnumbers")]
         public async Task<ActionResult> GetNumbers()
         {
-            LoggingExceptions.Init("TrainsController", "GetNumbers");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Getting train numbers from database");
+            Log.Init("TrainsController", "GetNumbers");
+            Log.Start();
+            Log.Wright("Getting train numbers from database");
             try
             {
                 List<string> trainNumbers = await _context.Trains
@@ -140,15 +140,15 @@ namespace TrainzInfo.Controllers.Api
                     .Select(t => t.Number.ToString())
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.Wright($"Successfully retrieved {trainNumbers.Count} train numbers.");
-                LoggingExceptions.Finish();
+                Log.Wright($"Successfully retrieved {trainNumbers.Count} train numbers.");
+                Log.Finish();
                 return Ok(trainNumbers);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error retrieving train numbers from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error retrieving train numbers from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -156,9 +156,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("gettrainbuid/{id}")]
         public async Task<ActionResult> GetTrainBuId(int id)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetTrainBuId));
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Get trainby idf: " + id);
+            Log.Init(this.ToString(), nameof(GetTrainBuId));
+            Log.Start();
+            Log.Wright("Get trainby idf: " + id);
             try
             {
                 TrainDTO train = await _context.Trains
@@ -170,22 +170,22 @@ namespace TrainzInfo.Controllers.Api
                         StationFrom = x.StationFrom,
                         StationTo = x.StationTo
                     }).FirstOrDefaultAsync();
-                LoggingExceptions.Finish();
+                Log.Finish();
                 return Ok(train);
             }catch(Exception ex)
             {
-                LoggingExceptions.Wright("ERROR");
-                LoggingExceptions.AddException(ex.ToString());
+                Log.Wright("ERROR");
+                Log.AddException(ex.ToString());
                 return BadRequest(ex.ToString());
-            }finally { LoggingExceptions.Finish(); }
+            }finally { Log.Finish(); }
         }
 
         [HttpGet("getstations")]
         public async Task<ActionResult> GetStations()
         {
-            LoggingExceptions.Init("TrainsController", "GetStations");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Getting station names from database");
+            Log.Init("TrainsController", "GetStations");
+            Log.Start();
+            Log.Wright("Getting station names from database");
             try
             {
                 List<string> stationNames = await _context.Stations
@@ -194,15 +194,15 @@ namespace TrainzInfo.Controllers.Api
                     .Select(s => s.Name)
                     .Distinct()
                     .ToListAsync();
-                LoggingExceptions.Wright($"Successfully retrieved {stationNames.Count} station names.");
-                LoggingExceptions.Finish();
+                Log.Wright($"Successfully retrieved {stationNames.Count} station names.");
+                Log.Finish();
                 return Ok(stationNames);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error retrieving station names from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error retrieving station names from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -210,9 +210,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] TrainDTO trainDTO)
         {
-            LoggingExceptions.Init("TrainsController", "Create");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Creating new train in database");
+            Log.Init("TrainsController", "Create");
+            Log.Start();
+            Log.Wright("Creating new train in database");
             try
             {
                 Train newTrain = new Train
@@ -228,15 +228,15 @@ namespace TrainzInfo.Controllers.Api
                 };
                 _context.Trains.Add(newTrain);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Successfully created new train.");
-                LoggingExceptions.Finish();
+                Log.Wright("Successfully created new train.");
+                Log.Finish();
                 return Ok(new { Message = "Train created successfully", TrainId = newTrain.id });
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error creating new train in database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error creating new train in database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -245,9 +245,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getedittrain/{id}")]
         public async Task<ActionResult> GetEditTrain(int id)
         {
-            LoggingExceptions.Init("TrainsController", "GetEditTrain");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Getting train for editing from database");
+            Log.Init("TrainsController", "GetEditTrain");
+            Log.Start();
+            Log.Wright("Getting train for editing from database");
             try
             {
                 Train train = await _context.Trains
@@ -259,8 +259,8 @@ namespace TrainzInfo.Controllers.Api
                     .FirstOrDefaultAsync(x => x.id == id);
                 if (train == null)
                 {
-                    LoggingExceptions.Wright("Train not found for editing");
-                    LoggingExceptions.Finish();
+                    Log.Wright("Train not found for editing");
+                    Log.Finish();
                     return NotFound("Train not found");
                 }
                 TrainDTO trainDTO = new TrainDTO
@@ -274,15 +274,15 @@ namespace TrainzInfo.Controllers.Api
                     IsUsing = train.IsUsing,
                     PassTrainType = train.TypeOfPassTrain.Type
                 };
-                LoggingExceptions.Wright("Successfully retrieved train for editing.");
-                LoggingExceptions.Finish();
+                Log.Wright("Successfully retrieved train for editing.");
+                Log.Finish();
                 return Ok(trainDTO);
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error getting train for editing from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error getting train for editing from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -290,16 +290,16 @@ namespace TrainzInfo.Controllers.Api
         [HttpPost("edit")]
         public async Task<ActionResult> Edit([FromBody] TrainDTO trainDTO)
         {
-            LoggingExceptions.Init("TrainsController", "Edit");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Editing train in database");
+            Log.Init("TrainsController", "Edit");
+            Log.Start();
+            Log.Wright("Editing train in database");
             try
             {
                 Train existingTrain = await _context.Trains.FindAsync(trainDTO.Id);
                 if (existingTrain == null)
                 {
-                    LoggingExceptions.Wright("Train not found for editing");
-                    LoggingExceptions.Finish();
+                    Log.Wright("Train not found for editing");
+                    Log.Finish();
                     return NotFound("Train not found");
                 }
                 existingTrain.Number = trainDTO.Number;
@@ -311,15 +311,15 @@ namespace TrainzInfo.Controllers.Api
                 existingTrain.TypeOfPassTrain = await _context.TypeOfPassTrains.FirstOrDefaultAsync(t => t.Type == trainDTO.PassTrainType);
                 _context.Trains.Update(existingTrain);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Successfully edited train.");
-                LoggingExceptions.Finish();
+                Log.Wright("Successfully edited train.");
+                Log.Finish();
                 return Ok(new { Message = "Train edited successfully" });
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error editing train in database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error editing train in database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -327,29 +327,29 @@ namespace TrainzInfo.Controllers.Api
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            LoggingExceptions.Init("TrainsController", "Delete");
-            LoggingExceptions.Start();
-            LoggingExceptions.Wright("Deleting train from database");
+            Log.Init("TrainsController", "Delete");
+            Log.Start();
+            Log.Wright("Deleting train from database");
             try
             {
                 Train trainToDelete = await _context.Trains.FindAsync(id);
                 if (trainToDelete == null)
                 {
-                    LoggingExceptions.Wright("Train not found for deletion");
-                    LoggingExceptions.Finish();
+                    Log.Wright("Train not found for deletion");
+                    Log.Finish();
                     return NotFound("Train not found");
                 }
                 _context.Trains.Remove(trainToDelete);
                 await _context.SaveChangesAsync();
-                LoggingExceptions.Wright("Successfully deleted train.");
-                LoggingExceptions.Finish();
+                Log.Wright("Successfully deleted train.");
+                Log.Finish();
                 return Ok(new { Message = "Train deleted successfully" });
             }
             catch (Exception ex)
             {
-                LoggingExceptions.AddException(ex.ToString());
-                LoggingExceptions.Wright("Error deleting train from database");
-                LoggingExceptions.Finish();
+                Log.AddException(ex.ToString());
+                Log.Wright("Error deleting train from database");
+                Log.Finish();
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -357,22 +357,22 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("gettypes")]
         public async Task<ActionResult> GetTypesTrains()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetTypesTrains));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetTypesTrains));
+            Log.Start();
 
-            LoggingExceptions.Wright("Get types");
+            Log.Wright("Get types");
             try
             {
                 List<string> types = await _context.TypeOfPassTrains
                     .Select(t => t.Type).ToListAsync();
-                LoggingExceptions.Wright("OK");
+                Log.Wright("OK");
                 return Ok(types);
             }catch(Exception ex)
             {
-                LoggingExceptions.Wright(ex.ToString());
-                LoggingExceptions.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.AddException(ex.ToString());
                 return BadRequest(ex.ToString);
-            }finally { LoggingExceptions.Finish(); }
+            }finally { Log.Finish(); }
         } 
 
     }

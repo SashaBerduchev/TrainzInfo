@@ -33,16 +33,16 @@ namespace TrainzInfo.Controllers.Api
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Register));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(Register));
+            Log.Start();
 
-            LoggingExceptions.Wright("Register user");
+            Log.Wright("Register user");
             var user = new IdentityUser { UserName = dto.Email, Email = dto.Email };
             var result = await _userManager.CreateAsync(user, dto.Password);
-            LoggingExceptions.Wright(result.ToString());
+            Log.Wright(result.ToString());
             if (!result.Succeeded)
             {
-                LoggingExceptions.Wright(result.Errors.ToString());
+                Log.Wright(result.Errors.ToString());
                 List<RegisterErrorsDTO> errors = result.Errors
                     .Select(x => new RegisterErrorsDTO
                     {
@@ -51,7 +51,7 @@ namespace TrainzInfo.Controllers.Api
                     }).ToList();
                 return BadRequest(errors);
             }
-            LoggingExceptions.Finish();
+            Log.Finish();
             return Ok();
         }
 
@@ -59,15 +59,15 @@ namespace TrainzInfo.Controllers.Api
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            LoggingExceptions.Init(this.ToString(), nameof(Login));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(Login));
+            Log.Start();
 
-            LoggingExceptions.Wright("Start login");
+            Log.Wright("Start login");
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
             {
-                LoggingExceptions.Wright("User not found");
-                LoggingExceptions.Finish();
+                Log.Wright("User not found");
+                Log.Finish();
                 return Unauthorized("User not found");
             }
 
@@ -78,8 +78,8 @@ namespace TrainzInfo.Controllers.Api
 
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtService.GenerateToken(user, roles);
-            LoggingExceptions.Wright("Generated token: " + token);
-            LoggingExceptions.Finish();
+            Log.Wright("Generated token: " + token);
+            Log.Finish();
             return Ok(token);
 
         }
@@ -96,12 +96,12 @@ namespace TrainzInfo.Controllers.Api
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDto>> GetAuthuser()
         {
-            LoggingExceptions.Init(this.ToString(), nameof(GetAuthuser));
-            LoggingExceptions.Start();
+            Log.Init(this.ToString(), nameof(GetAuthuser));
+            Log.Start();
 
-            LoggingExceptions.Wright("Try find user");
+            Log.Wright("Try find user");
             var email = User.Identity?.Name;
-            LoggingExceptions.Wright($"User email: {email}");
+            Log.Wright($"User email: {email}");
             if (string.IsNullOrEmpty(email))
                 return Unauthorized();
 
@@ -109,8 +109,8 @@ namespace TrainzInfo.Controllers.Api
             
             if (user == null)
             {
-                LoggingExceptions.Wright("User NOT FOUND");
-                LoggingExceptions.Finish();
+                Log.Wright("User NOT FOUND");
+                Log.Finish();
                 return Unauthorized();
             }
 
@@ -125,7 +125,7 @@ namespace TrainzInfo.Controllers.Api
                 IsAuthenticated = true
             };
 
-            LoggingExceptions.Finish();
+            Log.Finish();
             return Ok(dto);
 
         }

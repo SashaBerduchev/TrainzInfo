@@ -204,7 +204,7 @@ namespace TrainzInfo.Controllers.OldControllers
                 }
             }catch(Exception exp)
             {
-                LoggingExceptions.AddException(exp.ToString());
+                Log.AddException(exp.ToString());
                 return null;
             }
         }
