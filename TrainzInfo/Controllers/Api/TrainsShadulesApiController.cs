@@ -129,7 +129,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<ActionResult> DeleteConfirm(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteConfirm));

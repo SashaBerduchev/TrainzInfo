@@ -158,65 +158,28 @@ namespace TrainzInfo
             Log.Wright("Try configure app");
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            Log.Wright("Try use HTTPS redirection");
+
             app.UseHttpsRedirection();
-
-            Log.Wright("Try use static files");
             app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    Log.Wright($"Serving file: {ctx.File.PhysicalPath}");
-                }
-            });
+            app.UseStaticFiles();
 
-            Log.Wright("Try use routing");
             app.UseRouting();
-            app.UseCors();
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Method == "OPTIONS")
-                {
-                    context.Response.StatusCode = 200;
-                    await context.Response.CompleteAsync();
-                }
-                else
-                {
-                    await next();
-                }
-            });
 
-            Log.Wright("Try use authorization");
+            app.UseCors(); // <- обязательно перед авторизацией
             app.UseAuthentication();
             app.UseAuthorization();
-            //Log.Wright("Try use session");
-            //app.UseSession();
-            Log.Wright("Try use endpoints");
-            
+
             app.UseEndpoints(endpoints =>
             {
-                // Спочатку MVC контролери
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                //// Потім Razor Pages
-                //endpoints.MapRazorPages();
-
-                // API маршрути
-                endpoints.MapControllers();
-                // Fallback на Blazor WASM
-                endpoints.MapFallbackToFile("index.html");
+                endpoints.MapControllers();          // API
+                endpoints.MapFallbackToFile("index.html"); // Blazor WASM
             });
 
             var endpointDataSource = app.ApplicationServices.GetRequiredService<EndpointDataSource>();
