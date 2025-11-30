@@ -148,8 +148,8 @@ namespace TrainzInfo
             LoggingExceptions.Wright("Try configure app");
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseHttpsRedirection();
+                //app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -158,13 +158,16 @@ namespace TrainzInfo
                 app.UseHsts();
             }
             LoggingExceptions.Wright("Try use HTTPS redirection");
-            
+            app.UseHttpsRedirection();
+
             LoggingExceptions.Wright("Try use static files");
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
+
             LoggingExceptions.Wright("Try use routing");
             app.UseRouting();
             app.UseCors();
+
             LoggingExceptions.Wright("Try use authorization");
             app.UseAuthentication();
             app.UseAuthorization();
