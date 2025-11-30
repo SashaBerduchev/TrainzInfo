@@ -27,7 +27,11 @@
                     <td>@item.Arrival</td>
                     <td>@item.Departure</td>
                     <td>@item.Distance</td>
-                    
+                    <td>
+                        <button type="button" class="btn btn-danger btn-lg cart-btn" @onclick="() => HandleDelete(item)">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -111,13 +115,13 @@
     </div>
 </div>
 
-@if (ErrorMessage!="")
-        {
-            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-            <div class="alert alert-danger mt-2">
-                        <p>@ErrorMessage</p>
-            </div>
-        }
+@if (ErrorMessage != "")
+{
+    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+    <div class="alert alert-danger mt-2">
+        <p>@ErrorMessage</p>
+    </div>
+}
 
 @code {
     [Parameter] public int id { get; set; }
@@ -148,6 +152,12 @@
         StateHasChanged();
         trainsSheduller = new TrainsShedullerDTO();
         station = "";
+    }
+
+    private async Task HandleDelete(TrainsShedullerDTO trainsSheduller)
+    {
+        trainsShedullers.Remove(trainsSheduller);
+        StateHasChanged();
     }
 
     private async Task OnInputChanged(ChangeEventArgs e)
@@ -213,10 +223,10 @@
     private async Task SaveChanges()
     {
         TrainCreateRequest request = new TrainCreateRequest
-            {
-                Train = train,
-                TrainsShedullers = trainsShedullers
-            };
+        {
+            Train = train,
+            TrainsShedullers = trainsShedullers
+        };
 
         var response = await Http.PostAsJsonAsync("api/trainsshaduller/create", request);
         if (response.IsSuccessStatusCode)
@@ -229,6 +239,6 @@
         }
     }
 
-    
+
 }
 

@@ -10,7 +10,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
 
-            <!-- Назва станції -->
             <div class="form-group">
                 <label>Номер поїзда</label>
                 <InputNumber @bind-Value="trainDTO.Number" class="form-control" />
@@ -73,7 +72,10 @@
                     }
                 </InputSelect>
             </div>
-
+            <div class="form-group">
+                <label>Назва поїзда якщо фірмовий</label>
+                <InputText @bind-Value="trainDTO.NameOfTrain" class="form-control" />
+            </div>
             <!-- Кнопка -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Створити</button>

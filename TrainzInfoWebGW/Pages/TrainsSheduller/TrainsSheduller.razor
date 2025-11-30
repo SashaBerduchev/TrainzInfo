@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
-
+@inject IJSRuntime JS
 <h3 class="fw-bold text-center mb-3">
     Поїзд № @Train?.Number <br />
     сполученням: @Train?.StationFrom – @Train?.StationTo
@@ -13,7 +13,7 @@
     {
         <button class="btn btn-info m-1" @onclick="AddStop">Додати зупинку</button>
         <button class="btn btn-dark m-1" @onclick="UpdateInfo">Оновити дані</button>
-        <button class="btn btn-danger m-1" @onclick="DeleteSchedule">Видалити графік</button>
+        <button class="btn btn-danger m-1" @onclick="() => DeleteSchedule(Train.Id)">Видалити графік</button>
     }
 </div>
 
@@ -40,7 +40,7 @@ else
                 {
                     <tr>
                         <td style="font-size:18px">
-                            <a @onclick="@(() => Nav.NavigateTo($"/stations/{item.StationId}"))">
+                            <a @onclick="@(() => Nav.NavigateTo($"/stations/details/{item.StationId}"))">
                                 @item.NameStation
                             </a>
                         </td>
@@ -85,6 +85,13 @@ else
         }
     </div>
 }
+@if (ErrorMessage != "")
+        {
+            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+            <div class="alert alert-danger mt-2">
+                        <p>@ErrorMessage</p>
+            </div>
+        }
 
 <button class="btn btn-info mt-3" @onclick="GoBack">До списку поїздів</button>
 
@@ -93,7 +100,7 @@ else
 
     private List<TrainsShedullerDTO> Schedule;
     private TrainDTO Train;
-
+    private string ErrorMessage = "";
     private bool IsSuperadmin = false;
 
     protected override async Task OnInitializedAsync()
@@ -123,9 +130,27 @@ else
         );
     }
 
+    private async Task DeleteSchedule(int id)
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити розклад?"))
+            return;
+
+        var response = await Http.DeleteAsync($"api/trainsshaduller/delete/{Train.Id}");
+
+        if (response.IsSuccessStatusCode)
+            Nav.NavigateTo("/trains");
+
+        else
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
     void AddStop() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/add");
     void UpdateInfo() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/update");
-    void DeleteSchedule() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/delete");
     void Edit(int id) => Nav.NavigateTo($"/trainsshadule/edit/{id}");
     void GoBack() => Nav.NavigateTo("/trains");
 }

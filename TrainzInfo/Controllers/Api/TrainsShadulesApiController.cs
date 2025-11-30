@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Train train = await _context.Trains.Where(x => x.id == trainDTO.Id).FirstOrDefaultAsync();
-                
+
                 List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
                 foreach (var item in shadulesDTO)
                 {
@@ -115,7 +116,8 @@ namespace TrainzInfo.Controllers.Api
                 await _context.SaveChangesAsync();
                 return Ok();
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 LoggingExceptions.Wright($"Failed to save {ex.Message}");
                 LoggingExceptions.AddException($"{ex.Message}");
@@ -126,5 +128,91 @@ namespace TrainzInfo.Controllers.Api
                 LoggingExceptions.Finish();
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult> DeleteConfirm(int id)
+        {
+            LoggingExceptions.Init(this.ToString(), nameof(DeleteConfirm));
+            LoggingExceptions.Start();
+
+            LoggingExceptions.Wright("Start loading train adn schad");
+            int trainid = id;
+            try
+            {
+
+                List<TrainUnionDTO> result = await _context.Trains
+                        .Where(x => x.id == trainid)
+                        .Select(x => new TrainUnionDTO
+                        {
+                            TrainId = x.id,
+                            TrainSchadID = 0,
+                            StationSchadID = 0,
+                            StationID = 0
+                        })
+                        .Union(
+                            _context.TrainsShadule
+                                .Include(s => s.Train)
+                                .Where(s => s.Train.id == trainid)
+                                .Select(s => new TrainUnionDTO
+                                {
+                                   TrainId = s.Train.id, 
+                                   TrainSchadID = s.id, 
+                                   StationSchadID = 0,
+                                   StationID = 0,
+                                })
+                                .Union(
+                                    _context.StationsShadules
+                                    .Include(y => y.Stations)
+                                    .Include(y=>y.Train)
+                                        .ThenInclude(x=>x.TrainsShadules)
+                                    .Where(y => y.Train.id == trainid)
+                                    .Select(y=> new TrainUnionDTO
+                                    {
+                                        TrainId = y.Train.id, StationSchadID = y.id, 
+                                        StationID = y.Stations.id,
+                                        TrainSchadID = y.Train.TrainsShadules.Where(x => x.Stations.Name == y.Stations.Name)
+                                        .Select(x=>x.id).FirstOrDefault()
+                                    })
+                                )
+                        )
+                        .ToListAsync();
+
+                
+                _context.Trains.Remove(await _context.Trains.Where(x => x.id == trainid).FirstOrDefaultAsync());
+                foreach (var t in result)
+                {
+                    TrainsShadule trainsShadule = await _context.TrainsShadule.Where(x => x.id == t.TrainSchadID).FirstOrDefaultAsync();
+                    if(trainsShadule is not null)
+                        _context.TrainsShadule.Remove(trainsShadule);
+
+                    StationsShadule stationsShadule = await _context.StationsShadules.Where(x => x.id == t.StationSchadID).FirstOrDefaultAsync();
+                    if(stationsShadule is not null)
+                        _context.StationsShadules.Remove(stationsShadule);
+                }
+                await _context.SaveChangesAsync();
+
+                LoggingExceptions.Wright(result.ToString());
+                LoggingExceptions.Finish();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                LoggingExceptions.Wright(ex.ToString());
+                LoggingExceptions.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+
+            }
+        }
+    }
+
+    public class TrainUnionDTO
+    {
+        public int TrainId { get; set; }
+        public int TrainSchadID { get; set; }
+        public int StationSchadID { get; set; }
+        public int StationID { get; set; }
     }
 }

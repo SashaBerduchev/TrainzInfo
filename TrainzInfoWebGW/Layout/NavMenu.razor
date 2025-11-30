@@ -19,22 +19,25 @@
     </div>
 </div>
 
-<div class="nav-container @(isNavCollapsed ? "collapsed" : "expanded")"
+<div class="nav-container sidebar-menu @(isNavCollapsed ? "collapsed" : "expanded")"
      @onmouseenter="ExpandNav" @onmouseleave="CollapseNav">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Головна
+            <NavLink class="nav-link menu-link" href="" Match="NavLinkMatch.All">
+                <i class="fas fa-home"></i>
+                <span>Головна</span>
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ukrains-railways">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Українська залізниця
+            <NavLink class="nav-link menu-link" href="ukrains-railways">
+                <i class="fas fa-train"></i>
+                <span>Українська залізниця</span>
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="trains">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Список поїздів
+            <NavLink class="nav-link menu-link" href="trains">
+                <i class="fas fa-list"></i>
+                <span>Список поїздів</span>
             </NavLink>
         </div>
     </nav>

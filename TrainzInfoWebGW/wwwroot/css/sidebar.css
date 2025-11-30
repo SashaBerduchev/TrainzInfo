@@ -20,3 +20,61 @@
     .sidebar.collapsed {
         width: 60px;
     }
+
+
+.sidebar-menu .menu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #444;
+    transition: all .25s ease;
+}
+
+.sidebar-menu .menu-link {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* зменшили відстань між іконкою і текстом */
+    padding: 10px 14px; /* трохи менше padding для компактності */
+    border-radius: 8px;
+    font-size: 15px;
+    color: #444;
+    transition: all .25s ease;
+}
+
+    .sidebar-menu .menu-link i {
+        font-size: 18px;
+        opacity: 0.9;
+        transition: .25s;
+    }
+
+    .sidebar-menu .menu-link:hover {
+        background: #f0f0f0;
+        color: #0d6efd;
+        transform: translateX(3px);
+    }
+
+        .sidebar-menu .menu-link:hover i {
+            opacity: 1;
+        }
+
+    .sidebar-menu .menu-link.active {
+        background: #e8f0ff;
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+        .sidebar-menu .menu-link.active i {
+            color: #0d6efd;
+            opacity: 1;
+        }
+
+.nav-item {
+    margin-bottom: 5px;
+}
+
+.menu-text {
+    white-space: nowrap; /* текст не переноситься на новий рядок */
+}
