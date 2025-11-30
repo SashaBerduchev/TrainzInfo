@@ -135,7 +135,7 @@ else
         if (!await Confirm("Ви впевнені що хочете видалити розклад?"))
             return;
 
-        var response = await Http.DeleteAsync($"api/trainsshaduller/delete/{Train.Id}");
+        var response = await Http.PostAsync($"api/trainsshaduller/delete/{Train.Id}", null);
 
         if (response.IsSuccessStatusCode)
             Nav.NavigateTo("/trains");

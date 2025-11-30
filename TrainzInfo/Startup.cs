@@ -173,6 +173,24 @@ namespace TrainzInfo
             app.UseRouting();
 
             app.UseCors(); // <- обязательно перед авторизацией
+
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Method == "OPTIONS")
+                {
+                    context.Response.StatusCode = 200;
+                    context.Response.Headers.Add("Access-Control-Allow-Origin", "https://www.trainzinfo.com.ua");
+                    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+                    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type,Authorization");
+                    await context.Response.CompleteAsync();
+                }
+                else
+                {
+                    await next();
+                }
+            });
+
+
             app.UseAuthentication();
             app.UseAuthorization();
 
