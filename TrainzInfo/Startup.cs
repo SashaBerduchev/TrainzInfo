@@ -121,9 +121,19 @@ namespace TrainzInfo
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins(
+                                "https://trainzinfo.com.ua",
+                                "https://www.trainzinfo.com.ua",
+                                "https://localhost:5001",
+                                "https://localhost:5000",
+                                "http://localhost:5001",
+                                "http://localhost:5000",
+                                "https://localhost:7235",
+                                "https://localhost:7004"
+                            )
                           .AllowAnyMethod()
-                          .AllowAnyHeader();
+                          .AllowAnyHeader()
+                     .AllowCredentials();
                 });
             });
 
