@@ -139,7 +139,7 @@ namespace TrainzInfo.Controllers.Api
             int trainid = id;
             try
             {
-
+                Log.Wright($"Load data");
                 List<TrainUnionDTO> result = await _context.Trains
                         .Where(x => x.id == trainid)
                         .Select(x => new TrainUnionDTO

@@ -23,7 +23,7 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = false;
+        public static bool START_IN_PROD_DB = true;
         static string _connectionString = "";
 
         public Startup(IConfiguration configuration)
@@ -183,6 +183,18 @@ namespace TrainzInfo
             Log.Wright("Try use routing");
             app.UseRouting();
             app.UseCors();
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Method == "OPTIONS")
+                {
+                    context.Response.StatusCode = 200;
+                    await context.Response.CompleteAsync();
+                }
+                else
+                {
+                    await next();
+                }
+            });
 
             Log.Wright("Try use authorization");
             app.UseAuthentication();
