@@ -1,0 +1,149 @@
+﻿@page "/depotlists"
+
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h1 class="text-center mb-3">Список депо</h1>
+
+@if (!string.IsNullOrEmpty(filia?.Name))
+{
+    <h4 class="text-center text-muted">@filia?.Name</h4>
+}
+
+@if (User != null && UserCanManage)
+{
+    <div class="mb-3 text-center">
+        <button class="btn btn-info mx-2 mb-2" @onclick="CreateDepot">Додати</button>
+        <button class="btn btn-warning mx-2 mb-2" @onclick="UpdateForce">Націоналізувати</button>
+    </div>
+}
+
+@if (depots == null)
+{
+    <p class="text-center text-muted">Завантаження...</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr class="text-center">
+                    <th>Назва</th>
+                    <th>Філія</th>
+                    <th>Станція</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in depots)
+                {
+                    <tr>
+                        <td>
+                            @if (item.City != null)
+                            {
+                                <span class="fw-bold">@item.Name</span><br />
+                                <small class="text-muted">@item.City</small>
+                            }
+                            else
+                            {
+                                @item.Name
+                            }
+                        </td>
+
+                        <td>@item.UkrainsRailway</td>
+
+                        <td>@item.City</td>
+
+                        <td class="text-center">
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+
+                                @if (UserCanManage)
+                                {
+                                    <button class="btn btn-success btn-sm" @onclick="() => Edit(item.Id)">
+                                        Редагувати
+                                    </button>
+                                }
+
+                                @if (item.LocomotivesCount != null && item.LocomotivesCount > 0)
+                                {
+                                    <button class="btn btn-info btn-sm"
+                                            @onclick="() => GoToLocomotives(item.Name)">
+                                        Локомотиви
+                                    </button>
+                                }
+                                else if (item.ElectricTrainsCount != null && item.ElectricTrainsCount > 0)
+                                {
+                                    <button class="btn btn-info btn-sm" @onclick="() => GoToElectrics(item.Name)">
+                                        Електрички
+                                    </button>
+                                }
+                                else if (item.DieselTrainsCount != null && item.DieselTrainsCount > 0)
+                                {
+                                    <button class="btn btn-info btn-sm" @onclick="() => GoToDiesels(item.Name)">
+                                        Дизель-поїзди
+                                    </button>
+                                }
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+@code {
+    public List<DepotListDTO>? depots { get; set; }
+    public UkrainsRailwaysDTO? filia { get; set; }
+    string? filiasNameFromQuery;
+    public UserDto? User { get; set; }
+
+    bool UserCanManage =>
+        User != null &&
+        (User.Role == "Superadmin" ||
+         User.Role == "Admin" ||
+         User.Role == "Publisher");
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        filiasNameFromQuery = query["filialsName"];
+
+        filia = await Http.GetFromJsonAsync<UkrainsRailwaysDTO>($"api/railways/getfiliaByName?filiaName={Uri.EscapeDataString(filiasNameFromQuery)}");
+
+        depots = await Http.GetFromJsonAsync<List<DepotListDTO>>(
+                $"api/depots/getdepots?filiaName={Uri.EscapeDataString(filiasNameFromQuery)}"
+            );
+    }
+
+    void CreateDepot()
+    {
+        Nav.NavigateTo("/depots/create");
+    }
+
+    void UpdateForce()
+    {
+        Nav.NavigateTo("/depots/update-force");
+    }
+
+    void Edit(int id)
+    {
+        Nav.NavigateTo($"/depots/edit/{id}");
+    }
+    void GoToLocomotives(string name)
+    {
+        Nav.NavigateTo($"/locomotives&depotsName={name}");
+    }
+    void GoToElectrics(string name)
+    {
+        Nav.NavigateTo($"/electrics&depotsName={name}");
+    }
+    void GoToDiesels(string name)
+    {
+        Nav.NavigateTo($"/dieseltrains&depotsName={name}");
+    }
+}

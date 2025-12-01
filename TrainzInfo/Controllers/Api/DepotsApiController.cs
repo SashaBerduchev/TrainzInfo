@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -19,22 +20,24 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
-        [HttpGet("getdepots/{id}")]
-        public async Task<ActionResult> GetDepots(int id)
+        [HttpGet("getdepots")]
+        public async Task<ActionResult> GetDepots([FromQuery] string filiaName = null)
         {
             try
             {
                 Log.Init("DepotsApiController", "GetDepots");
                 Log.Start();
-                Log.Wright($"GetDepots id={id}");
-                var depots = await _context.Depots.Where(d => d.id == id)
+                Log.Wright($"GetDepots filia={filiaName}");
+                List<DepotListDTO> depots = await _context.Depots
                     .Include(d => d.City)
                         .ThenInclude(c => c.Oblasts)
+                    .Include(d=>d.UkrainsRailway)
                     .Include(d => d.UkrainsRailway)
                     .Include(d => d.Locomotives)
                     .Include(d => d.ElectricTrains)
                     .Include(d => d.DieselTrains)
-                    .Select(x => new DepotsDTO
+                    .Where(d => d.UkrainsRailway.Name == filiaName)
+                    .Select(x => new DepotListDTO
                     {
                         Id = x.id,
                         Name = x.Name,
@@ -46,19 +49,23 @@ namespace TrainzInfo.Controllers.Api
                         DieselTrainsCount = x.DieselTrains.Count
                     })
                     .ToListAsync();
-                Log.Finish();
+                
                 return Ok(depots);
             }
             catch (System.Exception ex)
             {
+                Log.Wright("ERROR");
                 Log.AddException(ex.Message);
-                Log.Finish();
                 return BadRequest(ex.Message);
+            }
+            finally
+            {
+                Log.Finish();
             }
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> CreateDepot([FromBody] DepotsDTO depotDto)
+        public async Task<ActionResult> CreateDepot([FromBody] DepotListDTO depotDto)
         {
             try
             {
@@ -120,7 +127,7 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpPost("edit")]
-        public async Task<ActionResult> EditDepot([FromBody] DepotsDTO depotDto)
+        public async Task<ActionResult> EditDepot([FromBody] DepotListDTO depotDto)
         {
             try
             {

@@ -91,5 +91,35 @@ namespace TrainzInfo.Controllers.Api
                 Log.Finish(); 
             }
         }
+
+        [HttpGet("getfiliaByName")]
+        public async Task<ActionResult> GetFiliaByName([FromQuery] string filiaName = null)
+        {
+            try
+            {
+                Log.Init(this.ToString(), nameof(GetFiliaByName));
+                Log.Start();
+
+                Log.Wright("Loading filia");
+                UkrainsRailwaysDTO ukrainsRailways = await _context.UkrainsRailways
+                    .Where(x=>x.Name == filiaName)
+                    .Select(x=> new UkrainsRailwaysDTO
+                    {
+                        id = x.id,
+                        Name = x.Name
+                    })
+                    .FirstOrDefaultAsync();
+                return Ok(ukrainsRailways);
+            }catch (Exception ex)
+            {
+                Log.Wright("ERROR");
+                Log.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
     }
 }
