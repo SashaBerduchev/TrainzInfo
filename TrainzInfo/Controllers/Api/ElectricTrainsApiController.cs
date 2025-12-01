@@ -104,13 +104,20 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Create electric train");
             try
             {
+                DepotList depot = await _context.Depots
+                    .Include(x=>x.City)
+                        .ThenInclude(x=>x.Oblasts)
+                    .Where(x => x.Name == trainDTO.DepotList).FirstOrDefaultAsync();
+                City city = await _context.Cities.Where(x => x.Name == depot.City.Name).FirstOrDefaultAsync();
+                SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();
                 ElectricTrain electricTrain = new ElectricTrain
                 {
                     Name = trainDTO.Name,
                     Model = trainDTO.Model,
                     MaxSpeed = trainDTO.MaxSpeed,
-                    DepotTrain = trainDTO.DepotTrain,
-                    DepotCity = trainDTO.DepotCity,
+                    DepotTrain = trainDTO.DepotList,
+                    DepotList = depot,
+                    DepotCity = depot.City.Name,
                     LastKvr = DateOnly.Parse(trainDTO.LastKvr),
                     CreatedTrain = DateOnly.Parse(trainDTO.CreatedTrain),
                     PlantCreate = trainDTO.PlantCreate,
@@ -119,16 +126,24 @@ namespace TrainzInfo.Controllers.Api
                                 ? Convert.FromBase64String(trainDTO.Image.Split(',')[1])
                                 : null,
                     ImageMimeTypeOfData = trainDTO.ImageMimeTypeOfData,
-                    IsProof = trainDTO.IsProof
+                    IsProof = true.ToString(),
+                    City = city,
+                    Trains = suburban
+
                 };
                 _context.Electrics.Add(electricTrain);
+                if(depot.ElectricTrains is null)
+                {
+                    depot.ElectricTrains = new List<ElectricTrain>();
+                }
+                depot.ElectricTrains.Add(electricTrain);
                 await _context.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
-                Log.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.ToString()} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.ToString()} ");
                 return StatusCode(500, "Internal server error");
             }
             finally
@@ -203,6 +218,25 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Finish();
             }
+        }
+
+        [HttpGet("getnames")]
+        public async Task<ActionResult> GetNames()
+        {
+            List<string> names = await _context.SuburbanTrainsInfos
+                .Select(x=>x.Model)
+                .ToListAsync();
+            return Ok(names);
+        }
+
+        [HttpGet("getdepots")]
+        public async Task<ActionResult> GetDepots()
+        {
+            List<string> depots = await _context.Depots
+                .Where(x=>x.Name.Contains("РПЧ"))
+                .Select(x=>x.Name)
+                .ToListAsync();
+            return Ok(depots);
         }
     }
 }

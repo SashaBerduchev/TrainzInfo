@@ -2,6 +2,7 @@
 @using TrainzInfoWebGW.Tools.DTO
 @inject NavigationManager Nav
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 
 <h1 class="mb-4 text-center">Електропоїзди</h1>
@@ -97,9 +98,7 @@
     private UserDto CurrentUser { get; set; }
 
     private bool IsSuperAdmin => CurrentUser?.Role == "Superadmin";
-    private bool IsPublisherOrAdminOrSuperAdmin =>
-        CurrentUser != null &&
-        (CurrentUser.Role == "Publisher" || CurrentUser.Role == "Admin" || CurrentUser.Role == "Superadmin");
+    private bool IsPublisherOrAdminOrSuperAdmin;
 
     private int currentPage = 1;
     private bool isLoading = false;
@@ -113,7 +112,7 @@
 
         depotNameFromQuery = query["depotsName"];
 
-
+        await CheckRoles();
         // Завантаження першої сторінки електропоїздів
         await LoadTrains();
 
@@ -151,6 +150,35 @@
         isLoading = false;
     }
 
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Admin");
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
     private void ApplyFilter()
     {
         FilteredTrains = ElectricTrains
@@ -159,7 +187,7 @@
             .ToList();
     }
 
-    private void CreateTrain() => Nav.NavigateTo("/electrictrains/create");
+    private void CreateTrain() => Nav.NavigateTo("/electric-trains/create");
     private void ViewTrainModels() => Nav.NavigateTo("/suburbantrainsinfoes");
     private void UpdateData() => Nav.NavigateTo("/electrictrains/updateindex");
     private void ViewDetails(int id) => Nav.NavigateTo($"/electrictrains/{id}");
