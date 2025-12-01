@@ -104,15 +104,15 @@
     private int currentPage = 1;
     private bool isLoading = false;
     private bool allLoaded = false;
-
+    private string depotNameFromQuery;
     protected override async Task OnInitializedAsync()
     {
-        // Завантаження користувача
-        var response = await Http.GetAsync("api/profile/getprofile");
-        if (response.IsSuccessStatusCode)
-        {
-            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
-        }
+
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        depotNameFromQuery = query["depotsName"];
+
 
         // Завантаження першої сторінки електропоїздів
         await LoadTrains();
@@ -127,7 +127,9 @@
 
         isLoading = true;
 
-        var trainsPage = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>($"api/electrictrains/get-electrics?page={currentPage}");
+        var url = $"api/electrictrains/get-electrics?page={currentPage}" +
+                $"{(string.IsNullOrWhiteSpace(depotNameFromQuery) ? "" : $"&depo={Uri.EscapeDataString(depotNameFromQuery)}")}";
+        var trainsPage = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>(url);
         if (trainsPage == null || trainsPage.Count == 0)
         {
             allLoaded = true;

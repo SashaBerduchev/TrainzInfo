@@ -136,14 +136,14 @@ else
     }
     void GoToLocomotives(string name)
     {
-        Nav.NavigateTo($"/locomotives&depotsName={name}");
+        Nav.NavigateTo($"/locomotives?depotsName={name}");
     }
     void GoToElectrics(string name)
     {
-        Nav.NavigateTo($"/electrics&depotsName={name}");
+        Nav.NavigateTo($"/electric-trains?depotsName={name}");
     }
     void GoToDiesels(string name)
     {
-        Nav.NavigateTo($"/dieseltrains&depotsName={name}");
+        Nav.NavigateTo($"/dieseltrains?depotsName={name}");
     }
 }

@@ -17,8 +17,8 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
-        [HttpGet("getimage/{name}")]
-        public async Task<ActionResult> GetImage(string name = null)
+        [HttpGet("getimage")]
+        public async Task<ActionResult> GetImage([FromQuery] string name = null)
         {
             Log.Init("MainImageApiController", "GetImage");
             Log.Start();
@@ -37,6 +37,7 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright($"Image found: {mainImage.Name}, Type: {mainImage.ImageType}, Size: {mainImage.Image.Length} bytes");
             Log.Finish();
             // Повертаємо байти прямо, а не Base64
+
             return File(mainImage.Image, mainImage.ImageType);
 
         }

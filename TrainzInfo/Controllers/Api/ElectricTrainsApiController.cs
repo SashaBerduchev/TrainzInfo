@@ -23,7 +23,8 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-electrics")]
-        public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1)
+        public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1,
+            [FromQuery] string depo = null)
         {
             Log.Init(this.ToString(), nameof(GetElectrics));
             Log.Start();
@@ -31,7 +32,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Wright("Loading electrics");
-                IQueryable query = _context
+                IQueryable<ElectricTrain> query = _context
                     .Electrics
                     .Include(d => d.DepotList)
                     .Include(p => p.PlantsCreate)
@@ -42,8 +43,17 @@ namespace TrainzInfo.Controllers.Api
                         .ThenInclude(o => o.UkrainsRailway)
                     .Include(t => t.Trains)
                     .Include(e => e.ElectrickTrainzInformation)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(depo))
+                {
+                    query = query.Where(x => x.DepotList.Name == depo);
+                }
+
+                query = query.Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+
+                List<ElectricTrain> electricTrains = await query.ToListAsync();
+                List<ElectricTrainDTO> electrics = electricTrains
                     .Select(x => new ElectricTrainDTO
                     {
                         id = x.id,
@@ -65,14 +75,12 @@ namespace TrainzInfo.Controllers.Api
                         Oblast = x.City.Oblasts.Name,
                         UkrainsRailway = x.DepotList.UkrainsRailway.Name,
                         City = x.City.Name,
-                        PlantsCreate = x.PlantsCreate.Name,
+                        PlantsCreate = x.PlantCreate,
                         PlantsKvr = x.PlantsKvr.Name,
-                        TrainsInfo = x.Trains.BaseInfo,
-                        ElectrickTrainzInformation = x.ElectrickTrainzInformation.AllInformation
-                    })
-                    .AsQueryable();
+                        TrainsInfo = x.Trains?.BaseInfo,
+                        ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation
+                    }).ToList();
                 Log.Wright("Electrics loaded query: " + query.ToQueryString());
-                List<ElectricTrainDTO> electrics = await query.Cast<ElectricTrainDTO>().ToListAsync();
                 return Ok(electrics);
             }
             catch (Exception ex)

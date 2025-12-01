@@ -121,10 +121,14 @@ else
     private bool IsLogged => true;
     private bool IsAdmin { get; set; }
     private bool IsAdminOrPublisher { get; set; }
-
+    private string depotNameFromQuery;
 
     protected override async Task OnInitializedAsync()
     {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        depotNameFromQuery = query["depotsName"];
         await Load();
         // Підписка на скрол через JS
         await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
@@ -140,6 +144,10 @@ else
         IsAdminOrPublisher = false;
         try
         {
+            if (depotNameFromQuery is not null)
+            {
+                SelectedDepot = depotNameFromQuery;
+            }
             var url =
                $"api/locomotives/getlocomotives?page={currentPage}" +
                $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +

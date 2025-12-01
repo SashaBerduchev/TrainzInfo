@@ -28,7 +28,7 @@ else
 
         <div class="text-center mt-4">
             <img class="img-fluid rounded shadow"
-                 src="@mainMapImgSrc"
+                 src="@image"
                  alt="Мапа Укрзалізниці" />
         </div>
     </div>
@@ -37,12 +37,19 @@ else
 @code {
     private List<UkrainsRailwaysDTO> railways;
     private string mainMapImgSrc = "/api/mainimage/getimage?name=MainMap"; // приклад API для картинки
-
+    private string image;
     protected override async Task OnInitializedAsync()
     {
         try
         {
             railways = await Http.GetFromJsonAsync<List<UkrainsRailwaysDTO>>("api/railways/railways");
+            var bytes = await Http.GetByteArrayAsync(mainMapImgSrc);
+
+            // Перетворюємо на Base64 рядок
+            var base64 = Convert.ToBase64String(bytes);
+
+            // Формуємо Data URL
+            image = $"data:image/png;base64,{base64}"; // заміни image/png на свій MIME тип
         }
         catch (Exception ex)
         {
