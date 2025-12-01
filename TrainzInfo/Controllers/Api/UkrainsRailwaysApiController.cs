@@ -54,5 +54,42 @@ namespace TrainzInfo.Controllers.Api
                 Log.Finish();
             }
         }
+
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult> GetDetails(int id)
+        {
+            Log.Init(this.ToString(), nameof(GetDetails));
+            Log.Start();
+
+            Log.Wright("Start load filia info");
+            try
+            {
+                Log.Wright("Execute quqery");
+                UkrainsRailwaysDTO filia = await _context.UkrainsRailways
+                    .Include(x => x.DepotLists)
+                    .Include(x => x.Stations)
+                    .Where(x => x.id == id)
+                    .Select(x => new UkrainsRailwaysDTO
+                    {
+                        id = x.id,
+                        Name = x.Name,
+                        Information = x.Information,
+                        ImageMimeTypeOfData = x.ImageMimeTypeOfData,
+                        Image = x.Image != null
+                                ? $"data:{x.ImageMimeTypeOfData};base64,{Convert.ToBase64String(x.Image)}"
+                                : null,
+                    })
+                    .FirstOrDefaultAsync();
+                return Ok(filia);
+            } catch (Exception ex)
+            {
+                Log.Wright("Bad request: " + ex.ToString());
+                Log.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }finally
+            {
+                Log.Finish(); 
+            }
+        }
     }
 }

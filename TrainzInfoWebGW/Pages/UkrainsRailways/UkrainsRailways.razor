@@ -36,7 +36,7 @@ else
 
 @code {
     private List<UkrainsRailwaysDTO> railways;
-    private string mainMapImgSrc = "/api/mainimages/getimage?name=MainMap"; // приклад API для картинки
+    private string mainMapImgSrc = "/api/mainimage/getimage?name=MainMap"; // приклад API для картинки
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,6 +53,6 @@ else
 
     private void ViewDetails(int id)
     {
-        Nav.NavigateTo($"/ukrains-railways/{id}");
+        Nav.NavigateTo($"/ukrains-railways/details/{id}");
     }
 }

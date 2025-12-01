@@ -1,0 +1,93 @@
+﻿@page "/ukrains-railways/details/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider Auth
+
+<h3 class="text-center mb-4">@Model?.Name</h3>
+
+@if (loading)
+{
+    <p>Завантаження...</p>
+}
+else if (Model == null)
+{
+    <p class="text-danger text-center">Дані не знайдено.</p>
+}
+else
+{
+    <div class="d-flex flex-wrap justify-content-center mb-4">
+        <button class="btn btn-info m-2"
+                @onclick='() => Nav.NavigateTo($"/depotlists/{Model.id}")'>
+            Список депо
+        </button>
+
+        <button class="btn btn-success m-2"
+                @onclick='() => Nav.NavigateTo($"/stations?filialsName={Model.Name}")'>
+            Список станцій
+        </button>
+
+        @if (IsSuperAdmin)
+        {
+            <button class="btn btn-info m-2"
+                    @onclick='() => Nav.NavigateTo($"/ukrains-railways/{Model.id}/add-image")'>
+                Додати зображення
+            </button>
+        }
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="row g-0 align-items-center">
+            <div class="col-12 col-md-5 text-center p-3">
+                <img class="img-fluid rounded"
+                     src="@Model.Image"
+                     alt="@Model.Name" />
+            </div>
+
+            <div class="col-12 col-md-7 p-3">
+                <p class="h5 mb-3">
+                    <b>Назва:</b> @Model.Name
+                </p>
+
+                <p class="h5">
+                    <b>Інформація:</b>
+                </p>
+                <p>@((MarkupString)Model.Information)</p>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    UkrainsRailwaysDTO? Model;
+    string ImageUrl = "";
+    bool loading = true;
+    bool IsSuperAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+        await CheckRole();
+    }
+
+    private async Task LoadData()
+    {
+        loading = true;
+
+        Model = await Http.GetFromJsonAsync<UkrainsRailwaysDTO>(
+            $"api/railways/details/{Id}");
+
+        loading = false;
+    }
+
+    private async Task CheckRole()
+    {
+        var authState = await Auth.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        IsSuperAdmin = user.IsInRole("Superadmin");
+    }
+}

@@ -58,7 +58,6 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(s => s.Oblasts.Name == oblast);
                 }
-
                 query = query
                     .OrderBy(s => s.id)
                     .Skip((page - 1) * pageSize)

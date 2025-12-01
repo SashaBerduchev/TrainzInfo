@@ -17,7 +17,7 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
-        [HttpGet("getimage")]
+        [HttpGet("getimage/{name}")]
         public async Task<ActionResult> GetImage(string name = null)
         {
             Log.Init("MainImageApiController", "GetImage");

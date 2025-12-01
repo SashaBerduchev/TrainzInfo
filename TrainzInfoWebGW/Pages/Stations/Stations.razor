@@ -138,6 +138,7 @@
 
 
 @code {
+    string? filiasNameFromQuery;
     List<StationsDTO> stationsList = new();
     List<string> Filias = new();
     List<string> Oblasts = new();
@@ -161,11 +162,13 @@
     private bool IsAdmin { get; set; }
     private bool IsAdminOrPublisher { get; set; }
 
-
     protected override async Task OnInitializedAsync()
     {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        filiasNameFromQuery = query["filialsName"];
         await LoadStations();
-        
 
         await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
     }
@@ -178,6 +181,10 @@
         IsAdmin = false;
         IsAdminOrPublisher = false;
 
+        if(filiasNameFromQuery != null)
+        {
+            SelectedFilia = filiasNameFromQuery;
+        }
         var url =
                $"api/stations/get-stations?page={currentPage}" +
                $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
