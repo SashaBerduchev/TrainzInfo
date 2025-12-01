@@ -31,15 +31,25 @@
                 <InputText @bind-Value="locomotive.Number" class="form-control" />
             </div>
 
-            <!-- Депо -->
-            <div class="form-group">
+            
+            <div class="form-group position-relative">
                 <label>Депо</label>
-                <InputSelect @bind-Value="locomotive.Depot" class="form-control">
-                    @foreach (var item in DepotList)
-                    {
-                        <option value="@item">@item</option>
-                    }
-                </InputSelect>
+                <InputText @bind-Value="depo" class="form-control" placeholder="Почніть вводити депо..."
+                           @oninput="OnInputChanged" />
+
+                @if (filteredDepot?.Any() == true)
+                {
+                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
+                        @foreach (var item in filteredDepot)
+                        {
+                            <li class="list-group-item list-group-item-action"
+                                style="cursor:pointer;"
+                                @onclick="() => SelectItem(item)">
+                                @item
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
 
             <!-- Конструкційна швидкість -->
@@ -86,6 +96,9 @@
     // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
     private List<string> SeriaList = new List<string>();
     private List<string> DepotList = new List<string>();
+    private List<string> filteredDepot = new List<string>();
+    private CancellationTokenSource debounceCts;
+    private string depo;
     private string imagePreview;
     private string errors;
 
@@ -124,6 +137,49 @@
         }
         
 
+    }
+
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        depo = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(depo))
+                {
+                    filteredDepot.Clear();
+                }
+                else
+                {
+                    filteredDepot = DepotList
+                        .Where(x => x.Contains(depo, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        depo = item;
+        locomotive.Depot = depo;
+        filteredDepot.Clear();
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
