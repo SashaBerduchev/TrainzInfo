@@ -39,17 +39,25 @@
             }
         </select>
     </div>
+    <div class="form-group position-relative">
+        <label>Станції</label>
+        <InputText @bind-Value="SelectedName" class="form-control" placeholder="Почніть вводити назву станції..."
+                   @oninput="OnInputChanged" />
 
-    <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedName">
-            <option value="">Всі станції</option>
-            @foreach (var s in StationNames)
-            {
-                <option value="@s">@s</option>
-            }
-        </select>
+        @if (filteredStations?.Any() == true)
+        {
+            <ul class="list-group position-absolute w-100" style="z-index:1000;">
+                @foreach (var item in filteredStations)
+                {
+                    <li class="list-group-item list-group-item-action"
+                        style="cursor:pointer;"
+                        @onclick="() => SelectItem(item)">
+                        @item
+                    </li>
+                }
+            </ul>
+        }
     </div>
-
     <div class="col-12 mt-2">
         <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
     </div>
@@ -135,6 +143,8 @@
     List<string> Oblasts = new();
     List<string> StationNames = new();
     private UserDto CurrentUser { get; set; }
+    private CancellationTokenSource debounceCts;
+    private List<string> filteredStations = new List<string>();
     private bool isFilterLoad = false;
     string SelectedFilia = "";
     string SelectedOblast = "";
@@ -221,6 +231,47 @@
         StateHasChanged();
     }
 
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        SelectedName = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(SelectedName))
+                {
+                    filteredStations.Clear();
+                }
+                else
+                {
+                    filteredStations = StationNames
+                        .Where(x => x.Contains(SelectedName, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        SelectedName = item;
+        filteredStations.Clear();
+    }
 
      private async Task CheckRoles()
     {
