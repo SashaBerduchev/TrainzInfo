@@ -98,9 +98,8 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("LocomotivesApiController", "GetSeries");
                 Log.Start();
                 Log.Wright("Start Get GetSeries");
-                var series = await _context.Locomotives
-                    .Include(ls => ls.Locomotive_Series)
-                    .Select(x => x.Locomotive_Series.Seria)
+                var series = await _context.Locomotive_Series
+                    .Select(x => x.Seria)
                     .Distinct()
                     .ToListAsync();
                 return Ok(series);
@@ -126,10 +125,9 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("LocomotivesApiController", "GetDepots");
                 Log.Start();
                 Log.Wright("Start Get GetDepots");
-                var depots = await _context.Locomotives
-                    .Include(d => d.DepotList)
-                    .OrderBy(x => x.DepotList.Name)
-                    .Select(x => x.DepotList.Name)
+                var depots = await _context.Depots
+                    .OrderBy(x => x.Name)
+                    .Select(x => x.Name)
                     .Distinct()
                     .ToListAsync();
                 return Ok(depots);
