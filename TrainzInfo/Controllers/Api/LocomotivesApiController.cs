@@ -51,7 +51,7 @@ namespace TrainzInfo.Controllers.Api
                     query = query.Where(l => l.DepotList.UkrainsRailway.Name == filia);
 
                 if (!string.IsNullOrWhiteSpace(depot))
-                    query = query.Where(l => l.Depot == depot);
+                    query = query.Where(l => l.DepotList.Name == depot);
 
                 if (!string.IsNullOrWhiteSpace(seria))
                     query = query.Where(l => l.Seria == seria);
@@ -154,6 +154,8 @@ namespace TrainzInfo.Controllers.Api
                 Log.Start();
                 Log.Wright("Start Post CreateLocomotive");
 
+                DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
+                        .FirstOrDefaultAsync();
 
                 var locomotive = new Locomotive
                 {
@@ -162,17 +164,21 @@ namespace TrainzInfo.Controllers.Api
                     // Assuming you have logic to fetch related entities based on names
                     Locomotive_Series = await _context.Locomotive_Series
                         .FirstOrDefaultAsync(s => s.Seria == locomotiveDTO.Seria),
-                    DepotList = await _context.Depots
-                        .FirstOrDefaultAsync(d => d.Name == locomotiveDTO.Depot),
+                    DepotList = depot,
                     // Image handling can be added here if needed
-                    Seria = locomotiveDTO.Seria
+                    Seria = locomotiveDTO.Seria,
+                    Depot = locomotiveDTO.Depot
                 };
-
+                if(depot.Locomotives == null)
+                {
+                    depot.Locomotives = new List<Locomotive>();
+                }
+                depot.Locomotives.Add(locomotive);
                 Log.Wright("Try find locomotoive if exist");
-                Locomotive locomotiveExit = await _context.Locomotives
+                Locomotive locomotiveExist = await _context.Locomotives
                     .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)
                     .FirstOrDefaultAsync();
-                if (locomotiveExit is not null)
+                if (locomotiveExist is not null)
                 {
                     Log.Wright("Locomotoive is exist");
                     Log.Finish();
@@ -189,6 +195,8 @@ namespace TrainzInfo.Controllers.Api
                     byte[] imageBytes = Convert.FromBase64String(base64Data);
                     locomotive.Image = imageBytes;
                 }
+
+
                 _context.Locomotives.Add(locomotive);
                 await _context.SaveChangesAsync();
                 return Ok();
