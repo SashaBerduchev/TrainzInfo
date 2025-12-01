@@ -47,19 +47,38 @@
     <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
         <AuthorizeView>
             <Authorized>
-                <li class="nav-item d-flex align-items-center">
-                    <button class="btn btn-outline-primary" @onclick="Profile">Мій профіль</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-outline-danger" @onclick="Logout">Вийти</button>
+                <li class="nav-item d-flex align-items-center gap-2">
+
+                    <button class="btn btn-light shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Profile">
+                        <i class="fa-solid fa-user text-primary"></i>
+                        <span>Мій профіль</span>
+                    </button>
+
+                    <button class="btn btn-danger shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Вийти</span>
+                    </button>
+
                 </li>
             </Authorized>
+
             <NotAuthorized>
-                <li class="nav-item">
-                    <button class="btn btn-outline-primary" @onclick="Login">Вхід</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-outline-primary" @onclick="Register">Реєстрація</button>
+                <li class="nav-item d-flex align-items-center gap-2">
+
+                    <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Login">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Вхід</span>
+                    </button>
+
+                    <button class="btn btn-outline-primary shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Register">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Реєстрація</span>
+                    </button>
+
                 </li>
             </NotAuthorized>
         </AuthorizeView>
