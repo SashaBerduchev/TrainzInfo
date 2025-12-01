@@ -54,6 +54,7 @@ namespace TrainzInfo.Controllers.Api
 
                 List<ElectricTrain> electricTrains = await query.ToListAsync();
                 List<ElectricTrainDTO> electrics = electricTrains
+                    .AsParallel()
                     .Select(x => new ElectricTrainDTO
                     {
                         id = x.id,

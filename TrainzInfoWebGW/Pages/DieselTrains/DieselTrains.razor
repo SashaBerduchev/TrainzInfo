@@ -80,7 +80,7 @@
                             <h5>@item.Name — №@item.NumberTrain</h5>
                             <p><b>Депо:</b> @item.DepotList</p>
                             <p><b>Філія:</b> @item.Filia</p>
-                            <p><b>Область:</b> @item.</p>
+                            <p><b>Область:</b> @item.Oblast</p>
                             <p><b>Місто:</b> @item.City</p>
                         </div>
                         <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
@@ -120,17 +120,14 @@
     private int currentPage = 1;
     private bool isLoading = false;
     private bool allLoaded = false;
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "depotsName")]
+    public string? DepotNameFromQuery { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.GetAsync("api/profile/getprofile");
-        if (response.IsSuccessStatusCode)
-        {
-            CurrentUser = await response.Content.ReadFromJsonAsync<UserDto>();
-        }
-
         await Load();
-        
+
         filteredTrains = dieselTrains.ToList();
 
         // Завантаження даних для фільтрів
@@ -147,9 +144,18 @@
     {
         if (isLoading || allLoaded) return;
 
-        isLoading = true;
+        if (DepotNameFromQuery is not null)
+        {
+            selectedDepo = DepotNameFromQuery;
+        }
 
-        var dieselPage = await Http.GetFromJsonAsync<List<DieselTrainsDTO>>("api/diesels/gettrains");
+        isLoading = true;
+        var url =
+               $"api/diesels/gettrains?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(selectedFilia) ? "" : $"&filia={Uri.EscapeDataString(selectedFilia)}")}" + 
+               $"{(string.IsNullOrWhiteSpace(selectedDepo) ? "" : $"&depot={Uri.EscapeDataString(selectedDepo)}")}";
+
+        var dieselPage = await Http.GetFromJsonAsync<List<DieselTrainsDTO>>(url);
         if (dieselPage == null || dieselPage.Count == 0)
         {
             allLoaded = true;

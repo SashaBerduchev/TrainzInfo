@@ -21,7 +21,9 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("gettrains")]
-        public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrains(int page = 1)
+        public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrains(int page = 1,
+            [FromQuery] string filia = null,
+            [FromQuery] string depot = null)
         {
             Log.Init("DieselTrainsApiController", "GetDieselTrains");
             Log.Start();
@@ -29,33 +31,46 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 int pageCount = 10;
-                IQueryable<DieselTrainsDTO> diesels = _context.DieselTrains
+                IQueryable<DieselTrains> query = _context.DieselTrains
                     .Include(dt => dt.DepotList)
                         .ThenInclude(dl => dl.City)
                             .ThenInclude(c => c.Oblasts)
                     .Include(dt => dt.DepotList)
                         .ThenInclude(dl => dl.UkrainsRailway)
-                    .Include(dt => dt.SuburbanTrainsInfo)
-                    .Skip((page - 1) * pageCount)
-                    .Take(pageCount)
-                    .Select(dt => new DieselTrainsDTO
-                    {
-                        Id = dt.Id,
-                        Name = dt.SuburbanTrainsInfo.Model,
-                        SuburbanTrainsInfo = dt.SuburbanTrainsInfo.BaseInfo,
-                        NumberTrain = dt.NumberTrain,
-                        DepotList = dt.DepotList.Name,
-                        City = dt.DepotList.City.Name,
-                        Oblast = dt.DepotList.City.Oblasts.Name,
-                        Filia = dt.DepotList.UkrainsRailway.Name,
-                        Image = dt.Image != null
+                    .Include(dt => dt.SuburbanTrainsInfo).AsQueryable();
+
+                if (!string.IsNullOrEmpty(filia))
+                {
+                    query = query.Where(x => x.DepotList.UkrainsRailway.Name == filia);
+                }
+                if (!string.IsNullOrEmpty(depot))
+                {
+                    query = query.Where(x => x.DepotList.Name == depot);
+                }
+                query = query.Skip((page - 1) * pageCount)
+                .Take(pageCount);
+
+                Log.Wright("GetDieselTrains API finished bu query: " + query.ToQueryString());
+                List<DieselTrains> diesels = await query.ToListAsync();
+                List<DieselTrainsDTO> dieselTrains = diesels
+                .AsParallel()
+                .Select(dt => new DieselTrainsDTO
+                {
+                    Id = dt.Id,
+                    Name = dt.SuburbanTrainsInfo.Model,
+                    SuburbanTrainsInfo = dt.SuburbanTrainsInfo.BaseInfo,
+                    NumberTrain = dt.NumberTrain,
+                    DepotList = dt.DepotList.Name,
+                    City = dt.DepotList.City.Name,
+                    Oblast = dt.DepotList.City.Oblasts.Name,
+                    Filia = dt.DepotList.UkrainsRailway.Name,
+                    Image = dt.Image != null
                                         ? $"data:{dt.ImageMimeTypeOfData};base64,{Convert.ToBase64String(dt.Image)}"
                                         : null,
-                        ImageMimeTypeOfData = dt.ImageMimeTypeOfData
-                    })
-                    .AsQueryable();
-                Log.Wright("GetDieselTrains API finished bu query: " + diesels.ToQueryString());
-                List<DieselTrainsDTO> dieselTrains = await diesels.ToListAsync();
+                    ImageMimeTypeOfData = dt.ImageMimeTypeOfData
+                })
+                .ToList();
+
                 return Ok(dieselTrains);
             }
             catch (Exception ex)
