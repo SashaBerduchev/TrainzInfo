@@ -31,4 +31,13 @@ public class ApiClient
         var response = await _client.PostAsJsonAsync("api/locomotives/create", dto);
         return response.IsSuccessStatusCode;
     }
+    
+    public async Task<string> GetMainBannerAsync()
+    {
+        var response = await _client.GetAsync("api/mainimage/getimage?name=MainPhoto"); // endpoint на сервері
+        response.EnsureSuccessStatusCode();
+
+        var base64String = await response.Content.ReadAsStringAsync();
+        return base64String;
+    }
 }

@@ -3,67 +3,80 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:TrainzInfoWPF.Tools.ViewModel"
         xmlns:valueConverters="clr-namespace:TrainzInfoWPF.Tools.ValueConverters"
-        Title="TrainzInfo" Height="600" Width="800">
+        Title="TrainzInfo" Height="600" Width="1000">
 
     <Window.DataContext>
         <viewModel:MainWindowViewModel />
     </Window.DataContext>
+
     <Window.Resources>
         <valueConverters:Base64ToImageSourceConverter x:Key="Base64ToImageSourceConverter"/>
     </Window.Resources>
-    
+
     <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/> <!-- ліва колонка для головної картинки -->
+            <ColumnDefinition Width="*"/>   <!-- права колонка для заголовку, кнопок та новин -->
+        </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Заголовок і текст -->
-            <RowDefinition Height="Auto"/> <!-- Кнопки -->
-            <RowDefinition Height="*"/>    <!-- Новини -->
-        </Grid.RowDefinitions>
+        <!-- Ліва головна картинка -->
+        <Image Grid.Column="0"
+               Source="{Binding MainBannerImageBase64, Converter={StaticResource Base64ToImageSourceConverter}}"
+               Stretch="UniformToFill"
+               Margin="0,0,20,0"/>
 
-        <!-- Заголовок -->
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <TextBlock Text="Ласкаво просимо на сайт TrainzInfo!"
-                       FontSize="28" FontWeight="Bold" TextAlignment="Center"
-                       Margin="0,0,0,10"/>
-            <TextBlock Text="Сайт ТреінзІнфо присвячено любителям залізничного транспорту..."
-                       FontSize="16" TextAlignment="Center" TextWrapping="Wrap"
-                       Width="600"/>
-        </StackPanel>
+        <!-- Права колонка -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Заголовок і текст -->
+                <RowDefinition Height="Auto"/> <!-- Кнопки -->
+                <RowDefinition Height="*"/>    <!-- Новини -->
+            </Grid.RowDefinitions>
 
-        <!-- Кнопки -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <Button Content="Локомотиви" Width="160" Margin="10" Command="{Binding OpenLocomotivesCommand}"/>
-            <Button Content="Електропоїзди" Width="160" Margin="10" Command="{Binding OpenElectricTrainsCommand}"/>
-            <Button Content="Дизель-поїзди" Width="160" Margin="10" Command="{Binding OpenDieselTrainsCommand}"/>
-            <Button Content="Станції" Width="160" Margin="10" Command="{Binding OpenStationsCommand}"/>
-        </StackPanel>
+            <!-- Заголовок і текст -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <TextBlock Text="Ласкаво просимо на сайт TrainzInfo!"
+                           FontSize="28" FontWeight="Bold" TextAlignment="Center"
+                           Margin="0,0,0,10"/>
+                <TextBlock Text="Сайт ТреінзІнфо присвячено любителям залізничного транспорту..."
+                           FontSize="16" TextAlignment="Center" TextWrapping="Wrap"
+                           Width="600"/>
+            </StackPanel>
 
-        <!-- Новини з прокруткою -->
-        <ScrollViewer Grid.Row="2" x:Name="NewsScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="NewsScrollViewer_ScrollChanged">
-            <ItemsControl ItemsSource="{Binding FilteredNews}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+            <!-- Кнопки -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Button Content="Локомотиви" Width="160" Margin="10" Command="{Binding OpenLocomotivesCommand}"/>
+                <Button Content="Електропоїзди" Width="160" Margin="10" Command="{Binding OpenElectricTrainsCommand}"/>
+                <Button Content="Дизель-поїзди" Width="160" Margin="10" Command="{Binding OpenDieselTrainsCommand}"/>
+                <Button Content="Станції" Width="160" Margin="10" Command="{Binding OpenStationsCommand}"/>
+            </StackPanel>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Width="300" Margin="10" BorderBrush="Gray" BorderThickness="1" CornerRadius="5">
-                            <StackPanel>
-                                <Image Source="{Binding NewsImage, Converter={StaticResource Base64ToImageSourceConverter}}"
-                                       Height="150" Stretch="UniformToFill"/>
-                                <TextBlock Text="{Binding NameNewsHtmlPlain}" FontWeight="Bold" FontSize="16" Margin="5,5,5,0"/>
-                                <TextBlock Text="{Binding BaseNewsInfoHtmlPlain}" TextWrapping="Wrap" Margin="5,0,5,5"/>
-                                <Button Content="Детальніше" Margin="5" Width="100" 
-                                        Command="{Binding DataContext.OpenNewsDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding id}" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+            <!-- Новини з прокруткою -->
+            <ScrollViewer Grid.Row="2" x:Name="NewsScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="NewsScrollViewer_ScrollChanged">
+                <ItemsControl ItemsSource="{Binding FilteredNews}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="300" Margin="10" BorderBrush="Gray" BorderThickness="1" CornerRadius="5">
+                                <StackPanel>
+                                    <Image Source="{Binding NewsImage, Converter={StaticResource Base64ToImageSourceConverter}}"
+                                           Height="150" Stretch="UniformToFill"/>
+                                    <TextBlock Text="{Binding NameNewsHtmlPlain}" FontWeight="Bold" FontSize="16" Margin="5,5,5,0"/>
+                                    <TextBlock Text="{Binding BaseNewsInfoHtmlPlain}" TextWrapping="Wrap" Margin="5,0,5,5"/>
+                                    <Button Content="Детальніше" Margin="5" Width="100" 
+                                            Command="{Binding DataContext.OpenNewsDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding id}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>

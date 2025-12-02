@@ -11,7 +11,12 @@ public class MainWindowViewModel : BaseViewModel
     private int _currentPage = 1;
     public ObservableCollection<NewsDTO> AllNews { get; set; } = new();
     public ObservableCollection<NewsDTO> FilteredNews { get; set; } = new();
-
+    private string _mainBannerImageBase64;
+    public string MainBannerImageBase64
+    {
+        get => _mainBannerImageBase64;
+        set { _mainBannerImageBase64 = value; OnPropertyChanged(); }
+    }
     private string _searchText;
     public string SearchText
     {
@@ -40,9 +45,10 @@ public class MainWindowViewModel : BaseViewModel
         OpenStationsCommand = new RelayCommand(OpenStations);
 
         LoadNews();
+        LoadMainBannerAsync();
     }
     
-    private async void LoadNews()
+    private async Task LoadNews()
     {
         var data = await _api.GetNewsAsync(_currentPage);
         AllNews.Clear();
@@ -51,7 +57,12 @@ public class MainWindowViewModel : BaseViewModel
 
         ApplyFilter();
     }
-    
+    private async Task LoadMainBannerAsync()
+    {
+        var bannerData = await _api.GetMainBannerAsync(); // повертає Base64 рядок
+        MainBannerImageBase64 = bannerData;
+    }
+
     private void ApplyFilter()
     {
         FilteredNews.Clear();
