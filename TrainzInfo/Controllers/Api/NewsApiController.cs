@@ -10,7 +10,7 @@ using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfo.Tools.DTO;
+using TrainzInfoShared.DTO;
 using static Azure.Core.HttpHeader;
 
 namespace TrainzInfo.Controllers.Api

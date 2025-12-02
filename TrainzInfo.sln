@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainzInfo", "TrainzInfo\Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoWebGW", "TrainzInfoWebGW\TrainzInfoWebGW.csproj", "{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoWPF", "TrainzInfoWPF\TrainzInfoWPF.csproj", "{6DE0FF5A-F3B5-44F3-A67C-D9715D58AB46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoShared", "TrainzInfoShared\TrainzInfoShared.csproj", "{5B84C2D7-F6CF-42E6-A1B3-CAF0C87AEC94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA99FECD-FDD9-4842-A1BE-62055B4F9AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE0FF5A-F3B5-44F3-A67C-D9715D58AB46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE0FF5A-F3B5-44F3-A67C-D9715D58AB46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE0FF5A-F3B5-44F3-A67C-D9715D58AB46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE0FF5A-F3B5-44F3-A67C-D9715D58AB46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B84C2D7-F6CF-42E6-A1B3-CAF0C87AEC94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B84C2D7-F6CF-42E6-A1B3-CAF0C87AEC94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B84C2D7-F6CF-42E6-A1B3-CAF0C87AEC94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B84C2D7-F6CF-42E6-A1B3-CAF0C87AEC94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

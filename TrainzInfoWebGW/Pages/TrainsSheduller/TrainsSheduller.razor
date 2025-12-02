@@ -98,7 +98,7 @@ else
 @code {
     [Parameter] public int trainid { get; set; }
 
-    private List<TrainsShedullerDTO> Schedule;
+    private List<TrainsShaduleDTO> Schedule;
     private TrainDTO Train;
     private string ErrorMessage = "";
     private bool IsSuperadmin = false;
@@ -125,7 +125,7 @@ else
 
     private async Task LoadSchedule()
     {
-        Schedule = await Http.GetFromJsonAsync<List<TrainsShedullerDTO>>(
+        Schedule = await Http.GetFromJsonAsync<List<TrainsShaduleDTO>>(
             $"api/trainsshaduller/getbytrain?trainid={trainid}"
         );
     }

@@ -2,7 +2,6 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-
 <h3>Додати розклад до поїздаа:</h3>
 
 <!-- Таблиця для великих екранів -->
@@ -126,8 +125,8 @@
 @code {
     [Parameter] public int id { get; set; }
     private TrainDTO train;
-    private TrainsShedullerDTO trainsSheduller;
-    private List<TrainsShedullerDTO> trainsShedullers = new List<TrainsShedullerDTO>();
+    private TrainsShaduleDTO trainsSheduller;
+    private List<TrainsShaduleDTO> trainsShedullers = new List<TrainsShaduleDTO>();
     private List<string> filterStations;
     private string station;
     private List<string> stations = new List<string>();
@@ -136,7 +135,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        trainsSheduller = new TrainsShedullerDTO();
+        trainsSheduller = new TrainsShaduleDTO();
         await Loading();
     }
 
@@ -150,11 +149,11 @@
     {
         trainsShedullers.Add(trainsSheduller);
         StateHasChanged();
-        trainsSheduller = new TrainsShedullerDTO();
+        trainsSheduller = new TrainsShaduleDTO();
         station = "";
     }
 
-    private async Task HandleDelete(TrainsShedullerDTO trainsSheduller)
+    private async Task HandleDelete(TrainsShaduleDTO trainsSheduller)
     {
         trainsShedullers.Remove(trainsSheduller);
         StateHasChanged();

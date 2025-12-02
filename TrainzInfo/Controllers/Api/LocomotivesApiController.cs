@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfo.Tools.DTO;
+using TrainzInfoShared.DTO;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -59,8 +59,8 @@ namespace TrainzInfo.Controllers.Api
                 query = query.Skip((page - 1) * pageSize)
                     .Take(pageSize);
 
-                List<LocmotiveDTO> locoDTO = await query
-                .Select(n => new LocmotiveDTO
+                List<LocomotiveDTO> locoDTO = await query
+                .Select(n => new LocomotiveDTO
                 {
                     Id = n.id,
                     Number = n.Number,
@@ -146,7 +146,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> CreateLocomotive([FromBody] LocmotiveDTO locomotiveDTO)
+        public async Task<ActionResult> CreateLocomotive([FromBody] LocomotiveDTO locomotiveDTO)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("getlocomotive/{id}")]
-        public async Task<ActionResult<LocmotiveDTO>> GetLocomotive(int id)
+        public async Task<ActionResult<LocomotiveDTO>> GetLocomotive(int id)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace TrainzInfo.Controllers.Api
                 {
                     return NotFound();
                 }
-                var locoDTO = new LocmotiveDTO
+                var locoDTO = new LocomotiveDTO
                 {
                     Id = locomotive.id,
                     Number = locomotive.Number,

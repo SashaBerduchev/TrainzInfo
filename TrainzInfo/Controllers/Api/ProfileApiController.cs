@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
-using TrainzInfo.Tools.DTO;
+using TrainzInfoShared.DTO;
 
 namespace TrainzInfo.Controllers.Api
 {

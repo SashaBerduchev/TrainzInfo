@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfo.Tools.DTO;
 using TrainzInfo.Tools.RequestDTO;
+using TrainzInfoShared.DTO;
 
 namespace TrainzInfo.Controllers.Api
 {
