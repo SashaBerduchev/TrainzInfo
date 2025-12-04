@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
@@ -104,7 +103,7 @@ namespace TrainzInfo.Controllers.Api
                 return Unauthorized();
 
             var user = await _userManager.GetUserAsync(User);
-            
+            _identityUser = user;
             if (user == null)
             {
                 Log.Wright("User NOT FOUND");

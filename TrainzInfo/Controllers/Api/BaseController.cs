@@ -7,7 +7,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
-namespace TrainzInfo.Controllers.OldControllers
+namespace TrainzInfo.Controllers.Api
 {
     public class BaseController : Controller
     {

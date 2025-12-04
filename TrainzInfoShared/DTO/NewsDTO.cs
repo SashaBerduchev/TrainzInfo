@@ -12,6 +12,7 @@ namespace TrainzInfoShared.DTO
         public string DateTime { get; set; }
         public string NewsImage { get; set; }
         public string ImageMimeTypeOfData { get; set; }
+        public string UserEmail { get; set; }
         
         public string NameNewsInfoHtmlPlain
         {
