@@ -35,6 +35,7 @@
         @if (IsAdmin)
         {
             <button class="btn btn-info" @onclick="CreateNews">Створити новину</button>
+            <button class="btn btn-info" @onclick="CreateMail">Додати поштовий сервіс</button>
         }
     </div>
     <div>
@@ -54,7 +55,10 @@
     {
         Nav.NavigateTo("/news/create");
     }
-
+    private void CreateMail()
+    {
+        Nav.NavigateTo("/mail/create");
+    }
     private async Task CheckRoles()
     {
         if (AuthStateProvider is CustomAuthStateProvider customAuth)

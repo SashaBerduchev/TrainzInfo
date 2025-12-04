@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Claims;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.Mail;
 using TrainzInfoShared.DTO;
 using static Azure.Core.HttpHeader;
 
@@ -19,15 +21,18 @@ namespace TrainzInfo.Controllers.Api
     public class NewsApiController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
         UserManager<IdentityUser> _userManager;
-
+        private Mail _mail;
         private readonly ApplicationContext _context;
-        public NewsApiController(ILogger<HomeController> logger, ApplicationContext context, UserManager<IdentityUser> userManager)
+        public NewsApiController(ILogger<HomeController> logger, ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail)
              : base(userManager, context)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _mail = mail;
+            _signInManager = signInManager;
         }
         [Produces("application/json")]
         [HttpGet("getnews")]
@@ -120,7 +125,8 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("NewsApiController", "CreateNews");
                 
                 Log.Wright("Start Create NewsInfo");
-
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var user = await _userManager.FindByIdAsync(userId);
                 NewsInfo newNews = new NewsInfo
                 {
                     NameNews = newsInfo.NameNews,
@@ -132,6 +138,7 @@ namespace TrainzInfo.Controllers.Api
                 };
                 _context.NewsInfos.Add(newNews);
                 await _context.SaveChangesAsync();
+                await _mail.SendNewsMessage(newNews.id, user);
                 Log.Wright("NewsInfo Created Successfully");
                 return Ok();
             }

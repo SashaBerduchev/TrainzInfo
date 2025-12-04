@@ -1,0 +1,78 @@
+﻿@page "/mail/create"
+@inject HttpClient Http
+@inject NavigationManager Nav;
+
+<h4>Пошта</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@mail" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- Назва новини -->
+            <div class="form-group">
+                <label>Назва сервісу</label>
+                <InputText @bind-Value="mail.Name" class="form-control" />
+            </div>
+
+            <!-- Короткий опис (CKEditor) -->
+            <div class="form-group mt-2">
+                <label>Користувач</label>
+                <InputText @bind-Value="mail.User" class="form-control" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Пошта</label>
+                <InputText @bind-Value="mail.Email" class="form-control" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Пошта звідки</label>
+                <InputText @bind-Value="mail.From" class="form-control" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Пароль</label>
+                <InputText @bind-Value="mail.Password" type="password" class="form-control" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Хост</label>
+                <InputText @bind-Value="mail.Host" class="form-control" />
+            </div>
+            
+            <div class="form-group mt-2">
+                <label>Порт</label>
+                <InputNumber @bind-Value="mail.Port"  class="form-control" />
+            </div>
+            <!-- Кнопка створення -->
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Створити</button>
+            </div>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(errors))
+        {
+            <div class="alert alert-danger mt-3">
+                <h5>Помилка збереження:</h5>
+                <p>@errors</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    public MailDTO mail = new MailDTO();
+    public string errors;
+
+    public async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync($"api/mail/create", mail);
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            errors = await response.Content.ReadAsStringAsync();
+        }
+        StateHasChanged();
+    }
+}

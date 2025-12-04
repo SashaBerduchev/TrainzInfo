@@ -107,18 +107,18 @@ namespace TrainzInfo.Tools.Mail
             await SendMail(subject, body, user, true);
         }
 
-        public async Task SendManagerOrderAssigned(int ordernumber, IdentityUser user)
+        public async Task SendNewsMessage(int newsid, IdentityUser user)
         {
             var request = _httpContextAccessor.HttpContext.Request;
             string baseUrl = $"{request.Scheme}://{request.Host}";
             string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
-            string orderUrl = $"{baseUrl}/Orders/Details/{ordernumber}";
+            string orderUrl = $"{baseUrl}/Orders/Details/{newsid}";
 
             string body = $@"
-                        <p>Шановний користувачу, на сайті призначено нове замовлення номер {ordernumber}</p>
+                        <p>Шановний користувачу, ваша новина опублікована {newsid}</p>
                          <p>
                              Ви можете переглянути його за посиланням: 
-                             <a href='{orderUrl}' target='_blank'>Відкрити замовлення</a>
+                             <a href='{newsid}' target='_blank'>Відкрити новину</a>
                          </p>
                         <p>Дякуємо за користування нашим сервісом!</p>
                         <br />
@@ -126,12 +126,12 @@ namespace TrainzInfo.Tools.Mail
                         <table style='font-family:Arial;font-size:12px;color:#444;'>
                             <tr>
                                 <td>
-                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                    <img src='{newsid}'  alt='Логотип' width='120' alt='Trainzinfo Logo' />
                                 </td>
                                 <td style='padding-left:10px;'>
                                     <strong>Arsshina Service</strong><br/>
-                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
-                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                    <a href='https://trinzinfo.com.ua'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@atrainzingo.com.ua'>support@arsshina.com</a>
                                 </td>
                             </tr>
                         </table>";

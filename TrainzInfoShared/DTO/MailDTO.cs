@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TrainzInfoShared.DTO
+﻿namespace TrainzInfoShared.DTO
 {
-    internal class MailDTO
+    public class MailDTO
     {
         public string Name { get; set; }
         public string Host { get; set; }
