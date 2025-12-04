@@ -9,23 +9,47 @@
         <NavMenu />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <CascadingValue Value="this">
+        <main>
+            <div class="top-row d-flex align-items-center px-4 w-100">
+                <!-- Ліворуч: Закріплена вкладка Головна -->
+                <div class="me-3">
+                    <a href="/" class="text-decoration-none text-dark">Головна</a>
+                </div>
 
+                <!-- Праворуч: динамічні вкладки + About -->
+                <div class="d-flex align-items-center ms-auto">
+                    @foreach (var tab in Tabs)
+                    {
+                        <div class="tab @(ActiveTab?.Id == tab.Id ? "active" : "") me-2 d-flex align-items-center">
+                            <span @onclick="() => Activate(tab)">@tab.Title</span>
+                            <button class="close-btn" @onclick="() => Close(tab)">×</button>
+                        </div>
+                    }
 
-        </div>
+                    <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="ms-2">About</a>
+                </div>
+            </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-
-    </main>
+            <article class="content px-4">
+                @if (ActiveTab == null)
+                {
+                    @Body
+                }
+                else
+                {
+                    <DynamicComponent Type="ActiveTab.ComponentType" />
+                }
+            </article>
+        </main>
+    </CascadingValue>
 </div>
 
 @code {
 
     private bool isSidebarCollapsed = true;   // по умолчанию свернута
+    private List<TabItem> Tabs = new();
+    private TabItem? ActiveTab = null;
 
     void ExpandSidebar() => isSidebarCollapsed = false;
     void CollapseSidebar() => isSidebarCollapsed = true;
@@ -33,5 +57,31 @@
     /* Если хотите toggle‑кнопку (на мобильном) – добавьте:
        <button @onclick="ToggleSidebar">☰</button> */
 
+    public void OpenTab(string title, Type component)
+    {
+        var existing = Tabs.FirstOrDefault(x => x.ComponentType == component);
+        if (existing != null)
+        {
+            ActiveTab = existing;
+            return;
+        }
+
+        var tab = new TabItem
+        {
+            Title = title,
+            ComponentType = component
+        };
+        Tabs.Add(tab);
+        ActiveTab = tab;
+        StateHasChanged();
+    }
+
+    private void Activate(TabItem tab) => ActiveTab = tab;
+    private void Close(TabItem tab)
+    {
+        Tabs.Remove(tab);
+        if (ActiveTab == tab)
+            ActiveTab = Tabs.LastOrDefault();
+    }
 
 }

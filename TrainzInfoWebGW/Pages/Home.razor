@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @inject HttpClient Http
 @inject IJSRuntime JS
 
@@ -13,7 +14,11 @@
         </div>
 
         <div class="btn_main_panel">
-            <NavLink class="btn btn-info btn_news" href="/locomotives" style="width:160px; margin:10px;">Локомотиви</NavLink>
+            <button class="btn btn-info btn_news"
+                    @onclick="() => MainLayout.OpenTab(locomotiveTitle, typeof(Locomotives.Locomotives))"
+                    style="width:160px; margin:10px;">
+                Локомотиви
+            </button>
             <NavLink class="btn btn-info btn_news" href="/electric-trains" style="width:160px; margin:10px;">Електропоїзди</NavLink>
             <NavLink class="btn btn-info btn_news" href="/diesel-trains" style="width:160px; margin:10px;">Дизель-поїзди</NavLink>
             <NavLink class="btn btn-info btn_news" href="/stations" style="width:160px; margin:10px;">Станції</NavLink>
@@ -88,10 +93,15 @@
     private List<NewsDTO> allNews = new();
     private List<NewsDTO> filteredNews = new();
     private string searchText = string.Empty;
-
+    
     private int currentPage = 1;
     private bool isLoading = false;
     private bool allLoaded = false;
+
+    private string locomotiveTitle = "Локомотиви";
+
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
