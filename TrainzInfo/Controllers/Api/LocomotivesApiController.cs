@@ -34,7 +34,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetLocomotives");
-                Log.Start();
+                
                 Log.Wright("Start Get GetLocomotives");
                 int pageSize = 10;
 
@@ -96,7 +96,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetSeries");
-                Log.Start();
+                
                 Log.Wright("Start Get GetSeries");
                 var series = await _context.Locomotive_Series
                     .Select(x => x.Seria)
@@ -123,7 +123,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetDepots");
-                Log.Start();
+                
                 Log.Wright("Start Get GetDepots");
                 var depots = await _context.Depots
                     .OrderBy(x => x.Name)
@@ -151,7 +151,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "CreateLocomotive");
-                Log.Start();
+                
                 Log.Wright("Start Post CreateLocomotive");
 
                 DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
@@ -220,7 +220,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetLocomotive");
-                Log.Start();
+                
                 Log.Wright("Start Get GetLocomotive");
                 var locomotive = await _context.Locomotives
                     .Include(d => d.DepotList)
@@ -272,7 +272,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "DeleteLocomotive");
-                Log.Start();
+                
                 Log.Wright("Start Delete DeleteLocomotive");
                 var locomotive = await _context.Locomotives.FindAsync(id);
                 if (locomotive == null)
@@ -305,7 +305,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetFilias");
-                Log.Start();
+                
                 Log.Wright("Start Get GetFilias");
                 var filias = await _context.UkrainsRailways
                     .OrderBy(x => x.Name)
@@ -335,7 +335,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "GetDepotsList");
-                Log.Start();
+                
                 Log.Wright("Start Get GetDepotsList");
                 var depots = await _context.Depots
                     .Where(x => x.Name.Contains("ТЧ"))

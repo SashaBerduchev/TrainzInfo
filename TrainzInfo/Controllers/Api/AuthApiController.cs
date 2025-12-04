@@ -34,7 +34,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             Log.Init(this.ToString(), nameof(Register));
-            Log.Start();
+            
 
             Log.Wright("Register user");
             var user = new IdentityUser { UserName = dto.Email, Email = dto.Email };
@@ -60,8 +60,6 @@ namespace TrainzInfo.Controllers.Api
         public async Task<IActionResult> Login(LoginDto dto)
         {
             Log.Init(this.ToString(), nameof(Login));
-            Log.Start();
-
             Log.Wright("Start login");
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
@@ -97,7 +95,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<UserDto>> GetAuthuser()
         {
             Log.Init(this.ToString(), nameof(GetAuthuser));
-            Log.Start();
+            
 
             Log.Wright("Try find user");
             var email = User.Identity?.Name;

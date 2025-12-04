@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("DepotsApiController", "GetDepots");
-                Log.Start();
+                
                 Log.Wright($"GetDepots filia={filiaName}");
                 List<DepotListDTO> depots = await _context.Depots
                     .Include(d => d.City)
@@ -70,7 +70,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("DepotsApiController", "CreateDepot");
-                Log.Start();
+                
                 Log.Wright($"CreateDepot Name={depotDto.Name}");
                 var city = await _context.Cities.FirstOrDefaultAsync(c => c.Name == depotDto.City);
                 var railway = await _context.UkrainsRailways.FirstOrDefaultAsync(r => r.Name == depotDto.UkrainsRailways);
@@ -104,7 +104,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("DepotsApiController", "DeleteDepot");
-                Log.Start();
+                
                 Log.Wright($"DeleteDepot id={id}");
                 var depot = await _context.Depots.FindAsync(id);
                 if (depot == null)
@@ -132,7 +132,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("DepotsApiController", "EditDepot");
-                Log.Start();
+                
                 Log.Wright($"EditDepot id={depotDto.Id}");
                 var depot = await _context.Depots.FindAsync(depotDto.Id);
                 if (depot == null)

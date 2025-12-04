@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("UkrainsRailwaysApiController", "GetRailways");
-                Log.Start();
+                
                 Log.SQLLogging("Get all Ukrains Railways - api/railways/railways");
                 var railways = await _context.UkrainsRailways
                     .Select(x => new UkrainsRailwaysDTO
@@ -59,7 +59,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetDetails(int id)
         {
             Log.Init(this.ToString(), nameof(GetDetails));
-            Log.Start();
+            
 
             Log.Wright("Start load filia info");
             try
@@ -98,7 +98,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init(this.ToString(), nameof(GetFiliaByName));
-                Log.Start();
+                
 
                 Log.Wright("Loading filia");
                 UkrainsRailwaysDTO ukrainsRailways = await _context.UkrainsRailways

@@ -38,7 +38,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(string? FilialsName, string? NameStation, string? Oblast, int page = 1)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Enter Index stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Log.Wright("Get user by IP: " + remoteIpAddres);
@@ -214,7 +214,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> IndexAll(string? FilialsName, string? NameStation, string? Oblast, int page = 1)
         {
             Log.Init(this.ToString(), nameof(IndexAll));
-            Log.Start();
+            
             Log.Wright("Enter IndexAll stations");
             Log.Wright("Get user by IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -302,7 +302,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Details(int? id)
         {
             Log.Init(this.ToString(), nameof(Details));
-            Log.Start();
+            
             Log.Wright("Enter Details stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -343,7 +343,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Create()
         {
             Log.Init(this.ToString(), nameof(Create));
-            Log.Start();
+            
             Log.Wright("Enter Create stations");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -391,7 +391,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Create([Bind("id,Name,City,Railway,Oblast,Imgsrc, DopImgSrc, DopImgSrcSec, DopImgSrcThd")] Stations stations)
         {
             Log.Init(this.ToString(), nameof(Create));
-            Log.Start();
+            
             Log.Wright("Enter Create stations");
 
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -488,7 +488,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> UpdateImages()
         {
             Log.Init(this.ToString(), nameof(UpdateImages));
-            Log.Start();
+            
 
             Log.Wright("Get all stations from DB");
             List<Stations> stations = await _context.Stations.ToListAsync();

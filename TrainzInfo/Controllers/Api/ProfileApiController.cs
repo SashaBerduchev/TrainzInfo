@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<IdentityUser>> GetProfile()
         {
             Log.Init(this.ToString(), nameof(GetProfile));
-            Log.Start();
+            
 
             Log.Wright("Find user");
             var user = await _userManager.GetUserAsync(User);

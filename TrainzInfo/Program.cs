@@ -16,7 +16,7 @@ namespace TrainzInfo
         {
             Log.CreateFolder();
             Log.Init("Program", nameof(Main));
-            Log.Start();
+            
             Log.Wright("Try create host builder");
             CreateHostBuilder(args).Build().Run();
             Log.Wright("Host builder created");

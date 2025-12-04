@@ -22,7 +22,7 @@ namespace TrainzInfo.Tools.JWT
         public string GenerateToken(IdentityUser user, IList<string> roles)
         {
             Log.Init(this.ToString(), nameof(GenerateToken));
-            Log.Start();
+            
 
             Log.Wright("Set claims");
             var claims = new List<Claim>

@@ -36,7 +36,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(string Name, string Depot, int page = 1)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Start index electric trains");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
@@ -399,7 +399,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Edit(int? id)
         {
             Log.Init(this.ToString(), nameof(Edit));
-            Log.Start();
+            
             Log.Wright("Start edit electric train");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              

@@ -37,7 +37,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetNews");
-                Log.Start();
+                
                 Log.Wright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
                     .OrderByDescending(n => n.DateTime)
@@ -78,7 +78,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetNewsDetails");
-                Log.Start();
+                
                 Log.Wright("Start Get NewsInfo Details with Comments");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
@@ -118,7 +118,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "CreateNews");
-                Log.Start();
+                
                 Log.Wright("Start Create NewsInfo");
 
                 NewsInfo newNews = new NewsInfo
@@ -154,7 +154,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetEditNews");
-                Log.Start();
+                
                 Log.Wright("Start Get Edit NewsInfo");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
@@ -182,7 +182,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "EditNews");
-                Log.Start();
+                
                 Log.Wright("Start Edit NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(newsInfo.id);
                 if (existingNews == null)
@@ -217,7 +217,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "DeleteNews");
-                Log.Start();
+                
                 Log.Wright("Start Delete NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(id);
                 if (existingNews == null)

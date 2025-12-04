@@ -26,7 +26,7 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string depot = null)
         {
             Log.Init("DieselTrainsApiController", "GetDieselTrains");
-            Log.Start();
+            
             Log.Wright("GetDieselTrains API called");
             try
             {
@@ -89,7 +89,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<IEnumerable<string>>> GetFilias()
         {
             Log.Init("DieselTrainsApiController", "GetFilias");
-            Log.Start();
+            
             Log.Wright("GetFilias API called");
             try
             {
@@ -116,7 +116,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<IEnumerable<string>>> GetOblasts()
         {
             Log.Init("DieselTrainsApiController", "GetOblasts");
-            Log.Start();
+            
             Log.Wright("GetOblasts API called");
             try
             {
@@ -143,7 +143,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<IEnumerable<string>>> GetDepos()
         {
             Log.Init("DieselTrainsApiController", "GetDepos");
-            Log.Start();
+            
             Log.Wright("GetDepos API called");
             try
             {
@@ -171,7 +171,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<IEnumerable<string>>> GetModels()
         {
             Log.Init("DieselTrainsApiController", "GetModels");
-            Log.Start();
+            
             Log.Wright("GetModels API called");
             try
             {
@@ -198,7 +198,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<IActionResult> CreateDieselTrain([FromBody] DieselTrainsDTO dieselTrainDto)
         {
             Log.Init("DieselTrainsApiController", "CreateDieselTrain");
-            Log.Start();
+            
             Log.Wright("CreateDieselTrain API called");
             try
             {
@@ -229,7 +229,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<IActionResult> EditDieselTrain([FromBody] DieselTrainsDTO dieselTrainDto)
         {
             Log.Init("DieselTrainsApiController", "EditDieselTrain");
-            Log.Start();
+            
             Log.Wright("EditDieselTrain API called");
             try
             {
@@ -262,7 +262,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<IActionResult> DeleteDieselTrain(int id)
         {
             Log.Init("DieselTrainsApiController", "DeleteDieselTrain");
-            Log.Start();
+            
             Log.Wright("DeleteDieselTrain API called");
             try
             {

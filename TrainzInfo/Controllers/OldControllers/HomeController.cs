@@ -139,7 +139,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(int page = 1)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Find user IP");
             Log.Wright("Try to find user");
             var user = await _userManager.GetUserAsync(User);

@@ -31,7 +31,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(string? Filia, string? Oblast, string? Depo, string? Model, int page = 1)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Log.Wright("Get user by IP: " + remoteIpAddres);
              
@@ -198,7 +198,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Create()
         {
             Log.Init(this.ToString(), nameof(Create));
-            Log.Start();
+            
             Log.Wright("Get user by IP");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              

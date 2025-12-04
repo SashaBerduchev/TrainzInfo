@@ -34,7 +34,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index()
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Try get user by ip address");
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Log.Wright("User IP - " + remoteIpAddres);

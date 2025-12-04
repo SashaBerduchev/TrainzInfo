@@ -119,7 +119,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(int? number, string? from, string? to)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Try get remote IP address");
             List<Train> trains = new List<Train>();
             IQueryable<Train> query = _context.Trains

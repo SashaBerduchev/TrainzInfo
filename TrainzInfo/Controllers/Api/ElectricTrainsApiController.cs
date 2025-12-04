@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string depo = null)
         {
             Log.Init(this.ToString(), nameof(GetElectrics));
-            Log.Start();
+            
             int pageSize = 5;
             try
             {
@@ -100,7 +100,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Create([FromBody] ElectricTrainDTO trainDTO)
         {
             Log.Init(this.ToString(), nameof(Create));
-            Log.Start();
+            
             Log.Wright("Create electric train");
             try
             {
@@ -156,7 +156,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Edit([FromBody] ElectricTrainDTO electricTrainDTO)
         {
             Log.Init(this.ToString(), nameof(Edit));
-            Log.Start();
+            
             Log.Wright("Edit electric train");
             try
             {
@@ -195,7 +195,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Delete(int id)
         {
             Log.Init(this.ToString(), nameof(Delete));
-            Log.Start();
+            
             Log.Wright("Delete electric train");
             try
             {

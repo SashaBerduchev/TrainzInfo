@@ -31,7 +31,7 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string oblast = null)
         {
             Log.Init(this.ToString(), nameof(GetStations));
-            Log.Start();
+            
 
             int pageSize = 10;
 
@@ -131,7 +131,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Details(int id)
         {
             Log.Init(this.ToString(), nameof(Details));
-            Log.Start();
+            
             try
             {
                 StationsDTO station = await _context.Stations
@@ -173,7 +173,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetFilias()
         {
             Log.Init(this.ToString(), nameof(GetFilias));
-            Log.Start();
+            
             try
             {
                 var filias = await _context.UkrainsRailways
@@ -198,7 +198,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetOblasts()
         {
             Log.Init(this.ToString(), nameof(GetOblasts));
-            Log.Start();
+            
             try
             {
                 var oblasts = await _context.Oblasts
@@ -224,7 +224,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetCitys()
         {
             Log.Init(this.ToString(), nameof(GetCitys));
-            Log.Start();
+            
             try
             {
                 var citys = await _context.Cities
@@ -250,7 +250,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetStationNames()
         {
             Log.Init(this.ToString(), nameof(GetStationNames));
-            Log.Start();
+            
             try
             {
                 var stationNames = await _context.Stations
@@ -275,7 +275,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> CreateStation([FromBody] StationsDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(CreateStation));
-            Log.Start();
+            
             try
             {
                 Log.Wright("Creating new station in database");
@@ -343,7 +343,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetEditStation(int id)
         {
             Log.Init(this.ToString(), nameof(GetEditStation));
-            Log.Start();
+            
             try
             {
                 StationsDTO station = await _context.Stations
@@ -380,7 +380,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> EditStation([FromBody] StationsDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(EditStation));
-            Log.Start();
+            
             try
             {
                 Log.Wright("Editing station in database");
@@ -423,7 +423,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> DeleteStation(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteStation));
-            Log.Start();
+            
             try
             {
                 Log.Wright("Deleting station from database");
@@ -456,7 +456,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetStationNames(int id)
         {
             Log.Init(this.ToString(), nameof(GetStationNames));
-            Log.Start();
+            
 
             Log.Wright("Try loading");
             try

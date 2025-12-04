@@ -21,7 +21,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetImage([FromQuery] string name = null)
         {
             Log.Init("MainImageApiController", "GetImage");
-            Log.Start();
+            
 
             Log.Wright($"GetImage called with name: {name}");
             if (name == null)

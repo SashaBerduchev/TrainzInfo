@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
+using TrainzInfo.Tools.Mail;
 
 namespace TrainzInfo
 {
@@ -36,7 +37,7 @@ namespace TrainzInfo
         public void ConfigureServices(IServiceCollection services)
         {
             Log.Init("Startup", nameof(ConfigureServices));
-            Log.Start();
+            
             Log.Wright("Try add services");
             services.AddControllers();
 
@@ -145,7 +146,11 @@ namespace TrainzInfo
                 return new JwtService(settings.Secret, settings.Issuer);
             });
 
-            Mail mail = new Mail();
+            services.AddScoped<EncryptionService>();
+            services.AddScoped<MailSettingsService>();
+            services.Configure<SmtpSettings>(
+                Configuration.GetSection("Smtp"));
+            services.AddTransient<Mail>();
             Log.Finish();
             _connectionString = connection;
         }
@@ -154,7 +159,7 @@ namespace TrainzInfo
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             Log.Init("Startup", nameof(Configure));
-            Log.Start();
+            
             Log.Wright("Try configure app");
             if (env.IsDevelopment())
             {

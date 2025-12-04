@@ -123,7 +123,6 @@ namespace TrainzInfo.Controllers.OldControllers
                  newsComments.DateTime = DateTime.Now;
                  _context.Add(newsComments);
                  await _context.SaveChangesAsync();
-                 Mail.SendMessageNews(newsComments.NewsInfo.NameNews, "", _identityUser);
             }
              catch (DbUpdateConcurrencyException)
              {

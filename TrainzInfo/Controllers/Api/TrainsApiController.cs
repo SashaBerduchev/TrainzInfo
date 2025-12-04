@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string stationTo)
         {
             Log.Init("TrainsController", "GetTrains");
-            Log.Start();
+            
             Log.Wright("Getting trains from database");
             List<TrainDTO> trainDTOs = new List<TrainDTO>();
             try
@@ -86,7 +86,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetTrainByNumber([FromQuery] int trainid)
         {
             Log.Init("TrainsController", "GetTrainByNumber");
-            Log.Start();
+            
             Log.Wright($"Getting train with id =  {trainid} from database");
             try
             {
@@ -131,7 +131,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetNumbers()
         {
             Log.Init("TrainsController", "GetNumbers");
-            Log.Start();
+            
             Log.Wright("Getting train numbers from database");
             try
             {
@@ -157,7 +157,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetTrainBuId(int id)
         {
             Log.Init(this.ToString(), nameof(GetTrainBuId));
-            Log.Start();
+            
             Log.Wright("Get trainby idf: " + id);
             try
             {
@@ -184,7 +184,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetStations()
         {
             Log.Init("TrainsController", "GetStations");
-            Log.Start();
+            
             Log.Wright("Getting station names from database");
             try
             {
@@ -211,7 +211,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Create([FromBody] TrainDTO trainDTO)
         {
             Log.Init("TrainsController", "Create");
-            Log.Start();
+            
             Log.Wright("Creating new train in database");
             try
             {
@@ -246,7 +246,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetEditTrain(int id)
         {
             Log.Init("TrainsController", "GetEditTrain");
-            Log.Start();
+            
             Log.Wright("Getting train for editing from database");
             try
             {
@@ -291,7 +291,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Edit([FromBody] TrainDTO trainDTO)
         {
             Log.Init("TrainsController", "Edit");
-            Log.Start();
+            
             Log.Wright("Editing train in database");
             try
             {
@@ -328,7 +328,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Delete(int id)
         {
             Log.Init("TrainsController", "Delete");
-            Log.Start();
+            
             Log.Wright("Deleting train from database");
             try
             {
@@ -358,7 +358,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetTypesTrains()
         {
             Log.Init(this.ToString(), nameof(GetTypesTrains));
-            Log.Start();
+            
 
             Log.Wright("Get types");
             try

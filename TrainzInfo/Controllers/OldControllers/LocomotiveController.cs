@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.Mail;
 
 namespace TrainzInfo.Controllers.OldControllers
 {
@@ -60,7 +61,7 @@ namespace TrainzInfo.Controllers.OldControllers
         {
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             Log.Init(this.ToString(), "Index " + remoteIpAddres);
-            Log.Start();
+            
              
             
             if (HttpContext.Session.GetString("Seria") is not null)
@@ -219,7 +220,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Details(int? id)
         {
             Log.Init(this.ToString(), nameof(Details));
-            Log.Start();
+            
             Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
            
@@ -247,7 +248,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Create()
         {
             Log.Init(this.ToString(), nameof(Create));
-            Log.Start();
+            
             Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
@@ -300,7 +301,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Create([Bind("id,User,Number,Speed,Seria,Depot,Image,ImageMimeTypeOfData")] Locomotive locomotive)
         {
             Log.Init(this.ToString(), nameof(Create) + " POST");
-            Log.Start();
+            
             var remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
              
           
@@ -343,7 +344,6 @@ namespace TrainzInfo.Controllers.OldControllers
                 Include(x => x.Locomotive_Series).Where(x => x.Seria == locomotive.Seria && x.Number == locomotive.Number).FirstOrDefault();
             int locid = locosaved.id;
             Log.Wright("Find saved locomotive id: " + locid);
-            Mail.SendLocomotivesAddMessage(locosaved.Locomotive_Series.Seria + " - " + locosaved.Number, remoteIpAddres, _identityUser);
 
             TempData["LocomotiveId"] = locid;
             Trace.WriteLine(TempData);
@@ -356,7 +356,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> AddImage(int? id, IFormFile uploads)
         {
             Log.Init(this.ToString(), nameof(AddImage));
-            Log.Start();
+            
             Log.Wright("Try get user by IP: " + Request.HttpContext.Connection.RemoteIpAddress.ToString());
             if (id != null)
                 if (uploads != null)

@@ -24,7 +24,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetNewsComments(int id)
         {
             Log.Init("CommentApiController", "GetNewsComments");
-            Log.Start();
+            
 
             Log.Wright($"Get news comments for news id={id}");
             try
@@ -63,7 +63,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetNewsCommentsCount(int id)
         {
             Log.Init("CommentApiController", "GetNewsComments");
-            Log.Start();
+            
 
             Log.Wright($"Get news comments for news id={id}");
             try
@@ -86,7 +86,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> SetComment([FromBody] CommentsDTO comment)
         {
             Log.Init("CommentApiController", "SetComment");
-            Log.Start();
+            
             Log.Wright($"Set comment for news id={comment.NewsName} by author id={comment.AuthorEmail}");
             try
             {
@@ -117,7 +117,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Create([FromBody] CommentsDTO comment)
         {
             Log.Init("CommentApiController", "Create");
-            Log.Start();
+            
             Log.Wright($"Create comment for news id={comment.NewsID} by author id={comment.AuthorEmail}");
             try
             {

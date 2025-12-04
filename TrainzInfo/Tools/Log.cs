@@ -23,10 +23,7 @@ namespace TrainzInfo.Tools
         private static readonly object _logLock = new object();
         public static void Init(string nameClass, string nameMethod)
         {
-            startStandartLogStr = nameClass + " - " + nameMethod;
-        }
-        public static void Start()
-        {
+            startStandartLogStr = DateTime.Now + " - [INF] " +  nameClass + " - " + nameMethod;
             StandartLogFile(startStandartLogStr + " - " + "Start");
         }
         public static void Finish()
@@ -39,7 +36,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string logstr = "------Start log------- \n" + log + "\n -------End Log--------" + "\n" + "\n";
+                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n";
                 Trace.WriteLine(logstr);
                 Console.WriteLine(logstr);
                 FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog, FileMode.Append);
@@ -139,7 +136,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string log = "------Start log------- \n" + exception + "\n -------EndLog--------\n" + "\n + \n";
+                string log = "------Start log------- \n" + DateTime.Now + "[EXCEPTION] - " + exception + "\n -------EndLog--------\n" + "\n + \n";
                 string dir = folderlog + "\\" + log;
                 Console.WriteLine(log);
                 Trace.Write(log);

@@ -179,7 +179,7 @@ namespace TrainzInfo.Controllers.OldControllers
         public async Task<IActionResult> Index(int? id)
         {
             Log.Init(this.ToString(), nameof(Index));
-            Log.Start();
+            
             Log.Wright("Find train schaduler");
             if(id is null && TempData["TrainNumber"] is not null)
             {

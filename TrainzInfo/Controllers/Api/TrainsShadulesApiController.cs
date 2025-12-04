@@ -27,7 +27,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetShedullers([FromQuery] int trainid)
         {
             Log.Init("TrainsShadulesApiController", "GetShedullers");
-            Log.Start();
+            
             Log.Wright($"Получение расписания по поезду с ID: {trainid}");
             try
             {
@@ -71,7 +71,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> SaveSchaduller([FromBody] TrainCreateRequest trainCreateRequest)
         {
             Log.Init(this.ToString(), nameof(SaveSchaduller));
-            Log.Start();
+            
 
             TrainDTO trainDTO = trainCreateRequest.Train;
             List<TrainsShaduleDTO> shadulesDTO = trainCreateRequest.TrainsShedullers;
@@ -133,7 +133,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> DeleteConfirm(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteConfirm));
-            Log.Start();
+            
 
             Log.Wright("Start loading train adn schad");
             int trainid = id;
