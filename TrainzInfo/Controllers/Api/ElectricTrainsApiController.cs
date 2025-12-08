@@ -71,7 +71,6 @@ namespace TrainzInfo.Controllers.Api
                                     ? $"data:{x.ImageMimeTypeOfData};base64,{Convert.ToBase64String(x.Image)}"
                                     : null,
                         ImageMimeTypeOfData = x.ImageMimeTypeOfData,
-                        IsProof = x.IsProof,
                         DepotList = x.DepotList.Name,
                         Oblast = x.City.Oblasts.Name,
                         UkrainsRailway = x.DepotList.UkrainsRailway.Name,
@@ -237,6 +236,13 @@ namespace TrainzInfo.Controllers.Api
                 .Select(x=>x.Name)
                 .ToListAsync();
             return Ok(depots);
+        }
+
+        [HttpGet("getplants")]
+        public async Task<ActionResult> GetPlants()
+        {
+            List<string> plants = await _context.Plants.Select(x=>x.Name).ToListAsync();
+            return Ok(plants);
         }
     }
 }

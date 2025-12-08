@@ -19,7 +19,6 @@ namespace TrainzInfoShared.DTO
         public string PlantKvr { get; set; }
         public string Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
-        public string IsProof { get; set; }
         public string DepotList { get; set; }
         public string Oblast { get; set; }
         public string UkrainsRailway { get; set; }
