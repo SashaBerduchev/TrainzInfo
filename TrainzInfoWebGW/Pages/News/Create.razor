@@ -1,7 +1,6 @@
 ﻿@page "/news/create"
 @inject NavigationManager Navigation
 @inject HttpClient Http
-@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 
 <h4>Новини</h4>
@@ -63,7 +62,7 @@
     private NewsDTO news = new NewsDTO();
     private string imagePreview;
     private string errors;
-    private bool IsAdmin = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -85,7 +84,6 @@
 
     private async Task HandleValidSubmit()
     {
-        await CheckRoles();
         try
         {
             var result = await Http.PostAsJsonAsync("api/news/create", news);
@@ -112,36 +110,5 @@
         imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
         news.NewsImage = imagePreview;
         news.ImageMimeTypeOfData = file.ContentType;
-    }
-
-    private async Task CheckRoles()
-    {
-        if (AuthStateProvider is CustomAuthStateProvider customAuth)
-        {
-            // Перевірка стану авторизації на сервері
-            await customAuth.CheckAuthenticationAsync();
-
-            // Отримуємо ClaimsPrincipal
-            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user.Identity?.IsAuthenticated ?? false)
-            {
-                var email = user.Identity.Name;
-                var roles = user.Claims
-                                .Where(c => c.Type == ClaimTypes.Role)
-                                .Select(c => c.Value)
-                                .ToList();
-
-                news.UserEmail = email;
-                IsAdmin = roles.Contains("Admin");
-                IsAdmin = roles.Contains("Superadmin");
-
-            }
-            else
-            {
-
-            }
-        }
     }
 }

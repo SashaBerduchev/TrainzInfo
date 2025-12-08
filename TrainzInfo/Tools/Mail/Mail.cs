@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,6 +24,33 @@ namespace TrainzInfo.Tools.Mail
             _httpContextAccessor = httpContextAccessor;
             _mailSettingsService = mailSettingsService;
             _context = context;
+        }
+
+        public async Task SendMessageNews(string news, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+
+            string body = $@"
+                        <p>Шановний користувачу, вашу новину {news} було успішно опубліковано</p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "Новина опублікована!";
+            await SendMail(subject, body, user, true);
         }
 
         public async Task SendLocomotivesAddMessage(string name, IdentityUser user)
@@ -54,7 +80,32 @@ namespace TrainzInfo.Tools.Mail
             await SendMail(subject, body, user, true);
         }
 
-       
+        public async Task SendDeleteOrder(int ordernumber, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+
+            string body = $@"
+                        <p>Шановний користувачу, ваше замовлення з номером: {ordernumber} видалено</p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "Замовлення видалено";
+            await SendMail(subject, body, user, true);
+        }
 
         public async Task SendNewsMessage(int newsid, IdentityUser user)
         {
@@ -88,15 +139,128 @@ namespace TrainzInfo.Tools.Mail
             await SendMail(subject, body, user, true);
         }
 
-    
-     
+        public async Task SendManagerOrderInProgress(int ordernumber, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+            string orderUrl = $"{baseUrl}/Orders/Details/{ordernumber}";
 
-        
+            string body = $@"
+                        <p>Шановний користувачу, вам призначено нове замовлення номер {ordernumber}</p>
+                         <p>
+                             Ви можете переглянути його за посиланням: 
+                             <a href='{orderUrl}' target='_blank'>Відкрити замовлення</a>
+                         </p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "Вам призначено замовлення";
+            await SendMail(subject, body, user, true);
+        }
+
+        public async Task SendManagerOrderCompleted(int ordernumber, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+            string orderUrl = $"{baseUrl}/Orders/Details/{ordernumber}";
+
+            string body = $@"
+                        <p>Шановний користувачу, ваше замовлення номер {ordernumber} успішно виконано!</p>
+                         <p>
+                             Ви можете переглянути його за посиланням: 
+                             <a href='{orderUrl}' target='_blank'>Відкрити замовлення</a>
+                         </p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "Замовлення виконано успішно!";
+            await SendMail(subject, body, user, true);
+        }
+
+        public async Task SendTireAddToBasket(string tireinbasket, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+
+            string body = $@"
+                        <p>Шановний користувачу, до вашого кошика було додано шину: {tireinbasket}</p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "До кошика додано шину";
+            await SendMail(subject, body, user, true);
+        }
+
+        public async Task SendTireDeleteFromBasket(string tireinbasket, IdentityUser user)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            string baseUrl = $"{request.Scheme}://{request.Host}";
+            string logoUrl = $"{baseUrl}/MainImages/MainImageSite";
+
+            string body = $@"
+                        <p>Шановний користувачу, з вашого кошика було видалено шину: {tireinbasket}</p>
+                        <p>Дякуємо за користування нашим сервісом!</p>
+                        <br />
+                        <hr />
+                        <table style='font-family:Arial;font-size:12px;color:#444;'>
+                            <tr>
+                                <td>
+                                    <img src='{logoUrl}'  alt='Логотип' width='120' alt='Arsshina Logo' />
+                                </td>
+                                <td style='padding-left:10px;'>
+                                    <strong>Arsshina Service</strong><br/>
+                                    <a href='https://arsshina.com'>www.arsshina.com</a><br/>
+                                    ✉️ <a href='mailto:support@arsshina.com'>support@arsshina.com</a>
+                                </td>
+                            </tr>
+                        </table>";
+            string subject = "Шина видалена з кошика";
+            await SendMail(subject, body, user, true);
+        }
 
         private static async Task SendMail(string subject, string body, IdentityUser user, bool isHtml = false)
         {
 
-            Log.Init("Mail", nameof(SendMail));
+            Log.Init("Mail", nameof(SendMessageNews));
             Log.Wright("Try find user email");
 
             var settings = await _mailSettingsService.GetMailSettingsByNameAsync("Prod");

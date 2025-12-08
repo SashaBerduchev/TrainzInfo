@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,15 +20,19 @@ namespace TrainzInfo.Controllers.Api
     [Route("api/news")]
     public class NewsApiController : BaseController
     {
-        private IdentityUser identityUser;
+        private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        UserManager<IdentityUser> _userManager;
         private Mail _mail;
         private readonly ApplicationContext _context;
         public NewsApiController(ILogger<HomeController> logger, ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail)
              : base(userManager, context)
         {
+            _logger = logger;
             _context = context;
+            _userManager = userManager;
             _mail = mail;
-            identityUser = base._identityUser;
+            _signInManager = signInManager;
         }
         [Produces("application/json")]
         [HttpGet("getnews")]
@@ -122,7 +125,8 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("NewsApiController", "CreateNews");
                 
                 Log.Wright("Start Create NewsInfo");
-                
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var user = await _userManager.FindByIdAsync(userId);
                 NewsInfo newNews = new NewsInfo
                 {
                     NameNews = newsInfo.NameNews,
@@ -134,7 +138,6 @@ namespace TrainzInfo.Controllers.Api
                 };
                 _context.NewsInfos.Add(newNews);
                 await _context.SaveChangesAsync();
-                var user =  await _userManager.FindByEmailAsync(newsInfo.UserEmail);
                 await _mail.SendNewsMessage(newNews.id, user);
                 Log.Wright("NewsInfo Created Successfully");
                 return Ok();

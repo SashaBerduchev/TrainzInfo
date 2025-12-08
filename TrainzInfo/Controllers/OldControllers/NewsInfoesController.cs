@@ -16,7 +16,6 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using Microsoft.AspNetCore.Identity;
-using TrainzInfo.Controllers.Api;
 
 namespace TrainzInfo.Controllers.OldControllers
 {
