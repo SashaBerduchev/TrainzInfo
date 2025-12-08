@@ -17,5 +17,6 @@
 
         // Зображення
         public string ImgSrc { get; set; }  // URL або base64 string
+        public string BaseInfo { get; set; }
     }
 }

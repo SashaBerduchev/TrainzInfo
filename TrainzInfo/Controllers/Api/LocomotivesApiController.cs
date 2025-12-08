@@ -173,6 +173,18 @@ namespace TrainzInfo.Controllers.Api
                 {
                     depot.Locomotives = new List<Locomotive>();
                 }
+                LocomotiveBaseInfo locomotiveBase = await _context.LocomotiveBaseInfos.Where(x=>x.Name == locomotiveDTO.Seria).FirstOrDefaultAsync();
+                if(locomotiveBase == null)
+                {
+                    LocomotiveBaseInfo locomotiveBaseInfo = new LocomotiveBaseInfo();
+                    locomotiveBaseInfo.Name = locomotive.Number + " " + locomotive.Seria;
+                    locomotiveBaseInfo.BaseInfo = locomotiveDTO.BaseInfo;
+                    locomotiveBase = locomotiveBaseInfo;
+                }
+                if(locomotive.LocomotiveBaseInfo == null)
+                {                    
+                    locomotive.LocomotiveBaseInfo = locomotiveBase;
+                }
                 depot.Locomotives.Add(locomotive);
                 Log.Wright("Try find locomotoive if exist");
                 Locomotive locomotiveExist = await _context.Locomotives
