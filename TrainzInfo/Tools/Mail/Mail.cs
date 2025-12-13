@@ -135,7 +135,7 @@ namespace TrainzInfo.Tools.Mail
                                 </td>
                             </tr>
                         </table>";
-            string subject = "На сайті створено нове замовлення!";
+            string subject = "На сайті опубліковано новину!";
             await SendMail(subject, body, user, true);
         }
 
@@ -309,7 +309,7 @@ namespace TrainzInfo.Tools.Mail
                 {
                     Host = _settings.Host,
                     Port = _settings.Port,
-                    EnableSsl = _settings.EnableSsl,
+                    EnableSsl = true,
                     Credentials = new NetworkCredential(_settings.User, _settings.Password),
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false
@@ -330,7 +330,6 @@ namespace TrainzInfo.Tools.Mail
             }
             catch (Exception exp)
             {
-                Log.Wright("Error send email to " + user.Email);
                 Log.Wright(exp.ToString());
                 Log.AddException(exp.ToString());
                 _success = false;

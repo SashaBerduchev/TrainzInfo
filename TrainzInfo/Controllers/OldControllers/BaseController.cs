@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
@@ -20,9 +22,11 @@ namespace TrainzInfo.Controllers.OldControllers
             _context = context;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(
+    ActionExecutingContext context,
+    ActionExecutionDelegate next)
         {
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
 
             if (user != null)
             {
@@ -32,14 +36,14 @@ namespace TrainzInfo.Controllers.OldControllers
                 ViewBag.CurrentUser = user;
             }
             
-            string remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            IpAdresses ipAddresses = _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefault();
+            string remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
+            IpAdresses ipAddresses = await _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefaultAsync();
             if (ipAddresses is not null)
             {
                 ipAddresses.IpAddres = remoteIpAddres;
                 ipAddresses.DateUpdate = DateTime.Now;
                 _context.Update(ipAddresses);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -48,10 +52,10 @@ namespace TrainzInfo.Controllers.OldControllers
                 ipAddresses.IpAddres = remoteIpAddres;
                 ipAddresses.DateCreate = DateTime.Now;
                 _context.IpAdresses.Add(ipAddresses);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
-            base.OnActionExecuting(context);
+            await next();
         }
 
         //public IActionResult Index()

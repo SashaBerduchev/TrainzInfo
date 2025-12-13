@@ -2,6 +2,7 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 
 <h4>Новини</h4>
@@ -87,6 +88,7 @@
     {
         try
         {
+            await CheckRoles();
             var result = await Http.PostAsJsonAsync("api/news/create", news);
             if (result.IsSuccessStatusCode)
             {
@@ -100,6 +102,35 @@
         catch (Exception ex)
         {
             errors = ex.Message;
+        }
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                news.username = email;
+
+            }
+            else
+            {
+
+            }
         }
     }
 
