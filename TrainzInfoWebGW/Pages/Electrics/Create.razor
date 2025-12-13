@@ -159,7 +159,7 @@
         imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
 
         // Зберігаємо у модель
-        diesel.Image = imagePreview;
-        diesel.ImageMimeTypeOfData = file.ContentType;
+        electrics.Image = imagePreview;
+        electrics.ImageMimeTypeOfData = file.ContentType;
     }
 }
