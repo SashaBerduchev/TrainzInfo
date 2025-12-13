@@ -188,7 +188,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 var depos = await _context.Depots
-                    .Where(x => x.Name.Contains("РПЧ") && x.DieselTrains.Count > 0)
+                    .Where(x => x.Name.Contains("РПЧ"))
                     .Select(dl => dl.Name)
                     .Distinct()
                     .ToListAsync();

@@ -138,7 +138,7 @@
         {
             await Task.Delay(300, token); // debounce 300 мс
 
-            if (!token.IsCancellationRequested)
+           if (!token.IsCancellationRequested)
             {
                 if (string.IsNullOrWhiteSpace(depo))
                 {
