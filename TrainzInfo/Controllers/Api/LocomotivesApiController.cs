@@ -118,6 +118,34 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("getallseries")]
+        public async Task<ActionResult<List<string>>> GetAllSeries()
+        {
+            try
+            {
+                Log.Init("LocomotivesApiController", "GetSeries");
+
+                Log.Wright("Start Get GetSeries");
+                var series = await _context.Locomotive_Series
+                    .Select(x => x.Seria)
+                    .Distinct()
+                    .ToListAsync();
+                return Ok(series);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+
         [HttpGet("getdepots")]
         public async Task<ActionResult<List<string>>> GetDepots()
         {
