@@ -283,6 +283,7 @@ namespace TrainzInfo.Controllers.Api
                     city.Oblasts = await _context.Oblasts.Where(x=>x.Name == dieselTrainDto.Oblast).FirstOrDefaultAsync();
                     city.Oblast = dieselTrainDto.Oblast;
                 }
+                _context.Cities.Update(city);
                 var dieselTrain = new DieselTrains
                 {
                     SuburbanTrainsInfo = suburbanTrainsInfo,

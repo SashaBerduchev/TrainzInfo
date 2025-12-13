@@ -104,6 +104,12 @@ namespace TrainzInfo.Controllers.Api
                         .ThenInclude(x=>x.Oblasts)
                     .Where(x => x.Name == trainDTO.DepotList).FirstOrDefaultAsync();
                 City city = await _context.Cities.Where(x => x.Name == depot.City.Name).FirstOrDefaultAsync();
+                if (city.Oblasts == null)
+                {
+                    city.Oblasts = await _context.Oblasts.Where(x => x.Name == trainDTO.Oblast).FirstOrDefaultAsync();
+                    city.Oblast = trainDTO.Oblast;
+                }
+                _context.Cities.Update(city);
                 SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();
                 ElectricTrain electricTrain = new ElectricTrain
                 {
@@ -266,6 +272,13 @@ namespace TrainzInfo.Controllers.Api
                 .Select(x=>x.Name)
                 .ToListAsync();
             return Ok(filias);
+        }
+
+        [HttpGet("allobl")]
+        public async Task<ActionResult> GetAllOblasts()
+        {
+            var obl = await _context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
+            return Ok(obl);
         }
     }
 }

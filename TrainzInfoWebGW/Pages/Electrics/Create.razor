@@ -45,6 +45,17 @@
                 </InputSelect>
             </div>
 
+            <!-- Депо -->
+            <div class="form-group">
+                <label>Область</label>
+                <InputSelect @bind-Value="electrics.Oblast" class="form-control">
+                    @foreach (var item in OblList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </InputSelect>
+            </div>
+
             <!-- Конструкційна швидкість -->
             <div class="form-group">
                 <label>Конструкційна швидкість</label>
@@ -89,6 +100,7 @@
     // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
     private List<string> NameList = new List<string>();
     private List<string> DepotList = new List<string>();
+    private List<string> OblList = new List<string>();
     private List<string> Plant = new List<string>();
     private string imagePreview;
     private string errors;
@@ -110,9 +122,11 @@
         var series = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getallnames");
         var depots = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getalldepots");
         var plants = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getplants");
+        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/allobl");
         NameList.AddRange(series ?? new List<string>());
         DepotList.AddRange(depots ?? new List<string>());
         Plant.AddRange(plants ?? new List<string>());
+        OblList.AddRange(oblasts ?? new List<string>());
     }
 
     private async Task HandleValidSubmit()
