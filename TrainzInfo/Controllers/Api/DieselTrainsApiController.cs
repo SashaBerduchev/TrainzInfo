@@ -179,6 +179,34 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("alldepos")]
+        public async Task<ActionResult<IEnumerable<string>>> GetAllDepos()
+        {
+            Log.Init("DieselTrainsApiController", "GetAllDepos");
+
+            Log.Wright("GetDepos API called");
+            try
+            {
+                var depos = await _context.Depots
+                    .Where(x => x.Name.Contains("РПЧ") && x.DieselTrains.Count > 0)
+                    .Select(dl => dl.Name)
+                    .Distinct()
+                    .ToListAsync();
+                Log.Wright("GetDepos API finished");
+                return Ok(depos);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException("GetDepos API error: " + ex.Message);
+                Log.Wright("GetDepos API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
         [HttpGet("models")]
         public async Task<ActionResult<IEnumerable<string>>> GetModels()
         {
@@ -189,6 +217,34 @@ namespace TrainzInfo.Controllers.Api
             {
                 var models = await _context.SuburbanTrainsInfos
                     .Where(x=>x.DieselTrains.Count > 0)
+                    .Select(sti => sti.Model)
+                    .Distinct()
+                    .ToListAsync();
+                Log.Wright("GetModels API finished");
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException("GetModels API error: " + ex.Message);
+                Log.Wright("GetModels API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+        [HttpGet("allmodels")]
+        public async Task<ActionResult<IEnumerable<string>>> GetAllModels()
+        {
+            Log.Init("DieselTrainsApiController", "GetAllModels");
+
+            Log.Wright("GetModels API called");
+            try
+            {
+                var models = await _context.SuburbanTrainsInfos
+                    .Where(x => x.DieselTrains.Count > 0)
                     .Select(sti => sti.Model)
                     .Distinct()
                     .ToListAsync();

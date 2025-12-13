@@ -103,8 +103,8 @@
         NameList.Add("Виберіть серію");
         DepotList.Add("Виберіть депо");
         // Імітація завантаження даних — в реальному випадку виклик API
-        var series = await Http.GetFromJsonAsync<List<string>>("api/diesels/models");
-        var depots = await Http.GetFromJsonAsync<List<string>>("api/diesels/depos");
+        var series = await Http.GetFromJsonAsync<List<string>>("api/diesels/allmodels");
+        var depots = await Http.GetFromJsonAsync<List<string>>("api/diesels/alldepos");
         NameList.AddRange(series ?? new List<string>());
         DepotList.AddRange(depots ?? new List<string>());
     }

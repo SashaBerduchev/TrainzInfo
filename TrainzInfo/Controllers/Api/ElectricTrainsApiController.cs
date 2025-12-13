@@ -221,6 +221,16 @@ namespace TrainzInfo.Controllers.Api
             return Ok(names);
         }
 
+        [HttpGet("getallnames")]
+        public async Task<ActionResult> GetAllNames()
+        {
+            List<string> names = await _context.SuburbanTrainsInfos
+                .Select(x => x.Model)
+                .ToListAsync();
+            return Ok(names);
+        }
+
+
         [HttpGet("getdepots")]
         public async Task<ActionResult> GetDepots()
         {
@@ -230,6 +240,17 @@ namespace TrainzInfo.Controllers.Api
                 .ToListAsync();
             return Ok(depots);
         }
+
+        [HttpGet("getalldepots")]
+        public async Task<ActionResult> GetAllDepots()
+        {
+            List<string> depots = await _context.Depots
+                .Where(x => x.Name.Contains("РПЧ"))
+                .Select(x => x.Name)
+                .ToListAsync();
+            return Ok(depots);
+        }
+
 
         [HttpGet("getplants")]
         public async Task<ActionResult> GetPlants()

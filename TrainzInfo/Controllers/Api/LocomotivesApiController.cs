@@ -175,6 +175,35 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("getalldepots")]
+        public async Task<ActionResult<List<string>>> GetAllDepots()
+        {
+            try
+            {
+                Log.Init("LocomotivesApiController", "GetAllDepots");
+
+                Log.Wright("Start Get GetDepots");
+                var depots = await _context.Depots
+                    .Where(x => x.Name.Contains("ТЧ"))
+                    .OrderBy(x => x.Name)
+                    .Select(x => x.Name)
+                    .Distinct()
+                    .ToListAsync();
+                return Ok(depots);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException(ex.ToString());
+                Log.Wright(ex.ToString());
+                return BadRequest();
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
         [HttpPost("create")]
         public async Task<ActionResult> CreateLocomotive([FromBody] LocomotiveSetDTO locomotiveDTO)
         {
