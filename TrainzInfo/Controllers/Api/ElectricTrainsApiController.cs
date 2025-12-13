@@ -8,6 +8,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfoShared.DTO.GetDTO;
+using TrainzInfoShared.DTO.SetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -63,10 +64,7 @@ namespace TrainzInfo.Controllers.Api
                         MaxSpeed = x.MaxSpeed,
                         DepotTrain = x.DepotTrain,
                         DepotCity = x.DepotCity,
-                        LastKvr = x.LastKvr,
-                        CreatedTrain = x.CreatedTrain,
-                        PlantCreate = x.PlantCreate,
-                        PlantKvr = x.PlantKvr,
+                        
                         Image = x.Image != null
                                     ? $"data:{x.ImageMimeTypeOfData};base64,{Convert.ToBase64String(x.Image)}"
                                     : null,
@@ -75,8 +73,6 @@ namespace TrainzInfo.Controllers.Api
                         Oblast = x.City.Oblasts.Name,
                         UkrainsRailway = x.DepotList.UkrainsRailway.Name,
                         City = x.City.Name,
-                        PlantsCreate = x.PlantCreate,
-                        PlantsKvr = x.PlantsKvr.Name,
                         TrainsInfo = x.Trains?.BaseInfo,
                         ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation
                     }).ToList();
@@ -96,7 +92,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> Create([FromBody] ElectricTrainDTO trainDTO)
+        public async Task<ActionResult> Create([FromBody] ElectricTrainSetDTO trainDTO)
         {
             Log.Init(this.ToString(), nameof(Create));
             
@@ -117,10 +113,6 @@ namespace TrainzInfo.Controllers.Api
                     DepotTrain = trainDTO.DepotList,
                     DepotList = depot,
                     DepotCity = depot.City.Name,
-                    LastKvr = trainDTO.LastKvr,
-                    CreatedTrain = trainDTO.CreatedTrain,
-                    PlantCreate = trainDTO.PlantCreate,
-                    PlantKvr = trainDTO.PlantKvr,
                     Image = !string.IsNullOrEmpty(trainDTO.Image)
                                 ? Convert.FromBase64String(trainDTO.Image.Split(',')[1])
                                 : null,
@@ -223,6 +215,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetNames()
         {
             List<string> names = await _context.SuburbanTrainsInfos
+                .Where(x=>x.ElectricTrain.Count > 0)
                 .Select(x=>x.Model)
                 .ToListAsync();
             return Ok(names);
@@ -232,7 +225,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetDepots()
         {
             List<string> depots = await _context.Depots
-                .Where(x=>x.Name.Contains("РПЧ"))
+                .Where(x=>x.Name.Contains("РПЧ") && x.ElectricTrains.Count > 0)
                 .Select(x=>x.Name)
                 .ToListAsync();
             return Ok(depots);
@@ -243,6 +236,15 @@ namespace TrainzInfo.Controllers.Api
         {
             List<string> plants = await _context.Plants.Select(x=>x.Name).ToListAsync();
             return Ok(plants);
+        }
+
+        [HttpGet("getfilias")]
+        public async Task<ActionResult> GetFilias()
+        {
+            var filias = await _context.UkrainsRailways
+                .Select(x=>x.Name)
+                .ToListAsync();
+            return Ok(filias);
         }
     }
 }

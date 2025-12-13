@@ -32,30 +32,8 @@
                 <InputText @bind-Value="electrics.Model" class="form-control" />
             </div>
 
-            <div class="form-group">
-                <label>Завод будівництва</label>
-                <div class="form-inline">
-                    <InputSelect @bind-Value="electrics.PlantCreate" class="form-control">
-                        @foreach (var item in Plant)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </InputSelect>
-                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
-                </div>
-            </div>
-            <div class="form-group">
-            <label>Завод ремонту</label>
-            <div class="form-inline">
-                <InputSelect @bind-Value="electrics.PlantKvr" class="form-control">
-                    @foreach (var item in Plant)
-                    {
-                        <option value="@item">@item</option>
-                    }
-                </InputSelect>
-                @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
-            </div>
-    </div>
+
+
             <!-- Депо -->
             <div class="form-group">
                 <label>Депо</label>
@@ -72,8 +50,7 @@
                 <label>Конструкційна швидкість</label>
                 <InputNumber @bind-Value="electrics.MaxSpeed" class="form-control" />
             </div>
-            <InputDate @bind-Value="electrics.CreatedTrain" class="form-control" />
-            <InputDate @bind-Value="electrics.LastKvr" class="form-control" />
+
             <!-- Завантаження картинки -->
             <div class="form-group">
                 <label>Завантажити картинку</label>
@@ -103,11 +80,11 @@
 
 
 <div>
-    <NavLink href="/locomotives">Back to List</NavLink>
+    <NavLink href="/electric-trains">Back to List</NavLink>
 </div>
 
 @code {
-    private ElectricTrainDTO electrics = new ElectricTrainDTO();
+    private ElectricTrainSetDTO electrics = new ElectricTrainSetDTO();
 
     // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
     private List<string> NameList = new List<string>();

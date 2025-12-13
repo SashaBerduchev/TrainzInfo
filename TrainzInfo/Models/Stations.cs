@@ -13,7 +13,7 @@ namespace TrainzInfo.Models
         public string Name { get; set; }
         [Required]
         public string City { get; set; }
-        [Required]
+        
         public string Railway { get; set; }
         [Required]
         public string Oblast { get; set; }

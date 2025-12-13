@@ -58,11 +58,11 @@
 <button class="btn btn-secondary mb-3" @onclick="ClearFilter">Скинути фільтр</button>
 
 <div class="row" id="dieselContainer">
-    @if (dieselTrains == null)
+    @if (loading == false)
     {
         <p class="text-center">Завантаження...</p>
     }
-    else if (!filteredTrains.Any())
+    else if (!dieselTrains.Any())
     {
         <p class="text-center text-secondary">Нічого не знайдено.</p>
     }
@@ -117,8 +117,9 @@
     private List<string> oblasts = new();
     private List<string> depos = new();
     private List<string> models = new();
-
     private UserDto CurrentUser { get; set; }
+
+    private bool loading = false;
 
     private int currentPage = 1;
     private bool isLoading = false;
@@ -178,7 +179,7 @@
                 StateHasChanged();
             }
         }
-
+        loading = true;
         isLoading = false;
     }
     private async Task ApplyFilter()

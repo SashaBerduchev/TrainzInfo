@@ -26,7 +26,7 @@
     <div class="col-12 col-md-4">
         <select class="form-control" @bind="SelectedDepot">
             <option value="">Всі депо</option>
-            @foreach (var depot in Depots)
+            @foreach (var depot in DepotList)
             {
                 <option value="@depot">@depot</option>
             }
@@ -35,9 +35,18 @@
     <div class="col-12 col-md-4">
         <select class="form-control" @bind="SelectedName">
             <option value="">Всі назви</option>
-            @foreach (var name in Names)
+            @foreach (var name in NameList)
             {
                 <option value="@name">@name</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var filia in FiliaList)
+            {
+                <option value="@filia">@filia</option>
             }
         </select>
     </div>
@@ -45,11 +54,14 @@
         <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
     </div>
 </div>
+<div class="mb-4">
+    <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
+</div>
 
 <div class="row" id="trainsContainer">
-    @if (FilteredTrains != null)
+    @if (ElectricTrains != null)
     {
-        @foreach (var train in FilteredTrains)
+        @foreach (var train in ElectricTrains)
         {
             <div class="col-12 mb-4 train-card">
                 <div class="card shadow-sm fade-in">
@@ -89,11 +101,9 @@
     private List<ElectricTrainDTO> ElectricTrains { get; set; } = new();
     private List<ElectricTrainDTO> FilteredTrains { get; set; } = new();
 
-    private List<string> Depots { get; set; } = new();
-    private List<string> Names { get; set; } = new();
-
     private string SelectedDepot { get; set; } = "";
     private string SelectedName { get; set; } = "";
+    private string SelectedFilia { get; set; } = "";
 
     private UserDto CurrentUser { get; set; }
 
@@ -103,7 +113,13 @@
     private int currentPage = 1;
     private bool isLoading = false;
     private bool allLoaded = false;
+    private bool isFilterLoad = false;
     private string depotNameFromQuery;
+
+    private List<string> FiliaList = new();
+    private List<string> DepotList = new();
+    private List<string> NameList = new();
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -114,20 +130,26 @@
 
         await CheckRoles();
         // Завантаження першої сторінки електропоїздів
-        await LoadTrains();
+        await Load();
 
         // Підписка на JS скрол
         await JS.InvokeVoidAsync("addElectricsScrollListener", DotNetObjectReference.Create(this));
     }
 
-    private async Task LoadTrains()
+    private async Task Load()
     {
         if (isLoading || allLoaded) return;
 
         isLoading = true;
 
+        if (!string.IsNullOrEmpty(depotNameFromQuery))
+        {
+            SelectedDepot = depotNameFromQuery;
+        }
         var url = $"api/electrictrains/get-electrics?page={currentPage}" +
-                $"{(string.IsNullOrWhiteSpace(depotNameFromQuery) ? "" : $"&depo={Uri.EscapeDataString(depotNameFromQuery)}")}";
+                $"{(string.IsNullOrWhiteSpace(SelectedDepot) ? "" : $"&depo={Uri.EscapeDataString(SelectedDepot)}")}" +
+                $"{(string.IsNullOrWhiteSpace(SelectedName) ? "" : $"&name={Uri.EscapeDataString(SelectedName)}")}" +
+                $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}";
         var trainsPage = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>(url);
         if (trainsPage == null || trainsPage.Count == 0)
         {
@@ -136,7 +158,13 @@
         else
         {
             ElectricTrains.AddRange(trainsPage);
-            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            if (!isFilterLoad)
+            {
+                FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/electrictrains/getfilias"));
+                DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/electrictrains/getdepots"));
+                NameList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/electrictrains/getnames"));
+                isFilterLoad = true;
+            }
             currentPage++;
 
             // Додаємо невелику паузу для плавного появлення
@@ -179,13 +207,24 @@
             }
         }
     }
-    private void ApplyFilter()
+    private async Task ApplyFilter()
     {
-        FilteredTrains = ElectricTrains
-            .Where(t => (string.IsNullOrEmpty(SelectedDepot) || t.DepotList == SelectedDepot) &&
-                        (string.IsNullOrEmpty(SelectedName) || t.Name == SelectedName))
-            .ToList();
+        currentPage = 1;
+        allLoaded = false;
+        ElectricTrains.Clear();          // если хотите начать с нуля
+        await Load();                 // загружаем первую страницу
+
+        StateHasChanged();
     }
+
+    private async Task ClearFilter()
+    {
+        SelectedFilia = SelectedDepot = SelectedName = "";
+        currentPage = 1;
+        ElectricTrains.Clear();
+        await Load();
+    }
+
 
     private void CreateTrain() => Nav.NavigateTo("/electric-trains/create");
     private void ViewTrainModels() => Nav.NavigateTo("/suburbantrainsinfoes");
@@ -197,6 +236,6 @@
     [JSInvokable]
     public async Task OnScrollNearBottom()
     {
-        await LoadTrains();
+        await Load();
     }
 }

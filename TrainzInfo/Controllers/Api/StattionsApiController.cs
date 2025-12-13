@@ -87,7 +87,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving stations: {ex.Message}");
+                Log.AddException($"Error retrieving stations: {ex.ToString()}");
                 Log.Wright("Error retrieving stations: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
