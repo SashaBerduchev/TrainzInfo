@@ -9,7 +9,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.RequestDTO;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

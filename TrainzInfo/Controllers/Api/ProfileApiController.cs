@@ -6,6 +6,7 @@ using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

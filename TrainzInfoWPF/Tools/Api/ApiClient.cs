@@ -1,6 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfoWPF.Tools.Api;
 

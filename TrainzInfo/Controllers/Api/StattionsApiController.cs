@@ -11,7 +11,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
 using System.Collections.Generic;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

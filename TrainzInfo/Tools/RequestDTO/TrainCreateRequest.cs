@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Tools.RequestDTO
 {

@@ -1,5 +1,6 @@
 ﻿@page "/locomotives"
 @using System.Threading.Tasks
+@using TrainzInfoShared.DTO.GetDTO
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -191,7 +192,7 @@ else
         allLoaded = false;
         locomotives.Clear();          // если хотите начать с нуля
         await Load();                 // загружаем первую страницу
-
+        
         StateHasChanged();
     }
 

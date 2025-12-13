@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,8 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
+using TrainzInfoShared.DTO.SetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -99,6 +99,7 @@ namespace TrainzInfo.Controllers.Api
                 
                 Log.Wright("Start Get GetSeries");
                 var series = await _context.Locomotive_Series
+                    .Where(x=>x.Locomotives.Count>0)
                     .Select(x => x.Seria)
                     .Distinct()
                     .ToListAsync();
@@ -126,6 +127,7 @@ namespace TrainzInfo.Controllers.Api
                 
                 Log.Wright("Start Get GetDepots");
                 var depots = await _context.Depots
+                    .Where(x=>x.Name.Contains("ТЧ") && x.Locomotives.Count > 0)
                     .OrderBy(x => x.Name)
                     .Select(x => x.Name)
                     .Distinct()
@@ -146,7 +148,7 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult> CreateLocomotive([FromBody] LocomotiveDTO locomotiveDTO)
+        public async Task<ActionResult> CreateLocomotive([FromBody] LocomotiveSetDTO locomotiveDTO)
         {
             try
             {
@@ -172,18 +174,6 @@ namespace TrainzInfo.Controllers.Api
                 if(depot.Locomotives == null)
                 {
                     depot.Locomotives = new List<Locomotive>();
-                }
-                LocomotiveBaseInfo locomotiveBase = await _context.LocomotiveBaseInfos.Where(x=>x.Name == locomotiveDTO.Seria).FirstOrDefaultAsync();
-                if(locomotiveBase == null)
-                {
-                    LocomotiveBaseInfo locomotiveBaseInfo = new LocomotiveBaseInfo();
-                    locomotiveBaseInfo.Name = locomotive.Number + " " + locomotive.Seria;
-                    locomotiveBaseInfo.BaseInfo = locomotiveDTO.BaseInfo;
-                    locomotiveBase = locomotiveBaseInfo;
-                }
-                if(locomotive.LocomotiveBaseInfo == null)
-                {                    
-                    locomotive.LocomotiveBaseInfo = locomotiveBase;
                 }
                 depot.Locomotives.Add(locomotive);
                 Log.Wright("Try find locomotoive if exist");

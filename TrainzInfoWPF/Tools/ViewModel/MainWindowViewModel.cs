@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoWPF.Tools.Api;
 
 namespace TrainzInfoWPF.Tools.ViewModel;

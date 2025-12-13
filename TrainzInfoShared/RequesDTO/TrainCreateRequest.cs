@@ -1,5 +1,4 @@
-
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfoShared.RequesDTO;
 

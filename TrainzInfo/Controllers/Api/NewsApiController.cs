@@ -12,7 +12,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.Mail;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 using static Azure.Core.HttpHeader;
 
 namespace TrainzInfo.Controllers.Api

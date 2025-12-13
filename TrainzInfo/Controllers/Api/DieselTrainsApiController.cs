@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -23,7 +23,9 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("gettrains")]
         public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrains(int page = 1,
             [FromQuery] string filia = null,
-            [FromQuery] string depot = null)
+            [FromQuery] string depot = null,
+            [FromQuery] string model = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init("DieselTrainsApiController", "GetDieselTrains");
             
@@ -46,6 +48,14 @@ namespace TrainzInfo.Controllers.Api
                 if (!string.IsNullOrEmpty(depot))
                 {
                     query = query.Where(x => x.DepotList.Name == depot);
+                }
+                if (!string.IsNullOrEmpty(model))
+                {
+                    query = query.Where(x => x.SuburbanTrainsInfo.Model== model);
+                }
+                if (!string.IsNullOrEmpty(oblast))
+                {
+                    query = query.Where(x => x.DepotList.City.Oblasts.Name == oblast);
                 }
                 query = query.Skip((page - 1) * pageCount)
                 .Take(pageCount);
@@ -120,9 +130,11 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("GetOblasts API called");
             try
             {
-                var oblasts = await _context.Oblasts
-                    .Select(o => o.Name)
-                    .Distinct()
+                var oblasts = await _context.Depots
+                    .Include(x => x.City)
+                    .ThenInclude(x => x.Oblasts)
+                    .Where(x => x.DieselTrains.Count > 0)
+                    .Select(x => x.City.Oblasts.Name)
                     .ToListAsync();
                 Log.Wright("GetOblasts API finished");
                 return Ok(oblasts);
@@ -148,7 +160,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 var depos = await _context.Depots
-                    .Where(x => x.Name.Contains("РПЧ"))
+                    .Where(x => x.Name.Contains("РПЧ") && x.DieselTrains.Count > 0)
                     .Select(dl => dl.Name)
                     .Distinct()
                     .ToListAsync();
@@ -176,6 +188,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 var models = await _context.SuburbanTrainsInfos
+                    .Where(x=>x.DieselTrains.Count > 0)
                     .Select(sti => sti.Model)
                     .Distinct()
                     .ToListAsync();

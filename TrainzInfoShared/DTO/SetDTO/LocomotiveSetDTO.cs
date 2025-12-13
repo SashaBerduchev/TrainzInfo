@@ -1,22 +1,20 @@
-﻿namespace TrainzInfoShared.DTO
-{
-    public class LocomotiveDTO
-    {
-        public int Id { get; set; }
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-        // Основна інформація
+namespace TrainzInfoShared.DTO.SetDTO
+{
+    public class LocomotiveSetDTO
+    {
         public string Number { get; set; }
         public int Speed { get; set; }
         public string Seria { get; set; }
 
         // Філія / депо / місто / область
-        public string Filia { get; set; }
         public string Depot { get; set; }
-        public string City { get; set; }
-        public string Oblast { get; set; }
 
         // Зображення
         public string ImgSrc { get; set; }  // URL або base64 string
-        public string BaseInfo { get; set; }
+        public string ImageType { get; set; }  // URL або base64 string
     }
 }

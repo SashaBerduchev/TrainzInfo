@@ -1,4 +1,6 @@
 ﻿@page "/diesel-trains"
+@using System.Threading.Tasks
+@using TrainzInfoShared.DTO.GetDTO
 @inject HttpClient Http
 @inject NavigationManager Nav;
 @inject AuthenticationStateProvider AuthStateProvider
@@ -66,7 +68,7 @@
     }
     else
     {
-        @foreach (var item in filteredTrains)
+        @foreach (var item in dieselTrains)
         {
             <div class="col-12 mb-4 diesel-card">
                 <div class="card shadow-sm">
@@ -154,9 +156,10 @@
         isLoading = true;
         var url =
                $"api/diesels/gettrains?page={currentPage}" +
-               $"{(string.IsNullOrWhiteSpace(selectedFilia) ? "" : $"&filia={Uri.EscapeDataString(selectedFilia)}")}" + 
-               $"{(string.IsNullOrWhiteSpace(selectedDepo) ? "" : $"&depot={Uri.EscapeDataString(selectedDepo)}")}";
-
+               $"{(string.IsNullOrWhiteSpace(selectedFilia) ? "" : $"&filia={Uri.EscapeDataString(selectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedDepo) ? "" : $"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedModel) ? "" : $"&model={Uri.EscapeDataString(selectedModel)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
         var dieselPage = await Http.GetFromJsonAsync<List<DieselTrainsDTO>>(url);
         if (dieselPage == null || dieselPage.Count == 0)
         {
@@ -165,7 +168,7 @@
         else
         {
             dieselTrains.AddRange(dieselPage);
-            ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            //    await ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
             currentPage++;
 
             // Додаємо невелику паузу для плавного появлення
@@ -178,20 +181,22 @@
 
         isLoading = false;
     }
-    private void ApplyFilter()
+    private async Task ApplyFilter()
     {
-        filteredTrains = dieselTrains.Where(t =>
-            (string.IsNullOrEmpty(selectedFilia) || t.Filia == selectedFilia) &&
-            (string.IsNullOrEmpty(selectedOblast) || t.Oblast == selectedOblast) &&
-            (string.IsNullOrEmpty(selectedDepo) || t.DepotList == selectedDepo) &&
-            (string.IsNullOrEmpty(selectedModel) || t.Name == selectedModel)
-        ).ToList();
+        currentPage = 1;
+        allLoaded = false;
+        dieselTrains.Clear();          // если хотите начать с нуля
+        await Load();                 // загружаем первую страницу
+
+        //StateHasChanged();
     }
 
-    private void ClearFilter()
+    private async Task ClearFilter()
     {
-        selectedFilia = selectedOblast = selectedDepo = selectedModel = null;
-        filteredTrains = dieselTrains.ToList();
+        selectedFilia = selectedOblast = selectedDepo = selectedModel = "";
+        currentPage = 1;
+        dieselTrains.Clear();
+        await Load();
     }
 
     private void CreateDieselTrain()

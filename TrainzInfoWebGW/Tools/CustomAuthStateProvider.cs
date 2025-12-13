@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
-using TrainzInfoShared.DTO;
+using TrainzInfoShared.DTO.GetDTO;
 using static System.Net.WebRequestMethods;
 
 namespace TrainzInfoWebGW.Tools

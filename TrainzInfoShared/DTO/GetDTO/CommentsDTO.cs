@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrainzInfoShared.DTO
+namespace TrainzInfoShared.DTO.GetDTO
 {
     public class CommentsDTO
     {

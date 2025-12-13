@@ -1,4 +1,5 @@
 ﻿@page "/locomotives/create"
+@using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
@@ -69,10 +70,7 @@
                     </div>
                 }
             </div>
-            <div class="form-group">
-                <label>Базова інформація </label>
-                <InputText @bind-Value="locomotive.BaseInfo" class="form-control" />
-            </div>
+           
             <!-- Кнопка -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Створити</button>
@@ -95,7 +93,7 @@
 </div>
 
 @code {
-    private LocomotiveDTO locomotive = new LocomotiveDTO();
+    private LocomotiveSetDTO locomotive = new LocomotiveSetDTO();
 
     // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
     private List<string> SeriaList = new List<string>();
@@ -139,7 +137,7 @@
             errors = await result.Content.ReadAsStringAsync();
             Console.WriteLine($"Помилка: {errors}");
         }
-        
+
 
     }
 
@@ -198,5 +196,6 @@
 
         // Зберігаємо у модель
         locomotive.ImgSrc = imagePreview;
+        locomotive.ImageType = file.ContentType;
     }
 }
