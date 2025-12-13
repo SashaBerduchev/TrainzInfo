@@ -1,11 +1,12 @@
 ﻿@page "/diesel-trains"
 @inject HttpClient Http
 @inject NavigationManager Nav;
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 
 <h1 class="mb-4 text-center">Дизель-поїзди</h1>
 
-@if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
+@if (IsPublisherOrAdminOrSuperAdmin)
 {
     <button class="btn btn-info mb-3" @onclick="CreateDieselTrain">Створити</button>
 }
@@ -103,6 +104,7 @@
     private List<DieselTrainsDTO> dieselTrains = new();
     private List<DieselTrainsDTO> filteredTrains = new();
     private UserDto currentUser;
+    private bool IsPublisherOrAdminOrSuperAdmin;
 
     private string selectedFilia;
     private string selectedOblast;
@@ -125,6 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await CheckRoles();
         await Load();
 
         filteredTrains = dieselTrains.ToList();
@@ -200,6 +203,36 @@
     private void DeleteTrain(int id)
     {
         // Виклик API на видалення
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Admin");
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
     }
 
     [JSInvokable]

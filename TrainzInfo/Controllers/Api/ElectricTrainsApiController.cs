@@ -63,8 +63,8 @@ namespace TrainzInfo.Controllers.Api
                         MaxSpeed = x.MaxSpeed,
                         DepotTrain = x.DepotTrain,
                         DepotCity = x.DepotCity,
-                        LastKvr = x.LastKvr.ToString("yyyy-MM-dd"),
-                        CreatedTrain = x.CreatedTrain.ToString("yyyy-MM-dd"),
+                        LastKvr = x.LastKvr,
+                        CreatedTrain = x.CreatedTrain,
                         PlantCreate = x.PlantCreate,
                         PlantKvr = x.PlantKvr,
                         Image = x.Image != null
@@ -117,8 +117,8 @@ namespace TrainzInfo.Controllers.Api
                     DepotTrain = trainDTO.DepotList,
                     DepotList = depot,
                     DepotCity = depot.City.Name,
-                    LastKvr = DateOnly.Parse(trainDTO.LastKvr),
-                    CreatedTrain = DateOnly.Parse(trainDTO.CreatedTrain),
+                    LastKvr = trainDTO.LastKvr,
+                    CreatedTrain = trainDTO.CreatedTrain,
                     PlantCreate = trainDTO.PlantCreate,
                     PlantKvr = trainDTO.PlantKvr,
                     Image = !string.IsNullOrEmpty(trainDTO.Image)
@@ -171,8 +171,8 @@ namespace TrainzInfo.Controllers.Api
                 electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
                 electricTrain.DepotTrain = electricTrainDTO.DepotTrain;
                 electricTrain.DepotCity = electricTrainDTO.DepotCity;
-                electricTrain.LastKvr = DateOnly.Parse(electricTrainDTO.LastKvr);
-                electricTrain.CreatedTrain = DateOnly.Parse(electricTrainDTO.CreatedTrain);
+                electricTrain.LastKvr = electricTrainDTO.LastKvr;
+                electricTrain.CreatedTrain = electricTrainDTO.CreatedTrain;
                 electricTrain.PlantCreate = electricTrainDTO.PlantCreate;
                 _context.Electrics.Update(electricTrain);
                 await _context.SaveChangesAsync();

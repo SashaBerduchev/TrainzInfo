@@ -13,8 +13,8 @@ namespace TrainzInfoShared.DTO
 
         public string DepotTrain { get; set; }
         public string DepotCity { get; set; }
-        public string LastKvr { get; set; }
-        public string CreatedTrain { get; set; }
+        public DateOnly LastKvr { get; set; }
+        public DateOnly CreatedTrain { get; set; }
         public string PlantCreate { get; set; }
         public string PlantKvr { get; set; }
         public string Image { get; set; }

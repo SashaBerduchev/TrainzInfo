@@ -202,11 +202,31 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("CreateDieselTrain API called");
             try
             {
+                SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == dieselTrainDto.Name).FirstOrDefaultAsync();
+                DepotList depotList = await _context.Depots
+                    .Include(x => x.UkrainsRailway)
+                    .Where(x => x.Name == dieselTrainDto.DepotList).FirstOrDefaultAsync();
+                UkrainsRailways railways = depotList.UkrainsRailway;
                 var dieselTrain = new DieselTrains
                 {
+                    SuburbanTrainsInfo = suburbanTrainsInfo,
                     NumberTrain = dieselTrainDto.NumberTrain,
-                    // Set other properties as needed
+                    DepotList = depotList,
+                    ImageMimeTypeOfData = dieselTrainDto.ImageMimeTypeOfData,
+                    Image = !string.IsNullOrEmpty(dieselTrainDto.Image)
+                                ? Convert.FromBase64String(dieselTrainDto.Image.Split(',')[1])
+                                : null,
                 };
+                if (suburbanTrainsInfo.DieselTrains == null)
+                {
+                    suburbanTrainsInfo.DieselTrains = new List<DieselTrains>();
+                }
+                suburbanTrainsInfo.DieselTrains.Add(dieselTrain);
+                if (depotList.DieselTrains == null)
+                {
+                    depotList.DieselTrains= new List<DieselTrains>();
+                }
+                depotList.DieselTrains.Add(dieselTrain);
                 await _context.DieselTrains.AddAsync(dieselTrain);
                 await _context.SaveChangesAsync();
                 Log.Wright("CreateDieselTrain API finished");
