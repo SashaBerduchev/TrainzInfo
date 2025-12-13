@@ -85,7 +85,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetDieselTrains API error: " + ex.Message);
+                Log.AddException("GetDieselTrains API error: " + ex.ToString());
                 Log.Wright("GetDieselTrains API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -274,8 +274,15 @@ namespace TrainzInfo.Controllers.Api
                 SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == dieselTrainDto.Name).FirstOrDefaultAsync();
                 DepotList depotList = await _context.Depots
                     .Include(x => x.UkrainsRailway)
+                    .Include(x=>x.City)
                     .Where(x => x.Name == dieselTrainDto.DepotList).FirstOrDefaultAsync();
                 UkrainsRailways railways = depotList.UkrainsRailway;
+                City city = depotList.City;
+                if(city.Oblasts == null)
+                {
+                    city.Oblasts = await _context.Oblasts.Where(x=>x.Name == dieselTrainDto.Oblast).FirstOrDefaultAsync();
+                    city.Oblast = dieselTrainDto.Oblast;
+                }
                 var dieselTrain = new DieselTrains
                 {
                     SuburbanTrainsInfo = suburbanTrainsInfo,
@@ -376,6 +383,13 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Finish();
             }
+        }
+
+        [HttpGet("allobl")]
+        public async Task<ActionResult> GetAllOblasts()
+        {
+            var obl = await _context.Oblasts.OrderBy(x=>x.Name).Select(x=>x.Name).ToListAsync();
+            return Ok(obl);
         }
     }
 }

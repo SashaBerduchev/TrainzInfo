@@ -36,7 +36,7 @@
             <div class="form-group position-relative">
                 <label>Депо</label>
                 <InputText @bind-Value="depo" class="form-control" placeholder="Почніть вводити депо..."
-                           @oninput="OnInputChanged" />
+                           @oninput="OnInputChanged" /><Create />
 
                 @if (filteredDepot?.Any() == true)
                 {
@@ -51,6 +51,21 @@
                         }
                     </ul>
                 }
+            </div>
+
+            <!-- Область -->
+            <div class="form-group">
+                <label>Область </label>
+                <div class="form-inline">
+                    <InputSelect @bind-Value="diesel.Oblast" class="form-control">
+                       
+                        @foreach (var item in OblList)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </InputSelect>
+                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
+                </div>
             </div>
 
             <!-- Завантаження картинки -->
@@ -86,6 +101,7 @@
     private List<string> NameList = new List<string>();
     private List<string> DepotList = new List<string>();
     private List<string> filteredDepot = new List<string>();
+    private List<string> OblList = new List<string>();
     private CancellationTokenSource debounceCts;
     private string depo;
     private string imagePreview;
@@ -105,8 +121,10 @@
         // Імітація завантаження даних — в реальному випадку виклик API
         var series = await Http.GetFromJsonAsync<List<string>>("api/diesels/allmodels");
         var depots = await Http.GetFromJsonAsync<List<string>>("api/diesels/alldepos");
+        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/diesels/allobl");
         NameList.AddRange(series ?? new List<string>());
         DepotList.AddRange(depots ?? new List<string>());
+        OblList.AddRange(oblasts ?? new List<string>());
     }
     
     private async Task HandleValidSubmit()

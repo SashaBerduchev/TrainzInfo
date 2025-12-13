@@ -81,7 +81,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                Log.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.ToString()} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }

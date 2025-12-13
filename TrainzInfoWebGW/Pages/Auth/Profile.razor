@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Nav
+@inject HttpClient Http
+
 
 <h3>Мій профіль</h3>
 
@@ -36,6 +38,7 @@
         {
             <button class="btn btn-info" @onclick="CreateNews">Створити новину</button>
             <button class="btn btn-info" @onclick="CreateMail">Додати поштовий сервіс</button>
+            <button class="btn btn-info" @onclick="FixOblCities">Виправлення адресного класифікатора</button>
         }
     </div>
     <div>
@@ -87,5 +90,12 @@
 
             }
         }
+    }
+
+    public async Task FixOblCities()
+    {
+        var response = await Http.GetStringAsync("api/dbfix/fixcityoblasts");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/");
     }
 }
