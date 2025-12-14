@@ -31,6 +31,7 @@ namespace TrainzInfo.Models
         public ICollection<RailwayUsersPhoto> railwayUsersPhotos { get; set; }  
         public Metro Metro { get; set; }
         public StationImages StationImages { get; set; }
+        public ICollection<Locomotive> locomotives { get; set; }
     }
 
 }

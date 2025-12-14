@@ -23,6 +23,48 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
+        [HttpGet("update")]
+        public async Task<ActionResult> UpdateInfo()
+        {
+            try
+            {
+                Log.Init(this.ToString(), nameof(UpdateInfo));
+                Log.Wright("StartUpdating");
+                List<Locomotive> locomotives = await _context.Locomotives
+                    .Include(x => x.Locomotive_Series)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .Include(x=>x.Stations)
+                    .ToListAsync();
+                foreach (var item in locomotives)
+                {
+                    if (item.Stations is not null) continue;
+
+                    Log.Wright("Update locomotive: " + item.Locomotive_Series.Seria + " " + item.Number);
+                    Stations stations = await _context.Stations.Include(x=>x.locomotives).Include(x=>x.Citys).Where(x => x.Citys.Name == item.DepotList.City.Name).FirstOrDefaultAsync();
+                    if (stations == null) continue;
+
+                    Log.Wright("Station: " + stations.Name);
+                    item.Stations = stations;
+                    item.Create = DateTime.Now;
+                    item.Update = DateTime.Now;
+                    if (stations.locomotives == null)
+                    {
+                        stations.locomotives = new List<Locomotive>();
+                    }
+                    stations.locomotives.Add(item);
+                    _context.Update(stations);
+                    _context.Update(item);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }catch(Exception ex)
+            {
+                Log.Wright("ERROR");
+                Log.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }finally { Log.Finish(); }
+        }
 
         [Produces("application/json")]
         [HttpGet("getlocomotives")]
@@ -218,6 +260,7 @@ namespace TrainzInfo.Controllers.Api
                     .ThenInclude(x=>x.Oblasts)
                         .FirstOrDefaultAsync();
                 City city = depot.City;
+                Stations stations = await _context.Stations.Include(x => x.locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
                 if (city.Oblasts == null)
                 {
                     city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
@@ -234,13 +277,19 @@ namespace TrainzInfo.Controllers.Api
                     DepotList = depot,
                     // Image handling can be added here if needed
                     Seria = locomotiveDTO.Seria,
-                    Depot = locomotiveDTO.Depot
+                    Depot = locomotiveDTO.Depot,
+                    Stations = stations
                 };
                 if(depot.Locomotives == null)
                 {
                     depot.Locomotives = new List<Locomotive>();
                 }
                 depot.Locomotives.Add(locomotive);
+                if (stations.locomotives == null)
+                {
+                    stations.locomotives = new List<Locomotive>();
+                }
+                stations.locomotives.Add(locomotive);
                 Log.Wright("Try find locomotoive if exist");
                 Locomotive locomotiveExist = await _context.Locomotives
                     .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)

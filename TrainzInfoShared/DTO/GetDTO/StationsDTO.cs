@@ -17,5 +17,6 @@
         //public RailwayUsersPhotosDTO railwayUsersPhotos { get; set; }
         public string Metro { get; set; }
         public string StationImages { get; set; }
+        public List<StationsShadulerDTO> stationsShadulers { get; set; }
     }
 }

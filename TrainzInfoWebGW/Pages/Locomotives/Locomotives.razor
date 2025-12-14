@@ -17,6 +17,7 @@ else
         @if (IsAdmin)
         {
             <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
+            <button class="btn btn-info mb-2" @onclick="UpdateInfo">Оновити дані</button>
         }
     </div>
 
@@ -192,7 +193,7 @@ else
         allLoaded = false;
         locomotives.Clear();          // если хотите начать с нуля
         await Load();                 // загружаем первую страницу
-        
+
         StateHasChanged();
     }
 
@@ -238,6 +239,13 @@ else
     private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
     private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete/{id}");
     private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+
+    private async Task UpdateInfo()
+    {
+        var response = Http.GetStringAsync("api/locomotives/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/locomotives");
+    }
 
     [JSInvokable]
     public async Task OnScrollNearBottom()

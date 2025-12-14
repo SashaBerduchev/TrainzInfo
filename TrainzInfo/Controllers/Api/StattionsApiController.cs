@@ -45,6 +45,8 @@ namespace TrainzInfo.Controllers.Api
                        .Include(s => s.StationImages)
                        .Include(s => s.Metro)
                        .Include(s => s.UkrainsRailways)
+                       .Include(s=>s.StationsShadules)
+                       .Include(s=>s.locomotives)
                        .AsQueryable();
                 if (!string.IsNullOrEmpty(filia))
                 {
@@ -78,7 +80,7 @@ namespace TrainzInfo.Controllers.Api
                     Citys = station.Citys?.Name,
                     StationInfo = station.StationInfo?.BaseInfo,
                     Metro = station.Metro?.Name,
-                    StationImages = getSlowImage(station) // тепер МОЖНА
+                    StationImages = getSlowImage(station)
                 }).ToList();
 
                 Log.Wright("Stations successfully retrieved from database");
@@ -135,6 +137,9 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 StationsDTO station = await _context.Stations
+                    .Include(x => x.StationsShadules)
+                        .ThenInclude(x => x.Train)
+                    .Include(x => x.locomotives)
                     .Where(s => s.id == id)
                     .Select(s => new StationsDTO
                     {
@@ -152,6 +157,17 @@ namespace TrainzInfo.Controllers.Api
                         StationImages = s.StationImages.Image != null
                                 ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
                                 : null,
+                        stationsShadulers = s.StationsShadules
+                                 .OrderBy(sh =>sh.TimeOfDepet)
+                                 .Select(sh => new StationsShadulerDTO
+                                 {
+                                     id = sh.id,
+                                     Train = sh.Train.Number,
+                                     NumberTrain = sh.NumberTrain,
+                                     TimeOfArrive = sh.TimeOfArrive,
+                                     TimeOfDepet = sh.TimeOfDepet
+                                 })
+                                 .ToList()
                     })
                     .FirstOrDefaultAsync();
                 Log.Wright("Station details successfully retrieved from database");

@@ -66,6 +66,55 @@ else
     <p>Завантаження інформації...</p>
 }
 
+
+@if (schedule is null)
+{
+    <p>Відсутні дані...</p>
+}
+else
+{
+    <!-- Таблиця для великих екранів -->
+    <div class="table-responsive d-none d-md-block">
+        <table class="table table-striped table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Номер поїзда</th>
+                    <th>Прибуття</th>
+                    <th>Відправлення</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in schedule)
+                {
+                    <tr>
+                        <td style="font-size:18px">@item.Train</td>
+                        <td>@item.TimeOfArrive</td>
+                        <td>@item.TimeOfDepet</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Картки для мобільних -->
+    <div class="d-block d-md-none">
+        @foreach (var item in schedule)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                          Поїзд номер  @item.Train
+                    </h5>
+                    <p><b>Прибуття:</b> @item.TimeOfArrive</p>
+                    <p><b>Відправлення:</b> @item.TimeOfDepet</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
 @if (ErrorMessage is not null)
         {
             <H3>"Помилка збереження, зверніться до адміністратора";</H3>
@@ -74,10 +123,12 @@ else
             </div>
         }
 
+<button class="btn btn-info mt-3" @onclick="Back">До списку станцій</button>
 @code {
     [Parameter] public int Id { get; set; }
     private string ErrorMessage;
     private StationsDTO stations;
+    private List<StationsShadulerDTO> schedule;
     private UserDto CurrentUser; // або отримуй з авторизації
 
     private bool IsAdmin = false;
@@ -87,7 +138,7 @@ else
     {
         // Завантажуємо новину
         stations = await Http.GetFromJsonAsync<StationsDTO>($"api/stations/details/{Id}");
-
+        schedule = stations.stationsShadulers;
         // Приклад: завантаження поточного користувача та кількості коментарів
         // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
         // CommentCount = await Http.GetFromJsonAsync<int>($"api/news/{Id}/comments/count");
