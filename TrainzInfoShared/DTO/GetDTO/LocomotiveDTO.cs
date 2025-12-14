@@ -14,6 +14,7 @@
         public string Depot { get; set; }
         public string City { get; set; }
         public string Oblast { get; set; }
+        public string Station { get; set; }
 
         // Зображення
         public string ImgSrc { get; set; }  // URL або base64 string

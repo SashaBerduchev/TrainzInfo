@@ -87,6 +87,7 @@ namespace TrainzInfo.Controllers.Api
                     .Include(u => u.DepotList)
                         .ThenInclude(ur => ur.UkrainsRailway)
                     .Include(ls => ls.Locomotive_Series)
+                    .Include(x=>x.Stations)
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(filia))
@@ -97,7 +98,7 @@ namespace TrainzInfo.Controllers.Api
 
                 if (!string.IsNullOrWhiteSpace(seria))
                     query = query.Where(l => l.Seria == seria);
-
+                query = query.OrderBy(x => x.Locomotive_Series.Seria).OrderBy(x => x.Number);
                 query = query.Skip((page - 1) * pageSize)
                     .Take(pageSize);
 
@@ -112,6 +113,7 @@ namespace TrainzInfo.Controllers.Api
                     Oblast = n.DepotList.City.Oblasts.Name,
                     Filia = n.DepotList.UkrainsRailway.Name,
                     Seria = n.Locomotive_Series.Seria,
+                    Station = n.Stations.Name,
                     ImgSrc = n.Image != null
                                 ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.Image)}"
                                 : null,
