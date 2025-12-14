@@ -39,10 +39,16 @@ namespace TrainzInfo.Tools
                 string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n";
                 Trace.WriteLine(logstr);
                 Console.WriteLine(logstr);
-                FileStream fileStreamLog = new FileStream(folderlog + "\\" + DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog, FileMode.Append);
-                byte[] array = Encoding.Default.GetBytes(logstr.ToString());
-                fileStreamLog.Write(array, 0, array.Length);
-                fileStreamLog.Close();
+                string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog);
+
+                lock (_logLock)
+                {
+                    using (var filestreamlog = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    using (var writer = new StreamWriter(filestreamlog, Encoding.UTF8))
+                    {
+                        writer.Write(logstr);
+                    }
+                }
             }
             catch (Exception e)
             {

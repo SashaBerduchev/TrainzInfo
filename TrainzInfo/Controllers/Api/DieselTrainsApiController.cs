@@ -275,6 +275,7 @@ namespace TrainzInfo.Controllers.Api
                 DepotList depotList = await _context.Depots
                     .Include(x => x.UkrainsRailway)
                     .Include(x=>x.City)
+                    .ThenInclude(x=>x.Oblasts)
                     .Where(x => x.Name == dieselTrainDto.DepotList).FirstOrDefaultAsync();
                 UkrainsRailways railways = depotList.UkrainsRailway;
                 City city = depotList.City;

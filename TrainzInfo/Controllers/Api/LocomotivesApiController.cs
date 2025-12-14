@@ -214,6 +214,8 @@ namespace TrainzInfo.Controllers.Api
                 Log.Wright("Start Post CreateLocomotive");
 
                 DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
+                    .Include(x=>x.City)
+                    .ThenInclude(x=>x.Oblasts)
                         .FirstOrDefaultAsync();
                 City city = depot.City;
                 if (city.Oblasts == null)
