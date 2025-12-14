@@ -126,7 +126,7 @@ namespace TrainzInfo.Controllers.Api
                 
                 Log.Wright("Start Create NewsInfo");
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var user = await _userManager.FindByIdAsync(userId);
+                var user = await _userManager.FindByEmailAsync(newsInfo.username);
                 NewsInfo newNews = new NewsInfo
                 {
                     NameNews = newsInfo.NameNews,

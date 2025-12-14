@@ -12,7 +12,8 @@ namespace TrainzInfoShared.DTO.GetDTO
         public string DateTime { get; set; }
         public string NewsImage { get; set; }
         public string ImageMimeTypeOfData { get; set; }
-        
+        public string username { get; set; }
+
         public string NameNewsInfoHtmlPlain
         {
             get
