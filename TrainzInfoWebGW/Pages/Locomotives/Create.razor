@@ -6,87 +6,131 @@
 <h4>Локомотиви</h4>
 <hr />
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="@locomotive" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚆 Новий локомотив</h4>
 
-            <!-- Серія -->
-            <div class="form-group">
-                <label>Серія (наприклад ДС3, ЧС4)</label>
-                <div class="form-inline">
-                    <InputSelect @bind-Value="locomotive.Seria" class="form-control">
-                        @foreach (var item in SeriaList)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </InputSelect>
-                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
+                    <EditForm Model="@locomotive" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
+
+                        <!-- Серія -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Серія
+                                <small class="text-muted">(наприклад ДС3, ЧС4)</small>
+                            </label>
+                            <InputSelect @bind-Value="locomotive.Seria"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in SeriaList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Номер -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Номер локомотива
+                            </label>
+                            <InputText @bind-Value="locomotive.Number"
+                                       class="form-control form-control-lg"
+                                       placeholder="001, 002..." />
+                        </div>
+
+                        <!-- Депо -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-medium">Депо</label>
+                            <InputText @bind-Value="depo"
+                                       class="form-control form-control-lg"
+                                       placeholder="Почніть вводити депо..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filteredDepot?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1"
+                                    style="z-index:1000;">
+                                    @foreach (var item in filteredDepot)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectItem(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <div class="row">
+                            <!-- Швидкість -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">
+                                    Конструкційна швидкість
+                                </label>
+                                <InputNumber @bind-Value="locomotive.Speed"
+                                             class="form-control form-control-lg"
+                                             placeholder="км/год" />
+                            </div>
+
+                            <!-- Область -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">
+                                    Область
+                                </label>
+                                <InputSelect @bind-Value="locomotive.Oblast"
+                                             class="form-select form-select-lg">
+                                    @foreach (var item in OblList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <!-- Фото -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Фото локомотива
+                            </label>
+                            <InputFile class="form-control"
+                                       OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview"
+                                         class="img-thumbnail rounded-3"
+                                         style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопка -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg px-4">
+                                Зберегти
+                            </button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
 
-            <!-- Номер -->
-            <div class="form-group">
-                <label>Номер (приклад 001, 002)</label>
-                <InputText @bind-Value="locomotive.Number" class="form-control" />
-            </div>
-
-            
-            <div class="form-group position-relative">
-                <label>Депо</label>
-                <InputText @bind-Value="depo" class="form-control" placeholder="Почніть вводити депо..."
-                           @oninput="OnInputChanged" />
-
-                @if (filteredDepot?.Any() == true)
-                {
-                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
-                        @foreach (var item in filteredDepot)
-                        {
-                            <li class="list-group-item list-group-item-action"
-                                style="cursor:pointer;"
-                                @onclick="() => SelectItem(item)">
-                                @item
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-
-            <!-- Конструкційна швидкість -->
-            <div class="form-group">
-                <label>Конструкційна швидкість</label>
-                <InputNumber @bind-Value="locomotive.Speed" class="form-control" />
-            </div>
-
-            <!-- Завантаження картинки -->
-            <div class="form-group">
-                <label>Завантажити картинку</label>
-                <InputFile OnChange="HandleFileSelected" />
-                @if (!string.IsNullOrEmpty(imagePreview))
-                {
-                    <div class="mt-2">
-                        <img src="@imagePreview" alt="preview" width="150" />
-                    </div>
-                }
-            </div>
-           
-            <!-- Кнопка -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
+            @if (!string.IsNullOrEmpty(errors))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @errors
+                </div>
+            }
+        </div>
     </div>
 </div>
-
-@if (errors is not null)
-{
-    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-    <div class="alert alert-danger mt-2">
-        <p>@errors</p>
-    </div>
-}
-
 
 <div>
     <NavLink href="/locomotives">Back to List</NavLink>
@@ -99,6 +143,7 @@
     private List<string> SeriaList = new List<string>();
     private List<string> DepotList = new List<string>();
     private List<string> filteredDepot = new List<string>();
+    private List<string> OblList = new List<string>();
     private CancellationTokenSource debounceCts;
     private string depo;
     private string imagePreview;
@@ -119,8 +164,10 @@
         // Імітація завантаження даних — в реальному випадку виклик API
         var series = await Http.GetFromJsonAsync<List<string>>("api/locomotives/getallseries");
         var depots = await Http.GetFromJsonAsync<List<string>>("api/locomotives/getalldepots");
+        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/locomotives/allobl");
         SeriaList.AddRange(series ?? new List<string>());
         DepotList.AddRange(depots ?? new List<string>());
+        OblList.AddRange(oblasts ?? new List<string>());
     }
     private async Task HandleValidSubmit()
     {

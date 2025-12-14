@@ -215,7 +215,13 @@ namespace TrainzInfo.Controllers.Api
 
                 DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
                         .FirstOrDefaultAsync();
-
+                City city = depot.City;
+                if (city.Oblasts == null)
+                {
+                    city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
+                    city.Oblast = locomotiveDTO.Oblast;
+                }
+                _context.Cities.Update(city);
                 var locomotive = new Locomotive
                 {
                     Number = locomotiveDTO.Number,
@@ -416,5 +422,13 @@ namespace TrainzInfo.Controllers.Api
                 Log.Finish();
             }
         }
+
+        [HttpGet("allobl")]
+        public async Task<ActionResult> GetAllOblasts()
+        {
+            var obl = await _context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
+            return Ok(obl);
+        }
+
     }
 }

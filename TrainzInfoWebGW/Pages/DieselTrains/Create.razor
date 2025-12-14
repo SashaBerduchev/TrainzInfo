@@ -6,94 +6,121 @@
 <h4>Дизель</h4>
 <hr />
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="@diesel" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚆 Дизельний локомотив</h4>
 
-            <!-- Серія -->
-            <div class="form-group">
-                <label>Серія </label>
-                <div class="form-inline">
-                    <InputSelect @bind-Value="diesel.Name" class="form-control">
-                        @foreach (var item in NameList)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </InputSelect>
-                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
+                    <EditForm Model="@diesel" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
+
+                        <!-- Серія -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Серія
+                            </label>
+                            <InputSelect @bind-Value="diesel.Name"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in NameList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Номер -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Номер локомотива
+                            </label>
+                            <InputText @bind-Value="diesel.NumberTrain"
+                                       class="form-control form-control-lg"
+                                       placeholder="001, 002..." />
+                        </div>
+
+                        <!-- Депо -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-medium">
+                                Депо
+                            </label>
+                            <InputText @bind-Value="depo"
+                                       class="form-control form-control-lg"
+                                       placeholder="Почніть вводити депо..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filteredDepot?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1"
+                                    style="z-index:1000;">
+                                    @foreach (var item in filteredDepot)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectItem(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <!-- Область -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Область
+                            </label>
+                            <InputSelect @bind-Value="diesel.Oblast"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in OblList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Фото -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Фото локомотива
+                            </label>
+                            <InputFile class="form-control"
+                                       OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview"
+                                         class="img-thumbnail rounded-3"
+                                         style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопка -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg px-4">
+                                Зберегти
+                            </button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
 
-            <!-- Номер -->
-            <div class="form-group">
-                <label>Номер (приклад 001, 002)</label>
-                <InputText @bind-Value="diesel.NumberTrain" class="form-control" />
-            </div>
-
-            
-            <div class="form-group position-relative">
-                <label>Депо</label>
-                <InputText @bind-Value="depo" class="form-control" placeholder="Почніть вводити депо..."
-                           @oninput="OnInputChanged" />
-
-                @if (filteredDepot?.Any() == true)
-                {
-                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
-                        @foreach (var item in filteredDepot)
-                        {
-                            <li class="list-group-item list-group-item-action"
-                                style="cursor:pointer;"
-                                @onclick="() => SelectItem(item)">
-                                @item
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-
-            <!-- Область -->
-            <div class="form-group">
-                <label>Область </label>
-                <div class="form-inline">
-                    <InputSelect @bind-Value="diesel.Oblast" class="form-control">
-                       
-                        @foreach (var item in OblList)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </InputSelect>
-                    @* <NavLink class="btn btn-info ml-2" href="/create-seria">Додати Серію локомотиву</NavLink> *@
+            @if (!string.IsNullOrEmpty(errors))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @errors
                 </div>
-            </div>
-
-            <!-- Завантаження картинки -->
-            <div class="form-group">
-                <label>Завантажити картинку</label>
-                <InputFile OnChange="HandleFileSelected" />
-                @if (!string.IsNullOrEmpty(imagePreview))
-                {
-                    <div class="mt-2">
-                        <img src="@imagePreview" alt="preview" width="150" />
-                    </div>
-                }
-            </div>
-            <!-- Кнопка -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
+            }
+        </div>
     </div>
 </div>
 
-@if (errors is not null)
-{
-    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-    <div class="alert alert-danger mt-2">
-        <p>@errors</p>
-    </div>
-}
 
 
 @code {

@@ -31,7 +31,6 @@ namespace TrainzInfo.Controllers.Api
                 List<DepotListDTO> depots = await _context.Depots
                     .Include(d => d.City)
                         .ThenInclude(c => c.Oblasts)
-                    .Include(d=>d.UkrainsRailway)
                     .Include(d => d.UkrainsRailway)
                     .Include(d => d.Locomotives)
                     .Include(d => d.ElectricTrains)

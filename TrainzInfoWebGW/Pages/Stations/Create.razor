@@ -3,87 +3,103 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<h4>Станції</h4>
+<h4>Створення станції</h4>
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚉 Нова станція</h4>
+                    <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
 
-            <!-- Назва станції -->
-            <div class="form-group">
-                <label>Назва станції</label>
-                <InputText @bind-Value="stationsDTO.Name" class="form-control" />
+                        <!-- Назва станції -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Назва станції</label>
+                            <InputText @bind-Value="stationsDTO.Name" class="form-control form-control-lg" placeholder="Напр. Київ-Пасажирський" />
+                        </div>
+
+                        <!-- Місто -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-medium">Місто</label>
+                            <InputText @bind-Value="city" class="form-control form-control-lg"
+                                       placeholder="Почніть вводити місто..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filteredCitys?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1" style="z-index:1000;">
+                                    @foreach (var item in filteredCitys)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectItem(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <div class="row">
+                            <!-- Філія -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Філія</label>
+                                <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
+                                    @foreach (var item in FiliasList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <!-- Область -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Область</label>
+                                <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
+                                    @foreach (var item in OblastList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <!-- Картинка -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Фото станції</label>
+                            <InputFile class="form-control" OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview" class="img-thumbnail rounded-3" style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">Зберегти</button>
+                        </div>
+                    </EditForm>
+                </div>
             </div>
 
-            <!-- Місто з автодоповненням -->
-            <div class="form-group position-relative">
-                <label>Місто</label>
-                <InputText @bind-Value="city" class="form-control" placeholder="Почніть вводити місто..."
-                           @oninput="OnInputChanged" />
-
-                @if (filteredCitys?.Any() == true)
-                {
-                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
-                        @foreach (var item in filteredCitys)
-                        {
-                            <li class="list-group-item list-group-item-action"
-                                style="cursor:pointer;"
-                                @onclick="() => SelectItem(item)">
-                                @item
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-
-            <!-- Філія -->
-            <div class="form-group">
-                <label>Філія</label>
-                <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-control">
-                    @foreach (var item in FiliasList)
-                    {
-                        <option value="@item">@item</option>
-                    }
-                </InputSelect>
-            </div>
-            <!-- Область -->
-            <div class="form-group">
-                <label>Область</label>
-                <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-control">
-                    @foreach (var item in OblastList)
-                    {
-                        <option value="@item">@item</option>
-                    }
-                </InputSelect>
-            </div>
-            <!-- Завантаження картинки -->
-            <div class="form-group">
-                <label>Завантажити картинку</label>
-                <InputFile OnChange="HandleFileSelected" />
-                @if (!string.IsNullOrEmpty(imagePreview))
-                {
-                    <div class="mt-2">
-                        <img src="@imagePreview" alt="preview" width="150" />
-                    </div>
-                }
-            </div>
-
-            <!-- Кнопка -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @ErrorMessage
+                </div>
+            }
+        </div>
     </div>
+
+
 </div>
-@if (ErrorMessage != "")
-{
-    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-    <div class="alert alert-danger mt-2">
-        <p>@ErrorMessage</p>
-    </div>
-}
 
 
 
