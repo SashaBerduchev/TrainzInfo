@@ -146,7 +146,7 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.AddException(ex.ToString());
                 Log.Wright(ex.ToString());
-                return BadRequest();
+                return BadRequest(ex.ToString());
                 throw;
             }
             finally

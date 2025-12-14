@@ -86,22 +86,15 @@
 
     private async Task HandleValidSubmit()
     {
-        try
+        await CheckRoles();
+        var result = await Http.PostAsJsonAsync("api/news/create", news);
+        if (result.IsSuccessStatusCode)
         {
-            await CheckRoles();
-            var result = await Http.PostAsJsonAsync("api/news/create", news);
-            if (result.IsSuccessStatusCode)
-            {
-                Navigation.NavigateTo("/");
-            }
-            else
-            {
-                errors = await result.Content.ReadAsStringAsync();
-            }
+            Navigation.NavigateTo("/");
         }
-        catch (Exception ex)
+        else
         {
-            errors = ex.Message;
+            errors = await result.Content.ReadAsStringAsync();
         }
     }
 
