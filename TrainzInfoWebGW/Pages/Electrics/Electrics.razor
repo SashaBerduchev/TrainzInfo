@@ -75,6 +75,7 @@
                             <p><b>Філія:</b> @train.UkrainsRailway</p>
                             <p><b>Область:</b> @train.Oblast</p>
                             <p><b>Місто:</b> @train.City</p>
+                            <p><b>Станція:</b> @train.Station</p>
                             <p><b>Максимальна швидкість:</b> @train.MaxSpeed км/год</p>
                         </div>
                         <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
@@ -228,10 +229,17 @@
 
     private void CreateTrain() => Nav.NavigateTo("/electric-trains/create");
     private void ViewTrainModels() => Nav.NavigateTo("/suburbantrainsinfoes");
-    private void UpdateData() => Nav.NavigateTo("/electrictrains/updateindex");
     private void ViewDetails(int id) => Nav.NavigateTo($"/electrictrains/{id}");
     private void EditTrain(int id) => Nav.NavigateTo($"/electrictrains/edit/{id}");
     private void DeleteTrain(int id) { /* TODO: видалення */ }
+
+
+    private async Task UpdateData()
+    {
+        var response = Http.GetStringAsync("api/electrictrains/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/electric-trains");
+    }
 
     [JSInvokable]
     public async Task OnScrollNearBottom()

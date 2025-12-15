@@ -46,7 +46,7 @@ namespace TrainzInfo.Controllers.Api
                        .Include(s => s.Metro)
                        .Include(s => s.UkrainsRailways)
                        .Include(s=>s.StationsShadules)
-                       .Include(s=>s.locomotives)
+                       .Include(s=>s.Locomotives)
                        .AsQueryable();
                 if (!string.IsNullOrEmpty(filia))
                 {
@@ -139,7 +139,8 @@ namespace TrainzInfo.Controllers.Api
                 StationsDTO station = await _context.Stations
                     .Include(x => x.StationsShadules)
                         .ThenInclude(x => x.Train)
-                    .Include(x => x.locomotives)
+                    .Include(x => x.Locomotives)
+                    .Include(x=>x.ElectricTrains)
                     .Where(s => s.id == id)
                     .Select(s => new StationsDTO
                     {

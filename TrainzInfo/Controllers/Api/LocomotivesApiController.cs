@@ -41,18 +41,18 @@ namespace TrainzInfo.Controllers.Api
                     if (item.Stations is not null) continue;
 
                     Log.Wright("Update locomotive: " + item.Locomotive_Series.Seria + " " + item.Number);
-                    Stations stations = await _context.Stations.Include(x=>x.locomotives).Include(x=>x.Citys).Where(x => x.Citys.Name == item.DepotList.City.Name).FirstOrDefaultAsync();
+                    Stations stations = await _context.Stations.Include(x=>x.Locomotives).Include(x=>x.Citys).Where(x => x.Citys.Name == item.DepotList.City.Name).FirstOrDefaultAsync();
                     if (stations == null) continue;
 
                     Log.Wright("Station: " + stations.Name);
                     item.Stations = stations;
                     item.Create = DateTime.Now;
                     item.Update = DateTime.Now;
-                    if (stations.locomotives == null)
+                    if (stations.Locomotives == null)
                     {
-                        stations.locomotives = new List<Locomotive>();
+                        stations.Locomotives = new List<Locomotive>();
                     }
-                    stations.locomotives.Add(item);
+                    stations.Locomotives.Add(item);
                     _context.Update(stations);
                     _context.Update(item);
                 }
@@ -262,7 +262,7 @@ namespace TrainzInfo.Controllers.Api
                     .ThenInclude(x=>x.Oblasts)
                         .FirstOrDefaultAsync();
                 City city = depot.City;
-                Stations stations = await _context.Stations.Include(x => x.locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
+                Stations stations = await _context.Stations.Include(x => x.Locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
                 if (city.Oblasts == null)
                 {
                     city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
@@ -280,18 +280,20 @@ namespace TrainzInfo.Controllers.Api
                     // Image handling can be added here if needed
                     Seria = locomotiveDTO.Seria,
                     Depot = locomotiveDTO.Depot,
-                    Stations = stations
+                    Stations = stations,
+                    Create = DateTime.Now,
+                    Update = DateTime.Now
                 };
                 if(depot.Locomotives == null)
                 {
                     depot.Locomotives = new List<Locomotive>();
                 }
                 depot.Locomotives.Add(locomotive);
-                if (stations.locomotives == null)
+                if (stations.Locomotives == null)
                 {
-                    stations.locomotives = new List<Locomotive>();
+                    stations.Locomotives = new List<Locomotive>();
                 }
-                stations.locomotives.Add(locomotive);
+                stations.Locomotives.Add(locomotive);
                 Log.Wright("Try find locomotoive if exist");
                 Locomotive locomotiveExist = await _context.Locomotives
                     .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)

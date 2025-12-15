@@ -26,5 +26,7 @@
         public string PlantsKvr { get; set; }
         public string TrainsInfo { get; set; }
         public string ElectrickTrainzInformation { get; set; }
+        public string Station { get; set; }
+
     }
 }

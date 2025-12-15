@@ -23,6 +23,56 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
+        [HttpGet("update")]
+        public async Task<ActionResult> UpdateInfo()
+        {
+            try
+            {
+                Log.Init(this.ToString(), nameof(UpdateInfo));
+                Log.Wright("StartUpdating");
+                List<ElectricTrain> electricTrains = await _context.Electrics
+                    .Include(x => x.Trains)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .Include(x => x.Stations)
+                    .ToListAsync();
+                foreach (var item in electricTrains)
+                {
+                    if (item.Stations is not null) continue;
+
+                    if(item.Trains == null)
+                    {
+                        SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == item.Name).FirstOrDefaultAsync();
+                        item.Trains = suburbanTrainsInfo;
+                    }
+                    Log.Wright("Update electric train: " + item.Trains.Model + " " + item.Model);
+                    Stations stations = await _context.Stations.Include(x => x.ElectricTrains).Include(x => x.Citys).Where(x => x.Citys.Name == item.DepotList.City.Name).FirstOrDefaultAsync();
+                    if (stations == null) continue;
+
+                    Log.Wright("Station: " + stations.Name);
+                    item.Stations = stations;
+                    item.Create = DateTime.Now;
+                    item.Update = DateTime.Now;
+                    if (stations.ElectricTrains == null)
+                    {
+                        stations.ElectricTrains = new List<ElectricTrain>();
+                    }
+                    stations.ElectricTrains.Add(item);
+                    _context.Update(stations);
+                    _context.Update(item);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Wright("ERROR");
+                Log.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally { Log.Finish(); }
+        }
+
         [HttpGet("get-electrics")]
         public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1,
             [FromQuery] string depo = null)
@@ -44,12 +94,13 @@ namespace TrainzInfo.Controllers.Api
                         .ThenInclude(o => o.UkrainsRailway)
                     .Include(t => t.Trains)
                     .Include(e => e.ElectrickTrainzInformation)
+                    .Include(x=>x.Stations)
                     .AsQueryable();
                 if (!string.IsNullOrEmpty(depo))
                 {
                     query = query.Where(x => x.DepotList.Name == depo);
                 }
-
+                query = query.OrderBy(x => x.Trains.Model).OrderBy(x => x.Model);
                 query = query.Skip((page - 1) * pageSize)
                     .Take(pageSize);
 
@@ -74,7 +125,8 @@ namespace TrainzInfo.Controllers.Api
                         UkrainsRailway = x.DepotList.UkrainsRailway.Name,
                         City = x.City.Name,
                         TrainsInfo = x.Trains?.BaseInfo,
-                        ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation
+                        ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation,
+                        Station = x.Stations?.Name
                     }).ToList();
                 Log.Wright("Electrics loaded query: " + query.ToQueryString());
                 return Ok(electrics);

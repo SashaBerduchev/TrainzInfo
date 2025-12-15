@@ -31,5 +31,8 @@ namespace TrainzInfo.Models
         public Plants PlantsKvr { get; set; }
         public SuburbanTrainsInfo Trains { get; set; }
         public ElectrickTrainzInformation ElectrickTrainzInformation { get; set; }
+        public Stations Stations { get; set; }
+        public DateTime Create { get; set; }
+        public DateTime Update { get; set; }
     }
 }
