@@ -33,6 +33,7 @@ namespace TrainzInfo.Models
         public StationImages StationImages { get; set; }
         public ICollection<Locomotive> Locomotives { get; set; }
         public ICollection<ElectricTrain> ElectricTrains { get; set; }
+        public ICollection<DieselTrains> DieselTrains { get; set; }
     }
 
 }

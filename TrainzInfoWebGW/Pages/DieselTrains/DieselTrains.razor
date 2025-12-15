@@ -11,6 +11,7 @@
 @if (IsPublisherOrAdminOrSuperAdmin)
 {
     <button class="btn btn-info mb-3" @onclick="CreateDieselTrain">Створити</button>
+    <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
 }
 
 <div class="row g-2 mb-3">
@@ -84,6 +85,7 @@
                             <p><b>Філія:</b> @item.Filia</p>
                             <p><b>Область:</b> @item.Oblast</p>
                             <p><b>Місто:</b> @item.City</p>
+                            <p><b>Станція:</b> @item.Station</p>
                         </div>
                         <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
                             <NavLink class="btn btn-info mb-2" href="@($"/diesel-trains/details/{item.Id}")">Детально</NavLink>
@@ -239,6 +241,14 @@
 
             }
         }
+    }
+
+
+    private async Task UpdateData()
+    {
+        var response = Http.GetStringAsync("api/diesels/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/diesel-trains");
     }
 
     [JSInvokable]

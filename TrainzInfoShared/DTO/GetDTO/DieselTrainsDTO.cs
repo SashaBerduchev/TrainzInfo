@@ -12,5 +12,6 @@
         public string Oblast { get; set; }
         public string City { get; set; }
         public string Filia { get; set; }
+        public string Station { get; set; }
     }
 }

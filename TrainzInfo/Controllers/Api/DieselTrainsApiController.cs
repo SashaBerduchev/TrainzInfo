@@ -20,6 +20,53 @@ namespace TrainzInfo.Controllers.Api
             _context = context;
         }
 
+        [HttpGet("update")]
+        public async Task<ActionResult> UpdateInfo()
+        {
+            try
+            {
+                Log.Init(this.ToString(), nameof(UpdateInfo));
+                Log.Wright("StartUpdating");
+                List<DieselTrains> diesels = await _context.DieselTrains
+                    .Include(x => x.SuburbanTrainsInfo)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .Include(x => x.Stations)
+                    .ToListAsync();
+                foreach (var item in diesels)
+                {
+                    if (item.Stations is not null) continue;
+
+                    
+                    Log.Wright("Update diesel train: " + item.SuburbanTrainsInfo.Model + " " + item.NumberTrain);
+                    Stations stations = await _context.Stations.Include(x => x.DieselTrains).Include(x => x.Citys).Where(x => x.Citys.Name == item.DepotList.City.Name).FirstOrDefaultAsync();
+                    if (stations == null) continue;
+
+                    Log.Wright("Station: " + stations.Name);
+                    item.Stations = stations;
+                    item.Create = DateTime.Now;
+                    item.Update = DateTime.Now;
+                    if (stations.DieselTrains == null)
+                    {
+                        stations.DieselTrains = new List<DieselTrains>();
+                    }
+                    stations.DieselTrains.Add(item);
+                    _context.Update(stations);
+                    _context.Update(item);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Wright("ERROR");
+                Log.AddException(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally { Log.Finish(); }
+        }
+
+
         [HttpGet("gettrains")]
         public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrains(int page = 1,
             [FromQuery] string filia = null,
@@ -39,7 +86,9 @@ namespace TrainzInfo.Controllers.Api
                             .ThenInclude(c => c.Oblasts)
                     .Include(dt => dt.DepotList)
                         .ThenInclude(dl => dl.UkrainsRailway)
-                    .Include(dt => dt.SuburbanTrainsInfo).AsQueryable();
+                    .Include(dt => dt.SuburbanTrainsInfo)
+                    .Include(x=>x.Stations)
+                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(filia))
                 {
@@ -77,7 +126,8 @@ namespace TrainzInfo.Controllers.Api
                     Image = dt.Image != null
                                         ? $"data:{dt.ImageMimeTypeOfData};base64,{Convert.ToBase64String(dt.Image)}"
                                         : null,
-                    ImageMimeTypeOfData = dt.ImageMimeTypeOfData
+                    ImageMimeTypeOfData = dt.ImageMimeTypeOfData,
+                    Station = dt.Stations?.Name
                 })
                 .ToList();
 
@@ -285,6 +335,7 @@ namespace TrainzInfo.Controllers.Api
                     city.Oblast = dieselTrainDto.Oblast;
                 }
                 _context.Cities.Update(city);
+                Stations stations = await _context.Stations.Include(x => x.DieselTrains).Include(x => x.Citys).Where(x => x.Citys.Name == city.Name).FirstOrDefaultAsync();
                 var dieselTrain = new DieselTrains
                 {
                     SuburbanTrainsInfo = suburbanTrainsInfo,
@@ -294,6 +345,9 @@ namespace TrainzInfo.Controllers.Api
                     Image = !string.IsNullOrEmpty(dieselTrainDto.Image)
                                 ? Convert.FromBase64String(dieselTrainDto.Image.Split(',')[1])
                                 : null,
+                    Create = DateTime.Now,
+                    Update = DateTime.Now,
+                    Stations = stations
                 };
                 if (suburbanTrainsInfo.DieselTrains == null)
                 {

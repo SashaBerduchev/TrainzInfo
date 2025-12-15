@@ -163,6 +163,7 @@ namespace TrainzInfo.Controllers.Api
                 }
                 _context.Cities.Update(city);
                 SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();
+                Stations stations = await _context.Stations.Include(x => x.ElectricTrains).Include(x => x.Citys).Where(x => x.Citys.Name == city.Name).FirstOrDefaultAsync();
                 ElectricTrain electricTrain = new ElectricTrain
                 {
                     Name = trainDTO.Name,
@@ -177,7 +178,10 @@ namespace TrainzInfo.Controllers.Api
                     ImageMimeTypeOfData = trainDTO.ImageMimeTypeOfData,
                     IsProof = true.ToString(),
                     City = city,
-                    Trains = suburban
+                    Trains = suburban,
+                    Create = DateTime.Now,
+                    Update = DateTime.Now,
+                    Stations = stations 
 
                 };
                 _context.Electrics.Add(electricTrain);

@@ -1,4 +1,6 @@
-﻿namespace TrainzInfo.Models
+﻿using System;
+
+namespace TrainzInfo.Models
 {
     public class DieselTrains
     {
@@ -8,6 +10,9 @@
         public DepotList DepotList { get; set; }
         public byte[] Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
+        public Stations Stations { get; set; }
+        public DateTime Create {  get; set; }
+        public DateTime Update {  get; set; }
 
     }
 }
