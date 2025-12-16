@@ -143,6 +143,15 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+
+        [HttpGet("getcount")]
+        public async Task<ActionResult> GetCount()
+        {
+            int count = await _context.Electrics.CountAsync();
+            return Ok(count);
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] ElectricTrainSetDTO trainDTO)
         {

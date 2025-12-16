@@ -66,6 +66,13 @@ namespace TrainzInfo.Controllers.Api
             }finally { Log.Finish(); }
         }
 
+        [HttpGet("getcount")]
+        public async Task<ActionResult> GetCount()
+        {
+            int count = await _context.Locomotives.CountAsync();
+            return Ok(count);
+        }
+
         [Produces("application/json")]
         [HttpGet("getlocomotives")]
         public async Task<ActionResult<List<Locomotive>>> GetLocomotives([FromQuery] string filia,
@@ -385,7 +392,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpDelete("deleteapprove/{id}")]
+        [HttpPost("deleteapprove/{id}")]
         //[Authorize(Roles = "Superadmin, Admin")]
         public async Task<ActionResult> DeleteLocomotive(int id)
         {

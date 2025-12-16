@@ -18,6 +18,7 @@
         <button class="btn btn-info mb-2" @onclick="@CreateTrain">Створити електропоїзд</button>
         <button class="btn btn-info mb-2" @onclick="@ViewTrainModels">Моделі електропоїздів</button>
         <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
+        <p><b>Кількість запитів:</b> @count</p>
     }
 </div>
 
@@ -101,6 +102,7 @@
 @code {
     private List<ElectricTrainDTO> ElectricTrains { get; set; } = new();
     private List<ElectricTrainDTO> FilteredTrains { get; set; } = new();
+    private int count;
 
     private string SelectedDepot { get; set; } = "";
     private string SelectedName { get; set; } = "";
@@ -152,6 +154,8 @@
                 $"{(string.IsNullOrWhiteSpace(SelectedName) ? "" : $"&name={Uri.EscapeDataString(SelectedName)}")}" +
                 $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}";
         var trainsPage = await Http.GetFromJsonAsync<List<ElectricTrainDTO>>(url);
+        var trainsCount = await Http.GetFromJsonAsync<int>("/api/electrictrains/getcount");
+        count = trainsCount;
         if (trainsPage == null || trainsPage.Count == 0)
         {
             allLoaded = true;
