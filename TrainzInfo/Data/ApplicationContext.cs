@@ -20,6 +20,7 @@ namespace TrainzInfo.Data
             {
                 optionsBuilder
                     .UseSqlServer(Startup.GetConnectionString())
+                    .AddInterceptors(new BlockingInterceptor())
                     .LogTo(Log.SQLLogging, LogLevel.Information); // лог у консоль
             }
             

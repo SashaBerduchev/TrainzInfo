@@ -17,6 +17,7 @@ namespace TrainzInfo.Tools
         static string ConnectionLog = "ConnectionLog.log";
         static string MailLog = "Mail.log";
         static string ExcelErrors = "ExcelErrors.log";
+        static string Blocking = "BlockingSQL.log";
 
         static string startStandartLogStr = "";
 
@@ -40,6 +41,31 @@ namespace TrainzInfo.Tools
                 Trace.WriteLine(logstr);
                 Console.WriteLine(logstr);
                 string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog);
+
+                lock (_logLock)
+                {
+                    using (var filestreamlog = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    using (var writer = new StreamWriter(filestreamlog, Encoding.UTF8))
+                    {
+                        writer.Write(logstr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                AddException(e.ToString());
+            }
+        }
+
+        public static void BlockingLog(string log)
+        {
+            try
+            {
+                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n";
+                Trace.WriteLine(logstr);
+                Console.WriteLine(logstr);
+                string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + Blocking);
 
                 lock (_logLock)
                 {
