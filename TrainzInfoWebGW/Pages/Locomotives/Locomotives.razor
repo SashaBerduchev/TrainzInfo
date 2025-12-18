@@ -62,45 +62,50 @@ else
 
     <!-- Список локомотивів -->
     <div class="row" id="locomotiveContainer">
-        @foreach (var item in FilteredLocomotives)
+        @if (locomotives is null)
         {
-            <div class="col-12 mb-4 loco-card">
-                <div class="card shadow-sm">
-                    <div class="row g-0">
-                        <div class="col-12 col-md-4">
-                            <img class="img-fluid rounded-start"
-                                 src="@item.ImgSrc"
-                                 alt="Локомотив" />
-                        </div>
-                        <div class="col-12 col-md-5 p-3">
-                            <h5>@item.Seria №@item.Number</h5>
-                            <p><b>Філія:</b> @item.Filia</p>
-                            <p><b>Депо:</b> @item.Depot</p>
-                            <p><b>Область:</b> @item.Oblast</p>
-                            <p><b>Місто:</b> @item.City</p>
-                            <p><b>Станція:</b> @item.Station </p>
-                            <p><b>Максимальна швидкість:</b> @item.Speed км/год</p>
-                        </div>
-                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-                            <button class="btn btn-outline-info mb-2" @onclick="() => ViewDetails(item.Id)">Детальна інформація</button>
-                            <button class="btn btn-outline-success mb-2" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">Фото користувачів</button>
+            <p>Локомотиви відсутні, застосуйте інший фільтр</p>
+        }else{
+            @foreach (var item in locomotives)
+            {
+                <div class="col-12 mb-4 loco-card">
+                    <div class="card shadow-sm">
+                        <div class="row g-0">
+                            <div class="col-12 col-md-4">
+                                <img class="img-fluid rounded-start"
+                                     src="@item.ImgSrc"
+                                     alt="Локомотив" />
+                            </div>
+                            <div class="col-12 col-md-5 p-3">
+                                <h5>@item.Seria №@item.Number</h5>
+                                <p><b>Філія:</b> @item.Filia</p>
+                                <p><b>Депо:</b> @item.Depot</p>
+                                <p><b>Область:</b> @item.Oblast</p>
+                                <p><b>Місто:</b> @item.City</p>
+                                <p><b>Станція:</b> @item.Station </p>
+                                <p><b>Максимальна швидкість:</b> @item.Speed км/год</p>
+                            </div>
+                            <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                                <button class="btn btn-outline-info mb-2" @onclick="() => ViewDetails(item.Id)">Детальна інформація</button>
+                                <button class="btn btn-outline-success mb-2" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">Фото користувачів</button>
 
-                            @if (IsAdminOrPublisher)
-                            {
-                                <button class="btn btn-outline-primary mb-2" @onclick="() => EditLocomotive(item.Id)">Редагувати</button>
-                            }
+                                @if (IsAdminOrPublisher)
+                                {
+                                    <button class="btn btn-outline-primary mb-2" @onclick="() => EditLocomotive(item.Id)">Редагувати</button>
+                                }
 
-                            @if (IsAdmin)
-                            {
-                                <button class="btn btn-outline-warning mb-2" @onclick="() => AddImage(item.Id)">Додати зображення</button>
-                                <button class="btn btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">Видалити</button>
-                            }
+                                @if (IsAdmin)
+                                {
+                                    <button class="btn btn-outline-warning mb-2" @onclick="() => AddImage(item.Id)">Додати зображення</button>
+                                    <button class="btn btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">Видалити</button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
+                }
+            }
             </div>
-        }
-    </div>
 }
 
 @code {
@@ -174,9 +179,20 @@ else
                 //ApplyFilter(); // оновлюємо відфільтровані новини
                 if (!isFilterLoad)
                 {
-                    FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getfilias"));
-                    DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getdepots"));
-                    SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/locomotives/getseries"));
+                    var urlfilia = $"api/locomotives/getfilias{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{( $"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{( $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+                    var urldepo = $"api/locomotives/getdepots{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    var urlseria = $"api/locomotives/getseries{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlfilia));
+                    DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>(urldepo));
+                    SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlseria));
                     isFilterLoad = true;
                 }
                 currentPage++;
@@ -197,6 +213,10 @@ else
         currentPage = 1;
         allLoaded = false;
         locomotives.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
         await Load();                 // загружаем первую страницу
 
         StateHasChanged();
@@ -235,7 +255,13 @@ else
     private async Task ClearFilter()
     {
         SelectedFilia = SelectedDepot = SelectedSeria = "";
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
         await Load();
+
+        StateHasChanged();
     }
 
     private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");

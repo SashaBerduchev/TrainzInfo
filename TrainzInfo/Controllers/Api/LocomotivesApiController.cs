@@ -75,7 +75,8 @@ namespace TrainzInfo.Controllers.Api
 
         [Produces("application/json")]
         [HttpGet("getlocomotives")]
-        public async Task<ActionResult<List<Locomotive>>> GetLocomotives([FromQuery] string filia,
+        public async Task<ActionResult<List<Locomotive>>> GetLocomotives(
+                [FromQuery] string filia,
                 [FromQuery] string depot,
                 [FromQuery] string seria,
                 [FromQuery] int page = 1)
@@ -142,18 +143,38 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("getseries")]
-        public async Task<ActionResult<List<string>>> GetSeries()
+        public async Task<ActionResult<List<string>>> GetSeries(
+                [FromQuery] string filia,
+                [FromQuery] string depot,
+                [FromQuery] string seria
+            )
         {
             try
             {
                 Log.Init("LocomotivesApiController", "GetSeries");
                 
                 Log.Wright("Start Get GetSeries");
-                var series = await _context.Locomotive_Series
-                    .Where(x=>x.Locomotives.Count>0)
-                    .Select(x => x.Seria)
+                IQueryable<Locomotive_series> query = _context.Locomotive_Series
+                    .Include(l => l.Locomotives)
+                        .ThenInclude(d => d.DepotList)
+                            .ThenInclude(ur => ur.UkrainsRailway)
+                    .AsQueryable();
+
+                if(!string.IsNullOrEmpty(filia))
+                    query = query.Where(l => l.Locomotives.Any(d => d.DepotList.UkrainsRailway.Name == filia));
+
+                if(!string.IsNullOrEmpty(depot))
+                    query = query.Where(l => l.Locomotives.Any(d => d.DepotList.Name == depot));
+
+                if(!string.IsNullOrEmpty(seria))
+                    query = query.Where(l => l.Seria == seria);
+
+                query = query.Where(x => x.Locomotives.Count > 0);
+
+                var series = await query.Select(x => x.Seria)
                     .Distinct()
                     .ToListAsync();
+
                 return Ok(series);
             }
             catch (Exception ex)
@@ -198,19 +219,36 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpGet("getdepots")]
-        public async Task<ActionResult<List<string>>> GetDepots()
+        public async Task<ActionResult<List<string>>> GetDepots(
+            [FromQuery] string filia,
+                [FromQuery] string depot,
+                [FromQuery] string seria)
         {
             try
             {
                 Log.Init("LocomotivesApiController", "GetDepots");
                 
                 Log.Wright("Start Get GetDepots");
-                var depots = await _context.Depots
-                    .Where(x=>x.Name.Contains("ТЧ") && x.Locomotives.Count > 0)
-                    .OrderBy(x => x.Name)
-                    .Select(x => x.Name)
-                    .Distinct()
-                    .ToListAsync();
+
+                IQueryable<DepotList> query = _context.Depots
+                    .Include(ur => ur.UkrainsRailway)
+                    .Include(l => l.Locomotives)
+                        .ThenInclude(ls => ls.Locomotive_Series)
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(filia))
+                    query = query.Where(l => l.UkrainsRailway.Name == filia);
+
+                if (!string.IsNullOrWhiteSpace(depot))
+                    query = query.Where(l => l.Name == depot);
+                if (!string.IsNullOrWhiteSpace(seria))
+                    query = query.Where(l => l.Locomotives.Any(d => d.Locomotive_Series.Seria == seria));
+
+                query = query.Where(x => x.Name.Contains("ТЧ"));
+                query = query.Where(x => x.Locomotives.Count > 0);
+                query = query.OrderBy(x => x.Name);
+
+                var depots = await query.Select(x => x.Name).ToListAsync();
                 return Ok(depots);
             }
             catch (Exception ex)
@@ -427,17 +465,34 @@ namespace TrainzInfo.Controllers.Api
 
         [HttpGet("getfilias")]
         [Produces("application/json")]
-        public async Task<ActionResult<List<string>>> GetFilias()
+        public async Task<ActionResult<List<string>>> GetFilias(
+                [FromQuery] string filia,
+                [FromQuery] string depot,
+                [FromQuery] string seria)
         {
             try
             {
                 Log.Init("LocomotivesApiController", "GetFilias");
                 
                 Log.Wright("Start Get GetFilias");
-                var filias = await _context.UkrainsRailways
-                    .OrderBy(x => x.Name)
-                    .Select(x => x.Name)
-                    .ToListAsync();
+                List<string> filias = new List<string>();
+                IQueryable<UkrainsRailways> query = _context.UkrainsRailways
+                    .Include(d => d.DepotLists)
+                    .Include(l => l.DepotLists)
+                        .ThenInclude(loc => loc.Locomotives)
+                            .ThenInclude(ls => ls.Locomotive_Series)
+                    .AsQueryable();
+                if (!string.IsNullOrWhiteSpace(filia))
+                    query = query.Where(l => l.Name == filia);
+
+                if (!string.IsNullOrWhiteSpace(depot))
+                    query = query.Where(l => l.DepotLists.Any(d => d.Name == depot));
+
+                if (!string.IsNullOrWhiteSpace(seria))
+                    query = query.Where(l => l.DepotLists.Any(d=>d.Locomotives.Any(d=>d.Locomotive_Series.Seria == seria)));
+
+                query = query.OrderBy(x => x.Name);
+                filias = await query.Select(x => x.Name).ToListAsync();
                 Log.Finish();
                 return Ok(filias);
             }
@@ -457,13 +512,15 @@ namespace TrainzInfo.Controllers.Api
 
         [HttpGet("getdepotslist")]
         [Produces("application/json")]
-        public async Task<ActionResult<List<string>>> GetDepotsList()
+        public async Task<ActionResult<List<string>>> GetDepotsList(
+            )
         {
             try
             {
                 Log.Init("LocomotivesApiController", "GetDepotsList");
                 
                 Log.Wright("Start Get GetDepotsList");
+
                 var depots = await _context.Depots
                     .Where(x => x.Name.Contains("ТЧ"))
                     .OrderBy(x => x.Name)
