@@ -7,20 +7,21 @@
 @inject AuthenticationStateProvider AuthStateProvider
 <h1 class="mb-4 text-center">Локомотиви</h1>
 
+<div class="mb-3">
+    @if (IsAdmin)
+    {
+        <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
+        <button class="btn btn-info mb-2" @onclick="UpdateInfo">Оновити дані</button>
+        <p><b>Кількість запитів:</b> @count</p>
+    }
+</div>
 @if (isLoading)
 {
     <p class="text-center">Завантаження...</p>
 }
 else
 {
-    <div class="mb-3">
-        @if (IsAdmin)
-        {
-            <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
-            <button class="btn btn-info mb-2" @onclick="UpdateInfo">Оновити дані</button>
-            <p><b>Кількість запитів:</b> @count</p>
-        }
-    </div>
+    
 
     <!-- Фільтри -->
     <div class="row g-2 mb-3">
@@ -218,7 +219,7 @@ else
         DepotList.Clear();
         SeriaList.Clear();
         await Load();                 // загружаем первую страницу
-
+        await JS.InvokeVoidAsync("revealNewLocoCards");
         StateHasChanged();
     }
 
@@ -260,7 +261,7 @@ else
         DepotList.Clear();
         SeriaList.Clear();
         await Load();
-
+        await JS.InvokeVoidAsync("revealNewLocoCards");
         StateHasChanged();
     }
 

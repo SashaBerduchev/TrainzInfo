@@ -75,7 +75,9 @@ namespace TrainzInfo.Controllers.Api
 
         [HttpGet("get-electrics")]
         public async Task<ActionResult<List<ElectricTrainDTO>>> GetElectrics(int page = 1,
-            [FromQuery] string depo = null)
+            [FromQuery] string depo = null,
+            [FromQuery] string name = null,
+            [FromQuery] string filia = null)
         {
             Log.Init(this.ToString(), nameof(GetElectrics));
             
@@ -100,6 +102,15 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(x => x.DepotList.Name == depo);
                 }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(x => x.Name == name);
+                }
+                if (!string.IsNullOrEmpty(filia))
+                {
+                    query = query.Where(x => x.DepotList.UkrainsRailway.Name == filia);
+                }
+
                 query = query.OrderBy(x => x.Trains.Model).OrderBy(x => x.Model);
                 query = query.Skip((page - 1) * pageSize)
                     .Take(pageSize);
@@ -283,10 +294,28 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("getnames")]
-        public async Task<ActionResult> GetNames()
+        public async Task<ActionResult> GetNames(
+            [FromQuery] string name = null,
+            [FromQuery] string filia = null,
+            [FromQuery] string depo = null
+            )
         {
-            List<string> names = await _context.SuburbanTrainsInfos
-                .Where(x=>x.ElectricTrain.Count > 0)
+            IQueryable<SuburbanTrainsInfo> query = _context.SuburbanTrainsInfos
+                .Include(x => x.ElectricTrain)
+                    .ThenInclude(x => x.DepotList)
+                        .ThenInclude(x => x.UkrainsRailway)
+                .AsQueryable();
+
+            if(!string.IsNullOrEmpty(name))
+                query = query.Where(x => x.ElectricTrain.Any(x=>x.Name == name));
+            if(!string.IsNullOrEmpty(filia))
+                query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.UkrainsRailway.Name == filia));
+            if(!string.IsNullOrEmpty(depo))
+                query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.Name == depo));
+
+            query = query.Where(x => x.ElectricTrain.Count > 0);
+            List<string> names = await query
+                
                 .Select(x=>x.Model)
                 .ToListAsync();
             return Ok(names);
@@ -303,12 +332,29 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpGet("getdepots")]
-        public async Task<ActionResult> GetDepots()
+        public async Task<ActionResult> GetDepots(
+            [FromQuery] string name = null,
+            [FromQuery] string filia = null,
+            [FromQuery] string depo = null
+            )
         {
-            List<string> depots = await _context.Depots
-                .Where(x=>x.Name.Contains("РПЧ") && x.ElectricTrains.Count > 0)
-                .Select(x=>x.Name)
-                .ToListAsync();
+
+            IQueryable<DepotList> query = _context.Depots
+                .Include(x => x.ElectricTrains)
+                .Include(x => x.UkrainsRailway)
+                .AsQueryable();
+
+            if(!string.IsNullOrEmpty(name))
+                query = query.Where(x => x.ElectricTrains.Any(x=>x.Name == name));
+            
+            if(!string.IsNullOrEmpty(filia))
+                query = query.Where(x => x.UkrainsRailway.Name == filia);
+
+            if(!string.IsNullOrEmpty(depo))
+                query = query.Where(x => x.Name == depo);
+
+            query = query.Where(x => x.Name.Contains("РПЧ") && x.ElectricTrains.Count > 0);
+            List<string> depots = await query.Select(x=>x.Name).ToListAsync();
             return Ok(depots);
         }
 
@@ -331,9 +377,26 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("getfilias")]
-        public async Task<ActionResult> GetFilias()
+        public async Task<ActionResult> GetFilias(
+            [FromQuery] string name = null,
+            [FromQuery] string filia = null,
+            [FromQuery] string depo = null
+            )
         {
-            var filias = await _context.UkrainsRailways
+            IQueryable<UkrainsRailways> query = _context.UkrainsRailways
+                .Include(x => x.DepotLists)
+                    .ThenInclude(x => x.ElectricTrains)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(x => x.DepotLists.Any(d => d.ElectricTrains.Any(e => e.Name == name)));
+            if (!string.IsNullOrEmpty(filia))
+                query = query.Where(x => x.Name == filia);
+            if (!string.IsNullOrEmpty(depo))
+                query = query.Where(x => x.DepotLists.Any(d => d.Name == depo));
+
+
+            var filias = await query
                 .Select(x=>x.Name)
                 .ToListAsync();
             return Ok(filias);

@@ -1,23 +1,14 @@
 ﻿window.addElectricsScrollListener = function (dotnetHelper) {
     const container = document.getElementById('trainsContainer');
-
-    if (!container) {
-        console.error("❌ trainsContainer not found!");
-        return;
-    }
+    if (!container) return console.error("trainsContainer not found!");
 
     function revealCards() {
         const cards = container.querySelectorAll('.train-card');
         const windowBottom = window.innerHeight + window.scrollY;
-
         cards.forEach(card => {
-            if (!card) return;
-
             if (!card.classList.contains('visible')) {
                 const cardTop = card.getBoundingClientRect().top + window.scrollY;
-                if (windowBottom > cardTop + 100) {
-                    card.classList.add('visible');
-                }
+                if (windowBottom > cardTop + 100) card.classList.add('visible');
             }
         });
     }
@@ -27,19 +18,17 @@
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
 
-        if (scrollTop + clientHeight >= scrollHeight - 50) {
-            if (dotnetHelper) {
-                dotnetHelper.invokeMethodAsync('OnScrollNearBottom');
-            } else {
-                console.error("❌ dotnetHelper is null");
-            }
+        if (scrollTop + clientHeight >= scrollHeight - 50 && dotnetHelper) {
+            dotnetHelper.invokeMethodAsync('OnScrollNearBottom');
         }
 
         revealCards();
     });
 
-    revealCards();
+    // Функція, яку можна викликати з Blazor після Load()
+    window.revealNewCards = function () {
+        container.querySelectorAll('.train-card').forEach(card => card.classList.add('visible'));
+    };
 
-    const observer = new MutationObserver(revealCards);
-    observer.observe(container, { childList: true, subtree: true });
+    revealCards();
 };
