@@ -109,11 +109,12 @@
     private List<DieselTrainsDTO> filteredTrains = new();
     private UserDto currentUser;
     private bool IsPublisherOrAdminOrSuperAdmin;
+    private bool isFilterLoad = false;
 
-    private string selectedFilia;
-    private string selectedOblast;
-    private string selectedDepo;
-    private string selectedModel;
+    private string selectedFilia { get; set; } = "";
+    private string selectedOblast { get; set; } = "";
+    private string selectedDepo { get; set; } = "";
+    private string selectedModel { get; set; } = "";
 
     private List<string> filias = new();
     private List<string> oblasts = new();
@@ -137,11 +138,7 @@
 
         filteredTrains = dieselTrains.ToList();
 
-        // Завантаження даних для фільтрів
-        filias = await Http.GetFromJsonAsync<List<string>>("api/diesels/filias");
-        oblasts = await Http.GetFromJsonAsync<List<string>>("api/diesels/oblasts");
-        depos = await Http.GetFromJsonAsync<List<string>>("api/diesels/depos");
-        models = await Http.GetFromJsonAsync<List<string>>("api/diesels/models");
+
 
         // JS для анімації
         await JS.InvokeVoidAsync("addDieselsScrollListener", DotNetObjectReference.Create(this));
@@ -172,34 +169,66 @@
         {
             dieselTrains.AddRange(dieselPage);
             //    await ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+
+            if (!isFilterLoad)
+            {
+                var urlfilia = $"api/diesels/filias{($"?filia={Uri.EscapeDataString(selectedFilia)}")}"+
+                 $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}"+
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urldepo = $"api/diesels/depos{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urlmodel = $"api/diesels/models{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                 $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urloblast = $"api/diesels/oblasts{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                filias = await Http.GetFromJsonAsync<List<string>>(urlfilia);
+                oblasts = await Http.GetFromJsonAsync<List<string>>(urloblast);
+                depos = await Http.GetFromJsonAsync<List<string>>(urldepo);
+                models = await Http.GetFromJsonAsync<List<string>>(urlmodel);
+                isFilterLoad = true;
+            }
             currentPage++;
 
-            // Додаємо невелику паузу для плавного появлення
-            foreach (var t in dieselPage)
-            {
-                await Task.Delay(50);
-                StateHasChanged();
-            }
         }
         loading = true;
         isLoading = false;
+        StateHasChanged();
     }
     private async Task ApplyFilter()
     {
         currentPage = 1;
         allLoaded = false;
         dieselTrains.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        models.Clear();
+        filias.Clear();
+        depos.Clear();
+        oblasts.Clear();
         await Load();                 // загружаем первую страницу
+        await JS.InvokeVoidAsync("revealNewDieselCards");
 
-        //StateHasChanged();
     }
 
     private async Task ClearFilter()
     {
         selectedFilia = selectedOblast = selectedDepo = selectedModel = "";
         currentPage = 1;
-        dieselTrains.Clear();
-        await Load();
+        allLoaded = false;
+        dieselTrains.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        models.Clear();
+        filias.Clear();
+        depos.Clear();
+        oblasts.Clear();
+        await Load();                 // загружаем первую страницу
+        await JS.InvokeVoidAsync("revealNewDieselCards");
     }
 
     private void CreateDieselTrain()

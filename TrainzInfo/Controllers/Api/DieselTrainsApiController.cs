@@ -146,14 +146,36 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("filias")]
-        public async Task<ActionResult<IEnumerable<string>>> GetFilias()
+        public async Task<ActionResult<IEnumerable<string>>> GetFilias(
+            [FromQuery] string filia = null,
+            [FromQuery] string depot = null,
+            [FromQuery] string model = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init("DieselTrainsApiController", "GetFilias");
             
             Log.Wright("GetFilias API called");
             try
             {
-                var filias = await _context.UkrainsRailways
+                IQueryable<UkrainsRailways> query = _context.UkrainsRailways
+                    .Include(x=>x.DepotLists)
+                        .ThenInclude(x=>x.DieselTrains)
+                    .Include(x=>x.DepotLists)
+                        .ThenInclude(x=>x.City)
+                            .ThenInclude(x=>x.Oblasts)
+                    .AsQueryable();
+
+                if(!string.IsNullOrEmpty(filia))
+                    query = query.Where(x=>x.Name == filia);
+                if(!string.IsNullOrEmpty(depot))
+                    query = query.Where(x=>x.DepotLists.Any(dl=>dl.Name == depot));
+                if(!string.IsNullOrEmpty(oblast))
+                    query = query.Where(x=>x.DepotLists.Any(dl=>dl.City.Oblasts.Name == oblast));
+                if(!string.IsNullOrEmpty(model))
+                    query = query.Where(x=>x.DepotLists.Any(dl=>dl.DieselTrains.Any(dt=>dt.SuburbanTrainsInfo.Model == model)));
+                
+                query = query.Where(ur => ur.DepotLists.Any(dl => dl.DieselTrains.Count > 0));
+                var filias = await query
                     .Select(ur => ur.Name)
                     .Distinct()
                     .ToListAsync();
@@ -173,17 +195,35 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("oblasts")]
-        public async Task<ActionResult<IEnumerable<string>>> GetOblasts()
+        public async Task<ActionResult<IEnumerable<string>>> GetOblasts(
+            [FromQuery] string filia = null,
+            [FromQuery] string depot = null,
+            [FromQuery] string model = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init("DieselTrainsApiController", "GetOblasts");
             
             Log.Wright("GetOblasts API called");
             try
             {
-                var oblasts = await _context.Depots
+                IQueryable<DepotList> query = _context.Depots
                     .Include(x => x.City)
-                    .ThenInclude(x => x.Oblasts)
-                    .Where(x => x.DieselTrains.Count > 0)
+                        .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.UkrainsRailway)
+                    .Include(x => x.DieselTrains)
+                        .ThenInclude(x => x.SuburbanTrainsInfo)
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(filia))
+                    query = query.Where(x => x.UkrainsRailway.Name == filia);
+                if (!string.IsNullOrEmpty(depot))
+                        query = query.Where(x => x.Name == depot);
+                if (!string.IsNullOrEmpty(oblast))
+                    query = query.Where(x => x.City.Oblasts.Name == oblast);
+                if (!string.IsNullOrEmpty(model))
+                    query = query.Where(x => x.DieselTrains.Any(dt => dt.SuburbanTrainsInfo.Model == model));
+
+                query = query.Where(x => x.DieselTrains.Count > 0);
+                var oblasts = await query
                     .Select(x => x.City.Oblasts.Name)
                     .ToListAsync();
                 Log.Wright("GetOblasts API finished");
@@ -202,15 +242,35 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("depos")]
-        public async Task<ActionResult<IEnumerable<string>>> GetDepos()
+        public async Task<ActionResult<IEnumerable<string>>> GetDepos(
+            [FromQuery] string filia = null,
+            [FromQuery] string depot = null,
+            [FromQuery] string model = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init("DieselTrainsApiController", "GetDepos");
             
             Log.Wright("GetDepos API called");
             try
             {
-                var depos = await _context.Depots
-                    .Where(x => x.Name.Contains("РПЧ") && x.DieselTrains.Count > 0)
+                IQueryable<DepotList> query = _context.Depots
+                    .Include(x => x.City)
+                        .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.UkrainsRailway)
+                    .Include(x => x.DieselTrains)
+                        .ThenInclude(x => x.SuburbanTrainsInfo)
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(filia))
+                    query = query.Where(x => x.UkrainsRailway.Name == filia);
+                if (!string.IsNullOrEmpty(depot))
+                    query = query.Where(x => x.Name == depot);
+                if (!string.IsNullOrEmpty(oblast))
+                    query = query.Where(x => x.City.Oblasts.Name == oblast);
+                if (!string.IsNullOrEmpty(model))
+                    query = query.Where(x => x.DieselTrains.Any(dt => dt.SuburbanTrainsInfo.Model == model));
+
+                query = query.Where(x => x.Name.Contains("РПЧ") && x.DieselTrains.Count > 0);
+                var depos = await query
                     .Select(dl => dl.Name)
                     .Distinct()
                     .ToListAsync();
@@ -258,15 +318,39 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("models")]
-        public async Task<ActionResult<IEnumerable<string>>> GetModels()
+        public async Task<ActionResult<IEnumerable<string>>> GetModels(
+            [FromQuery] string filia = null,
+            [FromQuery] string depot = null,
+            [FromQuery] string model = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init("DieselTrainsApiController", "GetModels");
             
             Log.Wright("GetModels API called");
             try
             {
-                var models = await _context.SuburbanTrainsInfos
-                    .Where(x=>x.DieselTrains.Count > 0)
+                IQueryable<SuburbanTrainsInfo> query = _context.SuburbanTrainsInfos
+                    .Include(x => x.DieselTrains)
+                        .ThenInclude(x => x.DepotList)
+                            .ThenInclude(x => x.City)
+                                .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.DieselTrains)
+                        .ThenInclude(x => x.DepotList)
+                            .ThenInclude(x => x.UkrainsRailway)
+                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(filia))
+                    query = query.Where(sti => sti.DieselTrains.Any(dt => dt.DepotList.UkrainsRailway.Name == filia));
+                if (!string.IsNullOrEmpty(depot))
+                    query = query.Where(sti => sti.DieselTrains.Any(dt => dt.DepotList.Name == depot));
+                if (!string.IsNullOrEmpty(oblast))
+                    query = query.Where(sti => sti.DieselTrains.Any(dt => dt.DepotList.City.Oblasts.Name == oblast));
+                if (!string.IsNullOrEmpty(model))
+                    query = query.Where(sti => sti.Model == model);
+
+                query = query.Where(x => x.DieselTrains.Count > 0);
+
+                var models = await query
                     .Select(sti => sti.Model)
                     .Distinct()
                     .ToListAsync();

@@ -297,7 +297,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetNames(
             [FromQuery] string name = null,
             [FromQuery] string filia = null,
-            [FromQuery] string depo = null
+            [FromQuery] string depot = null
             )
         {
             IQueryable<SuburbanTrainsInfo> query = _context.SuburbanTrainsInfos
@@ -310,8 +310,8 @@ namespace TrainzInfo.Controllers.Api
                 query = query.Where(x => x.ElectricTrain.Any(x=>x.Name == name));
             if(!string.IsNullOrEmpty(filia))
                 query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.UkrainsRailway.Name == filia));
-            if(!string.IsNullOrEmpty(depo))
-                query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.Name == depo));
+            if(!string.IsNullOrEmpty(depot))
+                query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.Name == depot));
 
             query = query.Where(x => x.ElectricTrain.Count > 0);
             List<string> names = await query
@@ -335,7 +335,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetDepots(
             [FromQuery] string name = null,
             [FromQuery] string filia = null,
-            [FromQuery] string depo = null
+            [FromQuery] string depot = null
             )
         {
 
@@ -350,8 +350,8 @@ namespace TrainzInfo.Controllers.Api
             if(!string.IsNullOrEmpty(filia))
                 query = query.Where(x => x.UkrainsRailway.Name == filia);
 
-            if(!string.IsNullOrEmpty(depo))
-                query = query.Where(x => x.Name == depo);
+            if(!string.IsNullOrEmpty(depot))
+                query = query.Where(x => x.Name == depot);
 
             query = query.Where(x => x.Name.Contains("РПЧ") && x.ElectricTrains.Count > 0);
             List<string> depots = await query.Select(x=>x.Name).ToListAsync();
@@ -380,7 +380,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetFilias(
             [FromQuery] string name = null,
             [FromQuery] string filia = null,
-            [FromQuery] string depo = null
+            [FromQuery] string depot = null
             )
         {
             IQueryable<UkrainsRailways> query = _context.UkrainsRailways
@@ -392,10 +392,10 @@ namespace TrainzInfo.Controllers.Api
                 query = query.Where(x => x.DepotLists.Any(d => d.ElectricTrains.Any(e => e.Name == name)));
             if (!string.IsNullOrEmpty(filia))
                 query = query.Where(x => x.Name == filia);
-            if (!string.IsNullOrEmpty(depo))
-                query = query.Where(x => x.DepotLists.Any(d => d.Name == depo));
+            if (!string.IsNullOrEmpty(depot))
+                query = query.Where(x => x.DepotLists.Any(d => d.Name == depot));
 
-
+            query = query.Where(x => x.DepotLists.Any(d => d.ElectricTrains.Count > 0));
             var filias = await query
                 .Select(x=>x.Name)
                 .ToListAsync();

@@ -26,7 +26,7 @@
     });
 
     // Функція, яку можна викликати з Blazor після Load()
-    window.revealNewCards = function () {
+    window.revealNewElectricTrainCards = function () {
         container.querySelectorAll('.train-card').forEach(card => card.classList.add('visible'));
     };
 

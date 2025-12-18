@@ -42,6 +42,7 @@ else
         </div>
         <div class="col-12 col-md-4">
             <select class="form-control" @bind="SelectedName">
+
                 <option value="">Всі назви</option>
                 @foreach (var name in NameList)
                 {
@@ -184,13 +185,6 @@ else
                 isFilterLoad = true;
             }
             currentPage++;
-
-            // // Додаємо невелику паузу для плавного появлення
-            // foreach (var t in trainsPage)
-            // {
-            //     await Task.Delay(50);
-            //     StateHasChanged();
-            // }
         }
 
         isLoading = false;
@@ -236,7 +230,7 @@ else
         DepotList.Clear();
         FiliaList.Clear();
         await Load();                 // загружаем первую страницу
-        await JS.InvokeVoidAsync("revealNewCards");
+        await JS.InvokeVoidAsync("revealNewElectricTrainCards");
         StateHasChanged();
     }
 
@@ -249,7 +243,7 @@ else
         FiliaList.Clear();
         ElectricTrains.Clear();
         await Load();
-        await JS.InvokeVoidAsync("revealNewCards");
+        await JS.InvokeVoidAsync("revealNewElectricTrainCards");
         StateHasChanged();
     }
 
