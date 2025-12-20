@@ -379,7 +379,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpGet("getlocomotive/{id}")]
+        [HttpGet("details/{id}")]
         public async Task<ActionResult<LocomotiveDTO>> GetLocomotive(int id)
         {
             try
@@ -394,6 +394,10 @@ namespace TrainzInfo.Controllers.Api
                     .Include(u => u.DepotList)
                         .ThenInclude(ur => ur.UkrainsRailway)
                     .Include(ls => ls.Locomotive_Series)
+                    .Include(x => x.Stations)
+                        .ThenInclude(si => si.StationInfo)
+                    .Include(x => x.Stations)
+                        .ThenInclude(ci => ci.StationImages)
                     .FirstOrDefaultAsync(n => n.id == id);
                 if (locomotive == null)
                 {
@@ -412,6 +416,11 @@ namespace TrainzInfo.Controllers.Api
                     ImgSrc = locomotive.Image != null
                                 ? $"data:{locomotive.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Image)}"
                                 : null,
+                    Station = locomotive.Stations.Name,
+                    StationInformation = locomotive.Stations.StationInfo.BaseInfo,
+                    StationImages = locomotive.Stations.StationImages.Image
+                        != null ? $"data:{locomotive.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Stations.StationImages.Image)}"
+                        : null
                 };
                 Log.Finish();
                 return Ok(locoDTO);

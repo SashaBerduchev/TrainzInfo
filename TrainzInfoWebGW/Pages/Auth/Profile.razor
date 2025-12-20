@@ -29,25 +29,60 @@
 }
 
 
-<div class="card mt-3" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">Користувач: @userName</h5>
-        <p class="card-text">Тут можна показати інші деталі користувача.</p>
-        <button class="btn btn-danger" @onclick="Logout">Вийти</button>
-        @if (IsAdmin)
-        {
-            <button class="btn btn-info" @onclick="CreateNews">Створити новину</button>
-            <button class="btn btn-info" @onclick="CreateMail">Додати поштовий сервіс</button>
-            <button class="btn btn-info" @onclick="FixOblCities">Виправлення адресного класифікатора</button>
-        }
+<div class="container mt-4">
+
+    <!-- Картка користувача -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex flex-column flex-md-row align-items-center gap-4">
+            <div class="user-info flex-grow-1">
+                <h4 class="card-title mb-2">Користувач: <strong>@userName</strong></h4>
+                <p class="card-text mb-2">Тут можна показати інші деталі користувача.</p>
+                <button class="btn btn-danger me-2 mb-2" @onclick="Logout">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Вийти
+                </button>
+            </div>
+            <div class="user-avatar">
+                <img src="@userAvatarUrl" class="rounded-circle" style="width:80px; height:80px;" alt="Аватар користувача" />
+            </div>
+        </div>
     </div>
-    <div>
-    </div>
+
+    <!-- Адмінська панель -->
+    @if (IsAdmin)
+    {
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Адміністраторські дії</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2"
+                                @onclick="CreateNews">
+                            <i class="fa-solid fa-newspaper"></i> Створити новину
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2"
+                                @onclick="CreateMail">
+                            <i class="fa-solid fa-envelope"></i> Додати поштовий сервіс
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2"
+                                @onclick="FixOblCities">
+                            <i class="fa-solid fa-map-marker-alt"></i> Виправлення адресного класифікатора
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
     private bool IsAdmin { get; set; } = false;
-
+    private string userAvatarUrl = "https://i.pravatar.cc/80"; // тестовий аватар
     private void Logout()
     {
         // редірект на сторінку логіну або виходу через Identity

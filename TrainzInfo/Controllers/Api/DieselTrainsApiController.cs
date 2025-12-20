@@ -145,6 +145,70 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<DieselTrainsDTO>> GetDieselTrainDetails(int id)
+        {
+            Log.Init("DieselTrainsApiController", "GetDieselTrainDetails");
+            
+            Log.Wright("GetDieselTrainDetails API called");
+            try
+            {
+                var dieselTrain = await _context.DieselTrains
+                    .Include(dt => dt.DepotList)
+                        .ThenInclude(dl => dl.City)
+                            .ThenInclude(c => c.Oblasts)
+                    .Include(dt => dt.DepotList)
+                        .ThenInclude(dl => dl.UkrainsRailway)
+                    .Include(dt => dt.SuburbanTrainsInfo)
+                    .Include(x=>x.Stations)
+                        .ThenInclude(s=>s.StationInfo)
+                    .Include(x => x.Stations)
+                        .ThenInclude(s => s.StationImages)
+                    .Include(x=>x.SuburbanTrainsInfo)
+                    .FirstOrDefaultAsync(dt => dt.Id == id);
+                if (dieselTrain == null)
+                {
+                    Log.Wright("GetDieselTrainDetails API: Diesel train not found");
+                    return NotFound();
+                }
+                var dieselTrainDto = new DieselTrainsDTO
+                {
+                    Id = dieselTrain.Id,
+                    Name = dieselTrain.SuburbanTrainsInfo.Model,
+                    SuburbanTrainsInfo = dieselTrain.SuburbanTrainsInfo.BaseInfo,
+                    NumberTrain = dieselTrain.NumberTrain,
+                    DepotList = dieselTrain.DepotList.Name,
+                    BaseInfo = dieselTrain.SuburbanTrainsInfo.BaseInfo,
+                    AllInfo = dieselTrain.SuburbanTrainsInfo.AllInfo,
+                    City = dieselTrain.DepotList.City.Name,
+                    Oblast = dieselTrain.DepotList.City.Oblasts.Name,
+                    Filia = dieselTrain.DepotList.UkrainsRailway.Name,
+                    Image = dieselTrain.Image != null
+                                        ? $"data:{dieselTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(dieselTrain.Image)}"
+                                        : null,
+                    ImageMimeTypeOfData = dieselTrain.ImageMimeTypeOfData,
+                    Station = dieselTrain.Stations?.Name,
+                    StationInformation = dieselTrain.Stations?.StationInfo?.BaseInfo,
+                    StationImages = dieselTrain.Stations?.StationImages?.Image != null
+                                        ?  $"data:{dieselTrain.Stations?.StationImages?.ImageMimeTypeOfData};base64,{Convert.ToBase64String(dieselTrain.Stations?.StationImages?.Image)}"
+                                        : null,
+                };
+                Log.Wright("GetDieselTrainDetails API finished");
+                return Ok(dieselTrainDto);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException("GetDieselTrainDetails API error: " + ex.Message);
+                Log.Wright("GetDieselTrainDetails API error: " + ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+
         [HttpGet("filias")]
         public async Task<ActionResult<IEnumerable<string>>> GetFilias(
             [FromQuery] string filia = null,
