@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LinqToDB;
+using LinqToDB.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using Image = SixLabors.ImageSharp.Image;
-using System.Collections.Generic;
 using TrainzInfoShared.DTO.GetDTO;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -31,23 +33,16 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string oblast = null)
         {
             Log.Init(this.ToString(), nameof(GetStations));
-            
+
 
             int pageSize = 10;
 
             Log.Wright("Getting stations from database");
             try
             {
-                IQueryable<Stations> query = _context.Stations
-                       .Include(s => s.StationInfo)
-                       .Include(s => s.Oblasts)
-                       .Include(s => s.Citys)
-                       .Include(s => s.StationImages)
-                       .Include(s => s.Metro)
-                       .Include(s => s.UkrainsRailways)
-                       .Include(s=>s.StationsShadules)
-                       .Include(s=>s.Locomotives)
-                       .AsQueryable();
+                IQueryable<Stations> query = _context.Stations;
+
+                // 2. Фільтрація (залишається майже без змін)
                 if (!string.IsNullOrEmpty(filia))
                 {
                     query = query.Where(s => s.UkrainsRailways.Name == filia);
@@ -60,29 +55,60 @@ namespace TrainzInfo.Controllers.Api
                 {
                     query = query.Where(s => s.Oblasts.Name == oblast);
                 }
-                query = query
+
+                // 3. Проекція (Select) ПРЯМО В БАЗІ ДАНИХ
+                // Ми вибираємо тільки ті дані, які потрібні для DTO.
+                // getSlowImage - це C# метод, тому ми не можемо викликати його в SQL.
+                // Ми витягнемо "сирі" дані для нього, а обробимо вже в пам'яті.
+
+                var rawData = await query
                     .OrderBy(s => s.id)
                     .Skip((page - 1) * pageSize)
-                    .Take(pageSize);
-                var stations = await query.ToListAsync();
+                    .Take(pageSize)
+                    .Select(s => new
+                    {
+                        s.id,
+                        s.Name,
+                        s.DopImgSrc,
+                        s.DopImgSrcSec,
+                        s.DopImgSrcThd,
+                        s.ImageMimeTypeOfData,
+                        // EF Core сам зробить потрібні JOIN, Include не треба писати вручну
+                        UkrainsRailways = s.UkrainsRailways.Name,
+                        Oblasts = s.Oblasts.Name,
+                        Citys = s.Citys.Name,
+                        StationInfo = s.StationInfo.BaseInfo,
+                        Metro = s.Metro.Name,
+                        // Витягуємо дані для картинки (припускаю, що getSlowImage використовує ці поля)
+                        // Якщо StationImages - це колекція, беремо першу або null
+                        // Якщо це об'єкт - просто беремо поля. 
+                        // Приклад для колекції (якщо зображень багато):
+                        RawImageBytes = s.StationImages.Image,
+                        RawImageMime = s.StationImages.ImageMimeTypeOfData
+                    })
+                    .ToListAsync();
 
-                // Після завантаження — формуємо DTO
-                var result = stations.AsParallel().Select(station => new StationsDTO
+                // 4. Фінальна трансформація в пам'яті (клієнтська частина)
+                // Оскільки даних мало (лише одна сторінка потрібних колонок), це буде миттєво.
+
+                var result = rawData.Select(item => new StationsDTO
                 {
-                    id = station.id,
-                    Name = station.Name,
-                    DopImgSrc = station.DopImgSrc,
-                    DopImgSrcSec = station.DopImgSrcSec,
-                    DopImgSrcThd = station.DopImgSrcThd,
-                    ImageMimeTypeOfData = station.ImageMimeTypeOfData,
-                    UkrainsRailways = station.UkrainsRailways?.Name,
-                    Oblasts = station.Oblasts?.Name,
-                    Citys = station.Citys?.Name,
-                    StationInfo = station.StationInfo?.BaseInfo,
-                    Metro = station.Metro?.Name,
-                    StationImages = getSlowImage(station)
-                }).ToList();
+                    id = item.id,
+                    Name = item.Name,
+                    DopImgSrc = item.DopImgSrc,
+                    DopImgSrcSec = item.DopImgSrcSec,
+                    DopImgSrcThd = item.DopImgSrcThd,
+                    ImageMimeTypeOfData = item.ImageMimeTypeOfData,
+                    UkrainsRailways = item.UkrainsRailways,
+                    Oblasts = item.Oblasts,
+                    Citys = item.Citys,
+                    StationInfo = item.StationInfo,
+                    Metro = item.Metro,
 
+                    // Тут імітуємо роботу вашого getSlowImage, маючи вже завантажені байти
+                    // Або викликаємо його, передавши DTO, якщо метод адаптований
+                    StationImages = getSlowImage(item.RawImageBytes, item.RawImageMime)
+                }).ToList();
                 Log.Wright("Stations successfully retrieved from database");
 
                 return Ok(result);
@@ -99,85 +125,115 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        private string getSlowImage(Stations station)
+        private string getSlowImage(byte[] imgdata, string imgtype)
         {
-            StationImages stationImages = station.StationImages;
+            if (imgdata == null) return null;
 
-            if (stationImages != null)
+            using (MemoryStream ms = new MemoryStream(imgdata, 0, imgdata.Length))
             {
-
-                using (MemoryStream ms = new MemoryStream(stationImages.Image, 0, stationImages.Image.Length))
+                int h = 700;
+                int w = 700;
+                using (Image img = Image.Load(ms))
                 {
-                    int h = 450;
-                    int w = 500;
-                    using (Image img = Image.Load(ms))
+
+                    img.Mutate(x => x.Resize(w, h));
+                    using (MemoryStream ms2 = new MemoryStream())
                     {
-
-                        img.Mutate(x => x.Resize(w, h));
-                        using (MemoryStream ms2 = new MemoryStream())
-                        {
-                            img.SaveAsJpeg(ms2);
-                            stationImages.Image = ms2.ToArray();
-                        }
-
+                        img.SaveAsJpeg(ms2);
+                        imgdata = ms2.ToArray();
                     }
-                }
 
-                return stationImages != null ? $"data:{stationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(stationImages.Image)}"
-                                    : null;
+                }
             }
-            return null;
+
+            return imgdata != null ? $"data:{imgtype};base64,{Convert.ToBase64String(imgdata)}" : null;
+
         }
 
         [HttpGet("details/{id}")]
         public async Task<ActionResult> Details(int id)
         {
             Log.Init(this.ToString(), nameof(Details));
-            
+
             try
             {
-                StationsDTO station = await _context.Stations
-                    .Include(x => x.StationsShadules)
-                        .ThenInclude(x => x.Train)
-                    .Include(x => x.Locomotives)
-                    .Include(x=>x.ElectricTrains)
+                var schedulesCte = _context.StationsShadules
+                    .ToLinqToDB()
+                    .Where(sh => EF.Property<int>(sh, "StationsId") == id)
+                    // Використовуємо .LeftJoin() замість навігаційної властивості
+                    .LeftJoin(
+                        _context.Trains.ToLinqToDB(),           // 1. Таблиця для приєднання
+                        (sh, t) => sh.id == t.id,          // 2. Умова з'єднання (FK == PK)
+                        (sh, t) => new StationsShadulerDTO      // 3. Проекція (Select)
+                        {
+                            id = sh.id,
+                            Train = t.Number,                   // t буде null, якщо поїзда немає (автоматично handled)
+                            NumberTrain = sh.NumberTrain,
+                            TimeOfArrive = sh.TimeOfArrive,
+                            TimeOfDepet = sh.TimeOfDepet
+                        }
+                    )
+                    .AsCte("StationSchedulesCTE");
+
+                // 2. Отримуємо саму Станцію (без змін, ваш код тут ок)
+                var stationQuery = _context.Stations
                     .Where(s => s.id == id)
-                    .Select(s => new StationsDTO
+                    .Select(s => new
                     {
-                        id = s.id,
-                        Name = s.Name,
-                        DopImgSrc = s.DopImgSrc,
-                        DopImgSrcSec = s.DopImgSrcSec,
-                        DopImgSrcThd = s.DopImgSrcThd,
-                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
+                        s.id,
+                        s.Name,
+                        s.DopImgSrc,
+                        s.DopImgSrcSec,
+                        s.DopImgSrcThd,
+                        s.ImageMimeTypeOfData,
                         UkrainsRailways = s.UkrainsRailways.Name,
                         Oblasts = s.Oblasts.Name,
                         Citys = s.Citys.Name,
                         StationInfo = s.StationInfo.BaseInfo,
                         Metro = s.Metro.Name,
-                        StationImages = s.StationImages.Image != null
-                                ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
-                                : null,
-                        stationsShadulers = s.StationsShadules
-                                 .OrderBy(sh =>sh.TimeOfDepet)
-                                 .Select(sh => new StationsShadulerDTO
-                                 {
-                                     id = sh.id,
-                                     Train = sh.Train.Number,
-                                     NumberTrain = sh.NumberTrain,
-                                     TimeOfArrive = sh.TimeOfArrive,
-                                     TimeOfDepet = sh.TimeOfDepet
-                                 })
-                                 .ToList()
-                    })
-                    .FirstOrDefaultAsync();
+                        StationImageBytes = s.StationImages.Image,
+                        StationImageMime = s.StationImages.ImageMimeTypeOfData
+                    });
+
+                // 3. Виконуємо запити
+                var stationData = await stationQuery.FirstOrDefaultAsync();
+
+                if (stationData == null) return null;
+
+                var schedules = await schedulesCte
+                    .OrderBy(sh => sh.TimeOfDepet)
+                    .ToListAsync();
+
+                // 4. Мапимо результат у DTO (на стороні клієнта/сервера)
+                var station = new StationsDTO
+                {
+                    id = stationData.id,
+                    Name = stationData.Name,
+                    DopImgSrc = stationData.DopImgSrc,
+                    DopImgSrcSec = stationData.DopImgSrcSec,
+                    DopImgSrcThd = stationData.DopImgSrcThd,
+                    ImageMimeTypeOfData = stationData.ImageMimeTypeOfData,
+                    UkrainsRailways = stationData.UkrainsRailways,
+                    Oblasts = stationData.Oblasts,
+                    Citys = stationData.Citys,
+                    StationInfo = stationData.StationInfo,
+                    Metro = stationData.Metro,
+
+                    // Конвертація Base64 виконується ТУТ, в пам'яті
+                    StationImages = stationData.StationImageBytes != null
+                         ? $"data:{stationData.StationImageMime};base64,{Convert.ToBase64String(stationData.StationImageBytes)}"
+                         : null,
+
+                    // Вставляємо наш список з CTE
+                    stationsShadulers = schedules
+                };
                 Log.Wright("Station details successfully retrieved from database");
                 return Ok(station);
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving station details: {ex.Message}");
-                Log.Wright("Error retrieving station details: " + ex.Message);
+                Log.AddException($"Error retrieving station details: {ex.ToString()}");
+                Log.Wright("Error retrieving station details: " + ex.ToString());
                 return StatusCode(500, "Internal server error");
             }
             finally
@@ -187,13 +243,28 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-filias")]
-        public async Task<ActionResult> GetFilias()
+        public async Task<ActionResult> GetFilias(
+            [FromQuery] string filia = null,
+            [FromQuery] string name = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init(this.ToString(), nameof(GetFilias));
-            
+
             try
             {
-                var filias = await _context.UkrainsRailways
+                IQueryable<UkrainsRailways> query = _context.UkrainsRailways.AsNoTracking()
+                    .Include(f => f.Stations)
+                    .ThenInclude(s => s.Oblasts)
+                    .AsQueryable();
+
+                if (filia != null)
+                    query = query.Where(f => f.Name == filia);
+                if (name != null)
+                    query = query.Where(f => f.Stations.Any(s => s.Name.Contains(name)));
+                if (oblast != null)
+                    query = query.Where(f => f.Stations.Any(s => s.Oblasts.Name == oblast));
+
+                var filias = await query
                     .Select(f => f.Name)
                     .ToListAsync();
                 Log.Wright("Filias successfully retrieved from database");
@@ -212,13 +283,28 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-oblasts")]
-        public async Task<ActionResult> GetOblasts()
+        public async Task<ActionResult> GetOblasts(
+            [FromQuery] string filia = null,
+            [FromQuery] string name = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init(this.ToString(), nameof(GetOblasts));
-            
+
             try
             {
-                var oblasts = await _context.Oblasts
+                IQueryable<Oblast> query = _context.Oblasts.AsNoTracking()
+                    .Include(o => o.Stations)
+                    .ThenInclude(s => s.UkrainsRailways)
+                    .AsQueryable();
+
+                if (filia != null)
+                    query = query.Where(o => o.Stations.Any(s => s.UkrainsRailways.Name == filia));
+                if (name != null)
+                    query = query.Where(o => o.Stations.Any(s => s.Name.Contains(name)));
+                if (oblast != null)
+                    query = query.Where(o => o.Name == oblast);
+
+                var oblasts = await query
                     .OrderBy(o => o.Name)
                     .Select(o => o.Name)
                     .ToListAsync();
@@ -241,7 +327,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetCitys()
         {
             Log.Init(this.ToString(), nameof(GetCitys));
-            
+
             try
             {
                 var citys = await _context.Cities
@@ -264,13 +350,28 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("get-station-names")]
-        public async Task<ActionResult> GetStationNames()
+        public async Task<ActionResult> GetStationNames(
+            [FromQuery] string filia = null,
+            [FromQuery] string name = null,
+            [FromQuery] string oblast = null)
         {
             Log.Init(this.ToString(), nameof(GetStationNames));
-            
+
             try
             {
-                var stationNames = await _context.Stations
+                IQueryable<Stations> query = _context.Stations.AsNoTracking()
+                    .Include(s => s.UkrainsRailways)
+                    .Include(s => s.Oblasts)
+                    .AsQueryable();
+
+                if (filia != null)
+                    query = query.Where(s => s.UkrainsRailways.Name == filia);
+                if (name != null)
+                    query = query.Where(s => s.Name.Contains(name));
+                if (oblast != null)
+                    query = query.Where(s => s.Oblasts.Name == oblast);
+
+                var stationNames = await query
                     .Select(s => s.Name)
                     .ToListAsync();
                 Log.Wright("Station names successfully retrieved from database");
@@ -292,7 +393,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> CreateStation([FromBody] StationsDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(CreateStation));
-            
+
             try
             {
                 Log.Wright("Creating new station in database");
@@ -360,7 +461,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetEditStation(int id)
         {
             Log.Init(this.ToString(), nameof(GetEditStation));
-            
+
             try
             {
                 StationsDTO station = await _context.Stations
@@ -397,7 +498,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> EditStation([FromBody] StationsDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(EditStation));
-            
+
             try
             {
                 Log.Wright("Editing station in database");
@@ -440,7 +541,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> DeleteStation(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteStation));
-            
+
             try
             {
                 Log.Wright("Deleting station from database");
@@ -473,7 +574,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetStationNames(int id)
         {
             Log.Init(this.ToString(), nameof(GetStationNames));
-            
+
 
             Log.Wright("Try loading");
             try

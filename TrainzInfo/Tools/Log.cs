@@ -37,7 +37,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n";
+                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n" + "\n";
                 Trace.WriteLine(logstr);
                 Console.WriteLine(logstr);
                 string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog);
@@ -62,7 +62,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n";
+                string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n" + "\n";
                 Trace.WriteLine(logstr);
                 Console.WriteLine(logstr);
                 string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + Blocking);
@@ -168,7 +168,7 @@ namespace TrainzInfo.Tools
         {
             try
             {
-                string log = "------Start log------- \n" + DateTime.Now + "[EXCEPTION] - " + exception + "\n -------EndLog--------\n" + "\n + \n";
+                string log = "------Start log------- \n" + DateTime.Now + "[EXCEPTION] - " + exception + "\n -------EndLog--------\n" + "\n" + "\n";
                 string dir = folderlog + "\\" + log;
                 Console.WriteLine(log);
                 Trace.Write(log);

@@ -11,72 +11,74 @@
 
 @if (news is not null)
 {
-    <div class="card shadow-sm news-detail-card">
-        <!-- 1️⃣ Устанавливаем flex‑order:
-              при больших экранах картинка идёт справа (order-2),
-              но в mobile остаётся первой (order-1) -->
-        <div class="row g-4 g-lg-5 align-items-start">
+    <div class="card news-detail-card border-0 shadow-sm">
+        <div class="card-body p-4 p-md-5">
 
-            @*  Текстовая часть новости – первая колонка для мобильных, 
-            в больших экранах будет слева (order-1) *@
-            <section class="col-md-8 order-1 order-lg-2">
-                <dl class="row mb-4">
-
-                    <dt class="col-sm-3 fw-semibold text-secondary">Назва</dt>
-                    <dd class="col-sm-9 news-text">@((MarkupString)news.NameNews)</dd>
-
-                    <dt class="col-sm-3 fw-semibold text-secondary">Коротко</dt>
-                    <dd class="col-sm-9 news-text">@((MarkupString)news.BaseNewsInfo)</dd>
-
-                    <dt class="col-sm-3 fw-semibold text-secondary">Повна інформація</dt>
-                    <dd class="col-sm-9 news-text">@((MarkupString)news.NewsInfoAll)</dd>
-                </dl>
-
-                <!-- 2️⃣ Кнопки действий -->
-                <div class="d-flex flex-wrap gap-2">
-                    @if (CanComment)
-                    {
-                        <button class="btn btn-info btn-sm"
-                                @onclick="() => NavigateToComment(news.id)">
-                            Коментувати
-                        </button>
-                        <button class="btn btn-info btn-sm"
-                                @onclick="() => NavigateToComments(news.id)">
-                            Коментарі + @CommentCount
-                        </button>
-                    }
-                    @if (IsAdmin)
-                    {
-                        <button class="btn btn-outline-info btn-sm"
-                                @onclick="() => EditNews(news.id)">
-                            Редагувати інформацію
-                        </button>
-                        <button class="btn btn-outline-info btn-sm"
-                                @onclick="() => AddImage(news.id)">
-                            Додати картинку
-                        </button>
-                    }
+            <header class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-info-subtle text-info border border-info-subtle px-3">Новини</span>
+                    <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd.MM.yyyy")</span>
                 </div>
-            </section>
+                <h1 class="display-5 fw-bold text-dark">@((MarkupString)news.NameNews)</h1>
+            </header>
 
-            @*  Картинка новости – вторая колонка, но order-2 на больших экранах 
-            (появляется справа), order-1 в мобильном режиме *@
-            <figure class="col-md-4 text-center mb-3 mb-md-0 order-2 order-lg-1">
-                @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+            <div class="row g-lg-5">
+                <div class="col-lg-7 order-2 order-lg-1">
+                    <div class="news-lead mb-4 p-3 bg-light rounded-3 border-start border-info border-4">
+                        <p class="mb-0 text-secondary fw-medium">@((MarkupString)news.BaseNewsInfo)</p>
+                    </div>
+
+                    <div class="news-main-text lh-lg text-muted">
+                        @((MarkupString)news.NewsInfoAll)
+                    </div>
+                </div>
+
+                <div class="col-lg-5 order-1 order-lg-2 mb-4 mb-lg-0">
+                    <div class="sticky-lg-top" style="top: 2rem;">
+                        <div class="image-wrapper shadow-lg">
+                            @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                            {
+                                <img src="@news.NewsImage" alt="@news.NameNews" class="img-fluid rounded-4" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-box rounded-4 bg-light d-flex flex-column align-items-center justify-content-center">
+                                    <i class="bi bi-card-image display-1 text-light"></i>
+                                    <span class="text-muted">Фото відсутнє</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-3 p-3 rounded-3 bg-light-subtle border border-dashed text-center">
+                            <small class="text-muted italic">Інформаційна служба залізниці</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top d-flex flex-wrap gap-2">
+                @if (CanComment)
                 {
-                    <img src="@news.NewsImage"
-                         alt="@news.NameNews"
-                         class="img-fluid rounded news-detail-img" />
+                    <button class="btn btn-info px-4 py-2 rounded-pill fw-bold" @onclick="() => NavigateToComment(news.id)">
+                        <i class="bi bi-chat-left-text me-2"></i>Коментувати
+                    </button>
+                    <button class="btn btn-outline-secondary px-4 py-2 rounded-pill" @onclick="() => NavigateToComments(news.id)">
+                        Коментарі (@CommentCount)
+                    </button>
                 }
-                else
+
+                @if (IsAdmin)
                 {
-                    <!-- placeholder, если картинки нет -->
-                    <div class="placeholder-img d-flex align-items-center justify-content-center">
-                        <span class="text-muted">Нет изображения</span>
+                    <div class="ms-auto d-flex gap-2">
+                        <button class="btn btn-light border rounded-circle shadow-sm" title="Редагувати" @onclick="() => EditNews(news.id)">
+                            <i class="bi bi-pencil-square text-warning"></i>
+                        </button>
+                        <button class="btn btn-light border rounded-circle shadow-sm" title="Додати фото" @onclick="() => AddImage(news.id)">
+                            <i class="bi bi-plus-circle text-success"></i>
+                        </button>
                     </div>
                 }
-            </figure>
-
+            </footer>
         </div>
     </div>
 }

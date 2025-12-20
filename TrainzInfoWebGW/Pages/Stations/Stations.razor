@@ -145,7 +145,7 @@
     List<string> StationNames = new();
     private UserDto CurrentUser { get; set; }
     private CancellationTokenSource debounceCts;
-    private List<string> filteredStations = new List<string>();
+    private List<string> filteredStations = new();
     private bool isFilterLoad = false;
     string SelectedFilia = "";
     string SelectedOblast = "";
@@ -192,7 +192,7 @@
                $"{(string.IsNullOrWhiteSpace(SelectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
 
         var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>(url);
-        
+
         if (stationsPage == null || stationsPage.Count == 0)
         {
             allLoaded = true;
@@ -207,9 +207,19 @@
         await CheckRoles();
         if (!isFilterLoad)
         {
-            Filias = await Http.GetFromJsonAsync<List<string>>("api/stations/get-filias");
-            Oblasts = await Http.GetFromJsonAsync<List<string>>("api/stations/get-oblasts");
-            StationNames = await Http.GetFromJsonAsync<List<string>>("api/stations/get-station-names");
+            var urlfilias = $"api/stations/get-filias{($"?name={Uri.EscapeDataString(SelectedName)}")}" + 
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+            var urloblasts = $"api/stations/get-oblasts{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}"; 
+            var urlstationnames = $"api/stations/get-station-names{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+            Filias = await Http.GetFromJsonAsync<List<string>>(urlfilias);
+            Oblasts = await Http.GetFromJsonAsync<List<string>>(urloblasts);
+            StationNames = await Http.GetFromJsonAsync<List<string>>(urlstationnames);
             isFilterLoad = true;
         }
         isLoading = false;
@@ -220,6 +230,10 @@
         // Переходим к первой странице и очищаем состояние
         currentPage = 1;
         allLoaded = false;
+        isFilterLoad = false;
+        Filias.Clear();
+        Oblasts.Clear();
+        StationNames.Clear();
         stationsList.Clear();          // если хотите начать с нуля
         await LoadStations();                 // загружаем первую страницу
 
@@ -231,6 +245,7 @@
         SelectedFilia = "";
         SelectedOblast = "";
         SelectedName = "";
+
         currentPage = 1;
         stationsList.Clear();
         await LoadStations();

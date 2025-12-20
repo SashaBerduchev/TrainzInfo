@@ -23,7 +23,6 @@ namespace TrainzInfo.Data
                     .AddInterceptors(new BlockingInterceptor())
                     .LogTo(Log.SQLLogging, LogLevel.Information); // лог у консоль
             }
-            
         }
         public DbSet<Locomotive> Locomotives { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }

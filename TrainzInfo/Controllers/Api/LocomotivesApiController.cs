@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LinqToDB;
+using LinqToDB.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -387,39 +389,98 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("LocomotivesApiController", "GetLocomotive");
                 
                 Log.Wright("Start Get GetLocomotive");
-                var locomotive = await _context.Locomotives
-                    .Include(d => d.DepotList)
-                        .ThenInclude(c => c.City)
-                            .ThenInclude(o => o.Oblasts)
-                    .Include(u => u.DepotList)
-                        .ThenInclude(ur => ur.UkrainsRailway)
-                    .Include(ls => ls.Locomotive_Series)
-                    .Include(x => x.Stations)
-                        .ThenInclude(si => si.StationInfo)
-                    .Include(x => x.Stations)
-                        .ThenInclude(ci => ci.StationImages)
-                    .FirstOrDefaultAsync(n => n.id == id);
-                if (locomotive == null)
+                var locoCte = _context.Locomotives
+                        .Where(n => n.id == id)
+                        .ToLinqToDB()
+                        .AsCte("LocoCTE");
+
+                // 2. Повний ланцюжок SelectMany для всіх зв'язків
+                var query = locoCte
+                                .SelectMany(l => _context.GetTable<DepotList>().Where(d => d.id == EF.Property<int>(l, "DepotListid")).DefaultIfEmpty(),
+                         (l, d) => new { l, d })
+
+                     // Приєднуємо Місто через ключ у Депо
+                     .SelectMany(x => _context.GetTable<City>().Where(c => c.id == EF.Property<int>(x.d, "Cityid")).DefaultIfEmpty(),
+                         (x, c) => new { x.l, x.d, c })
+
+                     // Приєднуємо Область через ключ у Місті
+                     .SelectMany(x => _context.GetTable<Oblast>().Where(o => o.id == EF.Property<int>(x.c, "Oblastsid")).DefaultIfEmpty(),
+                         (x, o) => new { x.l, x.d, x.c, o })
+
+                     // Приєднуємо Філію через ключ у Депо
+                     .SelectMany(x => _context.GetTable<UkrainsRailways>().Where(ur => ur.id == EF.Property<int>(x.d, "UkrainsRailwayid")).DefaultIfEmpty(),
+                         (x, ur) => new { x.l, x.d, x.c, x.o, ur })
+
+                     // Приєднуємо Серію через ключ у Локомотиві
+                     .SelectMany(x => _context.GetTable<Locomotive_series>().Where(ls => ls.id == EF.Property<int>(x.l, "Locomotive_Seriesid")).DefaultIfEmpty(),
+                         (x, ls) => new { x.l, x.d, x.c, x.o, x.ur, ls })
+
+                     // Приєднуємо Станцію через ключ у Локомотиві
+                     .SelectMany(x => _context.GetTable<Stations>().Where(s => s.id == EF.Property<int>(x.l, "Stationsid")).DefaultIfEmpty(),
+                         (x, s) => new { x.l, x.d, x.c, x.o, x.ur, x.ls, s })
+
+                     // Приєднуємо Інфо та Зображення станції (аналогічно)
+                     .SelectMany(x => _context.GetTable<StationInfo>().Where(si => si.id == EF.Property<int>(x.s, "StationInfoid")).DefaultIfEmpty(),
+                         (x, si) => new { x.l, x.d, x.c, x.o, x.ur, x.ls, x.s, si })
+                     .SelectMany(x => _context.GetTable<StationImages>().Where(ci => ci.id == EF.Property<int>(x.s, "StationImagesid")).DefaultIfEmpty(),
+                         (x, ci) => new { x.l, x.d, x.c, x.o, x.ur, x.ls, x.s, x.si, ci })
+                    // 3. Фінальна проекція БЕЗ звернень до навігаційних властивостей
+                    .Select(res => new
+                    {
+                        res.l.id,
+                        res.l.Number,
+                        res.l.Speed,
+                        DepotName = res.d.Name,
+                        CityName = res.c.Name,
+                        OblastName = res.o.Name,
+                        FiliaName = res.ur.Name,
+                        Seria = res.ls.Seria,
+
+                        // Зображення локомотива беремо з l (це базова таблиця)
+                        res.l.Image,
+                        res.l.ImageMimeTypeOfData,
+
+                        StationName = res.s.Name,
+                        StationInfo = res.si.BaseInfo,
+                        StationImageBytes = res.ci.Image,
+                        StationImageMime = res.ci.ImageMimeTypeOfData
+                    });
+
+                // 4. Виконання
+                var result = await LinqToDB.EntityFrameworkCore.LinqToDBForEFTools
+                    .ToLinqToDB(query)
+                    .ToListAsync();
+
+                var rawData = result.FirstOrDefault();
+
+                if (rawData == null)    
                 {
                     return NotFound();
                 }
+
+                // 4. Мапимо у DTO та конвертуємо зображення (в пам'яті, на стороні C#)
                 var locoDTO = new LocomotiveDTO
                 {
-                    Id = locomotive.id,
-                    Number = locomotive.Number,
-                    Speed = locomotive.Speed,
-                    Depot = locomotive.DepotList.Name,
-                    City = locomotive.DepotList.City.Name,
-                    Oblast = locomotive.DepotList.City.Oblasts.Name,
-                    Filia = locomotive.DepotList.UkrainsRailway.Name,
-                    Seria = locomotive.Locomotive_Series.Seria,
-                    ImgSrc = locomotive.Image != null
-                                ? $"data:{locomotive.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Image)}"
-                                : null,
-                    Station = locomotive.Stations.Name,
-                    StationInformation = locomotive.Stations.StationInfo.BaseInfo,
-                    StationImages = locomotive.Stations.StationImages.Image
-                        != null ? $"data:{locomotive.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(locomotive.Stations.StationImages.Image)}"
+                    Id = rawData.id,
+                    Number = rawData.Number,
+                    Speed = rawData.Speed,
+                    Depot = rawData.DepotName,
+                    City = rawData.CityName,
+                    Oblast = rawData.OblastName,
+                    Filia = rawData.FiliaName,
+                    Seria = rawData.Seria,
+
+                    // Логіка для картинки локомотива
+                    ImgSrc = rawData.Image != null
+                        ? $"data:{rawData.ImageMimeTypeOfData};base64,{Convert.ToBase64String(rawData.Image)}"
+                        : null,
+
+                    Station = rawData.StationName,
+                    StationInformation = rawData.StationInfo,
+
+                    // Логіка для картинки станції
+                    StationImages = rawData.StationImageBytes != null
+                        ? $"data:{rawData.StationImageMime};base64,{Convert.ToBase64String(rawData.StationImageBytes)}"
                         : null
                 };
                 Log.Finish();
@@ -429,7 +490,6 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.AddException(ex.ToString());
                 Log.Wright(ex.ToString());
-                Log.Finish();
                 return BadRequest(ex.ToString());
                 throw;
             }
