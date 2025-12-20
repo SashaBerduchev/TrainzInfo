@@ -11,11 +11,14 @@
         public int MaxSpeed { get; set; }
 
         public string DepotTrain { get; set; }
+
         public string DepotCity { get; set; }
         public DateOnly LastKvr { get; set; }
         public DateOnly CreatedTrain { get; set; }
         public string PlantCreate { get; set; }
         public string PlantKvr { get; set; }
+        public string BaseInfo { get; set; }
+        public string AllInfo { get; set; }
         public string Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public string DepotList { get; set; }
@@ -27,6 +30,8 @@
         public string TrainsInfo { get; set; }
         public string ElectrickTrainzInformation { get; set; }
         public string Station { get; set; }
+        public string StationInformation { get; set; }
+        public string StationImages { get; set; }
 
     }
 }

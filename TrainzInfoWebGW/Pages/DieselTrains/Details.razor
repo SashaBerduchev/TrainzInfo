@@ -129,8 +129,11 @@ else
         }
     </div>
 
-    <div>
-        <NavLink href="/diesel-trains">Back to List</NavLink>
+    <div class="mb-3">
+        <NavLink class="btn btn-secondary d-flex align-items-center gap-2" href="/diesel-trains">
+            <i class="fa-solid fa-arrow-left"></i>
+            Повернутися до списку
+        </NavLink>
     </div>
 }
 @code {
@@ -166,7 +169,7 @@ else
 
             if (dieselTrains == null)
             {
-                Error = "Локомотив не знайдено.";
+                Error = "Дизель не знайдено.";
                 return;
             }
 

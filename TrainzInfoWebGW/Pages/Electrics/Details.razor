@@ -1,6 +1,4 @@
-﻿@page "/locomotives/details/{Id:int}"
-@using System.Net.Http.Json
-@using TrainzInfoShared.DTO.GetDTO
+﻿@page "/electric-trains/details/{Id:int}"
 @inject HttpClient Http
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
@@ -29,10 +27,10 @@ else
 
                 <!-- Зображення -->
                 <div class="col-12 col-md-5 text-center">
-                    @if (Locomotive.ImgSrc != null)
+                    @if (electricTrain.Image != null)
                     {
                         <img class="img-fluid rounded-start"
-                             src="@Locomotive.ImgSrc"
+                             src="@electricTrain.Image"
                              alt="Локомотив" />
                     }
                     else
@@ -43,27 +41,33 @@ else
 
                 <!-- Інформація -->
                 <div class="col-12 col-md-7 bg-light p-3 rounded">
-                    <h4>@Locomotive.Seria - @Locomotive.Number</h4>
-                    <p>Максимальна швидкість: @Locomotive.Speed км/год</p>
-                    <p>Місто прописки: @Locomotive.City</p>
-                    <p>Депо прописки: @Locomotive.Depot</p>
+                    <h4>@electricTrain.Name - @electricTrain.Model</h4>
+                    <p>Місто прописки: @electricTrain.City</p>
+                    <p>Депо прописки: @electricTrain.DepotList</p>
+                    <p>Місто прописки: @electricTrain.City</p>
+                    <p>Філія: @electricTrain.UkrainsRailway</p>
                 </div>
 
             </div>
         </div>
-        @if (Locomotive.Station != null)
+        <div class="mt-4">
+            <p class="fs-5">@electricTrain.BaseInfo</p>
+            <p class="fs-5">@electricTrain.AllInfo</p>
+        </div>
+
+        @if (electricTrain.Station != null)
         {
             <div class="news-detail-card card shadow-sm mb-5">
                 <div class="row g-4 align-items-start">
                     <!-- Картинка -->
                     <div class="col-md-4 text-center">
-                        @if (string.IsNullOrEmpty(Locomotive.StationImages))
+                        @if (string.IsNullOrEmpty(electricTrain.StationImages))
                         {
-                            <img src="@Locomotive.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
+                            <img src="@electricTrain.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
                         }
                         else
                         {
-                            <img src="@Locomotive.StationImages" class="card-img-top" alt="@Locomotive.Station" />
+                            <img src="@electricTrain.StationImages" class="card-img-top" alt="@electricTrain.Station" />
                         }
                     </div>
 
@@ -71,7 +75,7 @@ else
                     <div class="col-md-8">
                         <dl class="row mb-3">
                             <dt class="col-sm-3">Назва</dt>
-                            <dd class="col-sm-9 news-text">@Locomotive.Station</dd>
+                            <dd class="col-sm-9 news-text">@electricTrain.Station</dd>
                         </dl>
 
                         <!-- Кнопки -->
@@ -98,24 +102,19 @@ else
         @if (IsPublisherOrAdmin)
         {
             <div class="mt-3 text-center">
-                <a class="btn btn-info" href="/edit-info/@Locomotive.Seria" target="_blank">
+                <a class="btn btn-info" href="/edit-info/@electricTrain.id" target="_blank">
                     Редагувати додаткову інформацію
                 </a>
             </div>
         }
 
-        <div class="mt-4">
-            <p class="fs-5">@Locomotive.BaseInfo</p>
-            <p class="fs-5">@Locomotive.AllInfo</p>
-        </div>
-
         <!-- Superadmin -->
         @if (IsSuperadmin)
         {
             <div class="mt-3 d-flex flex-wrap gap-2">
-                <a class="btn btn-success" href="/locomotive/edit/@Locomotive.Id">Редагувати</a>
-                <a class="btn btn-success" href="/locomotive/add-image/@Locomotive.Id">Додати зображення</a>
-                <button class="btn btn-danger w-100 w-md-auto" @onclick="DeleteLocomotive">
+                <a class="btn btn-success" href="/locomotive/edit/@electricTrain.id">Редагувати</a>
+                <a class="btn btn-success" href="/locomotive/add-image/@electricTrain.id">Додати зображення</a>
+                <button class="btn btn-danger w-100 w-md-auto" @onclick="DeleteElectics">
                     Видалити
                 </button>
             </div>
@@ -124,33 +123,28 @@ else
         {
             <H3>"Помилка збереження, зверніться до адміністратора";</H3>
             <div class="alert alert-danger mt-2">
-                        <p>@ErrorMessage</p>
+                <p>@ErrorMessage</p>
             </div>
         }
     </div>
-   
+
     <div class="mb-3">
-        <NavLink class="btn btn-secondary d-flex align-items-center gap-2" href="/locomotives">
+        <NavLink class="btn btn-secondary d-flex align-items-center gap-2" href="/electric-trains">
             <i class="fa-solid fa-arrow-left"></i>
             Повернутися до списку
         </NavLink>
     </div>
 }
 
-
 @code {
     [Parameter] public int Id { get; set; }
-
-    private LocomotiveDTO? Locomotive;
-
-    private string Title = "Локомотив";
-    private string? Error;
-    private bool IsLoading = true;
-
+    private ElectricTrainDTO? electricTrain;
     private string? ErrorMessage;
-
     private bool IsPublisherOrAdmin = false;
     private bool IsSuperadmin = false;
+    private string Title = "Електропоїзд";
+    private bool IsLoading = true;
+    private string? Error;
 
     protected override async Task OnInitializedAsync()
     {
@@ -170,17 +164,17 @@ else
             IsSuperadmin = user.IsInRole("Superadmin");
 
             // Завантажуємо локомотив
-            Locomotive = await Http.GetFromJsonAsync<LocomotiveDTO>($"api/locomotives/details/{Id}");
+            electricTrain = await Http.GetFromJsonAsync<ElectricTrainDTO>($"api/electrictrains/details/{Id}");
 
-            if (Locomotive == null)
+            if (electricTrain == null)
             {
-                Error = "Локомотив не знайдено.";
+                Error = "Електричка не знайдено.";
                 return;
             }
 
-            Title = $"{Locomotive.Seria} - {Locomotive.Number}";
+            Title = $"{electricTrain.Name} - {electricTrain.Model}";
 
-            
+
         }
         catch (Exception ex)
         {
@@ -191,16 +185,14 @@ else
             IsLoading = false;
         }
     }
-    private async Task DeleteLocomotive()
+
+    private async Task DeleteElectics()
     {
-        if (!await Confirm("Ви впевнені що хочете видалити локомотив?"))
+        if (!await Confirm("Ви впевнені що хочете видалити електричку?"))
             return;
-
-        var response = await Http.DeleteAsync($"api/locomotives/deleteapprove/{Id}");
-
+        var response = await Http.DeleteAsync($"api/electrictrains/deleteapprove/{Id}");
         if (response.IsSuccessStatusCode)
-            Nav.NavigateTo("/locomotives");
-
+            Nav.NavigateTo("/diesel-trains");
         else
             ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
     }
@@ -210,14 +202,5 @@ else
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
     }
 
-    public class Depot
-    {
-        public string Name { get; set; }
-        public City City { get; set; }
-    }
 
-    public class City
-    {
-        public string Name { get; set; }
-    }
 }

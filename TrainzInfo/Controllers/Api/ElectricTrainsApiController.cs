@@ -163,6 +163,74 @@ namespace TrainzInfo.Controllers.Api
         }
 
 
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult> Details(int id)
+        {
+            Log.Init(this.ToString(), nameof(Details));
+            
+            Log.Wright("Get electric train details");
+            try
+            {
+                ElectricTrain electricTrain = await _context.Electrics
+                    .Include(d => d.DepotList)
+                    .Include(p => p.PlantsCreate)
+                    .Include(k => k.PlantsKvr)
+                    .Include(c => c.City)
+                        .ThenInclude(o => o.Oblasts)
+                    .Include(u => u.DepotList)
+                        .ThenInclude(o => o.UkrainsRailway)
+                    .Include(t => t.Trains)
+                    .Include(e => e.ElectrickTrainzInformation)
+                    .Include(x => x.Stations)
+                        .ThenInclude(s => s.StationInfo)
+                    .Include(x => x.Stations)
+                        .ThenInclude(si => si.StationImages)
+                    .Where(x => x.id == id)
+                    .FirstOrDefaultAsync();
+                if (electricTrain == null)
+                {
+                    return NotFound();
+                }
+                ElectricTrainDTO electricTrainDTO = new ElectricTrainDTO
+                {
+                    id = electricTrain.id,
+                    Name = electricTrain.Name,
+                    Model = electricTrain.Model,
+                    MaxSpeed = electricTrain.MaxSpeed,
+                    DepotTrain = electricTrain.DepotTrain,
+                    DepotCity = electricTrain.DepotCity,
+                    Image = electricTrain.Image != null
+                                ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
+                                : null,
+                    ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
+                    DepotList = electricTrain.DepotList.Name,
+                    Oblast = electricTrain.City.Oblasts.Name,
+                    UkrainsRailway = electricTrain.DepotList.UkrainsRailway.Name,
+                    City = electricTrain.City.Name,
+                    TrainsInfo = electricTrain.Trains?.BaseInfo,
+                    BaseInfo = electricTrain.Trains?.BaseInfo,
+                    ElectrickTrainzInformation = electricTrain.ElectrickTrainzInformation?.AllInformation,
+                    Station = electricTrain.Stations?.Name,
+                    StationInformation = electricTrain.Stations?.StationInfo?.BaseInfo,
+                    StationImages = electricTrain.Stations.StationImages.Image
+                        != null ? $"data:{electricTrain.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Stations.StationImages.Image)}"
+                        : null
+                };
+                return Ok(electricTrainDTO);
+            }
+            catch (Exception ex)
+            {
+                Log.AddException($"Error in {this.ToString()} method {nameof(Details)}: {ex.ToString()} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Details)}: {ex.Message} ");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] ElectricTrainSetDTO trainDTO)
         {
