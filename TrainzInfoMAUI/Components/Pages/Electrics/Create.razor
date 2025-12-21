@@ -1,0 +1,197 @@
+﻿@page "/electric-trains/create"
+@using TrainzInfoShared.DTO.GetDTO
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h4>Електричка</h4>
+<hr />
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚆 Електропоїзд</h4>
+
+                    <EditForm Model="@electrics" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
+
+                        <!-- Назва -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Назва електропоїзда
+                            </label>
+                            <InputSelect @bind-Value="electrics.Name"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in NameList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Модель -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Модель
+                            </label>
+                            <InputText @bind-Value="electrics.Model"
+                                       class="form-control form-control-lg"
+                                       placeholder="ЕР9П, ЕР2, ЕПЛ9Т..." />
+                        </div>
+
+                        <div class="row">
+                            <!-- Депо -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">
+                                    Депо
+                                </label>
+                                <InputSelect @bind-Value="electrics.DepotList"
+                                             class="form-select form-select-lg">
+                                    @foreach (var item in DepotList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <!-- Область -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">
+                                    Область
+                                </label>
+                                <InputSelect @bind-Value="electrics.Oblast"
+                                             class="form-select form-select-lg">
+                                    @foreach (var item in OblList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <!-- Швидкість -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Конструкційна швидкість
+                            </label>
+                            <InputNumber @bind-Value="electrics.MaxSpeed"
+                                         class="form-control form-control-lg"
+                                         placeholder="км/год" />
+                        </div>
+
+                        <!-- Фото -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Фото електропоїзда
+                            </label>
+                            <InputFile class="form-control"
+                                       OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview"
+                                         class="img-thumbnail rounded-3"
+                                         style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопка -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg px-4">
+                                Зберегти
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errors))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @errors
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <NavLink href="/electric-trains">Back to List</NavLink>
+</div>
+
+@code {
+    private ElectricTrainSetDTO electrics = new ElectricTrainSetDTO();
+
+    // Приклад даних для dropdown — в реальному випадку можна отримувати через сервіс/API
+    private List<string> NameList = new List<string>();
+    private List<string> DepotList = new List<string>();
+    private List<string> OblList = new List<string>();
+    private List<string> Plant = new List<string>();
+    private string imagePreview;
+    private string errors;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await Load();
+        // Підписка на скрол через JS
+        //await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API
+    }
+
+    private async Task Load()
+    {
+        NameList.Add("Виберіть назву");
+        DepotList.Add("Виберіть депо");
+        // Імітація завантаження даних — в реальному випадку виклик API
+        var series = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getallnames");
+        var depots = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getalldepots");
+        var plants = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getplants");
+        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/allobl");
+        NameList.AddRange(series ?? new List<string>());
+        DepotList.AddRange(depots ?? new List<string>());
+        Plant.AddRange(plants ?? new List<string>());
+        OblList.AddRange(oblasts ?? new List<string>());
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/electrictrains/create", electrics);
+        if (result.IsSuccessStatusCode)
+        {
+            // Тут можна викликати сервіс, який додає локомотив в базу через API
+            Console.WriteLine($"Додано електричку: {electrics.Name} {electrics.Model}");
+            // Після успіху — навігація назад
+            Navigation.NavigateTo("/electric-trains");
+        }
+        else
+        {
+            errors = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Помилка: {errors}");
+        }
+
+
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB
+        var buffer = new byte[file.Size];
+        await stream.ReadAsync(buffer);
+
+        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        // Зберігаємо у модель
+        electrics.Image = imagePreview;
+        electrics.ImageMimeTypeOfData = file.ContentType;
+    }
+}

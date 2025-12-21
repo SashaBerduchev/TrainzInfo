@@ -1,0 +1,201 @@
+﻿@page "/stations/create"
+@using TrainzInfoShared.DTO.GetDTO
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h4>Створення станції</h4>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚉 Нова станція</h4>
+                    <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
+
+                        <!-- Назва станції -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Назва станції</label>
+                            <InputText @bind-Value="stationsDTO.Name" class="form-control form-control-lg" placeholder="Напр. Київ-Пасажирський" />
+                        </div>
+
+                        <!-- Місто -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-medium">Місто</label>
+                            <InputText @bind-Value="city" class="form-control form-control-lg"
+                                       placeholder="Почніть вводити місто..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filteredCitys?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1" style="z-index:1000;">
+                                    @foreach (var item in filteredCitys)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectItem(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <div class="row">
+                            <!-- Філія -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Філія</label>
+                                <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
+                                    @foreach (var item in FiliasList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <!-- Область -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Область</label>
+                                <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
+                                    @foreach (var item in OblastList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <!-- Картинка -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Фото станції</label>
+                            <InputFile class="form-control" OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview" class="img-thumbnail rounded-3" style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">Зберегти</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @ErrorMessage
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+
+
+
+@code {
+    private StationsDTO stationsDTO = new();
+    private string city = "";
+    private List<string> citys = new List<string>();
+    private List<string> filteredCitys = new List<string>();
+    private List<string> FiliasList = new List<string>();
+    private List<string> OblastList = new List<string>();
+    private CancellationTokenSource debounceCts;
+    private string ErrorMessage = "";
+    private string imagePreview;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Імітація завантаження даних
+        citys = await Http.GetFromJsonAsync<List<string>>($"api/stations/getcitys");
+        FiliasList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-filias");
+        OblastList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-oblasts");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("api/stations/create", stationsDTO);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/stations");
+        }
+        else
+        {
+            ErrorMessage = await response.Content.ReadAsStringAsync();
+            // Обробка помилки
+            Console.WriteLine("Помилка при створенні станції");
+        }
+
+        // Тут можна викликати API для збереження
+        Console.WriteLine($"Станція: {stationsDTO.Name}, Місто: {city}, Філія: {stationsDTO.UkrainsRailways}");
+    }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        city = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(city))
+                {
+                    filteredCitys.Clear();
+                }
+                else
+                {
+                    filteredCitys = citys
+                        .Where(x => x.Contains(city, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        city = item;
+        stationsDTO.Citys = city;
+        filteredCitys.Clear();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB
+        var buffer = new byte[file.Size];
+        await stream.ReadAsync(buffer);
+
+        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        // Зберігаємо у модель для відправки на сервер
+        stationsDTO.StationImages = imagePreview;
+        stationsDTO.ImageMimeTypeOfData = file.ContentType;
+    }
+
+}

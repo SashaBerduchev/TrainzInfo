@@ -1,0 +1,65 @@
+﻿@page "/ukrains-railways"
+@using TrainzInfoShared.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<PageTitle>Філії</PageTitle>
+
+<h1 class="text-center mb-4">Філії Української залізниці</h1>
+
+@if (railways == null)
+{
+    <p class="text-center">Завантаження...</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var item in railways)
+            {
+                <div class="col-12 col-md-6 mb-3">
+                    <button class="btn btn-info w-100 text-wrap py-3"
+                            @onclick="() => ViewDetails(item.id)">
+                        <span class="h5">@item.Name</span>
+                    </button>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-4">
+            <img class="img-fluid rounded shadow"
+                 src="@image"
+                 alt="Мапа Укрзалізниці" />
+        </div>
+    </div>
+}
+
+@code {
+    private List<UkrainsRailwaysDTO> railways;
+    private string mainMapImgSrc = "/api/mainimage/getimage?name=MainMap"; // приклад API для картинки
+    private string image;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            railways = await Http.GetFromJsonAsync<List<UkrainsRailwaysDTO>>("api/railways/railways");
+            var bytes = await Http.GetByteArrayAsync(mainMapImgSrc);
+
+            // Перетворюємо на Base64 рядок
+            var base64 = Convert.ToBase64String(bytes);
+
+            // Формуємо Data URL
+            image = $"data:image/png;base64,{base64}"; // заміни image/png на свій MIME тип
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження даних: " + ex.Message);
+            railways = new List<UkrainsRailwaysDTO>();
+        }
+    }
+
+    private void ViewDetails(int id)
+    {
+        Nav.NavigateTo($"/ukrains-railways/details/{id}");
+    }
+}

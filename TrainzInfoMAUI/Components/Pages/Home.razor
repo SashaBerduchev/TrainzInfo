@@ -1,0 +1,165 @@
+﻿@page "/"
+@using TrainzInfoShared.DTO.GetDTO
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<PageTitle>TrainzInfo</PageTitle>
+
+<h1 class="display-4 text-center mb-4">Ласкаво просимо на сайт TrainzInfo!</h1>
+
+<div class="text-center">
+    <div class="maincardpage">
+        <div class="main_text">
+            Сайт ТреінзІнфо присвячено любителям залізничного транспорту...
+        </div>
+
+        <div class="btn_main_panel">
+            <NavLink class="btn btn-info btn_news" href="/locomotives" style="width:160px; margin:10px;">Локомотиви</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/electric-trains" style="width:160px; margin:10px;">Електропоїзди</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/diesel-trains" style="width:160px; margin:10px;">Дизель-поїзди</NavLink>
+            <NavLink class="btn btn-info btn_news" href="/stations" style="width:160px; margin:10px;">Станції</NavLink>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <input @bind="SearchText"
+           @bind:event="oninput"
+           type="text"
+           class="form-control"
+           placeholder="Пошук новин..."
+           style="max-width:400px; margin:auto;" />
+</div>
+
+@*  Контейнер со списком новостей *@
+<div class="mt-4" id="newsContainer">
+
+    @if (allNews is null)
+    {
+        <p class="text-center text-muted">Завантаження…</p>
+    }
+    else if (!filteredNews.Any())
+    {
+        <p class="text-center text-secondary">Нічого не знайдено.</p>
+    }
+    else
+    {
+        <div class="row g-3">
+
+            @foreach (var news in filteredNews)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm news-card">
+                        @*  Картинка новости – placeholder, если не задана *@
+                        @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                        {
+                            <img src="@news.NewsImage"
+                                 alt="@news.NameNews"
+                                 class="card-img-top img-fluid rounded" />
+                        }
+                        else
+                        {
+                            <div class="placeholder-img d-flex align-items-center justify-content-center">
+                                <span class="text-muted">Без картинки</span>
+                            </div>
+                        }
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mb-2">@((MarkupString)news.NameNews)</h5>
+                            <p class="card-text flex-grow-1">@((MarkupString)news.BaseNewsInfo)</p>
+
+                            <NavLink href="@($"/news/details/{news.id}")"
+                                     class="btn btn-primary btn-sm mt-auto">
+                                Детальніше
+                            </NavLink>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (isLoading)
+        {
+            <p class="text-center text-secondary mt-3">Завантаження ще новин…</p>
+        }
+    }
+</div>
+
+@code {
+    private List<NewsDTO> allNews = new();
+    private List<NewsDTO> filteredNews = new();
+    private string searchText = string.Empty;
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNews();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addNewsScrollListener", DotNetObjectReference.Create(this));
+
+        await JS.InvokeVoidAsync("showNewsContainer");
+    }
+
+
+    private async Task LoadNews()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
+        try
+        {
+            var newItems = await Http.GetFromJsonAsync<List<NewsDTO>>($"api/news/getnews?page={currentPage}");
+            if (newItems == null || newItems.Count == 0)
+            {
+                allLoaded = true;
+            }
+            else
+            {
+                allNews.AddRange(newItems);
+                FilterNews(); // оновлюємо відфільтровані новини
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження новин: " + ex.Message);
+        }
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private void FilterNews()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredNews = allNews.ToList();
+        }
+        else
+        {
+            filteredNews = allNews
+                .Where(x => x.NameNews.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+    private string SearchText
+    {
+        get => searchText;
+        set
+        {
+            searchText = value;
+            FilterNews();
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadNews();
+    }
+}

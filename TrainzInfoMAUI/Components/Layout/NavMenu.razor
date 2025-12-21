@@ -1,0 +1,128 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using TrainzInfoShared.DTO.GetDTO
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient Http
+@inject NavigationManager Nav
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+
+        <!-- Лівий логотип -->
+        <a class="navbar-brand" href="/">TrainzInfo</a>
+
+        <!-- Кнопка toggle -->
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Логотип / інший контент справа на desktop -->
+        <div class="d-none d-md-flex align-items-center">
+            <img class="img-fluid rounded" style="max-height:50px;"
+                 src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto" />
+        </div>
+    </div>
+</div>
+
+
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link menu-link" href="" Match="NavLinkMatch.All">
+                <i class="fas fa-home"></i>
+                <span>Головна</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link menu-link" href="ukrains-railways">
+                <i class="fas fa-train"></i>
+                <span>Українська залізниця</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link menu-link" href="trains">
+                <i class="fas fa-list"></i>
+                <span>Список поїздів</span>
+            </NavLink>
+        </div>
+    </nav>
+
+    <!-- Блок авторизації -->
+
+    <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
+        <AuthorizeView>
+            <Authorized>
+                <li class="nav-item d-flex align-items-center gap-2">
+
+                    <button class="btn btn-light shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Profile">
+                        <i class="fa-solid fa-user text-primary"></i>
+                        <span>Мій профіль</span>
+                    </button>
+
+                    <button class="btn btn-danger shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Вийти</span>
+                    </button>
+
+                </li>
+            </Authorized>
+
+            <NotAuthorized>
+                <li class="nav-item d-flex align-items-center gap-2">
+
+                    <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Login">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Вхід</span>
+                    </button>
+
+                    <button class="btn btn-outline-primary shadow-sm d-flex align-items-center gap-2 px-3"
+                            @onclick="Register">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Реєстрація</span>
+                    </button>
+
+                </li>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ul>
+</div>
+
+@code {
+    private bool isNavCollapsed = true;
+    private string? NavMenuCssClass => isNavCollapsed ? "collapse" : null;
+    List<UkrainsRailwaysDTO> railways = new();
+    private AuthenticationState? authState;
+
+    [CascadingParameter] private Task<AuthenticationState> AuthStateTask { get; set; }
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthStateProvider.AuthenticationStateChanged += AuthStateChanged;
+        await ((CustomAuthStateProvider)AuthStateProvider).CheckAuthenticationAsync();
+    }
+
+    private async void AuthStateChanged(Task<AuthenticationState> task)
+    {
+        var authState = await task;
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+        StateHasChanged(); // перемальовує компонент
+    }
+
+    public void Dispose()
+    {
+        AuthStateProvider.AuthenticationStateChanged -= AuthStateChanged;
+    }
+
+    private void ToggleNavMenu() => isNavCollapsed = !isNavCollapsed;
+    private void ExpandNav() => isNavCollapsed = false;
+    private void CollapseNav() => isNavCollapsed = true;
+
+    private void Logout() => Nav.NavigateTo("logout");
+    private void Register() => Nav.NavigateTo($"/register/");
+    private void Login() => Nav.NavigateTo($"/login/");
+    private void Profile() => Nav.NavigateTo($"/profile/");
+}

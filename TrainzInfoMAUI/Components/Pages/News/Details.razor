@@ -1,0 +1,190 @@
+﻿@page "/news/details/{id:int}"
+@using TrainzInfoShared.DTO.GetDTO
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+@*  Заголовок страницы новости *@
+<h1 class="news-page-title mb-4">@((MarkupString)news?.NameNews)</h1>
+
+@if (news is not null)
+{
+    <div class="card news-detail-card border-0 shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+            <header class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-info-subtle text-info border border-info-subtle px-3">Новини</span>
+                    <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd.MM.yyyy")</span>
+                </div>
+                <h1 class="display-5 fw-bold text-dark">@((MarkupString)news.NameNews)</h1>
+            </header>
+
+            <div class="row g-lg-5">
+                <div class="col-lg-7 order-2 order-lg-1">
+                    <div class="news-lead mb-4 p-3 bg-light rounded-3 border-start border-info border-4">
+                        <p class="mb-0 text-secondary fw-medium">@((MarkupString)news.BaseNewsInfo)</p>
+                    </div>
+
+                    <div class="news-main-text lh-lg text-muted">
+                        @((MarkupString)news.NewsInfoAll)
+                    </div>
+                </div>
+
+                <div class="col-lg-5 order-1 order-lg-2 mb-4 mb-lg-0">
+                    <div class="sticky-lg-top" style="top: 2rem;">
+                        <div class="image-wrapper shadow-lg">
+                            @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                            {
+                                <img src="@news.NewsImage" alt="@news.NameNews" class="img-fluid rounded-4" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-box rounded-4 bg-light d-flex flex-column align-items-center justify-content-center">
+                                    <i class="bi bi-card-image display-1 text-light"></i>
+                                    <span class="text-muted">Фото відсутнє</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-3 p-3 rounded-3 bg-light-subtle border border-dashed text-center">
+                            <small class="text-muted italic">Інформаційна служба залізниці</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top d-flex flex-wrap gap-2">
+                @if (CanComment)
+                {
+                    <button class="btn btn-info px-4 py-2 rounded-pill fw-bold" @onclick="() => NavigateToComment(news.id)">
+                        <i class="bi bi-chat-left-text me-2"></i>Коментувати
+                    </button>
+                    <button class="btn btn-outline-secondary px-4 py-2 rounded-pill" @onclick="() => NavigateToComments(news.id)">
+                        Коментарі (@CommentCount)
+                    </button>
+                }
+
+                @if (IsAdmin)
+                {
+                    <div class="ms-auto d-flex gap-2">
+                        <button class="btn btn-light border rounded-circle shadow-sm" title="Редагувати" @onclick="() => EditNews(news.id)">
+                            <i class="bi bi-pencil-square text-warning"></i>
+                        </button>
+                        <button class="btn btn-light border rounded-circle shadow-sm" title="Додати фото" @onclick="() => AddImage(news.id)">
+                            <i class="bi bi-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                }
+            </footer>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-muted">Завантаження новини…</p>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private NewsDTO news;
+    private UserDto CurrentUser; // або отримуй з авторизації
+    private int CommentCount;
+
+    private bool IsAdmin = false;
+    private bool CanComment = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантажуємо новину
+        news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/details/{Id}");
+
+        // Приклад: завантаження поточного користувача та кількості коментарів
+        // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
+        CommentCount = await Http.GetFromJsonAsync<int>($"api/comments/getnewscommentscount/{Id}");
+        await CheckRoles();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin") || roles.Contains("Publisher");
+
+                if (user.Identity.Name != null)
+                {
+                    CanComment = true;
+                }
+            }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = new Uri(Nav.Uri);                            // полный URL, например https://app.com/news?id=42
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (!int.TryParse(query["id"], out int newsId))
+        {
+            // id не найден/не число – можно показать ошибку или перейти на другую страницу
+            return;
+        }
+
+        // 2️⃣ Загружаем новость по полученному id
+        var news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/{newsId}");
+
+        if (news == null) return; // ничего не найдено
+
+        // 3️⃣ Обновляем Open Graph‑теги через JS‑интероп
+        await JS.InvokeVoidAsync(
+            "og.setMetaTags",
+            news.NameNews,
+            // если BaseNewsInfo может быть null, берём часть от начала строки,
+            // иначе – саму строку (или обрезаем до 150 символов)
+            string.IsNullOrWhiteSpace(news.BaseNewsInfo)
+                ? ""
+                : news.BaseNewsInfo.Length > 150
+                    ? news.BaseNewsInfo[..150]
+                    : news.BaseNewsInfo,
+                    news.NewsImage
+        );
+    }
+
+
+    private void NavigateToComment(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/create/{newsId}");
+    }
+
+    private void NavigateToComments(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/{newsId}");
+    }
+
+    private void EditNews(int newsId)
+    {
+        Navigation.NavigateTo($"/news/edit/{newsId}");
+    }
+
+    private void AddImage(int newsId)
+    {
+        Navigation.NavigateTo($"/news/addimage/{newsId}");
+    }
+}

@@ -1,0 +1,207 @@
+﻿@page "/diesel-trains/details/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+
+<h3>@Title</h3>
+
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else if (Error != null)
+{
+    <div class="alert alert-danger">@Error</div>
+    <div>
+        <NavLink href="/locomotives">Back to List</NavLink>
+    </div>
+}
+else
+{
+    <div class="container my-4">
+        <hr />
+
+        <div class="bg-light p-3 rounded">
+            <div class="row g-3 align-items-center">
+
+                <!-- Зображення -->
+                <div class="col-12 col-md-5 text-center">
+                    @if (dieselTrains.Image != null)
+                    {
+                        <img class="img-fluid rounded-start"
+                             src="@dieselTrains.Image"
+                             alt="Локомотив" />
+                    }
+                    else
+                    {
+                        <p>Зображення відсутнє</p>
+                    }
+                </div>
+
+                <!-- Інформація -->
+                <div class="col-12 col-md-7 bg-light p-3 rounded">
+                    <h4>@dieselTrains.Name - @dieselTrains.NumberTrain</h4>
+                    <p>Місто прописки: @dieselTrains.City</p>
+                    <p>Депо прописки: @dieselTrains.DepotList</p>
+                    <p>Місто прописки: @dieselTrains.City</p>
+                    <p>Філія: @dieselTrains.Filia</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="mt-4">
+            <p class="fs-5">@dieselTrains.BaseInfo</p>
+            <p class="fs-5">@dieselTrains.AllInfo</p>
+        </div>
+
+        @if (dieselTrains.Station != null)
+        {
+            <div class="news-detail-card card shadow-sm mb-5">
+                <div class="row g-4 align-items-start">
+                    <!-- Картинка -->
+                    <div class="col-md-4 text-center">
+                        @if (string.IsNullOrEmpty(dieselTrains.StationImages))
+                        {
+                            <img src="@dieselTrains.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
+                        }
+                        else
+                        {
+                            <img src="@dieselTrains.StationImages" class="card-img-top" alt="@dieselTrains.Station" />
+                        }
+                    </div>
+
+                    <!-- Текстова частина -->
+                    <div class="col-md-8">
+                        <dl class="row mb-3">
+                            <dt class="col-sm-3">Назва</dt>
+                            <dd class="col-sm-9 news-text">@dieselTrains.Station</dd>
+                        </dl>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            @* @if (CanComment != null)
+                    {
+                        <button class="btn btn-info btn-sm" @onclick="() => NavUserPhoto(stations.id)">Коментувати</button>
+                        <button class="btn btn-info btn-sm" @onclick="() => NavStationShad(stations.id)">
+                            Коментарі + @CommentCount
+                        </button>
+                    } *@
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>Завантаження інформації...</p>
+        }
+        <!-- Publisher/Admin -->
+        @if (IsPublisherOrAdmin)
+        {
+            <div class="mt-3 text-center">
+                <a class="btn btn-info" href="/edit-info/@dieselTrains.Id" target="_blank">
+                    Редагувати додаткову інформацію
+                </a>
+            </div>
+        }
+
+        <!-- Superadmin -->
+        @if (IsSuperadmin)
+        {
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <a class="btn btn-success" href="/locomotive/edit/@dieselTrains.Id">Редагувати</a>
+                <a class="btn btn-success" href="/locomotive/add-image/@dieselTrains.Id">Додати зображення</a>
+                <button class="btn btn-danger w-100 w-md-auto" @onclick="DeleteDiesel">
+                    Видалити
+                </button>
+            </div>
+        }
+        @if (ErrorMessage is not null)
+        {
+            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
+            <div class="alert alert-danger mt-2">
+                <p>@ErrorMessage</p>
+            </div>
+        }
+    </div>
+
+    <div class="mb-3">
+        <NavLink class="btn btn-secondary d-flex align-items-center gap-2" href="/diesel-trains">
+            <i class="fa-solid fa-arrow-left"></i>
+            Повернутися до списку
+        </NavLink>
+    </div>
+}
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private DieselTrainsDTO? dieselTrains;
+    private string? ErrorMessage;
+    private bool IsPublisherOrAdmin = false;
+    private bool IsSuperadmin = false;
+    private string Title = "Дизель-поїзд";
+    private bool IsLoading = true; 
+    private string? Error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            // Авторизація
+            var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = auth.User;
+
+            IsPublisherOrAdmin =
+                user.IsInRole("Publisher") ||
+                user.IsInRole("Admin") ||
+                user.IsInRole("Superadmin");
+
+            IsSuperadmin = user.IsInRole("Superadmin");
+
+            // Завантажуємо локомотив
+            dieselTrains = await Http.GetFromJsonAsync<DieselTrainsDTO>($"api/diesels/details/{Id}");
+
+            if (dieselTrains == null)
+            {
+                Error = "Дизель не знайдено.";
+                return;
+            }
+
+            Title = $"{dieselTrains.Name} - {dieselTrains.NumberTrain}";
+
+
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+     
+
+    private async Task DeleteDiesel()
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити дизель-поїзд?"))
+            return;
+        var response = await Http.DeleteAsync($"api/diesels/deleteapprove/{Id}");
+        if (response.IsSuccessStatusCode)
+            Nav.NavigateTo("/diesel-trains");
+        else
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+}

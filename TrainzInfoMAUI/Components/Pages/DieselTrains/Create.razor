@@ -1,0 +1,229 @@
+@page "/diesel-trains/create"
+@using TrainzInfoShared.DTO.GetDTO
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h4>Дизель</h4>
+<hr />
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-semibold">🚆 Дизельний локомотив</h4>
+
+                    <EditForm Model="@diesel" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
+
+                        <!-- Серія -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Серія
+                            </label>
+                            <InputSelect @bind-Value="diesel.Name"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in NameList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Номер -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">
+                                Номер локомотива
+                            </label>
+                            <InputText @bind-Value="diesel.NumberTrain"
+                                       class="form-control form-control-lg"
+                                       placeholder="001, 002..." />
+                        </div>
+
+                        <!-- Депо -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-medium">
+                                Депо
+                            </label>
+                            <InputText @bind-Value="depo"
+                                       class="form-control form-control-lg"
+                                       placeholder="Почніть вводити депо..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filteredDepot?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1"
+                                    style="z-index:1000;">
+                                    @foreach (var item in filteredDepot)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectItem(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <!-- Область -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Область
+                            </label>
+                            <InputSelect @bind-Value="diesel.Oblast"
+                                         class="form-select form-select-lg">
+                                @foreach (var item in OblList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <!-- Фото -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">
+                                Фото локомотива
+                            </label>
+                            <InputFile class="form-control"
+                                       OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview"
+                                         class="img-thumbnail rounded-3"
+                                         style="max-height:180px" />
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Кнопка -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg px-4">
+                                Зберегти
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errors))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @errors
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private DieselTrainsDTO diesel = new DieselTrainsDTO();
+    private List<string> NameList = new List<string>();
+    private List<string> DepotList = new List<string>();
+    private List<string> filteredDepot = new List<string>();
+    private List<string> OblList = new List<string>();
+    private CancellationTokenSource debounceCts;
+    private string depo;
+    private string imagePreview;
+    private string errors;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        // Підписка на скрол через JS
+        //await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API
+    }
+    private async Task Load()
+    {
+        NameList.Add("Виберіть серію");
+        DepotList.Add("Виберіть депо");
+        // Імітація завантаження даних — в реальному випадку виклик API
+        var series = await Http.GetFromJsonAsync<List<string>>("api/diesels/allmodels");
+        var depots = await Http.GetFromJsonAsync<List<string>>("api/diesels/alldepos");
+        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/diesels/allobl");
+        NameList.AddRange(series ?? new List<string>());
+        DepotList.AddRange(depots ?? new List<string>());
+        OblList.AddRange(oblasts ?? new List<string>());
+    }
+    
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/diesels/create", diesel);
+        if (result.IsSuccessStatusCode)
+        {
+            // Тут можна викликати сервіс, який додає локомотив в базу через API
+            Console.WriteLine($"Додано локомотив: {diesel.Name} {diesel.NumberTrain}");
+            // Після успіху — навігація назад
+            Navigation.NavigateTo("/diesel-trains");
+        }
+        else
+        {
+            errors = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Помилка: {errors}");
+        }
+    }
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        depo = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+           if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(depo))
+                {
+                    filteredDepot.Clear();
+                }
+                else
+                {
+                    filteredDepot = DepotList
+                        .Where(x => x.Contains(depo, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        depo = item;
+        diesel.DepotList = depo;
+        filteredDepot.Clear();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB
+        var buffer = new byte[file.Size];
+        await stream.ReadAsync(buffer);
+
+        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        // Зберігаємо у модель
+        diesel.Image = imagePreview;
+        diesel.ImageMimeTypeOfData = file.ContentType;
+    }
+}

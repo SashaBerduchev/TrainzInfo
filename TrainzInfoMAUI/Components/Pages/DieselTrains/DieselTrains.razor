@@ -1,0 +1,289 @@
+﻿@page "/diesel-trains"
+@using System.Threading.Tasks
+@using TrainzInfoShared.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav;
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<h1 class="mb-4 text-center">Дизель-поїзди</h1>
+
+@if (IsPublisherOrAdminOrSuperAdmin)
+{
+    <button class="btn btn-info mb-3" @onclick="CreateDieselTrain">Створити</button>
+    <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
+}
+
+<div class="row g-2 mb-3">
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var f in filias)
+            {
+                <option value="@f">@f</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedOblast">
+            <option value="">Всі області</option>
+            @foreach (var o in oblasts)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedDepo">
+            <option value="">Всі депо</option>
+            @foreach (var d in depos)
+            {
+                <option value="@d">@d</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-3">
+        <select class="form-control" @bind="selectedModel">
+            <option value="">Всі моделі</option>
+            @foreach (var m in models)
+            {
+                <option value="@m">@m</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 mt-2">
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+</div>
+
+<button class="btn btn-secondary mb-3" @onclick="ClearFilter">Скинути фільтр</button>
+
+<div class="row" id="dieselContainer">
+    @if (loading == false)
+    {
+        <p class="text-center">Завантаження...</p>
+    }
+    else if (!dieselTrains.Any())
+    {
+        <p class="text-center text-secondary">Нічого не знайдено.</p>
+    }
+    else
+    {
+        @foreach (var item in dieselTrains)
+        {
+            <div class="col-12 mb-4 diesel-card">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-4">
+                            <img class="img-fluid rounded-start"
+                                 src="@item.Image"
+                                 alt="Дизель-поїзд" />
+                        </div>
+                        <div class="col-12 col-md-5 p-3">
+                            <h5>@item.Name — №@item.NumberTrain</h5>
+                            <p><b>Депо:</b> @item.DepotList</p>
+                            <p><b>Філія:</b> @item.Filia</p>
+                            <p><b>Область:</b> @item.Oblast</p>
+                            <p><b>Місто:</b> @item.City</p>
+                            <p><b>Станція:</b> @item.Station</p>
+                        </div>
+                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                            <NavLink class="btn btn-info mb-2" href="@($"/diesel-trains/details/{item.Id}")">Детально</NavLink>
+
+                            @if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
+                            {
+                                <NavLink class="btn btn-outline-warning mb-2" href="@($"/diesel-trains/add-image/{item.Id}")">Додати зображення</NavLink>
+                                <NavLink class="btn btn-success mb-2" href="@($"/diesel-trains/edit/{item.Id}")">Редагувати</NavLink>
+                                <button class="btn btn-danger" @onclick="() => DeleteTrain(item.Id)">Видалити</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private List<DieselTrainsDTO> dieselTrains = new();
+    private List<DieselTrainsDTO> filteredTrains = new();
+    private UserDto currentUser;
+    private bool IsPublisherOrAdminOrSuperAdmin;
+    private bool isFilterLoad = false;
+
+    private string selectedFilia { get; set; } = "";
+    private string selectedOblast { get; set; } = "";
+    private string selectedDepo { get; set; } = "";
+    private string selectedModel { get; set; } = "";
+
+    private List<string> filias = new();
+    private List<string> oblasts = new();
+    private List<string> depos = new();
+    private List<string> models = new();
+    private UserDto CurrentUser { get; set; }
+
+    private bool loading = false;
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "depotsName")]
+    public string? DepotNameFromQuery { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckRoles();
+        await Load();
+
+        filteredTrains = dieselTrains.ToList();
+
+
+
+        // JS для анімації
+        await JS.InvokeVoidAsync("addDieselsScrollListener", DotNetObjectReference.Create(this));
+    }
+
+    public async Task Load()
+    {
+        if (isLoading || allLoaded) return;
+
+        if (DepotNameFromQuery is not null)
+        {
+            selectedDepo = DepotNameFromQuery;
+        }
+
+        isLoading = true;
+        var url =
+               $"api/diesels/gettrains?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(selectedFilia) ? "" : $"&filia={Uri.EscapeDataString(selectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedDepo) ? "" : $"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedModel) ? "" : $"&model={Uri.EscapeDataString(selectedModel)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+        var dieselPage = await Http.GetFromJsonAsync<List<DieselTrainsDTO>>(url);
+        if (dieselPage == null || dieselPage.Count == 0)
+        {
+            allLoaded = true;
+        }
+        else
+        {
+            dieselTrains.AddRange(dieselPage);
+            //    await ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+
+            if (!isFilterLoad)
+            {
+                var urlfilia = $"api/diesels/filias{($"?filia={Uri.EscapeDataString(selectedFilia)}")}"+
+                 $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}"+
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urldepo = $"api/diesels/depos{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urlmodel = $"api/diesels/models{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                 $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                var urloblast = $"api/diesels/oblasts{($"?filia={Uri.EscapeDataString(selectedFilia)}")}" +
+                $"{($"&depot={Uri.EscapeDataString(selectedDepo)}")}" +
+                 $"{($"&model={Uri.EscapeDataString(selectedModel)}")}" +
+                 $"{($"&oblast={Uri.EscapeDataString(selectedOblast)}")}";
+                filias = await Http.GetFromJsonAsync<List<string>>(urlfilia);
+                oblasts = await Http.GetFromJsonAsync<List<string>>(urloblast);
+                depos = await Http.GetFromJsonAsync<List<string>>(urldepo);
+                models = await Http.GetFromJsonAsync<List<string>>(urlmodel);
+                isFilterLoad = true;
+            }
+            currentPage++;
+
+        }
+        loading = true;
+        isLoading = false;
+        StateHasChanged();
+    }
+    private async Task ApplyFilter()
+    {
+        currentPage = 1;
+        allLoaded = false;
+        dieselTrains.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        models.Clear();
+        filias.Clear();
+        depos.Clear();
+        oblasts.Clear();
+        await Load();                 // загружаем первую страницу
+        await JS.InvokeVoidAsync("revealNewDieselCards");
+
+    }
+
+    private async Task ClearFilter()
+    {
+        selectedFilia = selectedOblast = selectedDepo = selectedModel = "";
+        currentPage = 1;
+        allLoaded = false;
+        dieselTrains.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        models.Clear();
+        filias.Clear();
+        depos.Clear();
+        oblasts.Clear();
+        await Load();                 // загружаем первую страницу
+        await JS.InvokeVoidAsync("revealNewDieselCards");
+    }
+
+    private void CreateDieselTrain()
+    {
+        // Навігація на створення
+        Nav.NavigateTo("/diesel-trains/create");
+    }
+
+    private void DeleteTrain(int id)
+    {
+        // Виклик API на видалення
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Admin");
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+
+    private async Task UpdateData()
+    {
+        var response = Http.GetStringAsync("api/diesels/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/diesel-trains");
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await Load();
+    }
+
+}

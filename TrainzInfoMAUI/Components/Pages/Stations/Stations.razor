@@ -1,0 +1,335 @@
+﻿@page "/stations"
+@using TrainzInfoShared.DTO.GetDTO
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+
+<h1 class="text-center mb-3">Станції</h1>
+
+@if (!string.IsNullOrEmpty(CurrentFilia))
+{
+    <h2 class="text-center mb-4">@CurrentFilia</h2>
+}
+<div class="mb-3">
+    @if (IsAdmin)
+    {
+        <button class="btn btn-info mb-2" @onclick="AddStation">Додати станцію</button>
+    }
+</div>
+<!-- Фільтри -->
+<div class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var f in Filias)
+            {
+                <option value="@f">@f</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedOblast">
+            <option value="">Всі області</option>
+            @foreach (var o in Oblasts)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </div>
+    <div class="form-group position-relative">
+        <label>Станції</label>
+        <InputText @bind-Value="SelectedName" class="form-control" placeholder="Почніть вводити назву станції..."
+                   @oninput="OnInputChanged" />
+
+        @if (filteredStations?.Any() == true)
+        {
+            <ul class="list-group position-absolute w-100" style="z-index:1000;">
+                @foreach (var item in filteredStations)
+                {
+                    <li class="list-group-item list-group-item-action"
+                        style="cursor:pointer;"
+                        @onclick="() => SelectItem(item)">
+                        @item
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="col-12 mt-2">
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+</div>
+
+<button class="btn btn-secondary mb-4" @onclick="ClearFilter">Скинути фільтр</button>
+
+
+
+<!-- Список станцій -->
+<div class="row" id="stationsContainer">
+    @if(isLoading == true)
+    {
+        <p>Завантажуємо</p>
+    }
+    else if (stationsList.Count == 0)
+    {
+        <p>Нічого не знайдено…</p>
+    }
+
+    @foreach (var item in stationsList)
+    {
+        <div class="col-12 mb-4 station-card">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+
+                    <!-- Картинка -->
+                    <div class="col-12 col-md-4">
+                        <img class="station-img"
+                             src="@item.StationImages"
+                             alt="station" />
+                    </div>
+
+                    <!-- Інформація -->
+                    <div class="col-12 col-md-5 p-3">
+                        <h5>@item.Name</h5>
+                        <p><b>Область:</b> @item.Oblasts</p>
+                        <p><b>Місто:</b> @item.Citys</p>
+                        <p><b>Філія:</b> @item.UkrainsRailways</p>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+@* 
+                        @if (item.HasSchedule)
+                        {
+                            <a class="btn btn-info mb-2 w-100" href="/station-schedule/@item.Name">
+                                Розклад по станції
+                            </a>
+                        } *@
+
+                        <a class="btn btn-primary mb-2 w-100" href="/stations/details/@item.id">
+                            Інформація
+                        </a>
+                        @if (IsAdmin)
+                        {
+                            <a class="btn btn-outline-info mb-2 w-100" href="/stations/edit/@item.id">
+                                Редагувати
+                            </a>
+                        }
+                        
+
+                        @* @if (item.HasUsersPhotos)
+                        {
+                            <a class="btn btn-warning mb-2 w-100" href="/users-photos/@item.Id">
+                                Фотографії користувачів
+                            </a>
+                        } *@
+
+                        <!-- Рольова логіка при потребі -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@code {
+    string? filiasNameFromQuery;
+    List<StationsDTO> stationsList = new();
+    List<string> Filias = new();
+    List<string> Oblasts = new();
+    List<string> StationNames = new();
+    private UserDto CurrentUser { get; set; }
+    private CancellationTokenSource debounceCts;
+    private List<string> filteredStations = new();
+    private bool isFilterLoad = false;
+    string SelectedFilia = "";
+    string SelectedOblast = "";
+    string SelectedName = "";
+
+    string CurrentFilia = "";
+    string CurrentOblast = "";
+    string Currentname = "";
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        filiasNameFromQuery = query["filialsName"];
+        await LoadStations();
+
+        await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
+    }
+
+    protected async Task LoadStations()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+
+        if(filiasNameFromQuery != null)
+        {
+            SelectedFilia = filiasNameFromQuery;
+        }
+        var url =
+               $"api/stations/get-stations?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedName) ? "" : $"&name={Uri.EscapeDataString(SelectedName)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+        var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>(url);
+
+        if (stationsPage == null || stationsPage.Count == 0)
+        {
+            allLoaded = true;
+        }
+        else
+        {
+            stationsList.AddRange(stationsPage);
+            //ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            currentPage++;
+            StateHasChanged();
+        }
+        await CheckRoles();
+        if (!isFilterLoad)
+        {
+            var urlfilias = $"api/stations/get-filias{($"?name={Uri.EscapeDataString(SelectedName)}")}" + 
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+            var urloblasts = $"api/stations/get-oblasts{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}"; 
+            var urlstationnames = $"api/stations/get-station-names{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+            Filias = await Http.GetFromJsonAsync<List<string>>(urlfilias);
+            Oblasts = await Http.GetFromJsonAsync<List<string>>(urloblasts);
+            StationNames = await Http.GetFromJsonAsync<List<string>>(urlstationnames);
+            isFilterLoad = true;
+        }
+        isLoading = false;
+    }
+
+    protected async Task ApplyFilter()
+    {
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        isFilterLoad = false;
+        Filias.Clear();
+        Oblasts.Clear();
+        StationNames.Clear();
+        stationsList.Clear();          // если хотите начать с нуля
+        await LoadStations();                 // загружаем первую страницу
+
+        StateHasChanged();
+    }
+    
+    async Task ClearFilter()
+    {
+        SelectedFilia = "";
+        SelectedOblast = "";
+        SelectedName = "";
+
+        currentPage = 1;
+        stationsList.Clear();
+        await LoadStations();
+
+        StateHasChanged();
+    }
+
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        SelectedName = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(SelectedName))
+                {
+                    filteredStations.Clear();
+                }
+                else
+                {
+                    filteredStations = StationNames
+                        .Where(x => x.Contains(SelectedName, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        SelectedName = item;
+        filteredStations.Clear();
+    }
+
+     private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadStations();
+    }
+
+    private void AddStation() => Nav.NavigateTo("/stations/create");
+}

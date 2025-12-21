@@ -1,0 +1,49 @@
+﻿.news-detail-card {
+    border-radius: 24px;
+    background: #ffffff;
+}
+
+/* Обгортка картинки з ефектом підйому */
+.image-wrapper {
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+    .image-wrapper img {
+        width: 100%;
+        max-height: 450px; /* Обмежуємо висоту, щоб не було "стіни" */
+        object-fit: cover;
+    }
+
+    .image-wrapper:hover {
+        transform: translateY(-5px);
+    }
+
+.placeholder-box {
+    aspect-ratio: 4/3;
+    min-height: 300px;
+}
+
+/* Текст новини */
+.news-main-text {
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    text-align: justify;
+}
+
+/* Стилізація кнопок */
+.btn-info {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #fff;
+}
+
+/* Стікі-колонки працюють тільки на десктопах */
+@@media (min-width: 992px) {
+    .sticky-lg-top {
+        z-index: 10;
+    }
+}
+
+

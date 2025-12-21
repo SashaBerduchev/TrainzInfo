@@ -1,0 +1,109 @@
+﻿/* Файл: wwwroot/css/site.css (или любой подключенный файл) */
+
+/* 1️⃣ Общий layout */
+.layout {
+    display: flex;
+}
+
+/* 2️⃣ Sidebar (с фиксированной шириной) */
+.sidebar {
+    width: 250px; /* полная ширина */
+    min-width: 250px; /* чтобы не сжималась при flex‑shrink */
+    background: #343a40;
+    color: white;
+    overflow: hidden;
+    transition: width .3s ease; /* плавный переход */
+    flex-shrink: 0; /* важно! иначе flex может занять 0 */
+}
+
+    /* 3️⃣ Свернутая версия – оставляем только заглушку (60px) */
+    .sidebar.collapsed {
+        width: 60px;
+    }
+
+
+.sidebar-menu .menu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #444;
+    transition: all .25s ease;
+}
+
+.sidebar-menu .menu-link {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* зменшили відстань між іконкою і текстом */
+    padding: 10px 14px; /* трохи менше padding для компактності */
+    border-radius: 8px;
+    font-size: 15px;
+    color: #444;
+    transition: all .25s ease;
+}
+
+    .sidebar-menu .menu-link i {
+        font-size: 18px;
+        opacity: 0.9;
+        transition: .25s;
+    }
+
+    .sidebar-menu .menu-link:hover {
+        background: #f0f0f0;
+        color: #0d6efd;
+        transform: translateX(3px);
+    }
+
+        .sidebar-menu .menu-link:hover i {
+            opacity: 1;
+        }
+
+    .sidebar-menu .menu-link.active {
+        background: #e8f0ff;
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+        .sidebar-menu .menu-link.active i {
+            color: #0d6efd;
+            opacity: 1;
+        }
+
+.nav-item {
+    margin-bottom: 5px;
+}
+
+.menu-text {
+    white-space: nowrap; /* текст не переноситься на новий рядок */
+}
+/* ========================= */
+/* 📱 MOBILE FIX (до 768px) */
+/* ========================= */
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: relative; /* не fixed */
+        width: 100%; /* повна ширина */
+        height: auto; /* мінімальна висота при згорнутому стані */
+        background: #343a40;
+        overflow: hidden; /* ховаємо меню при згорнутому стані */
+        transition: height 0.3s ease;
+    }
+
+        /* Згорнутий стан — смужка висотою 60px */
+        .sidebar.collapsed {
+            height: 60px;
+        }
+
+        /* Розгорнутий стан — автоматична висота контенту */
+        .sidebar.expanded {
+            height: auto; /* або можна max-height: 300px; якщо хочеш обмежити */
+        }
+
+    /* Горизонтальна смужка кнопки/тексту завжди видно */
+    .menu-text {
+        display: inline;
+    }
+}

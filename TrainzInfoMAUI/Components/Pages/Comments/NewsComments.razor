@@ -1,0 +1,175 @@
+﻿@page "/newscomments/{id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+@using System.Globalization
+@using TrainzInfoShared.DTO.GetDTO
+
+<h1 class="mb-4 text-center fw-bold">
+    Коментарі до новини @((MarkupString)news.NameNews)
+</h1>
+
+@if (isLoading)
+{
+    <p class="text-center text-muted">Завантаження…</p>
+}
+else
+{
+    <!-- Список комментариев -->
+    <div class="row g-3" id="locomotiveContainer">
+        @if (comments != null && comments.Any())
+        {
+            @foreach (var item in comments)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 bg-light">
+                        <!-- Картинка‑аватарка (можно заменить на реальный URL) -->
+                        <img src="https://i.pravatar.cc/150?u=@item.Id"
+                             alt="@item.Authorname" class="card-img-top rounded-circle mx-auto mt-3"
+                             style="width:80px; height:80px; object-fit:cover;" />
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@item.Authorname</h5>
+
+                            <!-- Ссылка на полное сообщение (показать только часть) -->
+                            <p class="card-text text-truncate"
+                               title="@((MarkupString)item.Comment)">
+                                @((MarkupString)item.Comment)
+                            </p>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    @item.DateTime.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
+                                </small>
+
+                                @if (IsAdmin)
+                                {
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            title="Удалить комментарий"
+                                            @onclick="() => DeleteComment(item.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Небольшой футер с подписью автора -->
+                        <div class="card-footer bg-transparent border-0 text-center">
+                            <small class="text-muted">Автор: @item.Authorname</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="col-12 text-center text-secondary fst-italic">
+                Коментарі відсутні
+            </p>
+        }
+    </div>
+}
+
+
+@code {
+    private List<CommentsDTO> comments = new();
+    private NewsDTO news = new();
+    [Parameter] public int id { get; set; }
+
+    private bool isLoading = false;
+    private int currentPage = 1;
+    private bool allLoaded = false;
+
+    private string SelectedFilia = "";
+    private string SelectedDepot = "";
+    private string SelectedSeria = "";
+
+    // Симуляція авторизації
+    private bool IsLogged => true;
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API
+    }
+
+    private async Task Load()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+        try
+        {
+            var commentsItem = await Http.GetFromJsonAsync<List<CommentsDTO>>($"api/comments/getnewscomments/{id}");
+
+            allLoaded = true;
+
+            comments.AddRange(commentsItem);
+            currentPage++;
+            var getnews = await Http.GetFromJsonAsync<NewsDTO>($"api/news/details/{id}");
+            if (getnews != null)
+            {
+                news = getnews;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження локомотивів: " + ex.Message);
+        }
+
+        isLoading = false;
+        await CheckRoles();
+        StateHasChanged();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    // private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");
+    // private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
+    // private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
+    private void DeleteComment(int id) => Nav.NavigateTo($"/comments/delete/{id}");
+    // private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await Load();
+    }
+}

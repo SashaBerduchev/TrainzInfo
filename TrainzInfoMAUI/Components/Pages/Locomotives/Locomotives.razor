@@ -1,0 +1,287 @@
+﻿@page "/locomotives"
+@using System.Threading.Tasks
+@using TrainzInfoShared.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+<h1 class="mb-4 text-center">Локомотиви</h1>
+
+<div class="mb-3">
+    @if (IsAdmin)
+    {
+        <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
+        <button class="btn btn-info mb-2" @onclick="UpdateInfo">Оновити дані</button>
+        <p><b>Кількість запитів:</b> @count</p>
+    }
+</div>
+@if (isLoading)
+{
+    <p class="text-center">Завантаження...</p>
+}
+else
+{
+    
+
+    <!-- Фільтри -->
+    <div class="row g-2 mb-3">
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedFilia">
+                <option value="">Всі філії</option>
+                @foreach (var f in FiliaList)
+                {
+                    <option value="@f">@f</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedDepot">
+                <option value="">Всі депо</option>
+                @foreach (var d in DepotList)
+                {
+                    <option value="@d">@d</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <select class="form-control" @bind="SelectedSeria">
+                <option value="">Всі серії</option>
+                @foreach (var s in SeriaList)
+                {
+                    <option value="@s">@s</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
+    </div>
+
+    <!-- Список локомотивів -->
+    <div class="row" id="locomotiveContainer">
+        @if (locomotives is null)
+        {
+            <p>Локомотиви відсутні, застосуйте інший фільтр</p>
+        }else{
+            @foreach (var item in locomotives)
+            {
+                <div class="col-12 mb-4 loco-card">
+                    <div class="card shadow-sm">
+                        <div class="row g-0">
+                            <div class="col-12 col-md-4">
+                                <img class="img-fluid rounded-start"
+                                     src="@item.ImgSrc"
+                                     alt="Локомотив" />
+                            </div>
+                            <div class="col-12 col-md-5 p-3">
+                                <h5>@item.Seria №@item.Number</h5>
+                                <p><b>Філія:</b> @item.Filia</p>
+                                <p><b>Депо:</b> @item.Depot</p>
+                                <p><b>Область:</b> @item.Oblast</p>
+                                <p><b>Місто:</b> @item.City</p>
+                                <p><b>Станція:</b> @item.Station </p>
+                                <p><b>Максимальна швидкість:</b> @item.Speed км/год</p>
+                            </div>
+                            <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
+                                <button class="btn btn-outline-info mb-2" @onclick="() => ViewDetails(item.Id)">Детальна інформація</button>
+                                <button class="btn btn-outline-success mb-2" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">Фото користувачів</button>
+
+                                @if (IsAdminOrPublisher)
+                                {
+                                    <button class="btn btn-outline-primary mb-2" @onclick="() => EditLocomotive(item.Id)">Редагувати</button>
+                                }
+
+                                @if (IsAdmin)
+                                {
+                                    <button class="btn btn-outline-warning mb-2" @onclick="() => AddImage(item.Id)">Додати зображення</button>
+                                    <button class="btn btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">Видалити</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            }
+            </div>
+}
+
+@code {
+    private List<LocomotiveDTO> locomotives = new();
+    private List<LocomotiveDTO> FilteredLocomotives = new();
+    private int count;
+
+    private bool isLoading = false;
+    private int currentPage = 1;
+    private bool allLoaded = false;
+
+    private string SelectedFilia = "";
+    private string SelectedDepot = "";
+    private string SelectedSeria = "";
+
+    private bool isFilterLoad = false;
+
+    private List<string> FiliaList = new();
+    private List<string> DepotList = new();
+    private List<string> SeriaList = new();
+
+    // Симуляція авторизації
+    private bool IsLogged => true;
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+    private string depotNameFromQuery;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        depotNameFromQuery = query["depotsName"];
+        await Load();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API  
+    }
+
+    private async Task Load()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+        try
+        {
+            if (depotNameFromQuery is not null)
+            {
+                SelectedDepot = depotNameFromQuery;
+            }
+            var url =
+               $"api/locomotives/getlocomotives?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedDepot) ? "" : $"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedSeria) ? "" : $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+            var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>(url);
+            var locomotivesCount = await Http.GetFromJsonAsync<int>("/api/locomotives/getcount");
+            count = locomotivesCount;
+            if (locomotiveItems == null || locomotiveItems.Count == 0)
+            {
+
+                allLoaded = true;
+            }
+            else
+            {
+                locomotives.AddRange(locomotiveItems);
+                FilteredLocomotives = locomotiveItems;
+                //ApplyFilter(); // оновлюємо відфільтровані новини
+                if (!isFilterLoad)
+                {
+                    var urlfilia = $"api/locomotives/getfilias{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{( $"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{( $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+                    var urldepo = $"api/locomotives/getdepots{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    var urlseria = $"api/locomotives/getseries{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlfilia));
+                    DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>(urldepo));
+                    SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlseria));
+                    isFilterLoad = true;
+                }
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження локомотивів: " + ex.Message);
+        }
+
+        isLoading = false;
+        await CheckRoles();
+        StateHasChanged();
+    }
+    private async Task ApplyFilter()
+    {
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        locomotives.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
+        await Load();                 // загружаем первую страницу
+        await JS.InvokeVoidAsync("revealNewLocoCards");
+        StateHasChanged();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    private async Task ClearFilter()
+    {
+        SelectedFilia = SelectedDepot = SelectedSeria = "";
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
+        await Load();
+        await JS.InvokeVoidAsync("revealNewLocoCards");
+        StateHasChanged();
+    }
+
+    private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");
+    private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
+    private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
+    private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
+    private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete/{id}");
+    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+
+    private async Task UpdateInfo()
+    {
+        var response = Http.GetStringAsync("api/locomotives/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/locomotives");
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await Load();
+    }
+}
