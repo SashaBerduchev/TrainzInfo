@@ -78,42 +78,31 @@
 .menu-text {
     white-space: nowrap; /* текст не переноситься на новий рядок */
 }
-
 /* ========================= */
 /* 📱 MOBILE FIX (до 768px) */
 /* ========================= */
 @media (max-width: 768px) {
 
-    /* Layout більше НЕ flex */
-    .layout {
-        display: block;
-    }
-
-    /* Sidebar стає offcanvas */
     .sidebar {
-        position: fixed;
-        top: 56px; /* висота navbar */
-        left: 0;
-        width: 100%;
-        min-width: 100%;
-        height: calc(100vh - 56px);
-        z-index: 1050;
-        transform: translateX(-100%);
-        transition: transform .3s ease;
+        position: relative; /* не fixed */
+        width: 100%; /* повна ширина */
+        height: auto; /* мінімальна висота при згорнутому стані */
+        background: #343a40;
+        overflow: hidden; /* ховаємо меню при згорнутому стані */
+        transition: height 0.3s ease;
     }
 
-        /* Відкрите меню */
-        .sidebar.expanded {
-            transform: translateX(0);
-        }
-
-        /* Закрите */
+        /* Згорнутий стан — смужка висотою 60px */
         .sidebar.collapsed {
-            transform: translateX(-100%);
-            width: 100%;
+            height: 60px;
         }
 
-    /* Текст завжди показуємо */
+        /* Розгорнутий стан — автоматична висота контенту */
+        .sidebar.expanded {
+            height: auto; /* або можна max-height: 300px; якщо хочеш обмежити */
+        }
+
+    /* Горизонтальна смужка кнопки/тексту завжди видно */
     .menu-text {
         display: inline;
     }

@@ -4,14 +4,14 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient Http
 @inject NavigationManager Nav
-<div class="navbar navbar-dark bg-dark navbar-expand-md">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
 
         <!-- Лівий логотип -->
         <a class="navbar-brand" href="/">TrainzInfo</a>
 
         <!-- Кнопка toggle -->
-        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -25,7 +25,7 @@
 
 
 
-<div class="nav-container sidebar sidebar-menu @(isNavCollapsed ? "collapsed" : "expanded")">
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link menu-link" href="" Match="NavLinkMatch.All">
@@ -92,7 +92,7 @@
 
 @code {
     private bool isNavCollapsed = true;
-
+    private string? NavMenuCssClass => isNavCollapsed ? "collapse" : null;
     List<UkrainsRailwaysDTO> railways = new();
     private AuthenticationState? authState;
 
