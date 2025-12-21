@@ -2,18 +2,13 @@
 @inject NavigationManager Nav
 
 <div class="page">
-    <div class="sidebar @(isSidebarCollapsed ? "collapsed" : "")"
-         @onmouseenter="ExpandSidebar"
-         @onmouseleave="CollapseSidebar">
-
+    <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-
-
         </div>
 
         <article class="content px-4">
@@ -23,15 +18,3 @@
     </main>
 </div>
 
-@code {
-
-    private bool isSidebarCollapsed = true;   // по умолчанию свернута
-
-    void ExpandSidebar() => isSidebarCollapsed = false;
-    void CollapseSidebar() => isSidebarCollapsed = true;
-
-    /* Если хотите toggle‑кнопку (на мобильном) – добавьте:
-       <button @onclick="ToggleSidebar">☰</button> */
-
-
-}

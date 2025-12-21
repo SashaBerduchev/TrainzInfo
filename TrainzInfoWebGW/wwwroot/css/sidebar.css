@@ -78,3 +78,43 @@
 .menu-text {
     white-space: nowrap; /* текст не переноситься на новий рядок */
 }
+
+/* ========================= */
+/* 📱 MOBILE FIX (до 768px) */
+/* ========================= */
+@media (max-width: 768px) {
+
+    /* Layout більше НЕ flex */
+    .layout {
+        display: block;
+    }
+
+    /* Sidebar стає offcanvas */
+    .sidebar {
+        position: fixed;
+        top: 56px; /* висота navbar */
+        left: 0;
+        width: 100%;
+        min-width: 100%;
+        height: calc(100vh - 56px);
+        z-index: 1050;
+        transform: translateX(-100%);
+        transition: transform .3s ease;
+    }
+
+        /* Відкрите меню */
+        .sidebar.expanded {
+            transform: translateX(0);
+        }
+
+        /* Закрите */
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            width: 100%;
+        }
+
+    /* Текст завжди показуємо */
+    .menu-text {
+        display: inline;
+    }
+}
