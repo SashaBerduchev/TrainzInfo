@@ -47,6 +47,7 @@
                             <!-- Філія -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-medium">Філія</label>
+                            <option value="">Філії</option>
                                 <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
                                     @foreach (var item in FiliasList)
                                     {
@@ -58,6 +59,8 @@
                             <!-- Область -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-medium">Область</label>
+                            <option value="">Області</option>
+
                                 <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
                                     @foreach (var item in OblastList)
                                     {

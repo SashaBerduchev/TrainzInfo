@@ -537,7 +537,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<ActionResult> DeleteStation(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteStation));
@@ -558,7 +558,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error deleting station: {ex.Message}");
+                Log.AddException($"Error deleting station: {ex.ToString()}");
                 Log.Wright("Error deleting station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }

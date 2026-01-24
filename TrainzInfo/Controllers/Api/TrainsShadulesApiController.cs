@@ -82,7 +82,9 @@ namespace TrainzInfo.Controllers.Api
                 List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
                 foreach (var item in shadulesDTO)
                 {
-                    Stations stations = await _context.Stations.Where(x => x.Name == item.NameStation).FirstOrDefaultAsync();
+                    Stations stations = await _context.Stations
+                        .Include(x => x.UkrainsRailways)
+                        .Where(x => x.Name == item.NameStation).FirstOrDefaultAsync();
                     TrainsShadule trainsShadule = new TrainsShadule();
                     trainsShadule.Arrival = item.Arrival;
                     trainsShadule.NumberTrain = item.NumberTrain;

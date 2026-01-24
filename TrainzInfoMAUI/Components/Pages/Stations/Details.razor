@@ -193,7 +193,7 @@ else
         if (!await Confirm("Ви впевнені що хочете видалити станцію?"))
             return;
 
-        var response = await Http.DeleteAsync($"api/stations/delete/{Id}");
+        var response = await Http.PostAsync($"api/stations/delete/{id}", null);
 
         if (response.IsSuccessStatusCode)
             Navigation.NavigateTo("/stations");
