@@ -10,7 +10,7 @@
         public TimeSpan Arrival { get; set; }
         public TimeSpan Departure { get; set; }
 
-        public string Distance { get; set; }
+        public string? Distance { get; set; }
 
         public bool IsUsing { get; set; }
 

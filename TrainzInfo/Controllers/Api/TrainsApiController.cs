@@ -162,13 +162,15 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 TrainDTO train = await _context.Trains
+                    .Include(x=>x.TypeOfPassTrain)
                     .Where(t => t.id == id)
                     .Select(x => new TrainDTO
                     {
                         Id = x.id,
                         Number = x.Number,
                         StationFrom = x.StationFrom,
-                        StationTo = x.StationTo
+                        StationTo = x.StationTo,
+                        PassTrainType = x.TypeOfPassTrain.Type
                     }).FirstOrDefaultAsync();
                 Log.Finish();
                 return Ok(train);
