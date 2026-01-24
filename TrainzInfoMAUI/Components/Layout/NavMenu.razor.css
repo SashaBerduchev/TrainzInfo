@@ -82,9 +82,16 @@
 }
 
 .nav-scrollable {
-    display: none;
+    position: fixed;
+    top: calc(56px + env(safe-area-inset-top));
+    left: 0;
+    width: 100%;
+    background: #212529;
+    z-index: 1050;
 }
-
+    .nav-scrollable.collapse {
+        display: none;
+    }
 .navbar-toggler:checked ~ .nav-scrollable {
     display: block;
 }

@@ -1,7 +1,23 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+
+:root {
+    --nav-height: 56px;
+}
+
+.top-row {
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    background-color: #212529;
+    padding-top: env(safe-area-inset-top);
+    height: calc(var(--nav-height) + env(safe-area-inset-top));
+}
+
+
 body {
     background: var(--bg-image-url);
+    padding-top: calc(var(--nav-height) + env(safe-area-inset-top));
 }
 a.navbar-brand {
   white-space: normal;
@@ -83,3 +99,4 @@ body {
         max-width: 100%;
         box-sizing: border-box;
     }
+
