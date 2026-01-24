@@ -9,16 +9,17 @@
     <div class="col-md-4">
         <EditForm Model="@trainDTO" OnValidSubmit="HandleValidSubmit">
             <DataAnnotationsValidator />
-            <ValidationSummary />
-
+            @* <ValidationSummary /> *@
+            
             <div class="form-group">
                 <label>Номер поїзда</label>
                 <InputNumber @bind-Value="trainDTO.Number" class="form-control" />
+                <ValidationMessage For="@(() => trainDTO.Number)" />
             </div>
 
             <!-- Станція з автодоповненням -->
                <div class="form-group position-relative">
-                <label>Станція прибуття</label>
+                <label>Станція відправлення</label>
                 <InputText Value="@stationFrom"
                            ValueChanged="SelectStationsFrom"
                            ValueExpression="() => stationFrom"
@@ -39,6 +40,7 @@
                         }
                     </ul>
                 }
+                <ValidationMessage For="@(() => trainDTO.StationFrom)" />
             </div>
 
             <div class="form-group position-relative">
@@ -63,6 +65,7 @@
                         }
                     </ul>
                 }
+                <ValidationMessage For="@(() => trainDTO.StationTo)" />
             </div>
             <div class="form-group">
                 <label>Тип поїзда</label>
@@ -72,10 +75,12 @@
                         <option value="@item">@item</option>
                     }
                 </InputSelect>
+                <ValidationMessage For="@(() => trainDTO.PassTrainType)" />
             </div>
             <div class="form-group">
                 <label>Назва поїзда якщо фірмовий</label>
                 <InputText @bind-Value="trainDTO.NameOfTrain" class="form-control" />
+                <ValidationMessage For="@(() => trainDTO.NameOfTrain)" />
             </div>
             <!-- Кнопка -->
             <div class="form-group">

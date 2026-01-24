@@ -148,6 +148,7 @@
 
     private async Task HandleValidSubmit()
     {
+        trainsSheduller.NumberTrain = train.Number.ToString();
         trainsShedullers.Add(trainsSheduller);
         StateHasChanged();
         trainsSheduller = new TrainsShaduleDTO();
