@@ -21,6 +21,8 @@ namespace TrainzInfoShared.DTO.GetDTO
         //public StationsShadulesDTO StationsShadules { get; set; }
         public string StationInfo { get; set; }
         //public RailwayUsersPhotosDTO railwayUsersPhotos { get; set; }
+        public string? BaseInfo { get; set; }
+        public string? AllInfo { get; set; }
         public string Metro { get; set; }
         public string StationImages { get; set; }
         public List<StationsShadulerDTO> stationsShadulers { get; set; }

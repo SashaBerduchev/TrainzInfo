@@ -53,7 +53,7 @@ namespace TrainzInfo.Controllers.Api
             }catch(Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally

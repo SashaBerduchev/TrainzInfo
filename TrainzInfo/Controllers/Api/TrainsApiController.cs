@@ -75,7 +75,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error retrieving trains from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -120,7 +120,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error retrieving train from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -146,7 +146,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error retrieving train numbers from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -177,7 +177,7 @@ namespace TrainzInfo.Controllers.Api
             }catch(Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }finally { Log.Finish(); }
         }
@@ -202,7 +202,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error retrieving station names from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -236,7 +236,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error creating new train in database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -282,7 +282,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error getting train for editing from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -319,7 +319,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error editing train in database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -349,7 +349,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 Log.Wright("Error deleting train from database");
                 Log.Finish();
                 return StatusCode(500, "Internal server error");
@@ -372,7 +372,7 @@ namespace TrainzInfo.Controllers.Api
             }catch(Exception ex)
             {
                 Log.Wright(ex.ToString());
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString);
             }finally { Log.Finish(); }
         } 

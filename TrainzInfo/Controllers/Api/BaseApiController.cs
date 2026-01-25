@@ -1,22 +1,22 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 
-namespace TrainzInfo.Controllers.OldControllers
+namespace TrainzInfo.Controllers.Api
 {
-    public class BaseController : Controller
+    public class BaseApiController : Controller
     {
         protected readonly UserManager<IdentityUser> _userManager;
         protected IdentityUser _identityUser;
         protected ApplicationContext _context;
-        public BaseController(UserManager<IdentityUser> userManager, ApplicationContext context)
+        public BaseApiController(UserManager<IdentityUser> userManager, ApplicationContext context)
         {
             _userManager = userManager;
             _context = context;
@@ -58,9 +58,5 @@ namespace TrainzInfo.Controllers.OldControllers
             await next();
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
     }
 }

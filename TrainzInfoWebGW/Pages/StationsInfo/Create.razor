@@ -1,0 +1,81 @@
+﻿@page "/stationsinfo/create/{stationName}"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<h3>Ініформація про станцію: @stationName</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@info" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+
+            <!-- Короткий опис (CKEditor) -->
+            <div class="form-group mt-2">
+                <label>Короткий опис</label>
+                <textarea id="editorBase"></textarea>
+            </div>
+
+            <!-- Повний текст новини (CKEditor) -->
+            <div class="form-group mt-2">
+                <label>Повний опис</label>
+                <textarea id="editorFull"></textarea>
+            </div>
+
+
+            <!-- Кнопка створення -->
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Зберегти</button>
+            </div>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(errors))
+        {
+            <div class="alert alert-danger mt-3">
+                <h5>Помилка збереження:</h5>
+                <p>@errors</p>
+            </div>
+        }
+    </div>
+</div>
+@code {
+    [Parameter] 
+    public string? stationName { get; set; }
+    private StationInfoDTO info = new StationInfoDTO();
+
+    private string errors = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ініціалізація CKEditor через JS Interop
+            await JS.InvokeVoidAsync("initCKEditorForStationInfo", "editorBase", DotNetObjectReference.Create(this), "SetBase");
+            await JS.InvokeVoidAsync("initCKEditorForStationInfo", "editorFull", DotNetObjectReference.Create(this), "SetFull");
+            info.Name = stationName;
+        }
+    }
+
+    [JSInvokable]
+    public void SetBase(string value) => info.BaseInfo = value;
+
+    [JSInvokable]
+    public void SetFull(string value) => info.AllInfo = value;
+
+    private async Task HandleValidSubmit()
+    {
+        info.Name = stationName;
+        var result = await Http.PostAsJsonAsync("api/StationInfoApi/create", info);
+        if (result.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/stations");
+        }
+        else
+        {
+            errors = await result.Content.ReadAsStringAsync();
+        }
+    }
+}

@@ -1,5 +1,4 @@
-﻿using LinqToDB.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -79,15 +78,6 @@ namespace TrainzInfo
             });
             Log.Wright("Try add MVC");
             services.AddMvc();
-            DataConnection.TurnTraceSwitchOn();
-
-            // 2. Перенаправляємо вивід у ваш метод логування
-            DataConnection.WriteTraceLine = (message, displayName, level) =>
-            {
-                // Тут ви викликаєте свій існуючий метод логування
-                // Додаємо префікс [LINQ2DB], щоб відрізняти від EF Core запитів
-                Log.SQLLogging($"[LINQ2DB] {message}");
-            };
 
             Log.Wright("Try find connection string");
             if (DEBUG_MODE == true)

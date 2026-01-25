@@ -45,7 +45,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"GetRailways - {ex.Message} - {ex.InnerException}");
+                Log.Exceptions($"GetRailways - {ex.Message} - {ex.InnerException}");
                 Log.Wright($"GetRailways - {ex.Message} - {ex.InnerException}");
                 return BadRequest();
             }
@@ -84,7 +84,7 @@ namespace TrainzInfo.Controllers.Api
             } catch (Exception ex)
             {
                 Log.Wright("Bad request: " + ex.ToString());
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }finally
             {
@@ -113,7 +113,7 @@ namespace TrainzInfo.Controllers.Api
             }catch (Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally

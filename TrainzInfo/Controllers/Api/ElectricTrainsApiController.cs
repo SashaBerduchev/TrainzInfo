@@ -67,7 +67,7 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally { Log.Finish(); }
@@ -144,7 +144,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.ToString()} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.ToString()} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
@@ -220,7 +220,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(Details)}: {ex.ToString()} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Details)}: {ex.ToString()} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(Details)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
@@ -283,7 +283,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(Create)}: {ex.ToString()} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Create)}: {ex.ToString()} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(Create)}: {ex.ToString()} ");
                 return StatusCode(500, "Internal server error");
             }
@@ -322,7 +322,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
@@ -351,7 +351,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }

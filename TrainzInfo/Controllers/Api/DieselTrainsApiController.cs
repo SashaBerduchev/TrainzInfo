@@ -60,7 +60,7 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally { Log.Finish(); }
@@ -135,7 +135,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetDieselTrains API error: " + ex.ToString());
+                Log.Exceptions("GetDieselTrains API error: " + ex.ToString());
                 Log.Wright("GetDieselTrains API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -198,7 +198,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetDieselTrainDetails API error: " + ex.Message);
+                Log.Exceptions("GetDieselTrainDetails API error: " + ex.Message);
                 Log.Wright("GetDieselTrainDetails API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -248,7 +248,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetFilias API error: " + ex.Message);
+                Log.Exceptions("GetFilias API error: " + ex.Message);
                 Log.Wright("GetFilias API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -295,7 +295,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetOblasts API error: " + ex.Message);
+                Log.Exceptions("GetOblasts API error: " + ex.Message);
                 Log.Wright("GetOblasts API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -343,7 +343,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetDepos API error: " + ex.Message);
+                Log.Exceptions("GetDepos API error: " + ex.Message);
                 Log.Wright("GetDepos API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -371,7 +371,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetDepos API error: " + ex.Message);
+                Log.Exceptions("GetDepos API error: " + ex.Message);
                 Log.Wright("GetDepos API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -423,7 +423,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetModels API error: " + ex.Message);
+                Log.Exceptions("GetModels API error: " + ex.Message);
                 Log.Wright("GetModels API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -451,7 +451,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("GetModels API error: " + ex.Message);
+                Log.Exceptions("GetModels API error: " + ex.Message);
                 Log.Wright("GetModels API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -514,7 +514,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("CreateDieselTrain API error: " + ex.Message);
+                Log.Exceptions("CreateDieselTrain API error: " + ex.Message);
                 Log.Wright("CreateDieselTrain API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -548,7 +548,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("EditDieselTrain API error: " + ex.Message);
+                Log.Exceptions("EditDieselTrain API error: " + ex.Message);
                 Log.Wright("EditDieselTrain API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -579,7 +579,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException("DeleteDieselTrain API error: " + ex.Message);
+                Log.Exceptions("DeleteDieselTrain API error: " + ex.Message);
                 Log.Wright("DeleteDieselTrain API error: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }

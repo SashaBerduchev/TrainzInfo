@@ -54,7 +54,7 @@ namespace TrainzInfo.Controllers.Api
             catch (System.Exception ex)
             {
                 Log.Wright("ERROR");
-                Log.AddException(ex.Message);
+                Log.Exceptions(ex.Message);
                 return BadRequest(ex.Message);
             }
             finally
@@ -91,7 +91,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException(ex.Message);
+                Log.Exceptions(ex.Message);
                 Log.Finish();
                 return BadRequest(ex.Message);
             }
@@ -118,7 +118,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException(ex.Message);
+                Log.Exceptions(ex.Message);
                 Log.Finish();
                 return BadRequest(ex.Message);
             }
@@ -156,7 +156,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException(ex.Message);
+                Log.Exceptions(ex.Message);
                 Log.Finish();
                 return BadRequest(ex.Message);
             }

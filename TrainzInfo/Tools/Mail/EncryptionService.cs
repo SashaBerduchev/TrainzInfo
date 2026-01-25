@@ -30,7 +30,7 @@ namespace TrainzInfo.Tools.Mail
             catch (Exception e)
             {
                 // Якщо розшифрування не вдалося, повертаємо оригінальний текст
-                Log.AddException("Decryption failed in EncryptionService.Decrypt " + e.ToString());
+                Log.Exceptions("Decryption failed in EncryptionService.Decrypt " + e.ToString());
                 return encryptedText;
             }
         }

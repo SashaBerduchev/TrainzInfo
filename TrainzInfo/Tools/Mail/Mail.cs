@@ -331,7 +331,7 @@ namespace TrainzInfo.Tools.Mail
             catch (Exception exp)
             {
                 Log.Wright(exp.ToString());
-                Log.AddException(exp.ToString());
+                Log.Exceptions(exp.ToString());
                 _success = false;
                 _error = exp.ToString();
             }

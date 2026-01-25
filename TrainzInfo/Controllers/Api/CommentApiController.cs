@@ -49,7 +49,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException($"Error getting news comments for news id={id}: {ex.Message}");
+                Log.Exceptions($"Error getting news comments for news id={id}: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
             finally
@@ -73,7 +73,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException($"Error getting news comments for news id={id}: {ex.Message}");
+                Log.Exceptions($"Error getting news comments for news id={id}: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
             finally
@@ -103,7 +103,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException($"Error setting comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.Message}");
+                Log.Exceptions($"Error setting comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.Message}");
                 Log.Wright($"Exception: {ex.ToString()}");
                 return StatusCode(500, "Internal server error");
             }
@@ -134,7 +134,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (System.Exception ex)
             {
-                Log.AddException($"Error creating comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.ToString()}");
+                Log.Exceptions($"Error creating comment for news id={comment.NewsID} by author id={comment.AuthorEmail}: {ex.ToString()}");
                 Log.Wright($"Exception: {ex.ToString()}");
                 return StatusCode(500, "Internal server error");
             }

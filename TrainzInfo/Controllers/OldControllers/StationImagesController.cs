@@ -107,7 +107,7 @@ namespace TrainzInfo.Controllers.OldControllers
             }
             catch (Exception exp)
             {
-                Log.AddException(exp.ToString());
+                Log.Exceptions(exp.ToString());
             }
             Log.Finish();
             return null;
@@ -135,7 +135,7 @@ namespace TrainzInfo.Controllers.OldControllers
             }
             catch (Exception exp)
             {
-                Log.AddException(exp.ToString());
+                Log.Exceptions(exp.ToString());
             }
             Log.Finish();
             return null;

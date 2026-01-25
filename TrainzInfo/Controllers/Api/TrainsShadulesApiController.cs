@@ -58,7 +58,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Ошибка получения расписания по поезду с ID: {trainid}. Exception: {ex}");
+                Log.Exceptions($"Ошибка получения расписания по поезду с ID: {trainid}. Exception: {ex}");
                 return BadRequest($"Ошибка получения расписания по поезду с ID: {trainid}");
             }
             finally
@@ -122,7 +122,7 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 Log.Wright($"Failed to save {ex.Message}");
-                Log.AddException($"{ex.Message}");
+                Log.Exceptions($"{ex.Message}");
                 return BadRequest(ex.ToString());
             }
             finally
@@ -200,7 +200,7 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 Log.Wright(ex.ToString());
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally

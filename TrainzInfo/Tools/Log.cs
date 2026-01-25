@@ -54,7 +54,7 @@ namespace TrainzInfo.Tools
             catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
-                AddException(e.ToString());
+                Exceptions(e.ToString());
             }
         }
 
@@ -79,7 +79,7 @@ namespace TrainzInfo.Tools
             catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
-                AddException(e.ToString());
+                Exceptions(e.ToString());
             }
         }
         public static void Wright(string log)
@@ -106,7 +106,7 @@ namespace TrainzInfo.Tools
             }
             catch (Exception e)
             {
-                Log.AddException(e.ToString());
+                Log.Exceptions(e.ToString());
             }
         }
 
@@ -127,8 +127,8 @@ namespace TrainzInfo.Tools
             }
             catch (System.Exception exp)
             {
-                Log.AddException(exp.StackTrace);
-                Log.AddException(exp.ToString());
+                Log.Exceptions(exp.StackTrace);
+                Log.Exceptions(exp.ToString());
             }
         }
         public static void ConnLog(string log)
@@ -164,7 +164,7 @@ namespace TrainzInfo.Tools
             }
         }
 
-        public static void AddException(string exception)
+        public static void Exceptions(string exception)
         {
             try
             {

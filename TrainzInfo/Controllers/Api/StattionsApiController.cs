@@ -1,6 +1,4 @@
-﻿using LinqToDB;
-using LinqToDB.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -115,7 +113,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving stations: {ex.ToString()}");
+                Log.Exceptions($"Error retrieving stations: {ex.ToString()}");
                 Log.Wright("Error retrieving stations: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -157,82 +155,42 @@ namespace TrainzInfo.Controllers.Api
 
             try
             {
-                var schedulesCte = _context.StationsShadules
-                    .ToLinqToDB()
-                    .Where(sh => EF.Property<int>(sh, "StationsId") == id)
-                    // Використовуємо .LeftJoin() замість навігаційної властивості
-                    .LeftJoin(
-                        _context.Trains.ToLinqToDB(),           // 1. Таблиця для приєднання
-                        (sh, t) => sh.id == t.id,          // 2. Умова з'єднання (FK == PK)
-                        (sh, t) => new StationsShadulerDTO      // 3. Проекція (Select)
-                        {
-                            id = sh.id,
-                            Train = t.Number,                   // t буде null, якщо поїзда немає (автоматично handled)
-                            NumberTrain = sh.NumberTrain,
-                            TimeOfArrive = sh.TimeOfArrive,
-                            TimeOfDepet = sh.TimeOfDepet
-                        }
-                    )
-                    .AsCte("StationSchedulesCTE");
-
-                // 2. Отримуємо саму Станцію (без змін, ваш код тут ок)
-                var stationQuery = _context.Stations
-                    .Where(s => s.id == id)
-                    .Select(s => new
+                StationsDTO station = await _context.Stations
+                    .Include(x => x.StationImages)
+                    .Include(x => x.StationsShadules)
+                    .Include(x => x.StationInfo)
+                    .Include(x => x.UkrainsRailways)
+                    .Include(x => x.Locomotives)
+                    .Include(x => x.DieselTrains)
+                    .Include(x => x.ElectricTrains)
+                    .Where(x => x.id == id)
+                    .Select(xs=> new StationsDTO
                     {
-                        s.id,
-                        s.Name,
-                        s.DopImgSrc,
-                        s.DopImgSrcSec,
-                        s.DopImgSrcThd,
-                        s.ImageMimeTypeOfData,
-                        UkrainsRailways = s.UkrainsRailways.Name,
-                        Oblasts = s.Oblasts.Name,
-                        Citys = s.Citys.Name,
-                        StationInfo = s.StationInfo.BaseInfo,
-                        Metro = s.Metro.Name,
-                        StationImageBytes = s.StationImages.Image,
-                        StationImageMime = s.StationImages.ImageMimeTypeOfData
-                    });
-
-                // 3. Виконуємо запити
-                var stationData = await stationQuery.FirstOrDefaultAsync();
-
-                if (stationData == null) return null;
-
-                var schedules = await schedulesCte
-                    .OrderBy(sh => sh.TimeOfDepet)
-                    .ToListAsync();
-
-                // 4. Мапимо результат у DTO (на стороні клієнта/сервера)
-                var station = new StationsDTO
-                {
-                    id = stationData.id,
-                    Name = stationData.Name,
-                    DopImgSrc = stationData.DopImgSrc,
-                    DopImgSrcSec = stationData.DopImgSrcSec,
-                    DopImgSrcThd = stationData.DopImgSrcThd,
-                    ImageMimeTypeOfData = stationData.ImageMimeTypeOfData,
-                    UkrainsRailways = stationData.UkrainsRailways,
-                    Oblasts = stationData.Oblasts,
-                    Citys = stationData.Citys,
-                    StationInfo = stationData.StationInfo,
-                    Metro = stationData.Metro,
-
-                    // Конвертація Base64 виконується ТУТ, в пам'яті
-                    StationImages = stationData.StationImageBytes != null
-                         ? $"data:{stationData.StationImageMime};base64,{Convert.ToBase64String(stationData.StationImageBytes)}"
-                         : null,
-
-                    // Вставляємо наш список з CTE
-                    stationsShadulers = schedules
-                };
+                        id = xs.id,
+                        Name = xs.Name,
+                        stationsShadulers = xs.StationsShadules
+                        .Select(ss => new StationsShadulerDTO
+                        {
+                            id = ss.id,
+                            Train = ss.NumberTrain,
+                            NumberTrain = ss.NumberTrain,
+                            TimeOfDepet = ss.TimeOfDepet,
+                            TimeOfArrive = ss.TimeOfArrive,
+                        }).ToList(),
+                        StationImages = xs.StationImages.Image != null
+                                        ? $"data:{xs.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.StationImages.Image)}"
+                                        : null,
+                        StationInfo = xs.StationInfo != null ? xs.StationInfo.AllInfo : null,
+                        BaseInfo = xs.StationInfo != null ? xs.StationInfo.BaseInfo : null,
+                        AllInfo = xs.StationInfo != null ? xs.StationInfo.AllInfo : null,
+                    })
+                    .FirstOrDefaultAsync();
                 Log.Wright("Station details successfully retrieved from database");
                 return Ok(station);
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving station details: {ex.ToString()}");
+                Log.Exceptions($"Error retrieving station details: {ex.ToString()}");
                 Log.Wright("Error retrieving station details: " + ex.ToString());
                 return StatusCode(500, "Internal server error");
             }
@@ -272,7 +230,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving filias: {ex.Message}");
+                Log.Exceptions($"Error retrieving filias: {ex.Message}");
                 Log.Wright("Error retrieving filias: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -313,7 +271,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving oblasts: {ex.Message}");
+                Log.Exceptions($"Error retrieving oblasts: {ex.Message}");
                 Log.Wright("Error retrieving oblasts: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -339,7 +297,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving citys: {ex.Message}");
+                Log.Exceptions($"Error retrieving citys: {ex.Message}");
                 Log.Wright("Error retrieving citys: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -379,7 +337,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving station names: {ex.Message}");
+                Log.Exceptions($"Error retrieving station names: {ex.Message}");
                 Log.Wright("Error retrieving station names: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -446,7 +404,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error creating station: {ex.Message}");
+                Log.Exceptions($"Error creating station: {ex.Message}");
                 Log.Wright("Error creating station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
@@ -484,7 +442,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error retrieving station edit details: {ex.Message}");
+                Log.Exceptions($"Error retrieving station edit details: {ex.Message}");
                 Log.Wright("Error retrieving station edit details: " + ex.Message);
                 return StatusCode(500, "Internal server error");
             }
@@ -527,7 +485,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error editing station: {ex.Message}");
+                Log.Exceptions($"Error editing station: {ex.Message}");
                 Log.Wright("Error editing station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
@@ -558,7 +516,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
-                Log.AddException($"Error deleting station: {ex.ToString()}");
+                Log.Exceptions($"Error deleting station: {ex.ToString()}");
                 Log.Wright("Error deleting station: " + ex.Message);
                 return BadRequest(ex.ToString());
             }
@@ -588,7 +546,7 @@ namespace TrainzInfo.Controllers.Api
             catch (Exception ex)
             {
                 Log.Wright(ex.ToString());
-                Log.AddException(ex.ToString());
+                Log.Exceptions(ex.ToString());
                 return BadRequest(ex.ToString());
             }
             finally { Log.Finish(); }
