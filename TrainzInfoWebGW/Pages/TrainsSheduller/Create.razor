@@ -78,19 +78,19 @@
 
                     <!-- Час прибуття -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Час прибуття</label>
+                        <label class="form-label fw-bold">Час відправки</label>
                         <input type="time"
                                class="form-control"
-                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
+                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
                                @onchange="OnChangeDeparture" />
                     </div>
 
                     <!-- Час відправки -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Час відправки</label>
+                        <label class="form-label fw-bold">Час прибуття</label>
                         <input type="time"
                                class="form-control"
-                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
+                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
                                @onchange="OnChangeArrival" />
                     </div>
 
