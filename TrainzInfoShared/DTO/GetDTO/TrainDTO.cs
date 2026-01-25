@@ -28,5 +28,6 @@ namespace TrainzInfoShared.DTO.GetDTO
         // Для Blazor достатньо тільки кількості пунктів розкладу
         public int TrainsShadulesCount { get; set; }
         public int StationsShadulesCount { get; set; }
+        public string? username { get; set; }
     }
 }

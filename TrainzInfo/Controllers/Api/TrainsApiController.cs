@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Claims;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.Mail;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
@@ -16,9 +19,13 @@ namespace TrainzInfo.Controllers.Api
     public class TrainsApiController : Controller
     {
         private readonly ApplicationContext _context;
-        public TrainsApiController(ApplicationContext context)
+        private Mail _mail;
+        private readonly UserManager<IdentityUser> _userManager;
+        public TrainsApiController(ApplicationContext context, UserManager<IdentityUser> userManager, Mail mail)
         {
             _context = context;
+            _mail = mail;
+            _userManager = userManager;
         }
 
         [HttpGet("gettrains")]
@@ -217,6 +224,8 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Creating new train in database");
             try
             {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var user = await _userManager.FindByEmailAsync(trainDTO.username);
                 Train newTrain = new Train
                 {
                     Number = trainDTO.Number,
@@ -231,6 +240,7 @@ namespace TrainzInfo.Controllers.Api
                 _context.Trains.Add(newTrain);
                 await _context.SaveChangesAsync();
                 Log.Wright("Successfully created new train.");
+                await _mail.SendTrainAddMail(newTrain.Number.ToString(), newTrain.StationFrom, newTrain.StationTo, user);
                 Log.Finish();
                 return Ok(new { Message = "Train created successfully", TrainId = newTrain.id });
             }
