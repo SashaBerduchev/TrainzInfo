@@ -33,7 +33,7 @@ namespace TrainzInfo.Controllers.Api
             Log.Init(this.ToString(), nameof(GetStations));
 
 
-            int pageSize = 10;
+            int pageSize = 7;
 
             Log.Wright("Getting stations from database");
             try
@@ -54,10 +54,6 @@ namespace TrainzInfo.Controllers.Api
                     query = query.Where(s => s.Oblasts.Name == oblast);
                 }
 
-                // 3. Проекція (Select) ПРЯМО В БАЗІ ДАНИХ
-                // Ми вибираємо тільки ті дані, які потрібні для DTO.
-                // getSlowImage - це C# метод, тому ми не можемо викликати його в SQL.
-                // Ми витягнемо "сирі" дані для нього, а обробимо вже в пам'яті.
 
                 var rawData = await query
                     .OrderBy(s => s.id)
@@ -77,17 +73,11 @@ namespace TrainzInfo.Controllers.Api
                         Citys = s.Citys.Name,
                         StationInfo = s.StationInfo.BaseInfo,
                         Metro = s.Metro.Name,
-                        // Витягуємо дані для картинки (припускаю, що getSlowImage використовує ці поля)
-                        // Якщо StationImages - це колекція, беремо першу або null
-                        // Якщо це об'єкт - просто беремо поля. 
-                        // Приклад для колекції (якщо зображень багато):
+                      
                         RawImageBytes = s.StationImages.Image,
                         RawImageMime = s.StationImages.ImageMimeTypeOfData
                     })
                     .ToListAsync();
-
-                // 4. Фінальна трансформація в пам'яті (клієнтська частина)
-                // Оскільки даних мало (лише одна сторінка потрібних колонок), це буде миттєво.
 
                 var result = rawData.Select(item => new StationsDTO
                 {
@@ -129,7 +119,7 @@ namespace TrainzInfo.Controllers.Api
 
             using (MemoryStream ms = new MemoryStream(imgdata, 0, imgdata.Length))
             {
-                int h = 700;
+                int h = 800;
                 int w = 700;
                 using (Image img = Image.Load(ms))
                 {
