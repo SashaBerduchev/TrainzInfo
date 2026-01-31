@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
@@ -21,7 +22,11 @@ namespace TrainzInfo.Data
                 optionsBuilder
                     .UseSqlServer(Startup.GetConnectionString())
                     .AddInterceptors(new BlockingInterceptor())
-                    .LogTo(Log.SQLLogging, LogLevel.Information); // лог у консоль
+                    .EnableSensitiveDataLogging()
+                    .LogTo(Log.SQLLogging, 
+                    LogLevel.Information,
+                    DbContextLoggerOptions.LocalTime)
+                    ; // лог у консоль
             }
         }
         public DbSet<Locomotive> Locomotives { get; set; }
