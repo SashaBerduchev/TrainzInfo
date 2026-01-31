@@ -101,13 +101,7 @@
 
                     <!-- Кнопки -->
                     <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-@* 
-                        @if (item.HasSchedule)
-                        {
-                            <a class="btn btn-info mb-2 w-100" href="/station-schedule/@item.Name">
-                                Розклад по станції
-                            </a>
-                        } *@
+
 
                         <a class="btn btn-primary mb-2 w-100" href="/stations/details/@item.id">
                             Інформація
@@ -245,7 +239,7 @@
         SelectedFilia = "";
         SelectedOblast = "";
         SelectedName = "";
-
+        isFilterLoad = false;
         currentPage = 1;
         stationsList.Clear();
         await LoadStations();

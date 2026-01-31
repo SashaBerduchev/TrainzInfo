@@ -47,58 +47,58 @@
                             <!-- Філія -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-medium">Філія</label>
-                        <option value="">Філії</option>
-                        <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
-                            @foreach (var item in FiliasList)
+                            <option value="">Філії</option>
+                                <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
+                                    @foreach (var item in FiliasList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <!-- Область -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Область</label>
+                            <option value="">Області</option>
+
+                                <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
+                                    @foreach (var item in OblastList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <!-- Картинка -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Фото станції</label>
+                            <InputFile class="form-control" OnChange="HandleFileSelected" />
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
                             {
-                                <option value="@item">@item</option>
+                                <div class="mt-3 text-center">
+                                    <img src="@imagePreview" class="img-thumbnail rounded-3" style="max-height:180px" />
+                                </div>
                             }
-                        </InputSelect>
-                </div>
+                        </div>
 
-                <!-- Область -->
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-medium">Область</label>
-                    <option value="">Області</option>
-
-                    <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
-                        @foreach (var item in OblastList)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </InputSelect>
+                        <!-- Кнопки -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">Зберегти</button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
 
-            <!-- Картинка -->
-            <div class="mb-4">
-                <label class="form-label fw-medium">Фото станції</label>
-                <InputFile class="form-control" OnChange="HandleFileSelected" />
-
-                @if (!string.IsNullOrEmpty(imagePreview))
-                {
-                    <div class="mt-3 text-center">
-                        <img src="@imagePreview" class="img-thumbnail rounded-3" style="max-height:180px" />
-                    </div>
-                }
-            </div>
-
-            <!-- Кнопки -->
-            <div class="d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-primary btn-lg px-4">Зберегти</button>
-            </div>
-            </EditForm>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3 rounded-3">
+                    <strong>Помилка збереження</strong><br />
+                    @ErrorMessage
+                </div>
+            }
         </div>
-    </div>
-
-    @if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger mt-3 rounded-3">
-            <strong>Помилка збереження</strong><br />
-            @ErrorMessage
-        </div>
-    }
-</div>
     </div>
 
 

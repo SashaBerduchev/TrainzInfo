@@ -2,6 +2,7 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 
 <h3>Поїзд</h3>
 
@@ -154,6 +155,7 @@
 
     private async Task HandleValidSubmit()
     {
+        await CheckRoles();
         var result = await Http.PostAsJsonAsync("api/trains/create", trainDTO);
         if (!result.IsSuccessStatusCode)
         {
@@ -162,6 +164,35 @@
         else
         {
             Navigation.NavigateTo("/trains");
+        }
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                trainDTO.username = email;
+
+            }
+            else
+            {
+
+            }
         }
     }
 

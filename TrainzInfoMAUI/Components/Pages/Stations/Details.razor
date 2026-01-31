@@ -9,57 +9,55 @@
 
 @if (stations != null)
 {
-    <div class="news-detail-card card shadow-sm mb-5">
+
+    <div class="card news-detail-card shadow-lg mb-5 p-4">
         <div class="row g-4 align-items-start">
             <!-- Картинка -->
             <div class="col-md-4 text-center">
-                @if (string.IsNullOrEmpty(stations.StationImages))
+                @if (!string.IsNullOrEmpty(stations.StationImages))
                 {
-                    <img src="@stations.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
+                    <img src="@stations.StationImages" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
                 }
                 else
                 {
-                    <img src="@stations.StationImages" class="card-img-top" alt="@stations.Name" />
+                    <img src="/images/default-station.jpg" class="img-fluid rounded news-detail-img" alt="Станція" />
                 }
             </div>
 
             <!-- Текстова частина -->
             <div class="col-md-8">
-                <dl class="row mb-3">
-                    <dt class="col-sm-3">Назва</dt>
-                    <dd class="col-sm-9 news-text">@stations.Name</dd>
+                <h3 class="mb-3 text-primary">@stations.Name</h3>
+                <dl class="row mb-4">
+                    <dt class="col-sm-3 fw-bold">Філія</dt>
+                    <dd class="col-sm-9">@stations.UkrainsRailways</dd>
 
-                    <dt class="col-sm-3">Філія</dt>
-                    <dd class="col-sm-9 news-text">@stations.UkrainsRailways</dd>
+                    <dt class="col-sm-3 fw-bold">Місто</dt>
+                    <dd class="col-sm-9">@stations.Citys</dd>
 
-                    <dt class="col-sm-3">Місто</dt>
-                    <dd class="col-sm-9 news-text">@stations.Citys</dd>
-
-                    <dt class="col-sm-3">Область</dt>
-                    <dd class="col-sm-9 news-text">@stations.Oblasts</dd>
-
+                    <dt class="col-sm-3 fw-bold">Область</dt>
+                    <dd class="col-sm-9">@stations.Oblasts</dd>
                 </dl>
 
                 <!-- Кнопки -->
                 <div class="d-flex flex-wrap gap-2 mt-3">
-                    @* @if (CanComment != null)
+                    @if (IsAdmin)
                     {
-                        <button class="btn btn-info btn-sm" @onclick="() => NavUserPhoto(stations.id)">Коментувати</button>
-                        <button class="btn btn-info btn-sm" @onclick="() => NavStationShad(stations.id)">
-                            Коментарі + @CommentCount
-                        </button>
-                    } *@
-
-                    @if (IsAdmin == true)
-                    {
-                        <button class="btn btn-outline-info btn-sm" @onclick="() => EditStation(stations.id)">Редагувати інформацію</button>
-                        <button class="btn btn-outline-info btn-sm" @onclick="() => AddImage(stations.id)">Додати картинку</button>
-                        <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteStation(stations.id)">Видалити станію</button>
+                        <button class="btn btn-outline-primary btn-sm" @onclick="() => AddInfo()">Додати інформацію</button>
+                        <button class="btn btn-outline-warning btn-sm" @onclick="() => EditStation(stations.id)">Редагувати</button>
+                        <button class="btn btn-outline-success btn-sm" @onclick="() => AddImage(stations.id)">Додати картинку</button>
+                        <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteStation(stations.id)">Видалити станцію</button>
                     }
                 </div>
             </div>
         </div>
+
+        <!-- Додаткова інформація -->
+        <div class="mt-4">
+            @((MarkupString)stations.BaseInfo)
+            @((MarkupString)stations.AllInfo)
+        </div>
     </div>
+
 }
 else
 {
@@ -188,6 +186,10 @@ else
         Navigation.NavigateTo($"/stations/");
     }
 
+    private void AddInfo()
+    {
+        Navigation.NavigateTo($"/stationsinfo/create/{stations.Name}");
+    }
     private async Task DeleteStation(int id)
     {
         if (!await Confirm("Ви впевнені що хочете видалити станцію?"))

@@ -16,3 +16,11 @@
     height: 180px;
     background-color: #f8f9fa;
 }
+
+
+.card-img-top {
+    width: 100%;
+    height: 250px; /* або інша висота, наприклад 200px */
+    object-fit: cover;
+    border-radius: 8px;
+}

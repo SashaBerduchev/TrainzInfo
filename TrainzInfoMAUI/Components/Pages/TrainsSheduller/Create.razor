@@ -2,7 +2,7 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
-
+@inject IJSRuntime JS
 <h3>Додати розклад до поїздаа:</h3>
 
 <!-- Таблиця для великих екранів -->
@@ -38,6 +38,7 @@
     </table>
 </div>
 
+<NavigationLock ConfirmExternalNavigation="true" OnBeforeInternalNavigation="ConfirmNavigation" />
 
 <div class="row justify-content-center mt-4">
     <div class="col-md-5">
@@ -81,8 +82,8 @@
                         <label class="form-label fw-bold">Час прибуття</label>
                         <input type="time"
                                class="form-control"
-                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
-                               @onchange="OnChangeDeparture" />
+                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
+                               @onchange="OnChangeArrival" />
                     </div>
 
                     <!-- Час відправки -->
@@ -90,8 +91,8 @@
                         <label class="form-label fw-bold">Час відправки</label>
                         <input type="time"
                                class="form-control"
-                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
-                               @onchange="OnChangeArrival" />
+                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
+                               @onchange="OnChangeDeparture" />
                     </div>
 
                     <!-- Кнопка зберегти -->
@@ -123,6 +124,22 @@
     </div>
 }
 
+<script>
+    window.preventUnload = function () {
+        window.onbeforeunload = function (e) {
+            e.preventDefault();
+            e.returnValue = '';
+            console.log("preventUnload")
+        };
+    };
+
+    window.allowUnload = function () {
+            console.log("allowUnload")
+        window.onbeforeunload = null;
+    };
+</script>
+
+
 @code {
     [Parameter] public int id { get; set; }
     private TrainDTO train;
@@ -133,6 +150,7 @@
     private List<string> stations = new List<string>();
     private string ErrorMessage = "";
     private CancellationTokenSource debounceCts;
+    private bool HasUnsavedChanges = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -148,6 +166,8 @@
 
     private async Task HandleValidSubmit()
     {
+        await EnableProtection();
+        HasUnsavedChanges = true;
         trainsSheduller.NumberTrain = train.Number.ToString();
         trainsShedullers.Add(trainsSheduller);
         StateHasChanged();
@@ -223,6 +243,10 @@
 
     private async Task SaveChanges()
     {
+        if (!await Confirm("Ви впевнені що хочете зберегти графік поїзда?"))
+            return;
+        await DisableProtection();
+        HasUnsavedChanges = false;
         TrainCreateRequest request = new TrainCreateRequest
         {
             Train = train,
@@ -240,6 +264,33 @@
         }
     }
 
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
+    private async Task EnableProtection()
+    {
+        await JS.InvokeVoidAsync("preventUnload");
+    }
+
+    private async Task DisableProtection()
+    {
+        await JS.InvokeVoidAsync("allowUnload");
+    }
+
+
+    private async Task ConfirmNavigation(LocationChangingContext context)
+    {
+        if (HasUnsavedChanges)
+        {
+            var confirmed = await JS.InvokeAsync<bool>("confirm", "У вас є незбережені дані. Вийти?");
+            if (!confirmed)
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
 
 }
 
