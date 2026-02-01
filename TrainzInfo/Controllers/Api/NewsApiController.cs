@@ -13,6 +13,7 @@ using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.Mail;
 using TrainzInfoShared.DTO.GetDTO;
+using TrainzInfoShared.DTO.SetDTO;
 using static Azure.Core.HttpHeader;
 
 namespace TrainzInfo.Controllers.Api
@@ -42,7 +43,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetNews");
-                
+
                 Log.Wright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
                     .OrderByDescending(n => n.DateTime)
@@ -83,7 +84,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetNewsDetails");
-                
+
                 Log.Wright("Start Get NewsInfo Details with Comments");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
@@ -123,12 +124,13 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "CreateNews");
-                
+
                 Log.Wright("Start Create NewsInfo");
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var user = await _userManager.FindByEmailAsync(newsInfo.username);
                 NewsInfo newNews = new NewsInfo
                 {
+                    User = user,
                     NameNews = newsInfo.NameNews,
                     BaseNewsInfo = newsInfo.BaseNewsInfo,
                     NewsInfoAll = newsInfo.NewsInfoAll,
@@ -161,7 +163,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "GetEditNews");
-                
+
                 Log.Wright("Start Get Edit NewsInfo");
                 var news = await _context.NewsInfos.FindAsync(id);
                 if (news == null)
@@ -189,7 +191,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "EditNews");
-                
+
                 Log.Wright("Start Edit NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(newsInfo.id);
                 if (existingNews == null)
@@ -224,7 +226,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("NewsApiController", "DeleteNews");
-                
+
                 Log.Wright("Start Delete NewsInfo");
                 var existingNews = await _context.NewsInfos.FindAsync(id);
                 if (existingNews == null)
@@ -246,6 +248,36 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Finish();
             }
+        }
+
+        [HttpPost("updateall")]
+        public async Task<ActionResult> UpdateNews([FromQuery] UserEmailDTO userEmailDTO)
+        {
+            try
+            {
+                Log.Init("NewsApiController", "UpdateNews");
+
+                Log.Wright("Start Update NewsInfo");
+                List<NewsInfo> news = await _context.NewsInfos.Include(x => x.User).ToListAsync();
+                foreach (var item in news)
+                {
+                    item.User = await _userManager.FindByEmailAsync(userEmailDTO.Email);
+                    _context.NewsInfos.Update(item);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Exceptions(ex.ToString());
+                Log.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+
         }
     }
 }

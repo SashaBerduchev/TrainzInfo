@@ -60,6 +60,9 @@ namespace TrainzInfo.Data
         public DbSet<StationImages> StationImages { get; set; }
         public DbSet<MailSettings> MailSettings { get; set; }
         public DbSet<SendEmail> SendEmails { get; set; }
+        public DbSet<PlanningUserTrains> PlanningUserTrains { get; set; }
+        public DbSet<PlanningUserRoute> PlanningUserRoutes { get; set; }
+        public DbSet<PlanningUserRouteSave> PlanningUserRouteSaves { get; set; }
 
     }
 

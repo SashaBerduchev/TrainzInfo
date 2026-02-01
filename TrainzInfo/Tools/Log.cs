@@ -17,7 +17,7 @@ namespace TrainzInfo.Tools
         static string ConnectionLog = "ConnectionLog.log";
         static string MailLog = "Mail.log";
         static string ExcelErrors = "ExcelErrors.log";
-        static string Blocking = "BlockingSQL.log";
+        static string Blocking = "ErrorSQL.log";
 
         static string startStandartLogStr = "";
 

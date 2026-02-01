@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260201090916_PlanningUserRoute")]
+    partial class PlanningUserRoute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -817,11 +820,8 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int?>("PlanningUserRouteSaveID")
+                    b.Property<int>("TrainsShaduleID")
                         .HasColumnType("int");
-
-                    b.PrimitiveCollection<string>("TrainsShaduleID")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -831,7 +831,7 @@ namespace TrainzInfo.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PlanningUserRouteSaveID");
+                    b.HasIndex("TrainsShaduleID");
 
                     b.HasIndex("UserId");
 
@@ -846,14 +846,14 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("Arrive")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Depeat")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlanningUserRouteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlanningUserTrainsID")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -862,6 +862,10 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("PlanningUserRouteID");
+
+                    b.HasIndex("PlanningUserTrainsID");
 
                     b.HasIndex("UserId");
 
@@ -876,25 +880,15 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int?>("PlanningUserRouteSaveID")
-                        .HasColumnType("int");
-
                     b.Property<int>("TrainID")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PlanningUserRouteSaveID");
-
                     b.HasIndex("TrainID");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PlanningUserTrains");
                 });
@@ -1260,9 +1254,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NumberTrain")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlanningUserRouteID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Stationsid")
                         .HasColumnType("int");
 
@@ -1270,8 +1261,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
-
-                    b.HasIndex("PlanningUserRouteID");
 
                     b.HasIndex("Stationsid");
 
@@ -1620,35 +1609,9 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.PlanningUserRoute", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRouteSave", null)
-                        .WithMany("PlanningUserRoute")
-                        .HasForeignKey("PlanningUserRouteSaveID");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("TrainzInfo.Models.TrainsShadule", "Trains")
                         .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserTrains", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRouteSave", null)
-                        .WithMany("PlanningUserTrains")
-                        .HasForeignKey("PlanningUserRouteSaveID");
-
-                    b.HasOne("TrainzInfo.Models.Train", "Train")
-                        .WithMany()
-                        .HasForeignKey("TrainID")
+                        .HasForeignKey("TrainsShaduleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1656,9 +1619,45 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Train");
+                    b.Navigation("Trains");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.PlanningUserRoute", "PlanningUserRoute")
+                        .WithMany()
+                        .HasForeignKey("PlanningUserRouteID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TrainzInfo.Models.PlanningUserTrains", "PlanningUserTrains")
+                        .WithMany()
+                        .HasForeignKey("PlanningUserTrainsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("PlanningUserRoute");
+
+                    b.Navigation("PlanningUserTrains");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrainzInfo.Models.PlanningUserTrains", b =>
+                {
+                    b.HasOne("TrainzInfo.Models.Train", "Train")
+                        .WithMany()
+                        .HasForeignKey("TrainID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Train");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.RailwayUsersPhoto", b =>
@@ -1762,10 +1761,6 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRoute", null)
-                        .WithMany("TrainsShadule")
-                        .HasForeignKey("PlanningUserRouteID");
-
                     b.HasOne("TrainzInfo.Models.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
@@ -1845,18 +1840,6 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Cities");
 
                     b.Navigation("Stations");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRoute", b =>
-                {
-                    b.Navigation("TrainsShadule");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
-                {
-                    b.Navigation("PlanningUserRoute");
-
-                    b.Navigation("PlanningUserTrains");
                 });
 
             modelBuilder.Entity("TrainzInfo.Models.Stations", b =>

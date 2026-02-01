@@ -1,5 +1,6 @@
 ﻿@page "/profile"
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Threading.Tasks
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Nav
 @inject HttpClient Http
@@ -7,26 +8,7 @@
 
 <h3>Мій профіль</h3>
 
-@code {
-    private string? userName;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        await CheckRoles();
-        StateHasChanged();
-        if (user.Identity is not null && user.Identity.IsAuthenticated)
-        {
-            userName = user.Identity.Name;
-        }
-        else
-        {
-            // якщо не авторизований, редірект на логін
-            Nav.NavigateTo("/login");
-        }
-    }
-}
 
 
 <div class="container mt-4">
@@ -64,6 +46,12 @@
                     </div>
                     <div class="col-12 col-md-4">
                         <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2"
+                                @onclick="UpdateNews">
+                            <i class="fa-solid fa-newspaper"></i> Оновлення новин
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2"
                                 @onclick="CreateMail">
                             <i class="fa-solid fa-envelope"></i> Додати поштовий сервіс
                         </button>
@@ -75,14 +63,171 @@
                         </button>
                     </div>
                 </div>
+
             </div>
         </div>
     }
+
+    <div>
+        <h3>Побудова маршруту</h3>
+        <p>Для побудови маршруту перейдіть на головну сторінку та скористайтеся формою пошуку маршрутів.</p>
+        <div class="col-12 col-md-4">
+            <select class="form-control" @bind="SelectedDepeat">
+                <option value="">Станції початку</option>
+                @foreach (var station in Stations)
+                {
+                    <option value="@station.Names">@station.Names</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-4">
+            <select class="form-control" @bind="SelectedArrival">
+                <option value="">Станції кінця маршруту</option>
+                @foreach (var station in Stations)
+                {
+                    <option value="@station.Names">@station.Names</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-4">
+            <button class="btn btn-info w-100" @onclick="ApllyAndShow">Відобразити</button>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <button class="btn btn-danger w-100" @onclick="Clear">Видалити</button>
+        </div>
+        @if (planningUserRouteDTO != null && planningUserRouteDTO.Trains != null)
+        {
+            @foreach (var train in planningUserRouteDTO.Trains)
+            {
+                var trainSchedules = planningUserRouteDTO.trainsShadules
+                .Where(x => x.NumberTrain == train.Number.ToString())
+                .ToList();
+
+                <div class="mt-4 mb-3">
+                    <h4>
+                        Поїзд №@train.Number —
+                        @train.StationFrom → @train.StationTo
+                    </h4>
+                </div>
+
+                <!-- Таблиця для ПК -->
+                <div class="d-none d-md-block table-responsive mb-5">
+                    <table class="table table-striped table-bordered align-middle shadow-sm">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Станція</th>
+                                <th>Прибуття</th>
+                                <th>Відправлення</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in trainSchedules)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@s.NumberTrain</td>
+                                    <td>@s.NameStation</td>
+                                    <td>@s.Arrival</td>
+                                    <td>@s.Departure</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Картки для мобільних -->
+                <div class="d-block d-md-none">
+                    @foreach (var s in trainSchedules)
+                    {
+                        <div class="card mb-3 shadow">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">Поїзд №@s.NumberTrain</h5>
+
+                                <p class="mb-1">
+                                    <b>Станція:</b> @s.NameStation
+                                </p>
+
+                                <p class="mb-1">
+                                    <b>Прибуття:</b> @s.Arrival
+                                </p>
+
+                                <p class="mb-1">
+                                    <b>Відправлення:</b> @s.Departure
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        @if (!string.IsNullOrEmpty(errors))
+        {
+            <div class="alert alert-danger mt-3 rounded-3">
+                <strong>Помилка збереження</strong><br />
+                @errors
+            </div>
+        }
+    </div>
 </div>
 
 @code {
+    private string? userName;
     private bool IsAdmin { get; set; } = false;
     private string userAvatarUrl = "https://i.pravatar.cc/80"; // тестовий аватар
+    private UserEmailDTO userEmailDTO = new UserEmailDTO();
+    private string emails = "";
+    private List<StationsNamesDTO> Stations = new List<StationsNamesDTO>();
+    private string SelectedDepeat = "";
+    private string SelectedArrival = "";
+    private string errors = "";
+    public PlanninUserRouteDTO planningUserRouteDTO;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        await CheckRoles();
+        StateHasChanged();
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            userName = user.Identity.Name;
+        }
+        else
+        {
+            // якщо не авторизований, редірект на логін
+            Nav.NavigateTo("/login");
+        }
+        await Loading();
+    }
+
+    private async Task Loading()
+    {
+        Stations = await Http.GetFromJsonAsync<List<StationsNamesDTO>>("api/stations/getallnames");
+
+        var response = await Http.GetAsync(
+                $"api/PlanningUserRoute/getroutes?email={emails}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                planningUserRouteDTO = null;
+            }
+            else
+            {
+                planningUserRouteDTO = await response.Content
+                    .ReadFromJsonAsync<PlanninUserRouteDTO>();
+            }
+        }
+        else
+        {
+            planningUserRouteDTO = null;
+        }
+
+    }
+
     private void Logout()
     {
         // редірект на сторінку логіну або виходу через Identity
@@ -92,6 +237,20 @@
     private void CreateNews()
     {
         Nav.NavigateTo("/news/create");
+    }
+    private async Task UpdateNews()
+    {
+        await CheckRoles();
+        var response = await Http.PostAsJsonAsync("api/news/updateall", userEmailDTO);
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            // Обробка помилки
+            Console.WriteLine("Помилка оновлення новин.");
+        }
     }
     private void CreateMail()
     {
@@ -116,9 +275,10 @@
                                 .Select(c => c.Value)
                                 .ToList();
 
+                userEmailDTO.Email = user.Identity.Name;
                 IsAdmin = roles.Contains("Admin");
                 IsAdmin = roles.Contains("Superadmin");
-
+                emails = email ?? "";
             }
             else
             {
@@ -132,5 +292,33 @@
         var response = await Http.GetStringAsync("api/dbfix/fixcityoblasts");
         Console.WriteLine(response);
         Nav.NavigateTo("/");
+    }
+
+
+    public async Task ApllyAndShow()
+    {
+        var response = await Http.GetAsync($"api/PlanningUserRoute/getroutebystations?depeat={SelectedDepeat}&arrival={SelectedArrival}&email={emails}");
+        if (response.IsSuccessStatusCode)
+        {
+            await Loading();
+            StateHasChanged();
+        }
+        else
+        {
+            errors = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    public async Task Clear()
+    {
+        var response = await Http.GetAsync($"api/PlanningUserRoute/clearroutes?email={emails}");
+        if (response.IsSuccessStatusCode)
+        {
+            await Loading();
+        }
+        else
+        {
+            errors = await response.Content.ReadAsStringAsync();
+        }
     }
 }

@@ -73,7 +73,7 @@ namespace TrainzInfo.Controllers.Api
                         Citys = s.Citys.Name,
                         StationInfo = s.StationInfo.BaseInfo,
                         Metro = s.Metro.Name,
-                      
+
                         RawImageBytes = s.StationImages.Image,
                         RawImageMime = s.StationImages.ImageMimeTypeOfData
                     })
@@ -154,7 +154,7 @@ namespace TrainzInfo.Controllers.Api
                     .Include(x => x.DieselTrains)
                     .Include(x => x.ElectricTrains)
                     .Where(x => x.id == id)
-                    .Select(xs=> new StationsDTO
+                    .Select(xs => new StationsDTO
                     {
                         id = xs.id,
                         Name = xs.Name,
@@ -541,5 +541,38 @@ namespace TrainzInfo.Controllers.Api
             }
             finally { Log.Finish(); }
         }
+
+
+        [HttpGet("getallnames")]
+        public async Task<ActionResult> GetAllStationNames()
+        {
+            Log.Init(this.ToString(), nameof(GetAllStationNames));
+            Log.Wright("Try loading");
+
+            try
+            {
+                List<StationsNamesDTO> stations = await _context.Stations
+                    .OrderBy(x => x.Name)
+                    .Select(x => new StationsNamesDTO
+                    {
+                        Names = x.Name
+                    })
+                    .ToListAsync();
+                return Ok(stations);
+            }
+            catch (Exception ex)
+            {
+                Log.Wright(ex.ToString());
+                Log.Exceptions(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
     }
 }
+    
+
+

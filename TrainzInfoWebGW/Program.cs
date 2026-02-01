@@ -8,7 +8,7 @@ using TrainzInfoWebGW.Tools;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 var apiBaseUrl = builder.HostEnvironment.IsDevelopment()
-    ? "https://localhost:44321/"
+    ? "https://localhost:5001/"
     : "https://www.trainzinfo.com.ua/";
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
