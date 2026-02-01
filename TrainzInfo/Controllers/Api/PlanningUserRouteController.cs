@@ -62,7 +62,7 @@ namespace TrainzInfo.Controllers.Api
                 List<PlanningUserTrains> planningUserTrains = new List<PlanningUserTrains>();
                 List<PlanningUserRoute> planningUserRoutes = new List<PlanningUserRoute>();
                 List<PlanningUserRouteSave> planningUserRouteSaves = new List<PlanningUserRouteSave>();
-                for (int i = 0; i < 30; i++)
+                for (int i = 0; i < 200; i++)
                 {
                     var lasrStationName = trainsShadules.Last().Stations.Name;
                     PlanningUserTrains planningUserTrain = new PlanningUserTrains
