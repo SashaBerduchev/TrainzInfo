@@ -71,7 +71,8 @@ namespace TrainzInfo.Controllers.Api
                     List<PlanningUserRouteSave> planningUserRouteSaves = new List<PlanningUserRouteSave>();
                     for (int i = 0; i < 200; i++)
                     {
-                        var lasrStationName = trainsShadules.Last().Stations.Name;
+                        Log.Wright("Count iteration: " + i);
+                        var lastStationName = trainsShadules.Last().Stations.Name;
                         PlanningUserTrains planningUserTrain = new PlanningUserTrains
                         {
                             Train = trainByDepeatSt,
@@ -80,6 +81,7 @@ namespace TrainzInfo.Controllers.Api
                             User = user
                         };
                         planningUserTrains.Add(planningUserTrain);
+                        Log.Wright($"Iteration {i}: Added train {trainByDepeatSt.NameOfTrain} to planningUserTrains.");
                         PlanningUserRoute planningUserRoute = new PlanningUserRoute
                         {
                             User = user,
@@ -88,37 +90,56 @@ namespace TrainzInfo.Controllers.Api
                             Username = email
                         };
                         planningUserRoutes.Add(planningUserRoute);
+                        Log.Wright($"Iteration {i}: Added route with last station {lastStationName} to planningUserRoutes.");
 
-                        PlanningUserRouteSave planningUserRouteSave = new PlanningUserRouteSave
+                        if ((trainsShadules.Any(st => st.Stations != null) && trainsShadules.Any(st => st.Stations.Name == arrival))
+                                || trainsShadules.Any(st => st.Stations == null))
                         {
-                            Depeat = depeat,
-                            Arrive = arrival,
-                            PlanningUserRoute = planningUserRoutes,
-                            PlanningUserTrains = planningUserTrains,
-                            Username = email,
-                            User = user,
-                            Name = $"Route from {depeat} to {arrival}"
-                        };
-                        planningUserRouteSaves.Add(planningUserRouteSave);
-
-                        Log.Wright("Count iteration: " + i);
-                        if (trainsShadules.Any(st => st.Stations != null) && trainsShadules.Any(st => st.Stations.Name == arrival)
-                            || trainsShadules.Any(st => st.Stations == null))
                             break;
+                        }
+
+
+                        var currentTrainId = trainByDepeatSt.id;
 
                         trainsShadules = await _context.TrainsShadule
-                        .Include(ts => ts.Stations)
-                        .Include(ts => ts.Train)
-                        .Where(ts => ts.Stations.Name == lasrStationName)
-                        .OrderBy(ts => Guid.NewGuid())
-                        .ToListAsync();
+                            .Include(ts => ts.Stations)
+                            .Include(ts => ts.Train)
+                            // Ищем записи по названию станции (где мы сейчас находимся)
+                            .Where(ts => ts.Stations.Name == lastStationName)
+                            // Исключаем поезд, на котором мы приехали (ищем именно пересадку)
+                            .Where(ts => ts.Train.id != currentTrainId)
+                            .OrderBy(ts => Guid.NewGuid())
+                            .ToListAsync();
+                        if (trainsShadules.Any())
+                        {
+                            // Берем поезд из первой найденной записи расписания
+                            trainByDepeatSt = trainsShadules.First().Train;
+                        }
+                        else
+                        {
+                            // Если поездов больше нет — тупик, выходим
+                            break;
+                        }
 
                     }
+
+                    PlanningUserRouteSave finalRouteSave = new PlanningUserRouteSave
+                    {
+                        Depeat = depeat,
+                        Arrive = arrival,
+                        // Привязываем полные списки, собранные в цикле
+                        PlanningUserRoute = planningUserRoutes,
+                        PlanningUserTrains = planningUserTrains,
+                        Username = email,
+                        User = user,
+                        Name = $"Route from {depeat} to {arrival}"
+                    };
+                    planningUserRouteSaves.Add(finalRouteSave);
+                    Log.Wright("GetRouteByStations completed successfully.");
+
                     await _context.PlanningUserTrains.AddRangeAsync(planningUserTrains);
                     await _context.PlanningUserRoutes.AddRangeAsync(planningUserRoutes);
                     await _context.PlanningUserRouteSaves.AddRangeAsync(planningUserRouteSaves);
-                    Log.Wright("GetRouteByStations completed successfully.");
-
                 });
                 return Ok();
             }
@@ -175,33 +196,35 @@ namespace TrainzInfo.Controllers.Api
             {
                 IdentityUser user = await _userManager.FindByEmailAsync(email);
                 PlanninUserRouteDTO routes = await _context.PlanningUserRouteSaves
-                .Where(x => x.User == user)
-                .Select(x => new PlanninUserRouteDTO
-                {
-                    Name = x.Name,
-                    Trains = x.PlanningUserTrains.Select(tr => new TrainDTO
+                    .Where(x => EF.Property<string>(x, "UserId") == user.Id)
+                    .Where(x => x.PlanningUserTrains.Any())
+                    .Select(x => new PlanninUserRouteDTO
                     {
-                        Id = tr.Train.id,
-                        Number = tr.Train.Number,
-                        NameOfTrain = tr.Train.NameOfTrain,
-                        StationFrom = tr.Train.From.Name,
-                        StationTo = tr.Train.To.Name,
-                        Type = tr.Train.Type
-                    }).ToList(),
-
-                    trainsShadules = x.PlanningUserRoute
-                        .SelectMany(r => r.TrainsShadule)
-                        .Select(ts => new TrainsShaduleDTO
+                        Name = x.Name,
+                        Trains = x.PlanningUserTrains.Select(tr => new TrainDTO
                         {
-                            Id = ts.id,
-                            NumberTrain = ts.Train.Number.ToString(),
-                            Arrival = ts.Arrival,
-                            Departure = ts.Departure,
-                            NameStation = ts.Stations.Name,
-                            TrainId = ts.Train.id
-                        }).ToList()
-                })
-                .FirstOrDefaultAsync();
+                            // Важно: добавь проверку на null, если Train может отсутствовать
+                            Id = tr.Train.id,
+                            Number = tr.Train.Number,
+                            NameOfTrain = tr.Train.NameOfTrain,
+                            StationFrom = tr.Train.From.Name,
+                            StationTo = tr.Train.To.Name,
+                            Type = tr.Train.Type
+                        }).ToList(),
+
+                        trainsShadules = x.PlanningUserRoute
+                            .SelectMany(r => r.TrainsShadule)
+                            .Select(ts => new TrainsShaduleDTO
+                            {
+                                Id = ts.id,
+                                NumberTrain = ts.Train != null ? ts.Train.Number.ToString() : "",
+                                Arrival = ts.Arrival,
+                                Departure = ts.Departure,
+                                NameStation = ts.Stations != null ? ts.Stations.Name : "",
+                                TrainId = ts.Train != null ? ts.Train.id : 0
+                            }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
                 return Ok(routes);
             }
             catch (Exception ex)
