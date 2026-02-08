@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace TrainzInfoModel.Models.Dictionaries.MetaData
 {
@@ -11,5 +8,7 @@ namespace TrainzInfoModel.Models.Dictionaries.MetaData
         public string IpAddres { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime DateUpdate { get; set; }
+        public bool IsActive { get; set; }
+        public IdentityUser IdentityUser { get; set; }
     }
 }

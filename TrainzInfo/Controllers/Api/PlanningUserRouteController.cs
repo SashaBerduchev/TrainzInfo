@@ -246,13 +246,20 @@ namespace TrainzInfo.Controllers.Api
                     .Include(x => x.PlanningUserTrains)
                     .Include(x => x.PlanningUserRoute)
                     .Where(x => x.ID == routeid).FirstOrDefaultAsync();
+                    if(planningUserRouteSaves == null)
+                    {
+                        throw new InvalidOperationException("Маршрут відсутній");
+                    }
                     foreach (var route in planningUserRouteSaves.PlanningUserRoute)
                     {
 
                         PlanningUserRoute planningUserRoute = _context.PlanningUserRoutes
                         .Include(x=>x.TrainsShadule)
                         .Where(x => x.ID == route.ID).FirstOrDefault();
-                        
+                        if(planningUserRoute == null)
+                        {
+                            continue;
+                        }
                         planningUserRoute.TrainsShadule?.Clear();
                         planningUserRoute.TrainsShaduleID?.Clear();
                         planningUserRoute.TrainsShadule = null;

@@ -10,6 +10,7 @@ namespace TrainzInfoModel.Models.Information.Additional
     public class Locomotive_series
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Seria { get; set; }
         public ICollection<Locomotive> Locomotives { get; set; } 

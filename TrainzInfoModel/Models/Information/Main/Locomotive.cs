@@ -9,7 +9,8 @@ namespace TrainzInfoModel.Models.Information.Main
 {
     public class Locomotive
     {
-         public int id { get; set; }
+        public int id { get; set; }
+        public string ObjectName { get; set; }
         public string User { get; set; }
         [Required]
         public string Number { get; set; }

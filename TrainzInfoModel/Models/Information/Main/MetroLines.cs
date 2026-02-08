@@ -9,6 +9,7 @@ namespace TrainzInfoModel.Models.Information.Main
     public class MetroLines
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string NameLine { get; set; }
         [Required]

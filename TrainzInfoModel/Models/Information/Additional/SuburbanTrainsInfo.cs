@@ -10,6 +10,7 @@ namespace TrainzInfoModel.Models.Information.Additional
     public class SuburbanTrainsInfo
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Model { get; set; }
         [Required]

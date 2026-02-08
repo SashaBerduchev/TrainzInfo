@@ -9,6 +9,7 @@ using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Images;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoModel.Models.PlanningRoute;
+using TrainzInfoModel.Models.System;
 using TrainzInfoModel.Models.Trains;
 using TrainzInfoModel.Models.UsersInfo;
 
@@ -71,6 +72,7 @@ namespace TrainzInfo.Data
         public DbSet<PlanningUserTrains> PlanningUserTrains { get; set; }
         public DbSet<PlanningUserRoute> PlanningUserRoutes { get; set; }
         public DbSet<PlanningUserRouteSave> PlanningUserRouteSaves { get; set; }
+        public DbSet<DocumentToIndex> DocumentToIndex { get; set; }
 
     }
 

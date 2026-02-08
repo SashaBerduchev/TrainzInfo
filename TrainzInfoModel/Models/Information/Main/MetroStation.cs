@@ -9,6 +9,7 @@ namespace TrainzInfoModel.Models.Information.Main
     public class MetroStation
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Name { get; set; }
         public int MetroID { get; set; }

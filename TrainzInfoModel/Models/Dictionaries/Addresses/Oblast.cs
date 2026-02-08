@@ -10,8 +10,10 @@ namespace TrainzInfoModel.Models.Dictionaries.Addresses
     public class Oblast
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Name { get; set; }
+
         [Required]
         public string OblCenter { get; set; }
         public ICollection<Stations> Stations { get; set; }

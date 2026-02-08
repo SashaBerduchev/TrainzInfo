@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.JWT;
 using TrainzInfo.Tools.Mail;
 
@@ -145,6 +146,8 @@ namespace TrainzInfo
                 var settings = sp.GetRequiredService<JwtSettings>();
                 return new JwtService(settings.Secret, settings.Issuer);
             });
+
+            services.AddHostedService<SearchIndexingService>();
 
             services.AddScoped<EncryptionService>();
             services.AddScoped<MailSettingsService>();

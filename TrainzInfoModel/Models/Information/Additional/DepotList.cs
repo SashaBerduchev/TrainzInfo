@@ -11,6 +11,7 @@ namespace TrainzInfoModel.Models.Information.Additional
     public class DepotList
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

@@ -11,6 +11,7 @@ namespace TrainzInfoModel.Models.Information.Main
     public class NewsInfo
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string NameNews { get; set; }
         [Required]

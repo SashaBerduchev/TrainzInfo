@@ -3,6 +3,7 @@
     public class MailSettings
     {
         public int id {  get; set; }
+        public string ObjectName { get; set; }
         public string Name { get; set; }
         public string Host { get; set; }
         public string Email { get; set; }

@@ -7,6 +7,7 @@ namespace TrainzInfoModel.Models.PlanningRoute
     public class PlanningUserRouteSave
     {
         public int ID { get; set; }
+        public string ObjectName { get; set; }
         public string Name { get; set; }
         public string Depeat { get; set; }
         public string Arrive { get; set; }

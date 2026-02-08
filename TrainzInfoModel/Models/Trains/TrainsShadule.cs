@@ -7,6 +7,7 @@ namespace TrainzInfoModel.Models.Trains
     public class TrainsShadule
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         public string NameStation { get; set; }
         public string NumberTrain { get; set; }
         public TimeSpan Arrival { get; set; }

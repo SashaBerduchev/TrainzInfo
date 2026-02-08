@@ -10,6 +10,7 @@ namespace TrainzInfoModel.Models.UsersInfo
     public class UserLocomotivePhotos
     {
         public int Id { get; set; }
+        public string ObjectName { get; set; }
         public string NameLocomotive { get; set; }
         [Required]
         public string Email { get; set; }

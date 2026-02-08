@@ -7,6 +7,7 @@ namespace TrainzInfoModel.Models.PlanningRoute
     public class PlanningUserRoute
     {
         public int ID { get; set; }
+        public string ObjectName { get; set; }
         public IdentityUser User { get; set; }
         public ICollection<TrainsShadule> TrainsShadule { get; set; }
         public ICollection<int> TrainsShaduleID { get; set; }

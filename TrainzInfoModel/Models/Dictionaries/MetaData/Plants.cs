@@ -9,6 +9,7 @@ namespace TrainzInfoModel.Models.Dictionaries.MetaData
     public class Plants
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         public string Name { get; set; }
         [Required]
         public string Adress { get; set; }

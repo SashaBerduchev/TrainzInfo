@@ -11,6 +11,7 @@ namespace TrainzInfoModel.Models.Information.Main
     public class UkrainsRailways
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

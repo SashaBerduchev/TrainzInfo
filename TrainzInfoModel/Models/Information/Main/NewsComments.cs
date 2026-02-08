@@ -6,6 +6,7 @@ namespace TrainzInfoModel.Models.Information.Main
     public class NewsComments
     {
         public int Id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Comment { get; set; }
         [Required]

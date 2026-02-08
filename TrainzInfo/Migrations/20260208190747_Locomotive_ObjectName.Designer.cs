@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainzInfo.Data;
 
@@ -11,9 +12,11 @@ using TrainzInfo.Data;
 namespace TrainzInfo.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260208190747_Locomotive_ObjectName")]
+    partial class Locomotive_ObjectName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,9 +238,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Oblast")
                         .HasColumnType("nvarchar(max)");
 
@@ -264,9 +264,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OblCenter")
@@ -331,9 +328,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordEncrypted")
                         .HasColumnType("nvarchar(max)");
 
@@ -365,9 +359,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.ToTable("MainImages");
@@ -386,9 +377,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
@@ -412,9 +400,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<bool>("IsSuccess")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SentDate")
                         .HasColumnType("datetime2");
@@ -443,9 +428,6 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -468,9 +450,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UkrainsRailwayid")
@@ -509,9 +488,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.ToTable("ElectrickTrainzInformation");
@@ -533,9 +509,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.ToTable("LocomotiveBaseInfos");
@@ -548,9 +521,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Seria")
                         .IsRequired()
@@ -581,9 +551,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.ToTable("StationInfos");
@@ -607,9 +574,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
@@ -641,9 +605,6 @@ namespace TrainzInfo.Migrations
                     b.Property<int>("NewsInfoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.HasIndex("NewsInfoId")
@@ -673,9 +634,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.ToTable("StationImages");
@@ -702,9 +660,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumberTrain")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Stationsid")
@@ -778,9 +733,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlantCreate")
@@ -904,9 +856,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Photo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -938,9 +887,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("NameLine")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
@@ -980,9 +926,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("id");
 
                     b.HasIndex("MetroLinesid");
@@ -1008,15 +951,17 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("NewsInfoid")
+                    b.Property<int?>("DocumentToIndexid")
                         .HasColumnType("int");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("NewsInfoid")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("NewsInfoid");
 
@@ -1052,9 +997,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("NewsInfoAll")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -1105,9 +1047,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Oblast")
@@ -1168,9 +1107,6 @@ namespace TrainzInfo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
@@ -1187,8 +1123,8 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("DocumentToIndexid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PlanningUserRouteSaveID")
                         .HasColumnType("int");
@@ -1203,6 +1139,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("PlanningUserRouteSaveID");
 
@@ -1228,9 +1166,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -1252,8 +1187,8 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("DocumentToIndexid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PlanningUserRouteSaveID")
                         .HasColumnType("int");
@@ -1268,6 +1203,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("PlanningUserRouteSaveID");
 
@@ -1337,9 +1274,6 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NameObject")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("NewsCommentsId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("NewsImageid")
                         .HasColumnType("int");
 
@@ -1352,13 +1286,7 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlanningUserRouteID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PlanningUserRouteSavesID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PlanningUserTrainID")
                         .HasColumnType("int");
 
                     b.Property<int?>("Plantsid")
@@ -1373,22 +1301,16 @@ namespace TrainzInfo.Migrations
                     b.Property<int?>("SendEmailsId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StationImageid")
+                    b.Property<int?>("StationImagesid")
                         .HasColumnType("int");
 
                     b.Property<int?>("StationInfosid")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StationsShaduleid")
                         .HasColumnType("int");
 
                     b.Property<int?>("Stationsid")
                         .HasColumnType("int");
 
                     b.Property<int?>("SuburbanTrainsInfosid")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainsShaduleid")
                         .HasColumnType("int");
 
                     b.Property<int?>("Trainsid")
@@ -1398,9 +1320,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("UkrainsRailwaysid")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserLocomotivePhotoId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserTrainzPhotoid")
@@ -1436,19 +1355,13 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("Metrosid");
 
-                    b.HasIndex("NewsCommentsId");
-
                     b.HasIndex("NewsImageid");
 
                     b.HasIndex("NewsInfoid");
 
                     b.HasIndex("Oblastsid");
 
-                    b.HasIndex("PlanningUserRouteID");
-
                     b.HasIndex("PlanningUserRouteSavesID");
-
-                    b.HasIndex("PlanningUserTrainID");
 
                     b.HasIndex("Plantsid");
 
@@ -1456,25 +1369,19 @@ namespace TrainzInfo.Migrations
 
                     b.HasIndex("SendEmailsId");
 
-                    b.HasIndex("StationImageid");
+                    b.HasIndex("StationImagesid");
 
                     b.HasIndex("StationInfosid");
-
-                    b.HasIndex("StationsShaduleid");
 
                     b.HasIndex("Stationsid");
 
                     b.HasIndex("SuburbanTrainsInfosid");
-
-                    b.HasIndex("TrainsShaduleid");
 
                     b.HasIndex("Trainsid");
 
                     b.HasIndex("TypeOfPassTrainsid");
 
                     b.HasIndex("UkrainsRailwaysid");
-
-                    b.HasIndex("UserLocomotivePhotoId");
 
                     b.HasIndex("UserTrainzPhotoid");
 
@@ -1489,14 +1396,14 @@ namespace TrainzInfo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<int?>("DocumentToIndexid")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsUsing")
                         .HasColumnType("bit");
 
                     b.Property<int>("NumberTrain")
                         .HasColumnType("int");
-
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Station")
                         .IsRequired()
@@ -1522,6 +1429,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("Stationsid");
 
@@ -1551,9 +1460,6 @@ namespace TrainzInfo.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
-
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StationFrom")
                         .IsRequired()
@@ -1601,6 +1507,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("Distance")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DocumentToIndexid")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsUsing")
                         .HasColumnType("bit");
 
@@ -1608,9 +1517,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumberTrain")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PlanningUserRouteID")
@@ -1623,6 +1529,8 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("id");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("PlanningUserRouteID");
 
@@ -1651,9 +1559,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IsProof")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Stationsid")
@@ -1685,6 +1590,9 @@ namespace TrainzInfo.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DocumentToIndexid")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1701,10 +1609,9 @@ namespace TrainzInfo.Migrations
                     b.Property<string>("NameLocomotive")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ObjectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("DocumentToIndexid");
 
                     b.HasIndex("Locomotiveid");
 
@@ -1734,9 +1641,6 @@ namespace TrainzInfo.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Stationsid")
@@ -1972,6 +1876,10 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("NewsComments")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.Information.Main.NewsInfo", "NewsInfo")
                         .WithMany("NewsComments")
                         .HasForeignKey("NewsInfoid");
@@ -2031,6 +1939,10 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
                 {
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("PlanningUserRoutes")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
                         .WithMany("PlanningUserRoute")
                         .HasForeignKey("PlanningUserRouteSaveID");
@@ -2053,6 +1965,10 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", b =>
                 {
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("PlanningUserTrains")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
                         .WithMany("PlanningUserTrains")
                         .HasForeignKey("PlanningUserRouteSaveID");
@@ -2130,10 +2046,6 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("Metrosid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.NewsComments", "NewsComments")
-                        .WithMany()
-                        .HasForeignKey("NewsCommentsId");
-
                     b.HasOne("TrainzInfoModel.Models.Information.Images.NewsImage", "NewsImage")
                         .WithMany()
                         .HasForeignKey("NewsImageid");
@@ -2146,17 +2058,9 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("Oblastsid");
 
-                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", "PlanningUserRoute")
-                        .WithMany()
-                        .HasForeignKey("PlanningUserRouteID");
-
                     b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", "PlanningUserRouteSaves")
                         .WithMany()
                         .HasForeignKey("PlanningUserRouteSavesID");
-
-                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", "PlanningUserTrain")
-                        .WithMany()
-                        .HasForeignKey("PlanningUserTrainID");
 
                     b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", "Plants")
                         .WithMany()
@@ -2170,17 +2074,13 @@ namespace TrainzInfo.Migrations
                         .WithMany()
                         .HasForeignKey("SendEmailsId");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Images.StationImages", "StationImage")
+                    b.HasOne("TrainzInfoModel.Models.Information.Images.StationImages", "StationImages")
                         .WithMany()
-                        .HasForeignKey("StationImageid");
+                        .HasForeignKey("StationImagesid");
 
                     b.HasOne("TrainzInfoModel.Models.Information.Additional.StationInfo", "StationInfos")
                         .WithMany()
                         .HasForeignKey("StationInfosid");
-
-                    b.HasOne("TrainzInfoModel.Models.Trains.StationsShadule", "StationsShadule")
-                        .WithMany()
-                        .HasForeignKey("StationsShaduleid");
 
                     b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany()
@@ -2189,10 +2089,6 @@ namespace TrainzInfo.Migrations
                     b.HasOne("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", "SuburbanTrainsInfos")
                         .WithMany()
                         .HasForeignKey("SuburbanTrainsInfosid");
-
-                    b.HasOne("TrainzInfoModel.Models.Trains.TrainsShadule", "TrainsShadule")
-                        .WithMany()
-                        .HasForeignKey("TrainsShaduleid");
 
                     b.HasOne("TrainzInfoModel.Models.Trains.Train", "Trains")
                         .WithMany()
@@ -2205,10 +2101,6 @@ namespace TrainzInfo.Migrations
                     b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
                         .WithMany()
                         .HasForeignKey("UkrainsRailwaysid");
-
-                    b.HasOne("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", "UserLocomotivePhoto")
-                        .WithMany()
-                        .HasForeignKey("UserLocomotivePhotoId");
 
                     b.HasOne("TrainzInfoModel.Models.UsersInfo.UserTrainzPhoto", "UserTrainzPhoto")
                         .WithMany()
@@ -2242,19 +2134,13 @@ namespace TrainzInfo.Migrations
 
                     b.Navigation("Metros");
 
-                    b.Navigation("NewsComments");
-
                     b.Navigation("NewsImage");
 
                     b.Navigation("NewsInfo");
 
                     b.Navigation("Oblasts");
 
-                    b.Navigation("PlanningUserRoute");
-
                     b.Navigation("PlanningUserRouteSaves");
-
-                    b.Navigation("PlanningUserTrain");
 
                     b.Navigation("Plants");
 
@@ -2262,31 +2148,29 @@ namespace TrainzInfo.Migrations
 
                     b.Navigation("SendEmails");
 
-                    b.Navigation("StationImage");
+                    b.Navigation("StationImages");
 
                     b.Navigation("StationInfos");
 
                     b.Navigation("Stations");
 
-                    b.Navigation("StationsShadule");
-
                     b.Navigation("SuburbanTrainsInfos");
 
                     b.Navigation("Trains");
 
-                    b.Navigation("TrainsShadule");
-
                     b.Navigation("TypeOfPassTrains");
 
                     b.Navigation("UkrainsRailways");
-
-                    b.Navigation("UserLocomotivePhoto");
 
                     b.Navigation("UserTrainzPhoto");
                 });
 
             modelBuilder.Entity("TrainzInfoModel.Models.Trains.StationsShadule", b =>
                 {
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("StationsShadules")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany("StationsShadules")
                         .HasForeignKey("Stationsid");
@@ -2329,6 +2213,10 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfoModel.Models.Trains.TrainsShadule", b =>
                 {
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("TrainsShadule")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", null)
                         .WithMany("TrainsShadule")
                         .HasForeignKey("PlanningUserRouteID");
@@ -2357,6 +2245,10 @@ namespace TrainzInfo.Migrations
 
             modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", b =>
                 {
+                    b.HasOne("TrainzInfoModel.Models.System.DocumentToIndex", null)
+                        .WithMany("UserLocomotivePhoto")
+                        .HasForeignKey("DocumentToIndexid");
+
                     b.HasOne("TrainzInfoModel.Models.Information.Main.Locomotive", "Locomotive")
                         .WithMany("UserLocomotivesPhoto")
                         .HasForeignKey("Locomotiveid");
@@ -2469,6 +2361,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("PlanningUserRoute");
 
                     b.Navigation("PlanningUserTrains");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.System.DocumentToIndex", b =>
+                {
+                    b.Navigation("NewsComments");
+
+                    b.Navigation("PlanningUserRoutes");
+
+                    b.Navigation("PlanningUserTrains");
+
+                    b.Navigation("StationsShadules");
+
+                    b.Navigation("TrainsShadule");
+
+                    b.Navigation("UserLocomotivePhoto");
                 });
 
             modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>

@@ -11,6 +11,7 @@ namespace TrainzInfoModel.Models.Trains
     public class Train
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required(ErrorMessage ="Уведіть номер")]
         public int Number { get; set; }
         [Required(ErrorMessage = "Вкажіть станцію початку руху")]

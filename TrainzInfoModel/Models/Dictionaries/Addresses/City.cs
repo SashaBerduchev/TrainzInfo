@@ -11,6 +11,7 @@ namespace TrainzInfoModel.Models.Dictionaries.Addresses
     public class City
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         [Required]
         public string Name { get; set; }
         public string Oblast { get; set; }

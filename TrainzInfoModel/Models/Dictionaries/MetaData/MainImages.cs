@@ -8,6 +8,7 @@ namespace TrainzInfoModel.Models.Dictionaries.MetaData
     public class MainImages
     {
         public int id { get; set; }
+        public string ObjectName { get; set; }
         public string Name { get; set; }
         public byte[] Image { get; set; }
         public string ImageType { get; set; }
