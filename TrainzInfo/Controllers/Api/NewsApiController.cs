@@ -11,6 +11,7 @@ using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
@@ -123,25 +124,31 @@ namespace TrainzInfo.Controllers.Api
         {
             try
             {
+                string userId = null;
+                IdentityUser user = null; 
+                int newNewsId = 0;
                 Log.Init("NewsApiController", "CreateNews");
 
                 Log.Wright("Start Create NewsInfo");
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var user = await _userManager.FindByEmailAsync(newsInfo.username);
-                NewsInfo newNews = new NewsInfo
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    User = user,
-                    NameNews = newsInfo.NameNews,
-                    BaseNewsInfo = newsInfo.BaseNewsInfo,
-                    NewsInfoAll = newsInfo.NewsInfoAll,
-                    DateTime = DateTime.Now,
-                    NewsImage = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
-                    ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null
-                };
-                _context.NewsInfos.Add(newNews);
-                await _context.SaveChangesAsync();
-                await _mail.SendNewsMessage(newNews.id, user);
-                Log.Wright("NewsInfo Created Successfully");
+                    userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    user = await _userManager.FindByEmailAsync(newsInfo.username);
+                    NewsInfo newNews = new NewsInfo
+                    {
+                        User = user,
+                        NameNews = newsInfo.NameNews,
+                        BaseNewsInfo = newsInfo.BaseNewsInfo,
+                        NewsInfoAll = newsInfo.NewsInfoAll,
+                        DateTime = DateTime.Now,
+                        NewsImage = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
+                        ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null
+                    };
+                    _context.NewsInfos.Add(newNews);
+                    Log.Wright("NewsInfo Created Successfully");
+                    newNewsId = newNews.id;
+                });
+                await _mail.SendNewsMessage(newNewsId, user);
                 return Ok();
             }
             catch (Exception ex)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
 
@@ -304,68 +305,69 @@ namespace TrainzInfo.Controllers.Api
 
                 Log.Wright("Start Post CreateLocomotive");
 
-                DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    DepotList depot = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
                     .Include(x => x.City)
                     .ThenInclude(x => x.Oblasts)
                         .FirstOrDefaultAsync();
-                City city = depot.City;
-                Stations stations = await _context.Stations.Include(x => x.Locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
-                if (city.Oblasts == null)
-                {
-                    city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
-                    city.Oblast = locomotiveDTO.Oblast;
-                }
-                _context.Cities.Update(city);
-                var locomotive = new Locomotive
-                {
-                    Number = locomotiveDTO.Number,
-                    Speed = locomotiveDTO.Speed,
-                    // Assuming you have logic to fetch related entities based on names
-                    Locomotive_Series = await _context.Locomotive_Series
-                        .FirstOrDefaultAsync(s => s.Seria == locomotiveDTO.Seria),
-                    DepotList = depot,
-                    // Image handling can be added here if needed
-                    Seria = locomotiveDTO.Seria,
-                    Depot = locomotiveDTO.Depot,
-                    Stations = stations,
-                    Create = DateTime.Now,
-                    Update = DateTime.Now
-                };
-                if (depot.Locomotives == null)
-                {
-                    depot.Locomotives = new List<Locomotive>();
-                }
-                depot.Locomotives.Add(locomotive);
-                if (stations.Locomotives == null)
-                {
-                    stations.Locomotives = new List<Locomotive>();
-                }
-                stations.Locomotives.Add(locomotive);
-                Log.Wright("Try find locomotoive if exist");
-                Locomotive locomotiveExist = await _context.Locomotives
-                    .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)
-                    .FirstOrDefaultAsync();
-                if (locomotiveExist is not null)
-                {
-                    Log.Wright("Locomotoive is exist");
-                    Log.Finish();
-                    return BadRequest("Локомотив з такою серією та номером вже існує.");
-                }
-                Log.Wright("Parse image");
-                if (!string.IsNullOrEmpty(locomotiveDTO.ImgSrc))
-                {
-                    // Якщо рядок має формат "data:image/png;base64,....", треба відокремити сам base64
-                    var base64Data = locomotiveDTO.ImgSrc.Contains(",")
-                        ? locomotiveDTO.ImgSrc.Split(',')[1]
-                        : locomotiveDTO.ImgSrc;
+                    City city = depot.City;
+                    Stations stations = await _context.Stations.Include(x => x.Locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
+                    if (city.Oblasts == null)
+                    {
+                        city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
+                        city.Oblast = locomotiveDTO.Oblast;
+                    }
+                    _context.Cities.Update(city);
+                    var locomotive = new Locomotive
+                    {
+                        Number = locomotiveDTO.Number,
+                        Speed = locomotiveDTO.Speed,
+                        // Assuming you have logic to fetch related entities based on names
+                        Locomotive_Series = await _context.Locomotive_Series
+                            .FirstOrDefaultAsync(s => s.Seria == locomotiveDTO.Seria),
+                        DepotList = depot,
+                        // Image handling can be added here if needed
+                        Seria = locomotiveDTO.Seria,
+                        Depot = locomotiveDTO.Depot,
+                        Stations = stations,
+                        Create = DateTime.Now,
+                        Update = DateTime.Now
+                    };
+                    if (depot.Locomotives == null)
+                    {
+                        depot.Locomotives = new List<Locomotive>();
+                    }
+                    depot.Locomotives.Add(locomotive);
+                    if (stations.Locomotives == null)
+                    {
+                        stations.Locomotives = new List<Locomotive>();
+                    }
+                    stations.Locomotives.Add(locomotive);
+                    Log.Wright("Try find locomotoive if exist");
+                    Locomotive locomotiveExist = await _context.Locomotives
+                        .Where(x => x.Locomotive_Series == locomotive.Locomotive_Series && x.Number == locomotive.Number)
+                        .FirstOrDefaultAsync();
+                    if (locomotiveExist is not null)
+                    {
+                        Log.Wright("Locomotoive is exist");
+                        Log.Finish();
+                        throw new InvalidOperationException("Локомотив з такою серією та номером вже існує.");
+                    }
+                    Log.Wright("Parse image");
+                    if (!string.IsNullOrEmpty(locomotiveDTO.ImgSrc))
+                    {
+                        // Якщо рядок має формат "data:image/png;base64,....", треба відокремити сам base64
+                        var base64Data = locomotiveDTO.ImgSrc.Contains(",")
+                            ? locomotiveDTO.ImgSrc.Split(',')[1]
+                            : locomotiveDTO.ImgSrc;
 
-                    byte[] imageBytes = Convert.FromBase64String(base64Data);
-                    locomotive.Image = imageBytes;
-                }
+                        byte[] imageBytes = Convert.FromBase64String(base64Data);
+                        locomotive.Image = imageBytes;
+                    }
 
-
-                _context.Locomotives.Add(locomotive);
-                await _context.SaveChangesAsync();
+                    _context.Locomotives.Add(locomotive);
+                });
                 return Ok();
             }
             catch (Exception ex)

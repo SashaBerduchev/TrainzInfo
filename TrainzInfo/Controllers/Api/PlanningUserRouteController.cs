@@ -168,32 +168,23 @@ namespace TrainzInfo.Controllers.Api
             {
                 IdentityUser user = await _userManager.FindByEmailAsync(email);
                 PlanninUserRouteDTO routes = await _context.PlanningUserRouteSaves
-                    .Include(x => x.PlanningUserRoute)
-                        .ThenInclude(x => x.TrainsShadule)
-                            .ThenInclude(x => x.Stations)
-                    .Include(x => x.PlanningUserRoute)
-                        .ThenInclude(x => x.TrainsShadule)
-                            .ThenInclude(x => x.Train)
-                    .Include(x => x.PlanningUserTrains)
-                      .ThenInclude(x => x.Train)
-                        .ThenInclude(x => x.From)
-                    .Include(x => x.PlanningUserTrains)
-                      .ThenInclude(x => x.Train)
-                        .ThenInclude(x=>x.To)
-                    .Where(x => x.User == user)
-                    .Select(userroute => new PlanninUserRouteDTO
+                .Where(x => x.User == user)
+                .Select(x => new PlanninUserRouteDTO
+                {
+                    Name = x.Name,
+                    Trains = x.PlanningUserTrains.Select(tr => new TrainDTO
                     {
-                        Name = userroute.Name,
-                        Trains = userroute.PlanningUserTrains.Select(tr => new TrainDTO
-                        {
-                            Id = tr.Train.id,
-                            Number = tr.Train.Number,
-                            NameOfTrain = tr.Train.NameOfTrain,
-                            StationFrom = tr.Train.From.Name,
-                            StationTo = tr.Train.To.Name,
-                            Type = tr.Train.Type
-                        }).ToList(),
-                        trainsShadules = userroute.PlanningUserRoute.SelectMany(ts => ts.TrainsShadule).Select(ts => new TrainsShaduleDTO
+                        Id = tr.Train.id,
+                        Number = tr.Train.Number,
+                        NameOfTrain = tr.Train.NameOfTrain,
+                        StationFrom = tr.Train.From.Name,
+                        StationTo = tr.Train.To.Name,
+                        Type = tr.Train.Type
+                    }).ToList(),
+
+                    trainsShadules = x.PlanningUserRoute
+                        .SelectMany(r => r.TrainsShadule)
+                        .Select(ts => new TrainsShaduleDTO
                         {
                             Id = ts.id,
                             NumberTrain = ts.Train.Number.ToString(),
@@ -202,8 +193,8 @@ namespace TrainzInfo.Controllers.Api
                             NameStation = ts.Stations.Name,
                             TrainId = ts.Train.id
                         }).ToList()
-                    })
-                    .FirstOrDefaultAsync();
+                })
+                .FirstOrDefaultAsync();
                 return Ok(routes);
             }
             catch (Exception ex)
