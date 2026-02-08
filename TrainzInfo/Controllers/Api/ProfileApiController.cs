@@ -2,17 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
-using TrainzInfoShared.DTO;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
     [Route("api/profile")]
     [ApiController]
-    public class ProfileApiController : BaseController
+    public class ProfileApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<IdentityUser> _userManager;

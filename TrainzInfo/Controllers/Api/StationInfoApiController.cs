@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfoModel.Models.Information.Additional;
+using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
 

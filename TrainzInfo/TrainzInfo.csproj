@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TrainzInfoModel\TrainzInfoModel.csproj" />
     <ProjectReference Include="..\TrainzInfoShared\TrainzInfoShared.csproj" />
   </ItemGroup>
 

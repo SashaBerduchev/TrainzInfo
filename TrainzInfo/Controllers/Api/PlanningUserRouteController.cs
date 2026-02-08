@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
+using TrainzInfoModel.Models.PlanningRoute;
+using TrainzInfoModel.Models.Trains;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
@@ -34,85 +37,89 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Init("PlanningUserRouteController", "GetRouteByStations");
                 Log.Wright($"GetRouteByStations start with depeat: {depeat}, arrival: {arrival}");
-                IdentityUser user = await _userManager.FindByEmailAsync(email);
-
-                await ClearRoutesPlanning(user, depeat, arrival);
-
-
-                Train trainByDepeatSt = await _context.Trains
-                    .Include(t => t.From)
-                    .Include(t => t.TrainsShadules)
-                        .ThenInclude(ts => ts.Stations)
-                    .OrderBy(t => Guid.NewGuid())
-                    .Where(t => t.TrainsShadules.Any(ts => ts.Stations.Name == depeat))
-                    .FirstOrDefaultAsync();
-                if (trainByDepeatSt == null)
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    Log.Wright($"GetRouteByStations: No train found departing from {depeat}");
-                    return NotFound($"No train found departing from {depeat}");
-                }
 
-                List<TrainsShadule> trainsShadules = await _context.TrainsShadule
-                    .Include(ts => ts.Stations)
-                    .Include(ts => ts.Train)
-                    .Where(ts => ts.Train == trainByDepeatSt)
-                    .OrderBy(ts => ts.id)
-                    .ToListAsync();
 
-                List<PlanningUserTrains> planningUserTrains = new List<PlanningUserTrains>();
-                List<PlanningUserRoute> planningUserRoutes = new List<PlanningUserRoute>();
-                List<PlanningUserRouteSave> planningUserRouteSaves = new List<PlanningUserRouteSave>();
-                for (int i = 0; i < 200; i++)
-                {
-                    var lasrStationName = trainsShadules.Last().Stations.Name;
-                    PlanningUserTrains planningUserTrain = new PlanningUserTrains
+                    IdentityUser user = await _userManager.FindByEmailAsync(email);
+
+                    await ClearRoutesPlanning(user, depeat, arrival);
+
+
+                    Train trainByDepeatSt = await _context.Trains
+                        .Include(t => t.From)
+                        .Include(t => t.TrainsShadules)
+                            .ThenInclude(ts => ts.Stations)
+                        .OrderBy(t => Guid.NewGuid())
+                        .Where(t => t.TrainsShadules.Any(ts => ts.Stations.Name == depeat))
+                        .FirstOrDefaultAsync();
+                    if (trainByDepeatSt == null)
                     {
-                        Train = trainByDepeatSt,
-                        Username = email,
-                        TrainID = trainByDepeatSt.id,
-                        User = user
-                    };
-                    planningUserTrains.Add(planningUserTrain);
-                    PlanningUserRoute planningUserRoute = new PlanningUserRoute
+                        Log.Wright($"GetRouteByStations: No train found departing from {depeat}");
+                        throw new InvalidOperationException($"No train found departing from {depeat}");
+                    }
+
+                    List<TrainsShadule> trainsShadules = await _context.TrainsShadule
+                        .Include(ts => ts.Stations)
+                        .Include(ts => ts.Train)
+                        .Where(ts => ts.Train == trainByDepeatSt)
+                        .OrderBy(ts => ts.id)
+                        .ToListAsync();
+
+                    List<PlanningUserTrains> planningUserTrains = new List<PlanningUserTrains>();
+                    List<PlanningUserRoute> planningUserRoutes = new List<PlanningUserRoute>();
+                    List<PlanningUserRouteSave> planningUserRouteSaves = new List<PlanningUserRouteSave>();
+                    for (int i = 0; i < 200; i++)
                     {
-                        User = user,
-                        TrainsShadule = trainsShadules,
-                        TrainsShaduleID = trainsShadules.Select(ts => ts.id).ToList(),
-                        Username = email
-                    };
-                    planningUserRoutes.Add(planningUserRoute);
-                    
-                    PlanningUserRouteSave planningUserRouteSave = new PlanningUserRouteSave
-                    {
-                        Depeat = depeat,
-                        Arrive = arrival,
-                        PlanningUserRoute = planningUserRoutes,
-                        PlanningUserTrains = planningUserTrains,
-                        Username = email,
-                        User = user,
-                        Name = $"Route from {depeat} to {arrival}"
-                    };
-                    planningUserRouteSaves.Add(planningUserRouteSave);
+                        var lasrStationName = trainsShadules.Last().Stations.Name;
+                        PlanningUserTrains planningUserTrain = new PlanningUserTrains
+                        {
+                            Train = trainByDepeatSt,
+                            Username = email,
+                            TrainID = trainByDepeatSt.id,
+                            User = user
+                        };
+                        planningUserTrains.Add(planningUserTrain);
+                        PlanningUserRoute planningUserRoute = new PlanningUserRoute
+                        {
+                            User = user,
+                            TrainsShadule = trainsShadules,
+                            TrainsShaduleID = trainsShadules.Select(ts => ts.id).ToList(),
+                            Username = email
+                        };
+                        planningUserRoutes.Add(planningUserRoute);
 
-                    Log.Wright("Count iteration: " + i);
-                    if (trainsShadules.Any(st => st.Stations != null) && trainsShadules.Any(st => st.Stations.Name == arrival)
-                        || trainsShadules.Any(st => st.Stations == null))
-                        break;
+                        PlanningUserRouteSave planningUserRouteSave = new PlanningUserRouteSave
+                        {
+                            Depeat = depeat,
+                            Arrive = arrival,
+                            PlanningUserRoute = planningUserRoutes,
+                            PlanningUserTrains = planningUserTrains,
+                            Username = email,
+                            User = user,
+                            Name = $"Route from {depeat} to {arrival}"
+                        };
+                        planningUserRouteSaves.Add(planningUserRouteSave);
 
-                    trainsShadules = await _context.TrainsShadule
-                    .Include(ts => ts.Stations)
-                    .Include(ts => ts.Train)
-                    .Where(ts => ts.Stations.Name == lasrStationName)
-                    .OrderBy(ts => Guid.NewGuid())
-                    .ToListAsync();
-                    
-                }
-                await _context.PlanningUserTrains.AddRangeAsync(planningUserTrains);
-                await _context.PlanningUserRoutes.AddRangeAsync(planningUserRoutes);
-                await _context.PlanningUserRouteSaves.AddRangeAsync(planningUserRouteSaves);
-                Log.Wright("GetRouteByStations completed successfully.");
-                await _context.SaveChangesAsync();
+                        Log.Wright("Count iteration: " + i);
+                        if (trainsShadules.Any(st => st.Stations != null) && trainsShadules.Any(st => st.Stations.Name == arrival)
+                            || trainsShadules.Any(st => st.Stations == null))
+                            break;
 
+                        trainsShadules = await _context.TrainsShadule
+                        .Include(ts => ts.Stations)
+                        .Include(ts => ts.Train)
+                        .Where(ts => ts.Stations.Name == lasrStationName)
+                        .OrderBy(ts => Guid.NewGuid())
+                        .ToListAsync();
+
+                    }
+                    await _context.PlanningUserTrains.AddRangeAsync(planningUserTrains);
+                    await _context.PlanningUserRoutes.AddRangeAsync(planningUserRoutes);
+                    await _context.PlanningUserRouteSaves.AddRangeAsync(planningUserRouteSaves);
+                    Log.Wright("GetRouteByStations completed successfully.");
+
+                });
                 return Ok();
             }
             catch (Exception ex)
@@ -130,8 +137,8 @@ namespace TrainzInfo.Controllers.Api
         private async Task ClearRoutesPlanning(IdentityUser user, string depeat, string arrival)
         {
             List<PlanningUserRouteSave> planningUserRouteSaves = await _context.PlanningUserRouteSaves
-                .Include(x=>x.PlanningUserTrains)
-                .Include(x=>x.PlanningUserRoute)
+                .Include(x => x.PlanningUserTrains)
+                .Include(x => x.PlanningUserRoute)
                 .Where(x => x.User == user && x.Depeat == depeat && x.Arrive == arrival).ToListAsync();
             List<PlanningUserTrains> planningUserTrains = planningUserRouteSaves.SelectMany(x => x.PlanningUserTrains).ToList();
             List<PlanningUserRoute> planningUserRoutes = planningUserRouteSaves.SelectMany(x => x.PlanningUserRoute).ToList();

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoShared", "TrainzI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoMAUI", "TrainzInfoMAUI\TrainzInfoMAUI.csproj", "{07A3EC3E-84AD-40BF-BD96-4A6CAB5E8E23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainzInfoModel", "TrainzInfoModel\TrainzInfoModel.csproj", "{4B696729-62A9-4537-ADB2-90206F7E3C63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{07A3EC3E-84AD-40BF-BD96-4A6CAB5E8E23}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{07A3EC3E-84AD-40BF-BD96-4A6CAB5E8E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07A3EC3E-84AD-40BF-BD96-4A6CAB5E8E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B696729-62A9-4537-ADB2-90206F7E3C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B696729-62A9-4537-ADB2-90206F7E3C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B696729-62A9-4537-ADB2-90206F7E3C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B696729-62A9-4537-ADB2-90206F7E3C63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

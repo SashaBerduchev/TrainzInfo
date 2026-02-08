@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api

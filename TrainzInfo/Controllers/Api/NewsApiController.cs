@@ -1,36 +1,32 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Claims;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
-using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
+using TrainzInfoModel.Models.Information.Images;
+using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
-using static Azure.Core.HttpHeader;
 
 namespace TrainzInfo.Controllers.Api
 {
     [Route("api/news")]
-    public class NewsApiController : BaseController
+    public class NewsApiController : BaseApiController
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
         UserManager<IdentityUser> _userManager;
         private Mail _mail;
         private readonly ApplicationContext _context;
-        public NewsApiController(ILogger<HomeController> logger, ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail)
+        public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail)
              : base(userManager, context)
         {
-            _logger = logger;
             _context = context;
             _userManager = userManager;
             _mail = mail;
@@ -47,6 +43,9 @@ namespace TrainzInfo.Controllers.Api
 
                 Log.Wright("Start Get NewsInfos with Comments");
                 var newsDTOs = await _context.NewsInfos
+                    .Include(n => n.NewsComments)
+                    .Include(n => n.User)
+                    .Include(n => n.NewsImages)
                     .OrderByDescending(n => n.DateTime)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
@@ -57,8 +56,8 @@ namespace TrainzInfo.Controllers.Api
                         BaseNewsInfo = n.BaseNewsInfo,
                         NewsInfoAll = n.NewsInfoAll,
                         DateTime = n.DateTime.ToString("yyyy-MM-dd"),
-                        NewsImage = n.NewsImage != null
-                            ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.NewsImage)}"
+                        NewsImage = n.NewsImages.Image != null
+                            ? $"data:{n.NewsImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.NewsImages.Image)}"
                             : null
                     })
                     .ToListAsync();
@@ -125,7 +124,7 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 string userId = null;
-                IdentityUser user = null; 
+                IdentityUser user = null;
                 int newNewsId = 0;
                 Log.Init("NewsApiController", "CreateNews");
 
@@ -140,10 +139,16 @@ namespace TrainzInfo.Controllers.Api
                         NameNews = newsInfo.NameNews,
                         BaseNewsInfo = newsInfo.BaseNewsInfo,
                         NewsInfoAll = newsInfo.NewsInfoAll,
-                        DateTime = DateTime.Now,
-                        NewsImage = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
-                        ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null
+                        DateTime = DateTime.Now
                     };
+                    NewsImage newsImage = new NewsImage
+                    {
+                        Name = $"NewsImage_{newNews.id}",
+                        Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
+                        ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null,
+                        CreatedAt = DateTime.Now,
+                    };
+                    newNews.NewsImages = newsImage;
                     _context.NewsInfos.Add(newNews);
                     Log.Wright("NewsInfo Created Successfully");
                     newNewsId = newNews.id;
@@ -258,19 +263,39 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("updateall")]
-        public async Task<ActionResult> UpdateNews([FromQuery] UserEmailDTO userEmailDTO)
+        public async Task<ActionResult> UpdateNews([FromBody] UserEmailDTO userEmailDTO)
         {
             try
             {
                 Log.Init("NewsApiController", "UpdateNews");
 
                 Log.Wright("Start Update NewsInfo");
-                List<NewsInfo> news = await _context.NewsInfos.Include(x => x.User).ToListAsync();
-                foreach (var item in news)
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    item.User = await _userManager.FindByEmailAsync(userEmailDTO.Email);
-                    _context.NewsInfos.Update(item);
-                }
+                    List<NewsInfo> news = await _context.NewsInfos.Include(x => x.User).ToListAsync();
+                    foreach (var item in news)
+                    {
+                        item.User = await _userManager.FindByEmailAsync(userEmailDTO.Email);
+                        if (item.NewsImages == null)
+                        {
+                            NewsImage image = await _context.NewsImages.Where(x => x.NewsInfoId == item.id).FirstOrDefaultAsync();
+                            if (image == null)
+                            {
+                                image = new NewsImage
+                                {
+                                    Name = $"NewsImage_{item.id}",
+                                    Image = item.NewsImage,
+                                    ImageMimeTypeOfData = item.ImageMimeTypeOfData,
+                                    CreatedAt = DateTime.Now,
+                                    NewsInfoId = item.id                                };
+                            }
+                            item.NewsImages = image;
+                            item.NewsImage = null;
+                            item.ImageMimeTypeOfData = null;
+                        }
+                        _context.NewsInfos.Update(item);
+                    }
+                });
                 return Ok();
             }
             catch (Exception ex)

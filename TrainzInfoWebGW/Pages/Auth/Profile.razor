@@ -9,8 +9,6 @@
 <h3>Мій профіль</h3>
 
 
-
-
 <div class="container mt-4">
 
     <!-- Картка користувача -->
@@ -193,6 +191,7 @@
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
             userName = user.Identity.Name;
+            userEmailDTO.Email = user.Identity.Name;
         }
         else
         {
@@ -240,7 +239,6 @@
     }
     private async Task UpdateNews()
     {
-        await CheckRoles();
         var response = await Http.PostAsJsonAsync("api/news/updateall", userEmailDTO);
         if (response.IsSuccessStatusCode)
         {

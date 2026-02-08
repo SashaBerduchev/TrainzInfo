@@ -9,6 +9,8 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.RequestDTO;
+using TrainzInfoModel.Models.Information.Main;
+using TrainzInfoModel.Models.Trains;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api

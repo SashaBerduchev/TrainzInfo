@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainzInfo.Controllers.OldControllers;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
@@ -15,7 +14,7 @@ namespace TrainzInfo.Controllers.Api
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthApiController : BaseController
+    public class AuthApiController : BaseApiController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;

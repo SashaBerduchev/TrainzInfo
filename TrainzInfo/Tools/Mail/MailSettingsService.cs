@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfoModel.Models.Dictionaries.MetaData;
 
 namespace TrainzInfo.Tools.Mail
 {

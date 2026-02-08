@@ -220,7 +220,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.City", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -251,7 +251,182 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OblCenter")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Oblasts");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.IpAdresses", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddres")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("IpAdresses");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.MailSettings", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EnableSsl")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("From")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Host")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordEncrypted")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MailSettings");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.MainImages", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("MainImages");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Plants");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.SendEmail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToUserId");
+
+                    b.ToTable("SendEmails");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TypeOfPassTrains");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +457,178 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Depots");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.ElectrickTrainzInformation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("AllInformation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imgsrc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ElectrickTrainzInformation");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.LocomotiveBaseInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("BaseInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("LocomotiveBaseInfos");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.Locomotive_series", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Seria")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Locomotive_Series");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.StationInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("AllInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BaseInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("StationInfos");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("AllInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BaseInfo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("SuburbanTrainsInfos");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.NewsImage", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NewsInfoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("NewsInfoId")
+                        .IsUnique();
+
+                    b.ToTable("NewsImages");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.StationImages", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("StationImages");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.DieselTrains", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -325,7 +671,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("DieselTrains");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.ElectricTrain", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -418,54 +764,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Electrics");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.ElectrickTrainzInformation", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("AllInformation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Imgsrc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("ElectrickTrainzInformation");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.IpAdresses", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IpAddres")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("IpAdresses");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -527,104 +826,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.LocomotiveBaseInfo", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("BaseInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("LocomotiveBaseInfos");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Seria")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Locomotive_Series");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.MailSettings", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EnableSsl")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("From")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Host")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordEncrypted")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Port")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("MailSettings");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.MainImages", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("MainImages");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Metro", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Metro", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -649,7 +851,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Metros");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.MetroLines", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -680,7 +882,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.MetroStation", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroStation", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -717,7 +919,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MetroStations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsComments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -747,7 +949,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsComments");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -788,255 +990,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OblCenter")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Oblasts");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRoute", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("PlanningUserRouteSaveID")
-                        .HasColumnType("int");
-
-                    b.PrimitiveCollection<string>("TrainsShaduleID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PlanningUserRouteSaveID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlanningUserRoutes");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Arrive")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Depeat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlanningUserRouteSaves");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserTrains", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("PlanningUserRouteSaveID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PlanningUserRouteSaveID");
-
-                    b.HasIndex("TrainID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlanningUserTrains");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Plants", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Adress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Plants");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.RailwayUsersPhoto", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Information")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IsProof")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Stationsid")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("Stationsid");
-
-                    b.ToTable("RailwayUsersPhotos");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.SendEmail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsSuccess")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("SentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ToEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ToUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ToUserId");
-
-                    b.ToTable("SendEmails");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.StationImages", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageMimeTypeOfData")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("StationImages");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.StationInfo", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("AllInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BaseInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("StationInfos");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1112,7 +1066,127 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.UkrainsRailways", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageMimeTypeOfData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Information")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UkrainsRailways");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("PlanningUserRouteSaveID")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("TrainsShaduleID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PlanningUserRouteSaveID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PlanningUserRoutes");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Arrive")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Depeat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PlanningUserRouteSaves");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("PlanningUserRouteSaveID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PlanningUserRouteSaveID");
+
+                    b.HasIndex("TrainID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PlanningUserTrains");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.StationsShadule", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1160,32 +1234,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("StationsShadules");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("AllInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BaseInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("SuburbanTrainsInfos");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1234,7 +1283,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Trains");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.TrainsShadule", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1280,24 +1329,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("TrainsShadule");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("TypeOfPassTrains");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.RailwayUsersPhoto", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1308,26 +1340,26 @@ namespace TrainzInfo.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("ImageMimeTypeOfData")
+                    b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Information")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("IsProof")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Stationsid")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
-                    b.ToTable("UkrainsRailways");
+                    b.HasIndex("Stationsid");
+
+                    b.ToTable("RailwayUsersPhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.UserLocomotivePhotos", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1369,7 +1401,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("UserLocomotivePhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.UserTrainzPhoto", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserTrainzPhoto", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1459,22 +1491,31 @@ namespace TrainzInfo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.City", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Oblast", "Oblasts")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", "Oblasts")
                         .WithMany("Cities")
                         .HasForeignKey("Oblastsid");
 
                     b.Navigation("Oblasts");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.SendEmail", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.City", "City")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId");
+
+                    b.Navigation("ToUser");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
+                {
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "City")
                         .WithMany("DepotLists")
                         .HasForeignKey("Cityid");
 
-                    b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailway")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailway")
                         .WithMany("DepotLists")
                         .HasForeignKey("UkrainsRailwayid");
 
@@ -1483,17 +1524,26 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailway");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DieselTrains", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.NewsImage", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.NewsInfo", null)
+                        .WithOne("NewsImages")
+                        .HasForeignKey("TrainzInfoModel.Models.Information.Images.NewsImage", "NewsInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.DieselTrains", b =>
+                {
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("DieselTrains")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany("DieselTrains")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfo.Models.SuburbanTrainsInfo", "SuburbanTrainsInfo")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", "SuburbanTrainsInfo")
                         .WithMany("DieselTrains")
                         .HasForeignKey("SuburbanTrainsInfoid");
 
@@ -1504,33 +1554,33 @@ namespace TrainzInfo.Migrations
                     b.Navigation("SuburbanTrainsInfo");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.ElectricTrain", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.ElectricTrain", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.City", "City")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "City")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("Cityid");
 
-                    b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfo.Models.ElectrickTrainzInformation", "ElectrickTrainzInformation")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.ElectrickTrainzInformation", "ElectrickTrainzInformation")
                         .WithMany()
                         .HasForeignKey("ElectrickTrainzInformationid");
 
-                    b.HasOne("TrainzInfo.Models.Plants", "PlantsCreate")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", "PlantsCreate")
                         .WithMany()
                         .HasForeignKey("PlantsCreateid");
 
-                    b.HasOne("TrainzInfo.Models.Plants", "PlantsKvr")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", "PlantsKvr")
                         .WithMany()
                         .HasForeignKey("PlantsKvrid");
 
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfo.Models.SuburbanTrainsInfo", "Trains")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", "Trains")
                         .WithMany("ElectricTrain")
                         .HasForeignKey("Trainsid");
 
@@ -1549,21 +1599,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Trains");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.DepotList", "DepotList")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("Locomotives")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfo.Models.LocomotiveBaseInfo", "LocomotiveBaseInfo")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.LocomotiveBaseInfo", "LocomotiveBaseInfo")
                         .WithMany()
                         .HasForeignKey("LocomotiveBaseInfoid");
 
-                    b.HasOne("TrainzInfo.Models.Locomotive_series", "Locomotive_Series")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.Locomotive_series", "Locomotive_Series")
                         .WithMany("Locomotives")
                         .HasForeignKey("Locomotive_Seriesid");
 
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany("Locomotives")
                         .HasForeignKey("Stationsid");
 
@@ -1576,31 +1626,31 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.MetroLines", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Metro", "Metro")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Metro", "Metro")
                         .WithMany("MetroLines")
                         .HasForeignKey("Metroid");
 
                     b.Navigation("Metro");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.MetroStation", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroStation", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.MetroLines", "MetroLines")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.MetroLines", "MetroLines")
                         .WithMany("Stations")
                         .HasForeignKey("MetroLinesid");
 
                     b.Navigation("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.NewsComments", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsComments", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("TrainzInfo.Models.NewsInfo", "NewsInfo")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.NewsInfo", "NewsInfo")
                         .WithMany("NewsComments")
                         .HasForeignKey("NewsInfoid");
 
@@ -1609,7 +1659,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("NewsInfo");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -1618,90 +1668,29 @@ namespace TrainzInfo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRoute", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRouteSave", null)
-                        .WithMany("PlanningUserRoute")
-                        .HasForeignKey("PlanningUserRouteSaveID");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserTrains", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRouteSave", null)
-                        .WithMany("PlanningUserTrains")
-                        .HasForeignKey("PlanningUserRouteSaveID");
-
-                    b.HasOne("TrainzInfo.Models.Train", "Train")
-                        .WithMany()
-                        .HasForeignKey("TrainID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Train");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.RailwayUsersPhoto", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
-                        .WithMany("railwayUsersPhotos")
-                        .HasForeignKey("Stationsid");
-
-                    b.Navigation("Stations");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.SendEmail", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ToUser")
-                        .WithMany()
-                        .HasForeignKey("ToUserId");
-
-                    b.Navigation("ToUser");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
-                {
-                    b.HasOne("TrainzInfo.Models.City", "Citys")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "Citys")
                         .WithMany("Stations")
                         .HasForeignKey("Citysid");
 
-                    b.HasOne("TrainzInfo.Models.Metro", "Metro")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Metro", "Metro")
                         .WithMany()
                         .HasForeignKey("Metroid");
 
-                    b.HasOne("TrainzInfo.Models.Oblast", "Oblasts")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", "Oblasts")
                         .WithMany("Stations")
                         .HasForeignKey("Oblastsid");
 
-                    b.HasOne("TrainzInfo.Models.StationImages", "StationImages")
+                    b.HasOne("TrainzInfoModel.Models.Information.Images.StationImages", "StationImages")
                         .WithMany()
                         .HasForeignKey("StationImagesid");
 
-                    b.HasOne("TrainzInfo.Models.StationInfo", "StationInfo")
+                    b.HasOne("TrainzInfoModel.Models.Information.Additional.StationInfo", "StationInfo")
                         .WithMany()
                         .HasForeignKey("StationInfoid");
 
-                    b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailways")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
                         .WithMany("Stations")
                         .HasForeignKey("UkrainsRailwaysid");
 
@@ -1718,17 +1707,60 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.StationsShadule", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
+                        .WithMany("PlanningUserRoute")
+                        .HasForeignKey("PlanningUserRouteSaveID");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", b =>
+                {
+                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
+                        .WithMany("PlanningUserTrains")
+                        .HasForeignKey("PlanningUserRouteSaveID");
+
+                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
+                        .WithMany()
+                        .HasForeignKey("TrainID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Train");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.StationsShadule", b =>
+                {
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany("StationsShadules")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfo.Models.Train", "Train")
+                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
                         .WithMany("StationsShadules")
                         .HasForeignKey("Trainid");
 
-                    b.HasOne("TrainzInfo.Models.UkrainsRailways", "UkrainsRailways")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
                         .WithMany("stationsShadules")
                         .HasForeignKey("UkrainsRailwaysid");
 
@@ -1739,17 +1771,17 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Stations", "From")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "From")
                         .WithMany()
                         .HasForeignKey("Fromid");
 
-                    b.HasOne("TrainzInfo.Models.Stations", "To")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "To")
                         .WithMany()
                         .HasForeignKey("Toid");
 
-                    b.HasOne("TrainzInfo.Models.TypeOfPassTrain", "TypeOfPassTrain")
+                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", "TypeOfPassTrain")
                         .WithMany("Trains")
                         .HasForeignKey("TypeOfPassTrainid");
 
@@ -1760,17 +1792,17 @@ namespace TrainzInfo.Migrations
                     b.Navigation("TypeOfPassTrain");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.TrainsShadule", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.TrainsShadule", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.PlanningUserRoute", null)
+                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", null)
                         .WithMany("TrainsShadule")
                         .HasForeignKey("PlanningUserRouteID");
 
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfo.Models.Train", "Train")
+                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
                         .WithMany("TrainsShadules")
                         .HasForeignKey("Trainid");
 
@@ -1779,25 +1811,34 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Train");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.UserLocomotivePhotos", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.RailwayUsersPhoto", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Locomotive", "Locomotive")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                        .WithMany("railwayUsersPhotos")
+                        .HasForeignKey("Stationsid");
+
+                    b.Navigation("Stations");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", b =>
+                {
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Locomotive", "Locomotive")
                         .WithMany("UserLocomotivesPhoto")
                         .HasForeignKey("Locomotiveid");
 
                     b.Navigation("Locomotive");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.UserTrainzPhoto", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserTrainzPhoto", b =>
                 {
-                    b.HasOne("TrainzInfo.Models.Stations", "Stations")
+                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
 
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.City", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
                 {
                     b.Navigation("DepotLists");
 
@@ -1806,7 +1847,19 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.DepotList", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", b =>
+                {
+                    b.Navigation("Cities");
+
+                    b.Navigation("Stations");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
+                {
+                    b.Navigation("Trains");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
                 {
                     b.Navigation("DieselTrains");
 
@@ -1815,51 +1868,41 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Locomotive", b =>
-                {
-                    b.Navigation("UserLocomotivesPhoto");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Locomotive_series", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.Locomotive_series", b =>
                 {
                     b.Navigation("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Metro", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", b =>
+                {
+                    b.Navigation("DieselTrains");
+
+                    b.Navigation("ElectricTrain");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
+                {
+                    b.Navigation("UserLocomotivesPhoto");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Metro", b =>
                 {
                     b.Navigation("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.MetroLines", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
                 {
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.NewsInfo", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
                 {
                     b.Navigation("NewsComments");
+
+                    b.Navigation("NewsImages");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.Oblast", b =>
-                {
-                    b.Navigation("Cities");
-
-                    b.Navigation("Stations");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRoute", b =>
-                {
-                    b.Navigation("TrainsShadule");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.PlanningUserRouteSave", b =>
-                {
-                    b.Navigation("PlanningUserRoute");
-
-                    b.Navigation("PlanningUserTrains");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Stations", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
                 {
                     b.Navigation("DieselTrains");
 
@@ -1872,32 +1915,32 @@ namespace TrainzInfo.Migrations
                     b.Navigation("railwayUsersPhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfo.Models.SuburbanTrainsInfo", b =>
-                {
-                    b.Navigation("DieselTrains");
-
-                    b.Navigation("ElectricTrain");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.Train", b =>
-                {
-                    b.Navigation("StationsShadules");
-
-                    b.Navigation("TrainsShadules");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.TypeOfPassTrain", b =>
-                {
-                    b.Navigation("Trains");
-                });
-
-            modelBuilder.Entity("TrainzInfo.Models.UkrainsRailways", b =>
+            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.UkrainsRailways", b =>
                 {
                     b.Navigation("DepotLists");
 
                     b.Navigation("Stations");
 
                     b.Navigation("stationsShadules");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
+                {
+                    b.Navigation("TrainsShadule");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+                {
+                    b.Navigation("PlanningUserRoute");
+
+                    b.Navigation("PlanningUserTrains");
+                });
+
+            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
+                {
+                    b.Navigation("StationsShadules");
+
+                    b.Navigation("TrainsShadules");
                 });
 #pragma warning restore 612, 618
         }

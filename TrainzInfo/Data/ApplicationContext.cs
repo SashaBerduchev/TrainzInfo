@@ -2,8 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfoModel.Models.Dictionaries.Addresses;
+using TrainzInfoModel.Models.Dictionaries.MetaData;
+using TrainzInfoModel.Models.Information.Additional;
+using TrainzInfoModel.Models.Information.Images;
+using TrainzInfoModel.Models.Information.Main;
+using TrainzInfoModel.Models.PlanningRoute;
+using TrainzInfoModel.Models.Trains;
+using TrainzInfoModel.Models.UsersInfo;
 
 namespace TrainzInfo.Data
 {
@@ -32,6 +39,7 @@ namespace TrainzInfo.Data
         public DbSet<Locomotive> Locomotives { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }
         public DbSet<NewsComments> NewsComments { get; set; }
+        public DbSet<NewsImage> NewsImages { get; set; }
         public DbSet<UserLocomotivePhotos> UserLocomotivePhotos { get; set; }
         public DbSet<ElectricTrain> Electrics { get; set; }
         public DbSet<UserTrainzPhoto> UserTrainzPhotos { get; set; }
