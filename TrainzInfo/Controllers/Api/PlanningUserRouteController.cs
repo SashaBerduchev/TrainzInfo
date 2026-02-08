@@ -92,8 +92,7 @@ namespace TrainzInfo.Controllers.Api
                         planningUserRoutes.Add(planningUserRoute);
                         Log.Wright($"Iteration {i}: Added route with last station {lastStationName} to planningUserRoutes.");
 
-                        if ((trainsShadules.Any(st => st.Stations != null) && trainsShadules.Any(st => st.Stations.Name == arrival))
-                                || trainsShadules.Any(st => st.Stations == null))
+                        if (trainsShadules.Any(ts => ts.Stations?.Name == arrival))
                         {
                             break;
                         }
@@ -132,7 +131,7 @@ namespace TrainzInfo.Controllers.Api
                         PlanningUserTrains = planningUserTrains,
                         Username = email,
                         User = user,
-                        Name = $"Route from {depeat} to {arrival}"
+                        Name = $"Маршрут з {depeat} до {arrival}"
                     };
                     planningUserRouteSaves.Add(finalRouteSave);
                     Log.Wright("GetRouteByStations completed successfully.");
@@ -147,7 +146,7 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Wright($"GetRouteByStations inner exception: {ex.Message}");
                 Log.Exceptions(ex.ToString());
-                return BadRequest("Error occurred while processing the request.");
+                return BadRequest("Error occurred while processing the request. " + ex.Message);
             }
             finally
             {
@@ -195,11 +194,12 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 IdentityUser user = await _userManager.FindByEmailAsync(email);
-                PlanninUserRouteDTO routes = await _context.PlanningUserRouteSaves
+                List<PlanninUserRouteDTO> routes = await _context.PlanningUserRouteSaves
                     .Where(x => EF.Property<string>(x, "UserId") == user.Id)
                     .Where(x => x.PlanningUserTrains.Any())
                     .Select(x => new PlanninUserRouteDTO
                     {
+                        Id = x.ID,
                         Name = x.Name,
                         Trains = x.PlanningUserTrains.Select(tr => new TrainDTO
                         {
@@ -224,7 +224,7 @@ namespace TrainzInfo.Controllers.Api
                                 TrainId = ts.Train != null ? ts.Train.id : 0
                             }).ToList()
                     })
-                    .FirstOrDefaultAsync();
+                    .ToListAsync();
                 return Ok(routes);
             }
             catch (Exception ex)
@@ -233,64 +233,35 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpGet("clearroutes")]
-        public async Task<ActionResult> ClearAllUserRoutes([FromQuery] string email)
+        [HttpGet("clearroutesbyid")]
+        public async Task<ActionResult> ClearAllUserRoutes([FromQuery] int routeid)
         {
-            IdentityUser user = await _userManager.FindByEmailAsync(email);
-            List<PlanningUserTrains> planningUserTrains = await _context.PlanningUserTrains.Where(x => x.User == user).ToListAsync();
-            List<PlanningUserRoute> planningUserRoutes = await _context.PlanningUserRoutes.Include(x => x.TrainsShadule).Where(x => x.User == user).ToListAsync();
-            List<PlanningUserRouteSave> planningUserRouteSaves = await _context.PlanningUserRouteSaves.Where(x => x.User == user).ToListAsync();
-            if (planningUserRouteSaves.Count > 0)
+            await _context.ExecuteInTransactionAsync(async () =>
             {
-                _context.PlanningUserRouteSaves.RemoveRange(planningUserRouteSaves);
-            }
-            if (planningUserRoutes.Count > 0)
-            {
-
-                foreach (var route in planningUserRoutes)
+                PlanningUserRouteSave planningUserRouteSaves = await _context.PlanningUserRouteSaves
+                .Include(x => x.PlanningUserTrains)
+                .Include(x => x.PlanningUserRoute)
+                .Where(x => x.ID == routeid).FirstOrDefaultAsync();
+                //List<PlanningUserTrains> planningUserTrains = await _context.PlanningUserTrains.Where(x => x. == user).ToListAsync();
+                //List<PlanningUserRoute> planningUserRoutes = await _context.PlanningUserRoutes.Include(x => x.TrainsShadule).Where(x => x.User == user).ToListAsync();
+                foreach (var route in planningUserRouteSaves.PlanningUserRoute)
                 {
+                    if (route.TrainsShadule == null)
+                        continue;
                     route.TrainsShadule.Clear();
                     route.TrainsShaduleID.Clear();
                     route.TrainsShadule = null;
+                    planningUserRouteSaves.PlanningUserRoute.Remove(route);
+                    _context.PlanningUserRoutes.Remove(route);
                 }
-
-                _context.PlanningUserRoutes.RemoveRange(planningUserRoutes);
-            }
-            if (planningUserTrains.Count > 0)
-            {
-                _context.PlanningUserTrains.RemoveRange(planningUserTrains);
-            }
-            await _context.SaveChangesAsync();
-
-            List<PlanninUserRouteDTO> routes = await _context.PlanningUserRouteSaves
-                .Include(pur => pur.PlanningUserRoute)
-                .ThenInclude(pur => pur.TrainsShadule)
-                    .ThenInclude(ts => ts.Stations)
-                .Include(pur => pur.PlanningUserTrains)
-                    .ThenInclude(put => put.Train)
-                .Where(pur => pur.User == user)
-                .Select(pur => new PlanninUserRouteDTO
+                foreach (var train in planningUserRouteSaves.PlanningUserTrains)
                 {
-                    Name = pur.Name,
-                    Trains = pur.PlanningUserTrains.Select(put => new TrainDTO
-                    {
-                        Id = put.Train.id,
-                        NameOfTrain = put.Train.NameOfTrain,
-                        StationFrom = put.Train.From.Name,
-                        StationTo = put.Train.To.Name,
-                        Type = put.Train.Type
-                    }).ToList(),
-                    trainsShadules = pur.PlanningUserRoute.SelectMany(pur => pur.TrainsShadule).Select(ts => new TrainsShaduleDTO
-                    {
-                        Id = ts.id,
-                        Arrival = ts.Arrival,
-                        Departure = ts.Departure,
-                        NameStation = ts.Stations.Name,
-                        TrainId = ts.Train.id
-                    }).ToList()
-                })
-                .ToListAsync();
-            return Ok(routes);
+                    planningUserRouteSaves.PlanningUserTrains.Remove(train);
+                    _context.PlanningUserTrains.Remove(train);
+                }
+                _context.PlanningUserRouteSaves.Remove(planningUserRouteSaves);
+            });
+            return Ok();
         }
     }
 }

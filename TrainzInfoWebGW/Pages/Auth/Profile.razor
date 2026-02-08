@@ -91,72 +91,82 @@
             <button class="btn btn-info w-100" @onclick="ApllyAndShow">Відобразити</button>
         </div>
 
-        <div class="col-12 col-md-4">
-            <button class="btn btn-danger w-100" @onclick="Clear">Видалити</button>
-        </div>
-        @if (planningUserRouteDTO != null && planningUserRouteDTO.Trains != null)
+        
+        @if (planningUserRouteDTOs != null && planningUserRouteDTOs.Count > 0)
         {
-            @foreach (var train in planningUserRouteDTO.Trains)
+            foreach (var planningUserRouteDTO in planningUserRouteDTOs)
             {
-                var trainSchedules = planningUserRouteDTO.trainsShadules
-                .Where(x => x.NumberTrain == train.Number.ToString())
-                .ToList();
-
-                <div class="mt-4 mb-3">
-                    <h4>
-                        Поїзд №@train.Number —
-                        @train.StationFrom → @train.StationTo
-                    </h4>
+                <h2>@planningUserRouteDTO.Name</h2> 
+                <div class="col-12 col-md-4">
+                    <button class="btn btn-danger w-100" @onclick="() => Clear(planningUserRouteDTO.Id)">
+                        Видалити
+                    </button>
                 </div>
+                @if (planningUserRouteDTO != null && planningUserRouteDTO.Trains != null)
+                {
+                    @foreach (var train in planningUserRouteDTO.Trains)
+                    {
+                        var trainSchedules = planningUserRouteDTO.trainsShadules
+                        .Where(x => x.NumberTrain == train.Number.ToString())
+                        .ToList();
 
-                <!-- Таблиця для ПК -->
-                <div class="d-none d-md-block table-responsive mb-5">
-                    <table class="table table-striped table-bordered align-middle shadow-sm">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Номер</th>
-                                <th>Станція</th>
-                                <th>Прибуття</th>
-                                <th>Відправлення</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <div class="mt-4 mb-3">
+                            <h4>
+                                Поїзд №@train.Number —
+                                @train.StationFrom → @train.StationTo
+                            </h4>
+                        </div>
+
+                        <!-- Таблиця для ПК -->
+                        <div class="d-none d-md-block table-responsive mb-5">
+                            <table class="table table-striped table-bordered align-middle shadow-sm">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Номер</th>
+                                        <th>Станція</th>
+                                        <th>Прибуття</th>
+                                        <th>Відправлення</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var s in trainSchedules)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">@s.NumberTrain</td>
+                                            <td>@s.NameStation</td>
+                                            <td>@s.Arrival</td>
+                                            <td>@s.Departure</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Картки для мобільних -->
+                        <div class="d-block d-md-none">
                             @foreach (var s in trainSchedules)
                             {
-                                <tr>
-                                    <td class="fw-bold">@s.NumberTrain</td>
-                                    <td>@s.NameStation</td>
-                                    <td>@s.Arrival</td>
-                                    <td>@s.Departure</td>
-                                </tr>
+                                <div class="card mb-3 shadow">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">Поїзд №@s.NumberTrain</h5>
+
+                                        <p class="mb-1">
+                                            <b>Станція:</b> @s.NameStation
+                                        </p>
+
+                                        <p class="mb-1">
+                                            <b>Прибуття:</b> @s.Arrival
+                                        </p>
+
+                                        <p class="mb-1">
+                                            <b>Відправлення:</b> @s.Departure
+                                        </p>
+                                    </div>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Картки для мобільних -->
-                <div class="d-block d-md-none">
-                    @foreach (var s in trainSchedules)
-                    {
-                        <div class="card mb-3 shadow">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">Поїзд №@s.NumberTrain</h5>
-
-                                <p class="mb-1">
-                                    <b>Станція:</b> @s.NameStation
-                                </p>
-
-                                <p class="mb-1">
-                                    <b>Прибуття:</b> @s.Arrival
-                                </p>
-
-                                <p class="mb-1">
-                                    <b>Відправлення:</b> @s.Departure
-                                </p>
-                            </div>
                         </div>
                     }
-                </div>
+                }
             }
         }
         @if (!string.IsNullOrEmpty(errors))
@@ -179,7 +189,7 @@
     private string SelectedDepeat = "";
     private string SelectedArrival = "";
     private string errors = "";
-    public PlanninUserRouteDTO planningUserRouteDTO;
+    public List<PlanninUserRouteDTO> planningUserRouteDTOs;
 
 
     protected override async Task OnInitializedAsync()
@@ -212,17 +222,17 @@
         {
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
-                planningUserRouteDTO = null;
+                planningUserRouteDTOs = null;
             }
             else
             {
-                planningUserRouteDTO = await response.Content
-                    .ReadFromJsonAsync<PlanninUserRouteDTO>();
+                planningUserRouteDTOs = await response.Content
+                    .ReadFromJsonAsync<List<PlanninUserRouteDTO>>();
             }
         }
         else
         {
-            planningUserRouteDTO = null;
+            planningUserRouteDTOs = null;
         }
 
     }
@@ -307,9 +317,9 @@
         }
     }
 
-    public async Task Clear()
+    public async Task Clear(int id)
     {
-        var response = await Http.GetAsync($"api/PlanningUserRoute/clearroutes?email={emails}");
+        var response = await Http.GetAsync($"api/PlanningUserRoute/clearroutesbyid?routeid={id}");
         if (response.IsSuccessStatusCode)
         {
             await Loading();
