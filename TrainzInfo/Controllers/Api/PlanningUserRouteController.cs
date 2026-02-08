@@ -228,6 +228,7 @@ namespace TrainzInfo.Controllers.Api
             }
             catch (Exception ex)
             {
+                Log.Exceptions(ex.ToString());
                 return BadRequest($"Error occurred while retrieving routes: {ex.Message}");
             }
         }
