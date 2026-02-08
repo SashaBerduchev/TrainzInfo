@@ -43,7 +43,7 @@ namespace TrainzInfo.Controllers.Api
 
                     IdentityUser user = await _userManager.FindByEmailAsync(email);
 
-                    await ClearRoutesPlanning(user, depeat, arrival);
+                    //await ClearRoutesPlanning(user, depeat, arrival);
 
 
                     Train trainByDepeatSt = await _context.Trains
@@ -55,8 +55,8 @@ namespace TrainzInfo.Controllers.Api
                         .FirstOrDefaultAsync();
                     if (trainByDepeatSt == null)
                     {
-                        Log.Wright($"GetRouteByStations: No train found departing from {depeat}");
-                        throw new InvalidOperationException($"No train found departing from {depeat}");
+                        Log.Wright($"GetRouteByStations: Поїзди, що відправляються із станції {depeat} відсутні");
+                        throw new InvalidOperationException($"Поїзди, що відправляються із станції {depeat} відсутні");
                     }
 
                     List<TrainsShadule> trainsShadules = await _context.TrainsShadule
@@ -146,7 +146,7 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Wright($"GetRouteByStations inner exception: {ex.Message}");
                 Log.Exceptions(ex.ToString());
-                return BadRequest("Error occurred while processing the request. " + ex.Message);
+                return BadRequest("Помилка опрацювання запиту. " + ex.Message);
             }
             finally
             {
@@ -236,32 +236,49 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("clearroutesbyid")]
         public async Task<ActionResult> ClearAllUserRoutes([FromQuery] int routeid)
         {
-            await _context.ExecuteInTransactionAsync(async () =>
+            try
             {
-                PlanningUserRouteSave planningUserRouteSaves = await _context.PlanningUserRouteSaves
-                .Include(x => x.PlanningUserTrains)
-                .Include(x => x.PlanningUserRoute)
-                .Where(x => x.ID == routeid).FirstOrDefaultAsync();
-                //List<PlanningUserTrains> planningUserTrains = await _context.PlanningUserTrains.Where(x => x. == user).ToListAsync();
-                //List<PlanningUserRoute> planningUserRoutes = await _context.PlanningUserRoutes.Include(x => x.TrainsShadule).Where(x => x.User == user).ToListAsync();
-                foreach (var route in planningUserRouteSaves.PlanningUserRoute)
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    if (route.TrainsShadule == null)
-                        continue;
-                    route.TrainsShadule.Clear();
-                    route.TrainsShaduleID.Clear();
-                    route.TrainsShadule = null;
-                    planningUserRouteSaves.PlanningUserRoute.Remove(route);
-                    _context.PlanningUserRoutes.Remove(route);
-                }
-                foreach (var train in planningUserRouteSaves.PlanningUserTrains)
-                {
-                    planningUserRouteSaves.PlanningUserTrains.Remove(train);
-                    _context.PlanningUserTrains.Remove(train);
-                }
-                _context.PlanningUserRouteSaves.Remove(planningUserRouteSaves);
-            });
-            return Ok();
+                    Log.Init("PlanningUserRouteController", "ClearAllUserRoutes");
+                    Log.Wright($"ClearAllUserRoutes start with routeid: {routeid}");
+                    PlanningUserRouteSave planningUserRouteSaves = await _context.PlanningUserRouteSaves
+                    .Include(x => x.PlanningUserTrains)
+                    .Include(x => x.PlanningUserRoute)
+                    .Where(x => x.ID == routeid).FirstOrDefaultAsync();
+                    foreach (var route in planningUserRouteSaves.PlanningUserRoute)
+                    {
+
+                        PlanningUserRoute planningUserRoute = _context.PlanningUserRoutes
+                        .Include(x=>x.TrainsShadule)
+                        .Where(x => x.ID == route.ID).FirstOrDefault();
+                        
+                        planningUserRoute.TrainsShadule?.Clear();
+                        planningUserRoute.TrainsShaduleID?.Clear();
+                        planningUserRoute.TrainsShadule = null;
+                        planningUserRouteSaves.PlanningUserRoute.Remove(planningUserRoute);
+                        _context.PlanningUserRoutes.Remove(route);
+                    }
+                    foreach (var train in planningUserRouteSaves.PlanningUserTrains)
+                    {
+                        PlanningUserTrains planningUserTrains = _context.PlanningUserTrains.Where(x => x.ID == train.ID).FirstOrDefault();
+                        _context.PlanningUserTrains.Remove(train);
+                    }
+                    _context.PlanningUserRouteSaves.Remove(planningUserRouteSaves);
+                });
+                Log.Wright("ClearAllUserRoutes completed successfully.");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Wright($"ClearAllUserRoutes inner exception: {ex.Message}");
+                Log.Exceptions(ex.ToString());
+                return BadRequest($"Error occurred while clearing routes: {ex.Message}");
+            }
+            finally
+            {
+                Log.Finish();
+            }
         }
     }
 }
