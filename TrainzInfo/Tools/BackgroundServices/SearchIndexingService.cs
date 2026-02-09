@@ -66,6 +66,44 @@ namespace TrainzInfo.Tools.BackgroundServices
             await Trains(context);
             await TrainsSheduller(context);
             await StationsSheduller(context);
+            await News(context);
+        }
+
+        private async Task News(ApplicationContext context)
+        {
+            var indexedIds = await context.DocumentToIndex
+           .Include(d => d.NewsInfo)
+           .Where(d => d.NewsInfo != null)
+           .Select(d => d.NewsInfo.id)
+           .ToListAsync();
+
+            var newIndex = await context.NewsInfos
+            .Where(l => !indexedIds.Contains(l.id))
+            .Take(500) // Берем пачками по 500 штук, чтобы не грузить память
+            .ToListAsync();
+
+            foreach (var item in newIndex)
+            {
+                if (item.ObjectName == null)
+                {
+                    item.ObjectName = $"{nameof(NewsInfo).ToUpper()} - {item.id}";
+                }
+                var doc = new DocumentToIndex
+                {
+                    NameObject = item.ObjectName,
+                    Path = nameof(NewsInfo),
+                    DateCreate = DateTime.Now,
+                    DateUpdate = DateTime.Now,
+                    NewsInfo = item // Привязываем по ID (или объектом)
+                };
+                context.DocumentToIndex.Add(doc);
+            }
+
+            if (newIndex.Any())
+            {
+                await context.SaveChangesAsync();
+            }
+
         }
 
         private async Task StationsSheduller(ApplicationContext context)
