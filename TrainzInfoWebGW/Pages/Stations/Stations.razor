@@ -46,10 +46,10 @@
 
         @if (filteredStations?.Any() == true)
         {
-            <ul class="list-group position-absolute w-100" style="z-index:1000;">
+            <ul class="list-group position-absolute w-100 dropdown" style="z-index:1000;">
                 @foreach (var item in filteredStations)
                 {
-                    <li class="list-group-item list-group-item-action"
+                    <li class="list-group-item list-group-item-action "
                         style="cursor:pointer;"
                         @onclick="() => SelectItem(item)">
                         @item

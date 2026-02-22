@@ -143,11 +143,16 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Getting train numbers from database");
             try
             {
-                List<string> trainNumbers = await _context.Trains
-                    .OrderBy(x => x.Number)
-                    .Select(t => t.Number.ToString())
-                    .Distinct()
-                    .ToListAsync();
+                List<int> rawNumbers = await _context.Trains
+                    .Select(t => t.Number)   // Беремо числа
+                    .Distinct()              // Залишаємо тільки унікальні
+                    .OrderBy(n => n)         // Сортуємо їх ЯК ЧИСЛА (2 буде перед 125)
+                    .ToListAsync();          // Виконуємо запит до БД
+
+                // 2. Перетворюємо на текст вже в пам'яті (це миттєва операція)
+                List<string> trainNumbers = rawNumbers
+                    .Select(n => n.ToString())
+                    .ToList();
                 Log.Wright($"Successfully retrieved {trainNumbers.Count} train numbers.");
                 Log.Finish();
                 return Ok(trainNumbers);

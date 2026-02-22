@@ -29,7 +29,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             while (!stoppingToken.IsCancellationRequested)
             {
                 // 1. Ждем "таймаут" (например, 5 минут)
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 Log.Wright("SearchIndexingService triggered.");
                 try
                 {
@@ -41,6 +41,7 @@ namespace TrainzInfo.Tools.BackgroundServices
 
                         // 3. Выполняем логику индексации
                         await SyncIndexAsync(context);
+                        await UpdateTables(context);
                     }
                     Log.Wright("SearchIndexingService: Indexing process completed successfully.");
                 }
@@ -54,6 +55,36 @@ namespace TrainzInfo.Tools.BackgroundServices
                     Log.Wright("SearchIndexingService: Waiting for the next trigger.");
                 }
             }
+        }
+
+        private async Task UpdateTables(ApplicationContext context)
+        {
+            List<Train> trains = await context.Trains
+                .Include(t => t.From)
+                .Include(t => t.To)
+                .ToListAsync();
+            foreach (var train in trains)
+            {
+                if(train.From is null)
+                {
+                    if(train.StationFrom == "Київ")
+                    {
+                        train.StationFrom = "Київ-Пасажирський";
+                    }
+                    Stations stationFrom = await context.Stations.Where(s => s.Name == train.StationFrom).FirstOrDefaultAsync();
+                    Stations stationTo = await context.Stations.Where(s => s.Name == train.StationTo).FirstOrDefaultAsync();
+                    if (stationFrom != null)
+                    {
+                        train.From = stationFrom;
+                    }
+                    if (stationTo != null)
+                    {
+                        train.To = stationTo;
+                    }
+                    context.Trains.Update(train);
+                }
+            }
+            await context.SaveChangesAsync();
         }
 
         private async Task SyncIndexAsync(ApplicationContext context)

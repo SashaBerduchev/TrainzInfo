@@ -77,6 +77,8 @@ else
             <thead class="table-dark">
                 <tr>
                     <th>Номер поїзда</th>
+                    <th>Початок маршруту</th>
+                    <th>Кінець маршруту</th>
                     <th>Прибуття</th>
                     <th>Відправлення</th>
                     <th></th>
@@ -106,8 +108,10 @@ else
                     <h5 class="card-title">
                           Поїзд номер  @item.Train
                     </h5>
-                    <p><b>Прибуття:</b> @item.TimeOfArrive</p>
-                    <p><b>Відправлення:</b> @item.TimeOfDepet</p>
+                    <p><b>Початок маршруту</b> @item.TrainFrom</p>
+                    <p><b>Кінець маршруту</b> @item.TrainTo</p>
+                    <p><b>Прибуття</b> @item.TimeOfArrive</p>
+                    <p><b>Відправлення</b> @item.TimeOfDepet</p>
                 </div>
             </div>
         }
