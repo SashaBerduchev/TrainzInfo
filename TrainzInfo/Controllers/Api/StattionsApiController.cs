@@ -148,36 +148,35 @@ namespace TrainzInfo.Controllers.Api
 
             try
             {
-                StationsDTO station = await _context.Stations
-                    .Include(x => x.StationImages)
-                    .Include(x => x.StationsShadules)
-                    .Include(x => x.StationInfo)
-                    .Include(x => x.UkrainsRailways)
-                    .Include(x => x.Locomotives)
-                    .Include(x => x.DieselTrains)
-                    .Include(x => x.ElectricTrains)
-                    .Where(x => x.id == id)
-                    .Select(xs => new StationsDTO
+                StationsDetailsDTO station = await _context.Stations
+                .Where(x => x.id == id)
+                .Select(xs => new StationsDetailsDTO
+                {
+                    id = xs.id,
+                    Name = xs.Name,
+                    Citys = xs.Citys.Name,
+                    Oblasts = xs.Oblasts.Name,
+                    UkrainsRailways = xs.UkrainsRailways.Name,
+                    stationsShadulers = xs.StationsShadules.Select(ss => new StationsShadulerDTO
                     {
-                        id = xs.id,
-                        Name = xs.Name,
-                        stationsShadulers = xs.StationsShadules
-                        .Select(ss => new StationsShadulerDTO
-                        {
-                            id = ss.id,
-                            Train = ss.NumberTrain,
-                            NumberTrain = ss.NumberTrain,
-                            TimeOfDepet = ss.TimeOfDepet,
-                            TimeOfArrive = ss.TimeOfArrive,
-                        }).ToList(),
-                        StationImages = xs.StationImages.Image != null
-                                        ? $"data:{xs.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.StationImages.Image)}"
-                                        : null,
-                        StationInfo = xs.StationInfo != null ? xs.StationInfo.AllInfo : null,
-                        BaseInfo = xs.StationInfo != null ? xs.StationInfo.BaseInfo : null,
-                        AllInfo = xs.StationInfo != null ? xs.StationInfo.AllInfo : null,
-                    })
-                    .FirstOrDefaultAsync();
+                        id = ss.id,
+                        Train = ss.NumberTrain,
+                        NumberTrain = ss.NumberTrain,
+                        TrainFrom = ss.Train.From.Name ?? "Невідомо", // Захист від null
+                        TrainTo = ss.Train.To.Name ?? "Невідомо",
+                        TimeOfDepet = ss.TimeOfDepet,
+                        TimeOfArrive = ss.TimeOfArrive,
+                    }).ToList(),
+
+                    // Передаємо просто байти і тип! Ніяких Convert у запиті!
+                    ImageBytes = xs.StationImages.Image,
+                    ImageMime = xs.StationImages.ImageMimeTypeOfData,
+
+                    StationInfo = xs.StationInfo.AllInfo,
+                    BaseInfo = xs.StationInfo.BaseInfo,
+                    AllInfo = xs.StationInfo.AllInfo,
+                })
+                .FirstOrDefaultAsync();
                 Log.Wright("Station details successfully retrieved from database");
                 return Ok(station);
             }

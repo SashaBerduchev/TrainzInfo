@@ -25,7 +25,7 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = true;
+        public static bool START_IN_PROD_DB = false;
         static string _connectionString = "";
 
         public Startup(IConfiguration configuration)
@@ -129,6 +129,7 @@ namespace TrainzInfo
                                 "https://localhost:5001",
                                 "https://localhost:5000",
                                 "http://localhost:5001",
+                                "https://localhost:5001",
                                 "http://localhost:5000",
                                 "https://localhost:7235",
                                 "https://localhost:7004"
@@ -182,21 +183,21 @@ namespace TrainzInfo
 
             app.UseCors(); // <- обязательно перед авторизацией
 
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Method == "OPTIONS")
-                {
-                    context.Response.StatusCode = 200;
-                    context.Response.Headers.Add("Access-Control-Allow-Origin", "https://www.trainzinfo.com.ua");
-                    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-                    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type,Authorization");
-                    await context.Response.CompleteAsync();
-                }
-                else
-                {
-                    await next();
-                }
-            });
+            //app.Use(async (context, next) =>
+            //{
+            //    if (context.Request.Method == "OPTIONS")
+            //    {
+            //        context.Response.StatusCode = 200;
+            //        context.Response.Headers.Add("Access-Control-Allow-Origin", "https://localhost:7004/");
+            //        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+            //        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type,Authorization");
+            //        await context.Response.CompleteAsync();
+            //    }
+            //    else
+            //    {
+            //        await next();
+            //    }
+            //});
 
 
             app.UseAuthentication();

@@ -9,6 +9,8 @@ namespace TrainzInfoShared.DTO.GetDTO
     {
         public int id { get; set; }
         public int Train { get; set; }
+        public string TrainFrom { get; set; }
+        public string TrainTo { get; set; }
         public string UzFilia { get; set; }
         public TimeSpan TimeOfArrive { get; set; }
         public TimeSpan TimeOfDepet { get; set; }

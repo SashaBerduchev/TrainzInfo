@@ -87,6 +87,8 @@ else
                 {
                     <tr>
                         <td style="font-size:18px">@item.NumberTrain</td>
+                        <td>@item.TrainFrom</td>
+                        <td>@item.TrainTo</td>
                         <td>@item.TimeOfArrive</td>
                         <td>@item.TimeOfDepet</td>
                     </tr>
@@ -125,7 +127,7 @@ else
 @code {
     [Parameter] public int Id { get; set; }
     private string ErrorMessage;
-    private StationsDTO stations;
+    private StationsDetailsDTO stations;
     private List<StationsShadulerDTO> schedule;
     private UserDto CurrentUser; // або отримуй з авторизації
 
@@ -134,8 +136,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Завантажуємо новину
-        stations = await Http.GetFromJsonAsync<StationsDTO>($"api/stations/details/{Id}");
+        stations = await Http.GetFromJsonAsync<StationsDetailsDTO>($"api/stations/details/{Id}");
         schedule = stations.stationsShadulers;
         // Приклад: завантаження поточного користувача та кількості коментарів
         // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
