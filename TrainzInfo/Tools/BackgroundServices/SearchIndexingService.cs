@@ -29,7 +29,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             while (!stoppingToken.IsCancellationRequested)
             {
                 // 1. Ждем "таймаут" (например, 5 минут)
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
                 Log.Wright("SearchIndexingService triggered.");
                 try
                 {
