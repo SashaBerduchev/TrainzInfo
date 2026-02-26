@@ -61,7 +61,10 @@
 <div class="row" id="dieselContainer">
     @if (loading == false)
     {
-        <p class="text-center">Завантаження...</p>
+        <div class="d-flex justify-content-center align-items-center"
+             style="min-height: 60vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
     }
     else if (!dieselTrains.Any())
     {

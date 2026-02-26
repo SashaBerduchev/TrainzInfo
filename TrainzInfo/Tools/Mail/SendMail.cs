@@ -94,7 +94,7 @@ namespace TrainzInfo.Tools.Mail
 
                 mail.To.Add(user.Email);
                 Log.Wright("Try send mail");
-                smtp.Send(mail);
+                await smtp.SendMailAsync(mail);
             }
             catch (Exception exp)
             {
@@ -103,22 +103,32 @@ namespace TrainzInfo.Tools.Mail
                 _success = false;
                 _error = exp.ToString();
             }
-
-            var sentEmail = new SendEmail
+            try
             {
-                ToUser = user,
-                ToEmail = user.Email,
-                Subject = subject,
-                Body = body,
-                SentDate = DateTime.Now,
-                IsSuccess = _success,
-                ErrorMessage = _error
-            };
+                var trackedUser = await _context.Users.FindAsync(user.Id);
+                var sentEmail = new SendEmail
+                {
+                    ToUser = trackedUser,
+                    ToEmail = user.Email,
+                    Subject = subject,
+                    Body = body,
+                    SentDate = DateTime.Now,
+                    IsSuccess = _success,
+                    ErrorMessage = _error
+                };
 
-            _context.SendEmails.Add(sentEmail);
-            await _context.SaveChangesAsync();
-
-            Log.Finish();
+                _context.SendEmails.Add(sentEmail);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Wright(ex.ToString());
+                Log.Exceptions(ex.ToString());
+            }
+            finally
+            {
+                Log.Finish();
+            }
         }
 
         public async Task SendMailManyAsync(string subject, string body, IdentityUser user, List<string> emails, bool isHtml = false)

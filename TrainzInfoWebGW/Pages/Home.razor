@@ -2,7 +2,7 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject HttpClient Http
 @inject IJSRuntime JS
-
+@inject AuthenticationStateProvider AuthStateProvider
 <PageTitle>TrainzInfo</PageTitle>
 
 <h1 class="display-4 text-center mb-4">Ласкаво просимо на сайт TrainzInfo!</h1>
@@ -40,7 +40,10 @@
     }
     else if (!filteredNews.Any())
     {
-        <p class="text-center text-secondary">Нічого не знайдено.</p>
+        <div class="d-flex justify-content-center align-items-center"
+             style="min-height: 60vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
     }
     else
     {
@@ -68,10 +71,18 @@
                             <h5 class="card-title mb-2">@((MarkupString)news.NameNews)</h5>
                             <p class="card-text flex-grow-1">@((MarkupString)news.BaseNewsInfo)</p>
 
-                            <NavLink href="@($"/news/details/{news.id}")"
-                                     class="btn btn-primary btn-sm mt-auto">
-                                Детальніше
-                            </NavLink>
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                                <NavLink href="@($"/news/details/{news.id}")" class="btn btn-primary btn-sm px-3">
+                                    Детальніше
+                                </NavLink>
+
+                                @if (IsAdmin)
+                                {
+                                    <NavLink href="@($"/news/edit/{news.id}")" class="btn btn-warning btn-sm shadow-sm text-dark">
+                                        <i class="bi bi-gear-fill me-1"></i> Редагувати
+                                    </NavLink>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,7 +91,10 @@
 
         @if (isLoading)
         {
-            <p class="text-center text-secondary mt-3">Завантаження ще новин…</p>
+            <div class="d-flex justify-content-center align-items-center"
+                 style="min-height: 60vh;">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
         }
     }
 </div>
@@ -89,7 +103,7 @@
     private List<NewsDTO> allNews = new();
     private List<NewsDTO> filteredNews = new();
     private string searchText = string.Empty;
-
+    private bool IsAdmin = false;
     private int currentPage = 1;
     private bool isLoading = false;
     private bool allLoaded = false;
@@ -128,9 +142,38 @@
         {
             Console.WriteLine("Помилка завантаження новин: " + ex.Message);
         }
-
+        await CheckRoles();
         isLoading = false;
         StateHasChanged();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+            }
+            else
+            {
+
+            }
+        }
     }
 
     private void FilterNews()

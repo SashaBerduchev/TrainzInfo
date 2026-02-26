@@ -30,7 +30,7 @@ namespace TrainzInfo.Data
                 optionsBuilder
                     .UseSqlServer(Startup.GetConnectionString())
                     .AddInterceptors(new BlockingInterceptor())
-                    .EnableSensitiveDataLogging()
+                    //.EnableSensitiveDataLogging()
                     .LogTo(Log.SQLLogging, 
                     LogLevel.Information,
                     DbContextLoggerOptions.LocalTime)
@@ -73,6 +73,7 @@ namespace TrainzInfo.Data
         public DbSet<PlanningUserRoute> PlanningUserRoutes { get; set; }
         public DbSet<PlanningUserRouteSave> PlanningUserRouteSaves { get; set; }
         public DbSet<DocumentToIndex> DocumentToIndex { get; set; }
+        public DbSet<StatusObject> StatusObjects { get; set; }
 
     }
 

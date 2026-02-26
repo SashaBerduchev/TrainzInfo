@@ -71,7 +71,10 @@
 <div class="row" id="stationsContainer">
     @if(isLoading == true)
     {
-        <p>Завантажуємо</p>
+        <div class="d-flex justify-content-center align-items-center"
+             style="min-height: 60vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
     }
     else if (stationsList.Count == 0)
     {

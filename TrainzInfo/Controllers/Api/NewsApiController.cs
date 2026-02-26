@@ -86,7 +86,12 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("NewsApiController", "GetNewsDetails");
 
                 Log.Wright("Start Get NewsInfo Details with Comments");
-                var news = await _context.NewsInfos.FindAsync(id);
+                var news = await _context.NewsInfos
+                    .Include(n => n.NewsComments)
+                    .Include(n => n.User)
+                    .Include(n => n.NewsImages)
+                    .Where(n => n.id == id)
+                    .FirstOrDefaultAsync();
                 if (news == null)
                 {
                     return NotFound();
@@ -98,8 +103,8 @@ namespace TrainzInfo.Controllers.Api
                     BaseNewsInfo = news.BaseNewsInfo,
                     NewsInfoAll = news.NewsInfoAll,
                     DateTime = news.DateTime.ToString("yyyy-MM-dd"),
-                    NewsImage = news.NewsImage != null
-                        ? $"data:{news.ImageMimeTypeOfData};base64,{Convert.ToBase64String(news.NewsImage)}"
+                    NewsImage = news.NewsImages.Image != null
+                        ? $"data:{news.NewsImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(news.NewsImages.Image)}"
                         : null
                 };
                 return Ok(newsDTO);
@@ -119,42 +124,76 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpPost("create")]
-        public async Task<ActionResult> CreateNews([FromBody] NewsDTO newsInfo)
+        public async Task<ActionResult> CreateNews([FromBody] NewsSetDTO newsInfo)
         {
             try
             {
                 string userId = null;
                 IdentityUser user = null;
                 int newNewsId = 0;
+                string number = null;
                 Log.Init("NewsApiController", "CreateNews");
 
                 Log.Wright("Start Create NewsInfo");
-                await _context.ExecuteInTransactionAsync(async () =>
+                user = await _userManager.FindByEmailAsync(newsInfo.username);
+                userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var currentCount = await _context.NewsInfos.CountAsync();
+                if (newsInfo.ObjectName == null)
                 {
-                    userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    user = await _userManager.FindByEmailAsync(newsInfo.username);
-                    NewsInfo newNews = new NewsInfo
+                    await _context.ExecuteInTransactionAsync(async () =>
                     {
-                        User = user,
-                        NameNews = newsInfo.NameNews,
-                        BaseNewsInfo = newsInfo.BaseNewsInfo,
-                        NewsInfoAll = newsInfo.NewsInfoAll,
-                        DateTime = DateTime.Now
-                    };
-                    NewsImage newsImage = new NewsImage
+
+                        NewsInfo newNews = new NewsInfo
+                        {
+                            User = user,
+                            NameNews = newsInfo.NameNews,
+                            BaseNewsInfo = newsInfo.BaseNewsInfo,
+                            NewsInfoAll = newsInfo.NewsInfoAll,
+                            DateTime = DateTime.Now,
+                            DateStartActual = DateOnly.FromDateTime(DateTime.UtcNow),
+                            LinkSorce = newsInfo.LinkSorce,
+                            DateEndActual = newsInfo.DateEndActual,
+                            ObjectName = "NEWSINFO - " + currentCount.ToString()
+                        };
+                        NewsImage newsImage = new NewsImage
+                        {
+                            Name = $"NewsImage_{newNews.id}",
+                            Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
+                            ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null,
+                            CreatedAt = DateTime.Now,
+                        };
+                        Log.Wright("NewsImage Created Successfully");
+                        newNews.NewsImages = newsImage;
+                        _context.NewsInfos.Add(newNews);
+                        Log.Wright("NewsInfo Created Successfully");
+                        newNewsId = newNews.id;
+                        number = newNews.ObjectName;
+                    });
+                }
+                else
+                {
+                    await _context.ExecuteInTransactionAsync(async () =>
                     {
-                        Name = $"NewsImage_{newNews.id}",
-                        Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
-                        ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null,
-                        CreatedAt = DateTime.Now,
-                    };
-                    newNews.NewsImages = newsImage;
-                    _context.NewsInfos.Add(newNews);
-                    Log.Wright("NewsInfo Created Successfully");
-                    newNewsId = newNews.id;
-                });
+                        NewsInfo news = await _context.NewsInfos
+                        .Include(x => x.NewsImages)
+                        .Where(x => x.ObjectName == newsInfo.ObjectName).FirstOrDefaultAsync();
+                        news.NameNews = newsInfo.NameNews;
+                        news.BaseNewsInfo = newsInfo.BaseNewsInfo;
+                        news.NewsInfoAll = newsInfo.NewsInfoAll;
+                        news.LinkSorce = newsInfo.LinkSorce;
+                        news.DateStartActual = DateOnly.FromDateTime(DateTime.UtcNow);
+                        news.DateEndActual = newsInfo.DateEndActual;
+                        news.NewsImages.Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null;
+
+                        Log.Wright("NewsInfo Updated Successfully");
+                        _context.NewsInfos.Update(news);
+                        newNewsId = news.id;
+                        number = news.ObjectName;
+                    });
+                }
+                user = await _userManager.FindByEmailAsync(newsInfo.username);
                 await _mail.SendNewsMessage(newNewsId, user);
-                return Ok();
+                return Ok(number);
             }
             catch (Exception ex)
             {
@@ -170,14 +209,32 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("geteditnews/{id}")]
-        public async Task<ActionResult<NewsInfo>> GetEditNews(int id)
+        public async Task<ActionResult<NewsSetDTO>> GetEditNews(int id)
         {
             try
             {
                 Log.Init("NewsApiController", "GetEditNews");
 
                 Log.Wright("Start Get Edit NewsInfo");
-                var news = await _context.NewsInfos.FindAsync(id);
+                var news = await _context.NewsInfos
+                    .Include(n => n.NewsComments)
+                    .Include(n => n.User)
+                    .Include(n => n.NewsImages)
+                    .Where(n => n.id == id)
+                    .Select(x=> new NewsSetDTO
+                    {
+                        id = x.id,
+                        NameNews = x.NameNews,
+                        BaseNewsInfo = x.BaseNewsInfo,
+                        NewsInfoAll = x.NewsInfoAll,
+                        LinkSorce = x.LinkSorce,
+                        DateEndActual = x.DateEndActual,
+                        NewsImage = x.NewsImages.Image != null
+                            ? $"data:{x.NewsImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(x.NewsImages.Image)}"
+                            : null,
+                        ObjectName = x.ObjectName
+                    })
+                    .FirstOrDefaultAsync();
                 if (news == null)
                 {
                     return NotFound();
@@ -198,14 +255,14 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpPost("edit")]
-        public async Task<ActionResult> EditNews([FromBody] NewsInfo newsInfo)
+        public async Task<ActionResult> EditNews([FromBody] NewsSetDTO newsInfo)
         {
             try
             {
                 Log.Init("NewsApiController", "EditNews");
 
                 Log.Wright("Start Edit NewsInfo");
-                var existingNews = await _context.NewsInfos.FindAsync(newsInfo.id);
+                var existingNews = await _context.NewsInfos.Include(x=>x.NewsImages).Where(x=>x.id == newsInfo.id).FirstOrDefaultAsync();
                 if (existingNews == null)
                 {
                     return NotFound();
@@ -213,8 +270,10 @@ namespace TrainzInfo.Controllers.Api
                 existingNews.NameNews = newsInfo.NameNews;
                 existingNews.BaseNewsInfo = newsInfo.BaseNewsInfo;
                 existingNews.NewsInfoAll = newsInfo.NewsInfoAll;
-                existingNews.NewsImage = newsInfo.NewsImage;
-                existingNews.ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData;
+                existingNews.DateEndActual = newsInfo.DateEndActual;
+                existingNews.LinkSorce = newsInfo.LinkSorce;
+                existingNews.NewsImages.Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null;
+                existingNews.NewsImages.ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData;
                 _context.NewsInfos.Update(existingNews);
                 await _context.SaveChangesAsync();
                 return Ok();
@@ -284,14 +343,11 @@ namespace TrainzInfo.Controllers.Api
                                 image = new NewsImage
                                 {
                                     Name = $"NewsImage_{item.id}",
-                                    Image = item.NewsImage,
-                                    ImageMimeTypeOfData = item.ImageMimeTypeOfData,
                                     CreatedAt = DateTime.Now,
-                                    NewsInfoId = item.id                                };
+                                    NewsInfoId = item.id
+                                };
                             }
                             item.NewsImages = image;
-                            item.NewsImage = null;
-                            item.ImageMimeTypeOfData = null;
                         }
                         _context.NewsInfos.Update(item);
                     }
