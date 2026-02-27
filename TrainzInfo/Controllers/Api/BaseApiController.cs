@@ -38,28 +38,32 @@ namespace TrainzInfo.Controllers.Api
             }
 
             string remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
-            IpAdresses ipAddresses = await _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefaultAsync();
-            if(ipAddresses.DateUpdate <= DateTime.UtcNow.AddHours(3))
+
+            if (!string.IsNullOrEmpty(remoteIpAddres))
             {
-                if (ipAddresses is not null)
+                // 1. Шукаємо IP в базі
+                IpAdresses ipAddresses = await _context.IpAdresses.FirstOrDefaultAsync(x => x.IpAddres == remoteIpAddres);
+
+                // 2. Якщо IP немає в базі взагалі — створюємо новий запис
+                if (ipAddresses == null)
                 {
-                    ipAddresses.IpAddres = remoteIpAddres;
-                    ipAddresses.DateUpdate = DateTime.Now;
-                    _context.Update(ipAddresses);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    ipAddresses = new IpAdresses();
-                    ipAddresses.DateUpdate = DateTime.Now;
-                    ipAddresses.IpAddres = remoteIpAddres;
-                    ipAddresses.DateCreate = DateTime.Now;
+                    ipAddresses = new IpAdresses
+                    {
+                        IpAddres = remoteIpAddres,
+                        DateCreate = DateTime.Now,
+                        DateUpdate = DateTime.Now
+                    };
                     _context.IpAdresses.Add(ipAddresses);
                     await _context.SaveChangesAsync();
                 }
+                // 3. Якщо IP є, перевіряємо, чи пройшло 3 години з моменту останнього оновлення
+                else if (ipAddresses.DateUpdate <= DateTime.Now.AddHours(-3))
+                {
+                    ipAddresses.DateUpdate = DateTime.Now;
+                    // _context.Update(ipAddresses) писати НЕ ТРЕБА, EF Core вже бачить зміну
+                    await _context.SaveChangesAsync();
+                }
             }
-           
-
             await next();
         }
 
