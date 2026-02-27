@@ -76,6 +76,26 @@ namespace TrainzInfo.Controllers.Api
             
 
             TrainDTO trainDTO = trainCreateRequest.Train;
+            int isExist = await _context.TrainsShadule
+                .Include(x => x.Train)
+                .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                .CountAsync();
+            if(isExist > 0)
+            {
+                List<TrainsShadule> trainsShadulesDelete = await _context.TrainsShadule
+                    .Include(x=>x.Train)
+                    .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                    .ToListAsync();
+
+                List<StationsShadule> stationsShadulesDelete = await _context.StationsShadules
+                    .Include(x=>x.Train)
+                    .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                    .ToListAsync();
+                _context.RemoveRange(stationsShadulesDelete);
+                _context.RemoveRange(trainsShadulesDelete);
+                await _context.SaveChangesAsync();
+            }
+
             List<TrainsShaduleDTO> shadulesDTO = trainCreateRequest.TrainsShedullers;
             try
             {

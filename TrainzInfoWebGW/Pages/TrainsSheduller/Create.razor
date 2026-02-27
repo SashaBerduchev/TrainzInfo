@@ -3,118 +3,135 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject IJSRuntime JS
-<h3>Додати розклад до поїздаа:</h3>
 
-<!-- Таблиця для великих екранів -->
-<div class="table-responsive d-none d-md-block">
-    <table class="table table-striped table-bordered text-center align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Назва станції</th>
-                <th>Прибуття</th>
-                <th>Відправлення</th>
-                <th>Відстань</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in trainsShedullers)
-            {
-                <tr>
-                    <td style="font-size:18px">
-                        @item.NameStation
-                    </td>
-                    <td>@item.Arrival</td>
-                    <td>@item.Departure</td>
-                    <td>@item.Distance</td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-lg cart-btn" @onclick="() => HandleDelete(item)">
-                            <i class="fa-solid fa-basket-shopping"></i>
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<NavigationLock ConfirmExternalNavigation="true" OnBeforeInternalNavigation="ConfirmNavigation" />
-
-<div class="row justify-content-center mt-4">
-    <div class="col-md-5">
-
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white text-center">
-                <h5 class="mb-0">Додати станцію</h5>
-            </div>
-
-            <div class="card-body">
-                <EditForm Model="@trainsSheduller" OnValidSubmit="HandleValidSubmit">
-
-                    <!-- Станція -->
-                    <div class="mb-3 position-relative">
-                        <label class="form-label fw-bold">Станція</label>
-
-                        <InputText @bind-Value="station"
-                                   class="form-control"
-                                   placeholder="Почніть вводити назву..."
-                                   @oninput="OnInputChanged" />
-
-                        @if (filterStations?.Any() == true)
-                        {
-                            <ul class="list-group position-absolute w-100 shadow-sm"
-                                style="z-index:1000; max-height:180px; overflow-y:auto;">
-
-                                @foreach (var item in filterStations)
-                                {
-                                    <li class="list-group-item list-group-item-action"
-                                        style="cursor:pointer;"
-                                        @onclick="() => SelectStation(item)">
-                                        @item
-                                    </li>
-                                }
-                            </ul>
-                        }
-                    </div>
-
-                    <!-- Час прибуття -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Час прибуття</label>
-                        <input type="time"
-                               class="form-control"
-                               value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
-                               @onchange="OnChangeArrival" />
-                    </div>
-
-                    <!-- Час відправки -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Час відправки</label>
-                        <input type="time"
-                               class="form-control"
-                               value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
-                               @onchange="OnChangeDeparture" />
-                    </div>
-
-                    <!-- Кнопка зберегти -->
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-lg" @onclick="HandleValidSubmit">
-                            💾 Зберегти станцію
-                        </button>
-                    </div>
-
-                </EditForm>
-            </div>
-        </div>
-
-        <!-- Кнопка Застосувати -->
-        <div class="d-grid mt-3">
-            <button type="button" class="btn btn-success btn-lg" @onclick="SaveChanges">
-                ✔ Застосувати зміни
-            </button>
-        </div>
-
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 60vh;">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
-</div>
+}
+else
+{
+    <h3>Додати розклад до поїзда: @train.Number</h3>
+
+    <!-- Таблиця для великих екранів -->
+    <div class="table-responsive d-none d-md-block">
+        <table class="table table-striped table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Назва станції</th>
+                    <th>Прибуття</th>
+                    <th>Відправлення</th>
+                    <th>Відстань</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in trainsShedullers)
+                {
+                    <tr>
+                        <td style="font-size:18px">
+                            @item.NameStation
+                        </td>
+                        <td>@item.Arrival</td>
+                        <td>@item.Departure</td>
+                        <td>@item.Distance</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-lg cart-btn" @onclick="() => HandleDelete(item)">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <NavigationLock ConfirmExternalNavigation="true" OnBeforeInternalNavigation="ConfirmNavigation" />
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-5">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Додати станцію</h5>
+                </div>
+
+                <div class="card-body">
+                    <EditForm Model="@trainsSheduller" OnValidSubmit="HandleValidSubmit">
+
+                        <!-- Станція -->
+                        <div class="mb-3 position-relative">
+                            <label class="form-label fw-bold">Станція</label>
+
+                            <InputText @bind-Value="station"
+                                       class="form-control"
+                                       placeholder="Почніть вводити назву..."
+                                       @oninput="OnInputChanged" />
+
+                            @if (filterStations?.Any() == true)
+                            {
+                                <ul class="list-group position-absolute w-100 shadow-sm"
+                                    style="z-index:1000; max-height:180px; overflow-y:auto;">
+
+                                    @foreach (var item in filterStations)
+                                    {
+                                        <li class="list-group-item list-group-item-action"
+                                            style="cursor:pointer;"
+                                            @onclick="() => SelectStation(item)">
+                                            @item
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+
+                        <!-- Час прибуття -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Час прибуття</label>
+                            <input type="time"
+                                   class="form-control"
+                                   value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
+                                   @onchange="OnChangeArrival" />
+                        </div>
+
+                        <!-- Час відправки -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Час відправки</label>
+                            <input type="time"
+                                   class="form-control"
+                                   value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
+                                   @onchange="OnChangeDeparture" />
+                        </div>
+
+                        <!-- Кнопка зберегти -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" @onclick="HandleValidSubmit">
+                                💾 Зберегти станцію
+                            </button>
+                        </div>
+
+                    </EditForm>
+                </div>
+            </div>
+
+            <!-- Кнопка Застосувати -->
+            <div class="d-grid mt-3">
+                <div class="d-flex gap-2 mt-3">
+                    <button type="button" class="btn btn-success btn-lg" @onclick="@(() => SaveChanges("apply"))">
+                        💾 Застосувати
+                    </button>
+
+                    <button type="button" class="btn btn-success btn-lg" @onclick="@(() => SaveChanges("ok"))">
+                        ✅ Ок
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
 
 @if (ErrorMessage != "")
 {
@@ -151,17 +168,21 @@
     private string ErrorMessage = "";
     private CancellationTokenSource debounceCts;
     private bool HasUnsavedChanges = false;
-
+    private bool isSave = false;
+    private bool isLoading = false;
     protected override async Task OnInitializedAsync()
     {
         trainsSheduller = new TrainsShaduleDTO();
+        isLoading = true;
         await Loading();
     }
 
     public async Task Loading()
     {
+
         train = await Http.GetFromJsonAsync<TrainDTO>($"api/trains/gettrainbuid/{id}");
         stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-station-names");
+        isLoading = false;
     }
 
     private async Task HandleValidSubmit()
@@ -241,10 +262,31 @@
         filterStations.Clear();
     }
 
-    private async Task SaveChanges()
+    private async Task SaveChanges(string submitAction)
     {
-        if (!await Confirm("Ви впевнені що хочете зберегти графік поїзда?"))
+        if (isSave == true)
+        {
             return;
+        }
+        isSave = true;
+        if (submitAction == "ok")
+        {
+            Console.WriteLine("SaveAndExit");
+            await SaveAndExit();
+        }
+        else
+        {
+            Console.WriteLine("SaveWithoutExit");
+            await SaveWithoutExit();
+        }
+        isSave = false;
+    }
+
+    private async Task SaveAndExit()
+    {
+        if (!await Confirm("Ви впевнені що хочете зберегти графік поїзда і вийти?"))
+            return;
+
         await DisableProtection();
         HasUnsavedChanges = false;
         TrainCreateRequest request = new TrainCreateRequest
@@ -256,11 +298,36 @@
         var response = await Http.PostAsJsonAsync("api/trainsshaduller/create", request);
         if (response.IsSuccessStatusCode)
         {
+            Console.WriteLine("Збереження успішне!");
             Navigation.NavigateTo("/trains");
         }
         else
         {
             ErrorMessage = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Помилка при збереженні: " + ErrorMessage);
+        }
+    }
+
+    private async Task SaveWithoutExit()
+    {
+        TrainCreateRequest request = new TrainCreateRequest
+        {
+            Train = train,
+            TrainsShedullers = trainsShedullers
+        };
+        var response = await Http.PostAsJsonAsync("api/trainsshaduller/create", request);
+        if (response.IsSuccessStatusCode)
+        {
+            HasUnsavedChanges = false;
+            await DisableProtection();
+            Console.WriteLine("Збереження успішне!");
+            await Loading();
+            await JS.InvokeVoidAsync("alert", "Зміни збережено!");
+        }
+        else
+        {
+            ErrorMessage = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Помилка при збереженні: " + ErrorMessage);
         }
     }
 

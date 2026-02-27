@@ -39,22 +39,26 @@ namespace TrainzInfo.Controllers.Api
 
             string remoteIpAddres = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
             IpAdresses ipAddresses = await _context.IpAdresses.Where(x => x.IpAddres == remoteIpAddres).FirstOrDefaultAsync();
-            if (ipAddresses is not null)
+            if(ipAddresses.DateUpdate <= DateTime.UtcNow.AddHours(3))
             {
-                ipAddresses.IpAddres = remoteIpAddres;
-                ipAddresses.DateUpdate = DateTime.Now;
-                _context.Update(ipAddresses);
-                await _context.SaveChangesAsync();
+                if (ipAddresses is not null)
+                {
+                    ipAddresses.IpAddres = remoteIpAddres;
+                    ipAddresses.DateUpdate = DateTime.Now;
+                    _context.Update(ipAddresses);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ipAddresses = new IpAdresses();
+                    ipAddresses.DateUpdate = DateTime.Now;
+                    ipAddresses.IpAddres = remoteIpAddres;
+                    ipAddresses.DateCreate = DateTime.Now;
+                    _context.IpAdresses.Add(ipAddresses);
+                    await _context.SaveChangesAsync();
+                }
             }
-            else
-            {
-                ipAddresses = new IpAdresses();
-                ipAddresses.DateUpdate = DateTime.Now;
-                ipAddresses.IpAddres = remoteIpAddres;
-                ipAddresses.DateCreate = DateTime.Now;
-                _context.IpAdresses.Add(ipAddresses);
-                await _context.SaveChangesAsync();
-            }
+           
 
             await next();
         }

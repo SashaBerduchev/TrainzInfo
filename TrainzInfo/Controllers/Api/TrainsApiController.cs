@@ -232,6 +232,7 @@ namespace TrainzInfo.Controllers.Api
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var user = await _userManager.FindByEmailAsync(trainDTO.username);
+                int trainsCount = await _context.Trains.CountAsync();
                 Train newTrain = new Train
                 {
                     Number = trainDTO.Number,
@@ -240,6 +241,7 @@ namespace TrainzInfo.Controllers.Api
                     Type = trainDTO.PassTrainType,
                     NameOfTrain = trainDTO.NameOfTrain,
                     IsUsing = true,
+                    ObjectName = "TRAIN - " + Convert.ToString(trainsCount - 1),
                     TypeOfPassTrain = await _context.TypeOfPassTrains.Where(t => t.Type == trainDTO.PassTrainType).FirstOrDefaultAsync(),
                     TrainsShadules = new List<TrainsShadule>()
                 };
