@@ -17,7 +17,10 @@
 </div>
 @if (isLoading)
 {
-    <p class="text-center">Завантаження...</p>
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 60vh;">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
 }
 else
 {
@@ -219,8 +222,9 @@ else
         DepotList.Clear();
         SeriaList.Clear();
         await Load();                 // загружаем первую страницу
-        await JS.InvokeVoidAsync("revealNewLocoCards");
         StateHasChanged();
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("revealNewLocoCards");
     }
 
     private async Task CheckRoles()
@@ -261,8 +265,9 @@ else
         DepotList.Clear();
         SeriaList.Clear();
         await Load();
-        await JS.InvokeVoidAsync("revealNewLocoCards");
         StateHasChanged();
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("revealNewLocoCards");
     }
 
     private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");

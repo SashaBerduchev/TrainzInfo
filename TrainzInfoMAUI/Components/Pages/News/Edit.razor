@@ -9,10 +9,14 @@
 
 @if (news == null)
 {
-    <p>Завантаження даних...</p>
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 60vh;">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
 }
 else
 {
+    <h5>@news.ObjectName</h5>
     <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -44,7 +48,8 @@ else
         </div>
 
         <div class="form-group mt-3">
-            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <button type="submit" class="btn btn-secondary" @onclick="@(() => submitAction = "apply")">Застосувати</button>
+            <button type="submit" class="btn btn-primary" @onclick="@(() => submitAction = "ok")">Ок</button>
             <button type="button" class="btn btn-secondary" @onclick="GoBack">Назад</button>
         </div>
 
@@ -65,7 +70,7 @@ else
 
 @code {
     [Parameter] public int Id { get; set; }
-    private NewsDTO news;
+    private NewsSetDTO news;
     private string errors;
     private string imagePreview;
     private ElementReference editorShortRef;
@@ -74,12 +79,13 @@ else
     private bool editorShortInitialized = false;
     private bool editorFullInitialized = false;
     private bool editoNameNewsInitialized = false;
-
+    private string submitAction = "";
+    private bool isSave = false;
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/geteditnews/{Id}");
+            news = await Http.GetFromJsonAsync<NewsSetDTO>($"api/news/geteditnews/{Id}");
         }
         catch (Exception ex)
         {
@@ -148,18 +154,39 @@ else
 
     private async Task HandleValidSubmit()
     {
+        if (isSave)
+        {
+            return;
+        }
         try
         {
-            var result = await Http.PostAsJsonAsync("api/news/edit", news);
-            if (result.IsSuccessStatusCode)
-                Navigation.NavigateTo("/");
-            else
-                errors = await result.Content.ReadAsStringAsync();
+            isSave = true;
+            if (submitAction == "ok")
+            {
+                news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+                
+                var result = await Http.PostAsJsonAsync("api/news/edit", news);
+                if (result.IsSuccessStatusCode)
+                    Navigation.NavigateTo("/");
+                else
+                    errors = await result.Content.ReadAsStringAsync();
+                Console.WriteLine("Помилка при збереженні новини: " + errors);
+            }else if (submitAction == "apply")
+            {
+                news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+                
+                var result = await Http.PostAsJsonAsync("api/news/edit", news);
+                if (!result.IsSuccessStatusCode)
+                    errors = await result.Content.ReadAsStringAsync();
+                Console.WriteLine("Помилка при збереженні новини: " + errors);
+            }
+            
         }
         catch (Exception ex)
         {
             errors = ex.Message;
         }
+        isSave = false;
     }
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {

@@ -46,10 +46,10 @@
 
         @if (filteredStations?.Any() == true)
         {
-            <ul class="list-group position-absolute w-100" style="z-index:1000;">
+            <ul class="list-group position-absolute w-100 dropdown" style="z-index:1000;">
                 @foreach (var item in filteredStations)
                 {
-                    <li class="list-group-item list-group-item-action"
+                    <li class="list-group-item list-group-item-action "
                         style="cursor:pointer;"
                         @onclick="() => SelectItem(item)">
                         @item
@@ -71,7 +71,10 @@
 <div class="row" id="stationsContainer">
     @if(isLoading == true)
     {
-        <p>Завантажуємо</p>
+        <div class="d-flex justify-content-center align-items-center"
+             style="min-height: 60vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
     }
     else if (stationsList.Count == 0)
     {

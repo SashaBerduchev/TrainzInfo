@@ -8,71 +8,115 @@
 <h4>Новини</h4>
 <hr />
 
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <!-- Назва новини -->
-            <div class="form-group">
-                <label>Назва новини</label>
-                <textarea id="editorName"></textarea>
-            </div>
-
-            <!-- Короткий опис (CKEditor) -->
-            <div class="form-group mt-2">
-                <label>Короткий опис</label>
-                <textarea id="editorBase"></textarea>
-            </div>
-
-            <!-- Повний текст новини (CKEditor) -->
-            <div class="form-group mt-2">
-                <label>Повний текст новини</label>
-                <textarea id="editorFull"></textarea>
-            </div>
-
-            <!-- Завантаження картинки -->
-            <div class="form-group mt-2">
-                <label>Завантажити картинку</label>
-                <InputFile OnChange="HandleFileSelected" />
-                @if (!string.IsNullOrEmpty(imagePreview))
-                {
-                    <div class="mt-2">
-                        <img src="@imagePreview" alt="preview" width="150" class="img-thumbnail" />
-                    </div>
-                }
-            </div>
-
-            <!-- Кнопка створення -->
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
-
-        @if (!string.IsNullOrEmpty(errors))
-        {
-            <div class="alert alert-danger mt-3">
-                <h5>Помилка збереження:</h5>
-                <p>@errors</p>
-            </div>
-        }
+@if (isLoading)
+{
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 60vh;">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
-</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <h5>@number</h5>
+            </div>
+            <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <!-- Назва новини -->
+                <div class="form-group">
+                    <label>Назва новини</label>
+                    <textarea id="editorName"></textarea>
+                </div>
+
+                <!-- Короткий опис (CKEditor) -->
+                <div class="form-group mt-2">
+                    <label>Короткий опис</label>
+                    <textarea id="editorBase"></textarea>
+                </div>
+
+                <!-- Повний текст новини (CKEditor) -->
+                <div class="form-group mt-2">
+                    <label>Повний текст новини</label>
+                    <textarea id="editorFull"></textarea>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label>Посилання на першоджерело</label>
+                    <InputText @bind-Value="news.LinkSorce" class="form-control form-control-lg"></InputText>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Дата актуалізації новини</label>
+                    <InputDate @bind-Value="news.DateEndActual" class="form-control form-control-lg"></InputDate>
+                </div>
+                <!-- Завантаження картинки -->
+                <div class="form-group mt-2">
+                    <label>Завантажити картинку</label>
+                    <InputFile OnChange="HandleFileSelected" />
+                    @if (!string.IsNullOrEmpty(imagePreview))
+                    {
+                        <div class="mt-2">
+                            <img src="@imagePreview" alt="preview" width="150" class="img-thumbnail" />
+                        </div>
+                    }
+                </div>
+
+                <!-- Кнопка створення -->
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-secondary" @onclick="@(() => submitAction = "apply")">Застосувати</button>
+                    <button type="submit" class="btn btn-primary" @onclick="@(() => submitAction = "ok")">Ок</button>
+                </div>
+            </EditForm>
+
+
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(errors))
+{
+    <div class="alert alert-danger mt-3">
+        <h5>Помилка збереження:</h5>
+        <p>@errors</p>
+    </div>
+}
+@if (isSave)
+{
+    <div class="alert alert-warning mt-3">
+        <h5>Збереження...</h5>
+    </div>
+}
+
 
 @code {
-    private NewsDTO news = new NewsDTO();
+    private NewsSetDTO news = new NewsSetDTO();
     private string imagePreview;
+    private string number;
+    private string submitAction = "";
+    private bool isLoading = false;
+    private bool isSave = false;
     private string errors;
+
+    protected override Task OnInitializedAsync()
+    {
+        news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow);
+        return base.OnInitializedAsync();
+    } 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
         if (firstRender)
         {
+            isLoading = true;
+
             // Ініціалізація CKEditor через JS Interop
             await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorBase", DotNetObjectReference.Create(this), "SetBaseNewsInfo");
             await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorFull", DotNetObjectReference.Create(this), "SetNewsInfoAll");
             await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorName", DotNetObjectReference.Create(this), "SetNewsName");
+            isLoading = false;
         }
     }
 
@@ -86,16 +130,55 @@
 
     private async Task HandleValidSubmit()
     {
+        if (news.DateEndActual <= DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+            errors = "Дата повинна бути більша за поточну";
+            Console.WriteLine(errors);
+            return;
+        }
+        if (news.LinkSorce.Contains("https://") == false)
+        {
+            errors = "Посилання повинно містити https://";
+            Console.WriteLine(errors);
+            return;
+        }
+        if (isSave == true)
+        {
+            return;
+        }
+        isSave = true;
+        errors = "";
         await CheckRoles();
-        var result = await Http.PostAsJsonAsync("api/news/create", news);
-        if (result.IsSuccessStatusCode)
+        news.ObjectName = number;
+
+        if (submitAction == "apply")
         {
-            Navigation.NavigateTo("/");
+            var result = await Http.PostAsJsonAsync("api/news/create", news);
+            if (result.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Новина успішно створена" + result);
+                number = await result.Content.ReadAsStringAsync();
+                Console.WriteLine("Номер новини: " + number);
+            }
+            else
+            {
+                errors = await result.Content.ReadAsStringAsync();
+            }
         }
-        else
+        else if (submitAction == "ok")
         {
-            errors = await result.Content.ReadAsStringAsync();
+            var result = await Http.PostAsJsonAsync("api/news/create", news);
+            if (result.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Новина успішно створена" + result);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errors = await result.Content.ReadAsStringAsync();
+            }
         }
+        isSave = false;
     }
 
     private async Task CheckRoles()
