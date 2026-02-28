@@ -57,7 +57,7 @@ namespace TrainzInfo.Controllers.Api
                     await _context.SaveChangesAsync();
                 }
                 // 3. Якщо IP є, перевіряємо, чи пройшло 3 години з моменту останнього оновлення
-                else if (ipAddresses.DateUpdate <= DateTime.Now.AddHours(-3))
+                else if (ipAddresses.DateUpdate <= DateTime.Now.AddHours(-4))
                 {
                     ipAddresses.DateUpdate = DateTime.Now;
                     // _context.Update(ipAddresses) писати НЕ ТРЕБА, EF Core вже бачить зміну
