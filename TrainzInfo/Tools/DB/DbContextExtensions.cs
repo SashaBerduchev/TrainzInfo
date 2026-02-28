@@ -10,7 +10,7 @@ namespace TrainzInfo.Tools.DB
         public static async Task ExecuteInTransactionAsync(
         this DbContext context,
         Func<Task> action,
-        IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        IsolationLevel isolationLevel)
         {
             // Если транзакция уже запущена выше по стеку, просто выполняем код
             if (context.Database.CurrentTransaction != null)

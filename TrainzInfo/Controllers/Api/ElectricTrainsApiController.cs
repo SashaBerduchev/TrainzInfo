@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
@@ -242,46 +244,48 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Create electric train");
             try
             {
-                DepotList depot = await _context.Depots
-                    .Include(x=>x.City)
-                        .ThenInclude(x=>x.Oblasts)
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    DepotList depot = await _context.Depots
+                    .Include(x => x.City)
+                        .ThenInclude(x => x.Oblasts)
                     .Where(x => x.Name == trainDTO.DepotList).FirstOrDefaultAsync();
-                City city = await _context.Cities.Where(x => x.Name == depot.City.Name).FirstOrDefaultAsync();
-                if (city.Oblasts == null)
-                {
-                    city.Oblasts = await _context.Oblasts.Where(x => x.Name == trainDTO.Oblast).FirstOrDefaultAsync();
-                    city.Oblast = trainDTO.Oblast;
-                }
-                _context.Cities.Update(city);
-                SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();
-                Stations stations = await _context.Stations.Include(x => x.ElectricTrains).Include(x => x.Citys).Where(x => x.Citys.Name == city.Name).FirstOrDefaultAsync();
-                ElectricTrain electricTrain = new ElectricTrain
-                {
-                    Name = trainDTO.Name,
-                    Model = trainDTO.Model,
-                    MaxSpeed = trainDTO.MaxSpeed,
-                    DepotTrain = trainDTO.DepotList,
-                    DepotList = depot,
-                    DepotCity = depot.City.Name,
-                    Image = !string.IsNullOrEmpty(trainDTO.Image)
-                                ? Convert.FromBase64String(trainDTO.Image.Split(',')[1])
-                                : null,
-                    ImageMimeTypeOfData = trainDTO.ImageMimeTypeOfData,
-                    IsProof = true.ToString(),
-                    City = city,
-                    Trains = suburban,
-                    Create = DateTime.Now,
-                    Update = DateTime.Now,
-                    Stations = stations 
+                    City city = await _context.Cities.Where(x => x.Name == depot.City.Name).FirstOrDefaultAsync();
+                    if (city.Oblasts == null)
+                    {
+                        city.Oblasts = await _context.Oblasts.Where(x => x.Name == trainDTO.Oblast).FirstOrDefaultAsync();
+                        city.Oblast = trainDTO.Oblast;
+                    }
+                    _context.Cities.Update(city);
+                    SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();
+                    Stations stations = await _context.Stations.Include(x => x.ElectricTrains).Include(x => x.Citys).Where(x => x.Citys.Name == city.Name).FirstOrDefaultAsync();
+                    ElectricTrain electricTrain = new ElectricTrain
+                    {
+                        Name = trainDTO.Name,
+                        Model = trainDTO.Model,
+                        MaxSpeed = trainDTO.MaxSpeed,
+                        DepotTrain = trainDTO.DepotList,
+                        DepotList = depot,
+                        DepotCity = depot.City.Name,
+                        Image = !string.IsNullOrEmpty(trainDTO.Image)
+                                    ? Convert.FromBase64String(trainDTO.Image.Split(',')[1])
+                                    : null,
+                        ImageMimeTypeOfData = trainDTO.ImageMimeTypeOfData,
+                        IsProof = true.ToString(),
+                        City = city,
+                        Trains = suburban,
+                        Create = DateTime.Now,
+                        Update = DateTime.Now,
+                        Stations = stations
 
-                };
-                _context.Electrics.Add(electricTrain);
-                if(depot.ElectricTrains is null)
-                {
-                    depot.ElectricTrains = new List<ElectricTrain>();
-                }
-                depot.ElectricTrains.Add(electricTrain);
-                await _context.SaveChangesAsync();
+                    };
+                    _context.Electrics.Add(electricTrain);
+                    if (depot.ElectricTrains is null)
+                    {
+                        depot.ElectricTrains = new List<ElectricTrain>();
+                    }
+                    depot.ElectricTrains.Add(electricTrain);
+                }, IsolationLevel.ReadCommitted);
                 return Ok();
             }
             catch (Exception ex)
@@ -304,23 +308,26 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Edit electric train");
             try
             {
-                ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
-                electricTrain.DepotList = await _context.Depots.Where(d => d.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
-                electricTrain.City = await _context.Cities.Where(c => c.Name == electricTrainDTO.City).FirstOrDefaultAsync();
-                electricTrain.PlantsCreate = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsCreate).FirstOrDefaultAsync();
-                electricTrain.PlantsKvr = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsKvr).FirstOrDefaultAsync();
-                electricTrain.Trains = await _context.SuburbanTrainsInfos.Where(t => t.BaseInfo == electricTrainDTO.TrainsInfo).FirstOrDefaultAsync();
-                electricTrain.ElectrickTrainzInformation = await _context.ElectrickTrainzInformation.Where(e => e.AllInformation == electricTrainDTO.ElectrickTrainzInformation).FirstOrDefaultAsync();
-                electricTrain.Name = electricTrainDTO.Name;
-                electricTrain.Model = electricTrainDTO.Model;
-                electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
-                electricTrain.DepotTrain = electricTrainDTO.DepotTrain;
-                electricTrain.DepotCity = electricTrainDTO.DepotCity;
-                electricTrain.LastKvr = electricTrainDTO.LastKvr;
-                electricTrain.CreatedTrain = electricTrainDTO.CreatedTrain;
-                electricTrain.PlantCreate = electricTrainDTO.PlantCreate;
-                _context.Electrics.Update(electricTrain);
-                await _context.SaveChangesAsync();
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
+                    electricTrain.DepotList = await _context.Depots.Where(d => d.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
+                    electricTrain.City = await _context.Cities.Where(c => c.Name == electricTrainDTO.City).FirstOrDefaultAsync();
+                    electricTrain.PlantsCreate = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsCreate).FirstOrDefaultAsync();
+                    electricTrain.PlantsKvr = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsKvr).FirstOrDefaultAsync();
+                    electricTrain.Trains = await _context.SuburbanTrainsInfos.Where(t => t.BaseInfo == electricTrainDTO.TrainsInfo).FirstOrDefaultAsync();
+                    electricTrain.ElectrickTrainzInformation = await _context.ElectrickTrainzInformation.Where(e => e.AllInformation == electricTrainDTO.ElectrickTrainzInformation).FirstOrDefaultAsync();
+                    electricTrain.Name = electricTrainDTO.Name;
+                    electricTrain.Model = electricTrainDTO.Model;
+                    electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
+                    electricTrain.DepotTrain = electricTrainDTO.DepotTrain;
+                    electricTrain.DepotCity = electricTrainDTO.DepotCity;
+                    electricTrain.LastKvr = electricTrainDTO.LastKvr;
+                    electricTrain.CreatedTrain = electricTrainDTO.CreatedTrain;
+                    electricTrain.PlantCreate = electricTrainDTO.PlantCreate;
+                    _context.Electrics.Update(electricTrain);
+                    await _context.SaveChangesAsync();
+                }, IsolationLevel.ReadCommitted);
                 return Ok();
             }
             catch (Exception ex)

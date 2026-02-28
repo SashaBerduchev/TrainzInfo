@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IdentityModel.Claims;
 using System.Linq;
 using System.Threading.Tasks;
@@ -168,7 +169,7 @@ namespace TrainzInfo.Controllers.Api
                         Log.Wright("NewsInfo Created Successfully");
                         newNewsId = newNews.id;
                         number = newNews.ObjectName;
-                    });
+                    }, IsolationLevel.ReadCommitted);
                 }
                 else
                 {
@@ -189,7 +190,7 @@ namespace TrainzInfo.Controllers.Api
                         _context.NewsInfos.Update(news);
                         newNewsId = news.id;
                         number = news.ObjectName;
-                    });
+                    }, IsolationLevel.ReadCommitted);
                 }
                 user = await _userManager.FindByEmailAsync(newsInfo.username);
                 await _mail.SendNewsMessage(newNewsId, user);
@@ -351,7 +352,7 @@ namespace TrainzInfo.Controllers.Api
                         }
                         _context.NewsInfos.Update(item);
                     }
-                });
+                }, IsolationLevel.Serializable);
                 return Ok();
             }
             catch (Exception ex)

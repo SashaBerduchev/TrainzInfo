@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -138,7 +139,7 @@ namespace TrainzInfo.Controllers.Api
                     await _context.PlanningUserTrains.AddRangeAsync(planningUserTrains);
                     await _context.PlanningUserRoutes.AddRangeAsync(planningUserRoutes);
                     await _context.PlanningUserRouteSaves.AddRangeAsync(planningUserRouteSaves);
-                });
+                }, IsolationLevel.Serializable);
                 return Ok();
             }
             catch (Exception ex)
@@ -272,7 +273,7 @@ namespace TrainzInfo.Controllers.Api
                         _context.PlanningUserTrains.Remove(train);
                     }
                     _context.PlanningUserRouteSaves.Remove(planningUserRouteSaves);
-                });
+                }, IsolationLevel.ReadCommitted);
                 Log.Wright("ClearAllUserRoutes completed successfully.");
                 return Ok();
             }

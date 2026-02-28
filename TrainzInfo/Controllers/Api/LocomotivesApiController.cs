@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -374,7 +375,7 @@ namespace TrainzInfo.Controllers.Api
                     }
 
                     _context.Locomotives.Add(locomotive);
-                });
+                }, IsolationLevel.Serializable);
                 return Ok();
             }
             catch (Exception ex)

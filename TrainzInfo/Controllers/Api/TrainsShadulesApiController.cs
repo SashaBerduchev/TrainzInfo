@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.RequestDTO;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoModel.Models.Trains;
@@ -29,7 +31,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetShedullers([FromQuery] int trainid)
         {
             Log.Init("TrainsShadulesApiController", "GetShedullers");
-            
+
             Log.Wright($"Получение расписания по поезду с ID: {trainid}");
             try
             {
@@ -73,73 +75,76 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> SaveSchaduller([FromBody] TrainCreateRequest trainCreateRequest)
         {
             Log.Init(this.ToString(), nameof(SaveSchaduller));
-            
+
 
             TrainDTO trainDTO = trainCreateRequest.Train;
             int isExist = await _context.TrainsShadule
                 .Include(x => x.Train)
                 .Where(x => x.Train.id == trainCreateRequest.Train.Id)
                 .CountAsync();
-            if(isExist > 0)
-            {
-                List<TrainsShadule> trainsShadulesDelete = await _context.TrainsShadule
-                    .Include(x=>x.Train)
-                    .Where(x => x.Train.id == trainCreateRequest.Train.Id)
-                    .ToListAsync();
-
-                List<StationsShadule> stationsShadulesDelete = await _context.StationsShadules
-                    .Include(x=>x.Train)
-                    .Where(x => x.Train.id == trainCreateRequest.Train.Id)
-                    .ToListAsync();
-                _context.RemoveRange(stationsShadulesDelete);
-                _context.RemoveRange(trainsShadulesDelete);
-                await _context.SaveChangesAsync();
-            }
-
             List<TrainsShaduleDTO> shadulesDTO = trainCreateRequest.TrainsShedullers;
             try
             {
-                Train train = await _context.Trains.Where(x => x.id == trainDTO.Id).FirstOrDefaultAsync();
-
-                List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
-                foreach (var item in shadulesDTO)
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    Stations stations = await _context.Stations
-                        .Include(x => x.UkrainsRailways)
-                        .Where(x => x.Name == item.NameStation).FirstOrDefaultAsync();
-                    TrainsShadule trainsShadule = new TrainsShadule();
-                    trainsShadule.Arrival = item.Arrival;
-                    trainsShadule.NumberTrain = item.NumberTrain;
-                    trainsShadule.Train = train;
-                    trainsShadule.Departure = item.Departure;
-                    trainsShadule.Stations = stations;
+                    if (isExist > 0)
+                    {
+                        List<TrainsShadule> trainsShadulesDelete = await _context.TrainsShadule
+                            .Include(x => x.Train)
+                            .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                            .ToListAsync();
 
-                    StationsShadule stationsShadule = new StationsShadule();
-                    stationsShadule.Train = train;
-                    stationsShadule.NumberTrain = train.Number;
-                    stationsShadule.TimeOfArrive = trainsShadule.Arrival;
-                    stationsShadule.TimeOfDepet = trainsShadule.Departure;
-                    stationsShadule.IsUsing = true;
-                    stationsShadule.UzFilia = stations.Railway;
-                    stationsShadule.UkrainsRailways = stations.UkrainsRailways;
-                    stationsShadule.Stations = stations;
-                    stationsShadule.Station = stations.Name;
+                        List<StationsShadule> stationsShadulesDelete = await _context.StationsShadules
+                            .Include(x => x.Train)
+                            .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                            .ToListAsync();
+                        _context.RemoveRange(stationsShadulesDelete);
+                        _context.RemoveRange(trainsShadulesDelete);
+
+                    }
 
 
-                    if (train.TrainsShadules is null)
-                        train.TrainsShadules = new List<TrainsShadule>();
+                    Train train = await _context.Trains.Where(x => x.id == trainDTO.Id).FirstOrDefaultAsync();
 
-                    train.TrainsShadules.Add(trainsShadule);
+                    List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
+                    foreach (var item in shadulesDTO)
+                    {
+                        Stations stations = await _context.Stations
+                            .Include(x => x.UkrainsRailways)
+                            .Where(x => x.Name == item.NameStation).FirstOrDefaultAsync();
+                        TrainsShadule trainsShadule = new TrainsShadule();
+                        trainsShadule.Arrival = item.Arrival;
+                        trainsShadule.NumberTrain = item.NumberTrain;
+                        trainsShadule.Train = train;
+                        trainsShadule.Departure = item.Departure;
+                        trainsShadule.Stations = stations;
 
-                    if (stations.StationsShadules is null)
-                        stations.StationsShadules = new List<StationsShadule>();
-                    stations.StationsShadules.Add(stationsShadule);
+                        StationsShadule stationsShadule = new StationsShadule();
+                        stationsShadule.Train = train;
+                        stationsShadule.NumberTrain = train.Number;
+                        stationsShadule.TimeOfArrive = trainsShadule.Arrival;
+                        stationsShadule.TimeOfDepet = trainsShadule.Departure;
+                        stationsShadule.IsUsing = true;
+                        stationsShadule.UzFilia = stations.Railway;
+                        stationsShadule.UkrainsRailways = stations.UkrainsRailways;
+                        stationsShadule.Stations = stations;
+                        stationsShadule.Station = stations.Name;
 
-                    _context.TrainsShadule.Add(trainsShadule);
-                }
-                await _context.SaveChangesAsync();
+
+                        if (train.TrainsShadules is null)
+                            train.TrainsShadules = new List<TrainsShadule>();
+
+                        train.TrainsShadules.Add(trainsShadule);
+
+                        if (stations.StationsShadules is null)
+                            stations.StationsShadules = new List<StationsShadule>();
+                        stations.StationsShadules.Add(stationsShadule);
+
+                        _context.TrainsShadule.Add(trainsShadule);
+                    }
+                }, IsolationLevel.Serializable);
                 return Ok();
-
+                
             }
             catch (Exception ex)
             {
@@ -157,7 +162,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> DeleteConfirm(int id)
         {
             Log.Init(this.ToString(), nameof(DeleteConfirm));
-            
+
 
             Log.Wright("Start loading train adn schad");
             int trainid = id;
@@ -179,38 +184,39 @@ namespace TrainzInfo.Controllers.Api
                                 .Where(s => s.Train.id == trainid)
                                 .Select(s => new TrainUnionDTO
                                 {
-                                   TrainId = s.Train.id, 
-                                   TrainSchadID = s.id, 
-                                   StationSchadID = 0,
-                                   StationID = 0,
+                                    TrainId = s.Train.id,
+                                    TrainSchadID = s.id,
+                                    StationSchadID = 0,
+                                    StationID = 0,
                                 })
                                 .Union(
                                     _context.StationsShadules
                                     .Include(y => y.Stations)
-                                    .Include(y=>y.Train)
-                                        .ThenInclude(x=>x.TrainsShadules)
+                                    .Include(y => y.Train)
+                                        .ThenInclude(x => x.TrainsShadules)
                                     .Where(y => y.Train.id == trainid)
-                                    .Select(y=> new TrainUnionDTO
+                                    .Select(y => new TrainUnionDTO
                                     {
-                                        TrainId = y.Train.id, StationSchadID = y.id, 
+                                        TrainId = y.Train.id,
+                                        StationSchadID = y.id,
                                         StationID = y.Stations.id,
                                         TrainSchadID = y.Train.TrainsShadules.Where(x => x.Stations.Name == y.Stations.Name)
-                                        .Select(x=>x.id).FirstOrDefault()
+                                        .Select(x => x.id).FirstOrDefault()
                                     })
                                 )
                         )
                         .ToListAsync();
 
-                
+
                 _context.Trains.Remove(await _context.Trains.Where(x => x.id == trainid).FirstOrDefaultAsync());
                 foreach (var t in result)
                 {
                     TrainsShadule trainsShadule = await _context.TrainsShadule.Where(x => x.id == t.TrainSchadID).FirstOrDefaultAsync();
-                    if(trainsShadule is not null)
+                    if (trainsShadule is not null)
                         _context.TrainsShadule.Remove(trainsShadule);
 
                     StationsShadule stationsShadule = await _context.StationsShadules.Where(x => x.id == t.StationSchadID).FirstOrDefaultAsync();
-                    if(stationsShadule is not null)
+                    if (stationsShadule is not null)
                         _context.StationsShadules.Remove(stationsShadule);
                 }
                 await _context.SaveChangesAsync();
