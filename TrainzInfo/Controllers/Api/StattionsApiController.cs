@@ -20,6 +20,7 @@ using TrainzInfoModel.Models.Information.Images;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
+using static NuGet.Packaging.PackagingConstants;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace TrainzInfo.Controllers.Api
@@ -53,7 +54,7 @@ namespace TrainzInfo.Controllers.Api
             };
 
             string cacheKey = $"stations_{JsonSerializer.Serialize(filters)}";
-            int pageSize = 7;
+            int pageSize = 10;
             if (!_cache.TryGetValue(cacheKey, out List<StationsDTO> stations))
             {
 
@@ -143,51 +144,58 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Details(int id)
         {
             Log.Init(this.ToString(), nameof(Details));
-
-            try
+            string cacheKey = $"stations_{id}";
+            if (!_cache.TryGetValue(cacheKey, out StationsDetailsDTO station))
             {
-                StationsDetailsDTO station = await _context.Stations
-                .Where(x => x.id == id)
-                .Select(xs => new StationsDetailsDTO
+                try
                 {
-                    id = xs.id,
-                    Name = xs.Name,
-                    Citys = xs.Citys.Name,
-                    Oblasts = xs.Oblasts.Name,
-                    UkrainsRailways = xs.UkrainsRailways.Name,
-                    stationsShadulers = xs.StationsShadules.Select(ss => new StationsShadulerDTO
+                    station = await _context.Stations
+                    .Where(x => x.id == id)
+                    .Select(xs => new StationsDetailsDTO
                     {
-                        id = ss.id,
-                        Train = ss.NumberTrain,
-                        NumberTrain = ss.NumberTrain,
-                        TrainFrom = ss.Train.From.Name ?? "Невідомо", // Захист від null
-                        TrainTo = ss.Train.To.Name ?? "Невідомо",
-                        TimeOfDepet = ss.TimeOfDepet,
-                        TimeOfArrive = ss.TimeOfArrive,
-                    }).ToList(),
+                        id = xs.id,
+                        Name = xs.Name,
+                        Citys = xs.Citys.Name,
+                        Oblasts = xs.Oblasts.Name,
+                        UkrainsRailways = xs.UkrainsRailways.Name,
+                        stationsShadulers = xs.StationsShadules.Select(ss => new StationsShadulerDTO
+                        {
+                            id = ss.id,
+                            Train = ss.NumberTrain,
+                            NumberTrain = ss.NumberTrain,
+                            TrainFrom = ss.Train.From.Name ?? "Невідомо", // Захист від null
+                            TrainTo = ss.Train.To.Name ?? "Невідомо",
+                            TimeOfDepet = ss.TimeOfDepet,
+                            TimeOfArrive = ss.TimeOfArrive,
+                        }).ToList(),
 
-                    // Передаємо просто байти і тип! Ніяких Convert у запиті!
-                    ImageBytes = xs.StationImages.Image,
-                    ImageMime = xs.StationImages.ImageMimeTypeOfData,
+                        // Передаємо просто байти і тип! Ніяких Convert у запиті!
+                        ImageBytes = xs.StationImages.Image,
+                        ImageMime = xs.StationImages.ImageMimeTypeOfData,
 
-                    StationInfo = xs.StationInfo.AllInfo,
-                    BaseInfo = xs.StationInfo.BaseInfo,
-                    AllInfo = xs.StationInfo.AllInfo,
-                })
-                .FirstOrDefaultAsync();
-                Log.Wright("Station details successfully retrieved from database");
-                return Ok(station);
+                        StationInfo = xs.StationInfo.AllInfo,
+                        BaseInfo = xs.StationInfo.BaseInfo,
+                        AllInfo = xs.StationInfo.AllInfo,
+                    })
+                    .FirstOrDefaultAsync();
+                    Log.Wright("Station details successfully retrieved from database");
+                    _cache.Set(cacheKey, station, new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(15))
+                        .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token)));
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions($"Error retrieving station details: {ex.ToString()}");
+                    Log.Wright("Error retrieving station details: " + ex.ToString());
+                    return StatusCode(500, "Internal server error");
+                }
+                finally
+                {
+                    Log.Finish();
+                }
+
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions($"Error retrieving station details: {ex.ToString()}");
-                Log.Wright("Error retrieving station details: " + ex.ToString());
-                return StatusCode(500, "Internal server error");
-            }
-            finally
-            {
-                Log.Finish();
-            }
+            return Ok(station);
         }
 
         [HttpGet("get-filias")]

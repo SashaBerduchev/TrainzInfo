@@ -1,23 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
-using TrainzInfoLog;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -26,10 +30,12 @@ namespace TrainzInfo.Controllers.Api
     public class ElectricTrainsApiController : Controller
     {
         private readonly ApplicationContext _context;
-
-        public ElectricTrainsApiController(ApplicationContext context)
+        private static CancellationTokenSource _cancellationTokenSource = new();
+        private IMemoryCache _cache;
+        public ElectricTrainsApiController(ApplicationContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         [HttpGet("update")]
@@ -91,75 +97,91 @@ namespace TrainzInfo.Controllers.Api
             Log.Init(this.ToString(), nameof(GetElectrics));
             
             int pageSize = 5;
-            try
+
+            var filters = new
             {
-                Log.Wright("Loading electrics");
-                IQueryable<ElectricTrain> query = _context
-                    .Electrics
-                    .Include(d => d.DepotList)
-                    .Include(p => p.PlantsCreate)
-                    .Include(k => k.PlantsKvr)
-                    .Include(c => c.City)
-                        .ThenInclude(o => o.Oblasts)
-                    .Include(u => u.DepotList)
-                        .ThenInclude(o => o.UkrainsRailway)
-                    .Include(t => t.Trains)
-                    .Include(e => e.ElectrickTrainzInformation)
-                    .Include(x=>x.Stations)
-                    .AsQueryable();
-                if (!string.IsNullOrEmpty(depo))
+                filia = filia?.Trim().ToLower(),
+                name = name?.Trim().ToLower(),
+                depo = depo?.Trim().ToLower(),
+                page
+            };
+            string cacheKey = $"eelctrics_{JsonSerializer.Serialize(filters)}";
+            if (!_cache.TryGetValue(cacheKey, out List<ElectricTrainDTO> electrics))
+            {
+                try
                 {
-                    query = query.Where(x => x.DepotList.Name == depo);
-                }
-                if (!string.IsNullOrEmpty(name))
-                {
-                    query = query.Where(x => x.Name == name);
-                }
-                if (!string.IsNullOrEmpty(filia))
-                {
-                    query = query.Where(x => x.DepotList.UkrainsRailway.Name == filia);
-                }
-
-                query = query.OrderBy(x => x.Trains.Model).OrderBy(x => x.Model);
-                query = query.Skip((page - 1) * pageSize)
-                    .Take(pageSize);
-
-                List<ElectricTrain> electricTrains = await query.ToListAsync();
-                List<ElectricTrainDTO> electrics = electricTrains
-                    .AsParallel()
-                    .Select(x => new ElectricTrainDTO
+                    Log.Wright("Loading electrics");
+                    IQueryable<ElectricTrain> query = _context
+                        .Electrics
+                        .Include(d => d.DepotList)
+                        .Include(p => p.PlantsCreate)
+                        .Include(k => k.PlantsKvr)
+                        .Include(c => c.City)
+                            .ThenInclude(o => o.Oblasts)
+                        .Include(u => u.DepotList)
+                            .ThenInclude(o => o.UkrainsRailway)
+                        .Include(t => t.Trains)
+                        .Include(e => e.ElectrickTrainzInformation)
+                        .Include(x => x.Stations)
+                        .AsQueryable();
+                    if (!string.IsNullOrEmpty(depo))
                     {
-                        id = x.id,
-                        Name = x.Name,
-                        Model = x.Model,
-                        MaxSpeed = x.MaxSpeed,
-                        DepotTrain = x.DepotTrain,
-                        DepotCity = x.DepotCity,
-                        
-                        Image = x.Image != null
-                                    ? $"api/electrictrains/{x.id}/image?width=300" : null,
-                        ImageMimeTypeOfData = x.ImageMimeTypeOfData,
-                        DepotList = x.DepotList.Name,
-                        Oblast = x.City.Oblasts.Name,
-                        UkrainsRailway = x.DepotList.UkrainsRailway.Name,
-                        City = x.City.Name,
-                        TrainsInfo = x.Trains?.BaseInfo,
-                        ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation,
-                        Station = x.Stations?.Name
-                    }).ToList();
-                Log.Wright("Electrics loaded query: " + query.ToQueryString());
-                return Ok(electrics);
+                        query = query.Where(x => x.DepotList.Name == depo);
+                    }
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        query = query.Where(x => x.Name == name);
+                    }
+                    if (!string.IsNullOrEmpty(filia))
+                    {
+                        query = query.Where(x => x.DepotList.UkrainsRailway.Name == filia);
+                    }
+
+                    query = query.OrderBy(x => x.Trains.Model).OrderBy(x => x.Model);
+                    query = query.Skip((page - 1) * pageSize)
+                        .Take(pageSize);
+
+                    List<ElectricTrain> electricTrains = await query.ToListAsync();
+                    electrics = electricTrains
+                        .AsParallel()
+                        .Select(x => new ElectricTrainDTO
+                        {
+                            id = x.id,
+                            Name = x.Name,
+                            Model = x.Model,
+                            MaxSpeed = x.MaxSpeed,
+                            DepotTrain = x.DepotTrain,
+                            DepotCity = x.DepotCity,
+
+                            Image = x.Image != null
+                                        ? $"api/electrictrains/{x.id}/image?width=300" : null,
+                            ImageMimeTypeOfData = x.ImageMimeTypeOfData,
+                            DepotList = x.DepotList.Name,
+                            Oblast = x.City.Oblasts.Name,
+                            UkrainsRailway = x.DepotList.UkrainsRailway.Name,
+                            City = x.City.Name,
+                            TrainsInfo = x.Trains?.BaseInfo,
+                            ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation,
+                            Station = x.Stations?.Name
+                        }).ToList();
+                    Log.Wright("Electrics loaded query: " + query.ToQueryString());
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                                   .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                    _cache.Set(cacheKey, electrics, cacheOptions);
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.ToString()} ");
+                    Log.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
+                    return StatusCode(500, "Internal server error");
+                }
+                finally
+                {
+                    Log.Finish();
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.ToString()} ");
-                Log.Wright($"Error in {this.ToString()} method {nameof(GetElectrics)}: {ex.Message} ");
-                return StatusCode(500, "Internal server error");
-            }
-            finally
-            {
-                Log.Finish();
-            }
+            return Ok(electrics);
         }
 
 
@@ -309,6 +331,9 @@ namespace TrainzInfo.Controllers.Api
                     }
                     depot.ElectricTrains.Add(electricTrain);
                 }, IsolationLevel.Serializable);
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
                 return Ok();
             }
             catch (Exception ex)

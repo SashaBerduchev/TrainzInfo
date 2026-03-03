@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
-using TrainzInfoLog;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -23,6 +25,7 @@ namespace TrainzInfo.Controllers.Api
     public class DieselTrainsApiController : Controller
     {
         private readonly ApplicationContext _context;
+        
         public DieselTrainsApiController(ApplicationContext context)
         {
             _context = context;

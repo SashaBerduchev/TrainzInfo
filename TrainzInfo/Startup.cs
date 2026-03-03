@@ -68,8 +68,10 @@ namespace TrainzInfo
 
             string connection = "";
             string trace = "";
-            Log.Wright("Try add DB context");
             services.AddMemoryCache();
+            services.AddHostedService<CacheWarmupService>();
+
+            Log.Wright("Try add DB context");
             Log.Wright("Try add session");
             services.AddSession(options =>
             {
@@ -150,6 +152,7 @@ namespace TrainzInfo
             });
 
             services.AddHostedService<SearchIndexingService>();
+            services.AddHostedService<UpdateCaches>();
 
             services.AddScoped<EncryptionService>();
             services.AddScoped<MailSettingsService>();

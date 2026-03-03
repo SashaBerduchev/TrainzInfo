@@ -1,0 +1,162 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
+using System;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using TrainzInfo.Data;
+using TrainzInfoLog;
+using TrainzInfoShared.DTO.GetDTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace TrainzInfo.Tools.BackgroundServices
+{
+    public class CacheWarmupService : IHostedService
+    {
+        private readonly IServiceProvider _serviceProvider;
+        public CacheWarmupService(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            var cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+
+            await CacheNews(context, cache, cancellationToken);
+            await CacheLocomotives(context, cache, cancellationToken);
+            await CacheStations(context, cache, cancellationToken);
+        }
+
+        private async Task CacheStations(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
+        {
+            string filia = null;
+            string name = null;
+            string oblast = null;
+            int pageSize = 10;
+            for (int page = 1; page <= 10; page++)
+            {
+                var filters = new
+                {
+                    filia = filia?.Trim().ToLower(),
+                    name = name?.Trim().ToLower(),
+                    oblast = oblast?.Trim().ToLower(),
+                    page
+                };
+                string cacheKey = $"stations_{JsonSerializer.Serialize(filters)}";
+
+                var query = context.Stations;
+
+
+                var stations = await query
+                    .OrderBy(s => s.id)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(s => new StationsDTO
+                    {
+                        id = s.id,
+                        Name = s.Name,
+                        DopImgSrc = s.DopImgSrc,
+                        DopImgSrcSec = s.DopImgSrcSec,
+                        DopImgSrcThd = s.DopImgSrcThd,
+                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
+                        // EF Core сам зробить потрібні JOIN, Include не треба писати вручну
+                        UkrainsRailways = s.UkrainsRailways.Name,
+                        Oblasts = s.Oblasts.Name,
+                        Citys = s.Citys.Name,
+                        StationInfo = s.StationInfo.BaseInfo,
+                        Metro = s.Metro.Name,
+                        StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
+                    })
+                    .ToListAsync();
+
+
+                cache.Set(cacheKey, stations,
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+            }
+        }
+
+        private async Task CacheLocomotives(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
+        {
+            string filia = null;
+            string name = null;
+            string oblast = null;
+            int pageSize = 10;
+
+
+            for (int page = 1; page <= 10; page++)
+            {
+                var filters = new
+                {
+                    filia = (string)null,
+                    depot = (string)null,
+                    seria = (string)null,
+                    oblast = (string)null,
+                    page
+                };
+
+                string cacheKey = $"locomotives_{JsonSerializer.Serialize(filters)}";
+
+                var query = context.Locomotives.AsNoTracking()
+                    .OrderBy(x => x.Locomotive_Series.Seria)
+                    .ThenBy(x => x.Number)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+
+                var data = await query
+                    .Select(n => new LocomotiveDTO
+                    {
+                        Id = n.id,
+                        Number = n.Number,
+                        Speed = n.Speed,
+                        Depot = n.DepotList.Name,
+                        City = n.DepotList.City.Name,
+                        Oblast = n.DepotList.City.Oblasts.Name,
+                        Filia = n.DepotList.UkrainsRailway.Name,
+                        Seria = n.Locomotive_Series.Seria,
+                        Station = n.Stations.Name,
+                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
+                    }).ToListAsync();
+
+                cache.Set(cacheKey, data,
+                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+            }
+        }
+
+        private async Task CacheNews(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
+        {
+            int pageSize = 6;
+
+            for (int page = 1; page <= 5; page++) // прогріваємо перші 3 сторінки
+            {
+                string cacheKey = $"news_page_{page}";
+
+                var data = await context.NewsInfos
+                    .AsNoTracking()
+                    .OrderByDescending(n => n.DateTime)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(n => new NewsDTO
+                    {
+                        id = n.id,
+                        NameNews = n.NameNews,
+                        BaseNewsInfo = n.BaseNewsInfo,
+                        DateTime = n.DateTime.ToString("yyyy-MM-dd")
+                    })
+                    .ToListAsync();
+
+                cache.Set(cacheKey, data, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+            }
+        }
+
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        => Task.CompletedTask;
+    }
+}
