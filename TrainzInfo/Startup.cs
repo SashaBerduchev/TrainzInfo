@@ -15,6 +15,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Services;
 using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.JWT;
 using TrainzInfo.Tools.Mail;
@@ -72,6 +73,7 @@ namespace TrainzInfo
             Log.Wright("Try add memory cache and hosted services");
             services.AddMemoryCache();
             services.AddHostedService<CacheWarmupService>();
+            services.AddSingleton<NewsCacheService>();
 
             Log.Wright("Try add DB context");
             Log.Wright("Try add session");

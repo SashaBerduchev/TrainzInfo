@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Services;
 using TrainzInfoLog;
 using TrainzInfoShared.DTO.GetDTO;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -18,10 +19,12 @@ namespace TrainzInfo.Tools.BackgroundServices
     public class CacheWarmupService : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly NewsCacheService _newsCacheService;
         private CancellationTokenSource _cacheTokenSource = new CancellationTokenSource();
-        public CacheWarmupService(IServiceProvider serviceProvider)
+        public CacheWarmupService(IServiceProvider serviceProvider, NewsCacheService newsCacheService)
         {
             _serviceProvider = serviceProvider;
+            _newsCacheService = newsCacheService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -168,12 +171,11 @@ namespace TrainzInfo.Tools.BackgroundServices
                                 ? $"api/news/{n.NewsImages.id}/image?width=300" : null
                         })
                         .ToListAsync();
-
+                var token = _newsCacheService.GetToken();
                 cache.Set(cacheKey, data,
                     new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
-                        .AddExpirationToken(
-                            new CancellationChangeToken(_cacheTokenSource.Token)));
+                        .AddExpirationToken(token));
             }
         }
 

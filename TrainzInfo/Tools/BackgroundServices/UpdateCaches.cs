@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Services;
 using TrainzInfoLog;
 using TrainzInfoShared.DTO.GetDTO;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -19,6 +20,7 @@ namespace TrainzInfo.Tools.BackgroundServices
     {
         private readonly IServiceProvider _serviceProvider;
         private CancellationTokenSource _cacheTokenSource = new CancellationTokenSource();
+
         public UpdateCaches(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -38,9 +40,10 @@ namespace TrainzInfo.Tools.BackgroundServices
                 {
                     var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                     var cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+                    var token = scope.ServiceProvider.GetRequiredService<NewsCacheService>();
                     // 3. Выполняем логику индексации
-                    ClearCache(cache);
-                    await UpdateCache(context, cache);
+                    ClearCache(cache, token);
+                    await UpdateCache(context, cache, token);
                 }
                 Log.Wright("SearchIndexingService: Indexing process completed successfully.");
             }
@@ -55,7 +58,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             }
         }
 
-        private async Task UpdateCache(ApplicationContext context, IMemoryCache cache)
+        private async Task UpdateCache(ApplicationContext context, IMemoryCache cache, NewsCacheService token)
         {
             Log.Wright("UpdateCache: Starting cache update process.");
             Log.Wright("UpdateCache: Caching stations.");
@@ -63,14 +66,15 @@ namespace TrainzInfo.Tools.BackgroundServices
             Log.Wright("UpdateCache: Caching locomotives.");
             await CacheLocomotives(context, cache);
             Log.Wright("UpdateCache: Caching news.");
-            await CacheNews(context, cache);
+            await CacheNews(context, cache, token);
         }
 
-        private void ClearCache(IMemoryCache cache)
+        private void ClearCache(IMemoryCache cache, NewsCacheService token)
         {
             _cacheTokenSource.Cancel();           // всі записи стають недійсні
             _cacheTokenSource.Dispose();
             _cacheTokenSource = new CancellationTokenSource(); // новий токен для наступних записів
+            token.Clear(); // очищаємо кеш новин
         }
 
 
@@ -174,7 +178,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             }
         }
 
-        private async Task CacheNews(ApplicationContext context, IMemoryCache cache)
+        private async Task CacheNews(ApplicationContext context, IMemoryCache cache, NewsCacheService token)
         {
             int pageSize = 6;
 
@@ -200,11 +204,11 @@ namespace TrainzInfo.Tools.BackgroundServices
                                 ? $"api/news/{n.NewsImages.id}/image?width=300" : null
                         })
                         .ToListAsync();
-
+                var tokenForNews = token.GetToken();
                 cache.Set(cacheKey, data,
                     new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
-                        .AddExpirationToken(new CancellationChangeToken(_cacheTokenSource.Token)));
+                        .AddExpirationToken(tokenForNews));
             }
         }
     }

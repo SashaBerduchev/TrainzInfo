@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Migrations;
+using TrainzInfo.Services;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
@@ -34,8 +35,9 @@ namespace TrainzInfo.Controllers.Api
         private Mail _mail;
         private readonly ApplicationContext _context;
         private static CancellationTokenSource _newsCacheTokenSource = new();
+        private static NewsCacheService _newsCacheService;
         private IMemoryCache _cache;
-        public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail, IMemoryCache cache)
+        public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail, IMemoryCache cache, NewsCacheService newsCacheService)
              : base(userManager, context)
         {
             _context = context;
@@ -43,6 +45,7 @@ namespace TrainzInfo.Controllers.Api
             _mail = mail;
             _signInManager = signInManager;
             _cache = cache;
+            _newsCacheService = newsCacheService;
         }
         [Produces("application/json")]
         [HttpGet("getnews")]
@@ -245,6 +248,7 @@ namespace TrainzInfo.Controllers.Api
                 _newsCacheTokenSource.Cancel();
                 _newsCacheTokenSource.Dispose();
                 _newsCacheTokenSource = new CancellationTokenSource();
+                _newsCacheService?.Clear();
                 return Ok(number);
             }
             catch (Exception ex)
