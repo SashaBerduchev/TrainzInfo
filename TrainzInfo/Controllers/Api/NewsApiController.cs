@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Migrations;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
@@ -126,7 +127,7 @@ namespace TrainzInfo.Controllers.Api
             {
                 try
                 {
-                   
+
                     var news = await _context.NewsInfos
                         .Include(n => n.NewsComments)
                         .Include(n => n.User)
@@ -318,15 +319,43 @@ namespace TrainzInfo.Controllers.Api
                 {
                     return NotFound();
                 }
+                Log.Wright("NewsInfo Found Successfully");
+              
                 existingNews.NameNews = newsInfo.NameNews;
                 existingNews.BaseNewsInfo = newsInfo.BaseNewsInfo;
                 existingNews.NewsInfoAll = newsInfo.NewsInfoAll;
                 existingNews.DateEndActual = newsInfo.DateEndActual;
+                existingNews.DateTime = DateTime.UtcNow;
                 existingNews.LinkSorce = newsInfo.LinkSorce;
-                existingNews.NewsImages.Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null;
-                existingNews.NewsImages.ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData;
-                _context.NewsInfos.Update(existingNews);
+
+                if (newsInfo.NewsImage != null)
+                {
+                    if (existingNews.NewsImages == null)
+                    {
+                        existingNews.NewsImages = new NewsImage
+                        {
+                            Name = $"NewsImage_{existingNews.id}",
+                            CreatedAt = DateTime.Now,
+                            Image = Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]),
+                            ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData,
+                            NewsInfoId = existingNews.id
+                        };
+                        _context.NewsImages.Add(existingNews.NewsImages);
+                    }
+                    else
+                    {
+                        existingNews.NewsImages.Image = Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]);
+                        existingNews.NewsImages.ImageMimeTypeOfData = newsInfo.ImageMimeTypeOfData;
+                        existingNews.NewsImages.CreatedAt = DateTime.Now;
+                    }
+                }
+
                 await _context.SaveChangesAsync();
+                Log.Wright("NewsImage Updated Successfully");
+                _newsCacheTokenSource.Cancel();
+                _newsCacheTokenSource.Dispose();
+                _newsCacheTokenSource = new CancellationTokenSource();
+                Log.Finish();
                 return Ok();
             }
             catch (Exception ex)
