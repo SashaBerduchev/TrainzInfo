@@ -11,6 +11,7 @@ using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.RequestDTO;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoModel.Models.Trains;
 using TrainzInfoShared.DTO.GetDTO;

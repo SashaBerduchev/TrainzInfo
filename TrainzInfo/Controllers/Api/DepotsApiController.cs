@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoShared.DTO.GetDTO;
 

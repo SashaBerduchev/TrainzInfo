@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using TrainzInfoLog;
 
 namespace TrainzInfo.Tools
 {

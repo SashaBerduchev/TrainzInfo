@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text;
 
-namespace TrainzInfo.Tools
+namespace TrainzInfoLog
 {
     public class Log
     {
@@ -22,9 +20,10 @@ namespace TrainzInfo.Tools
         static string startStandartLogStr = "";
 
         private static readonly object _logLock = new object();
+
         public static void Init(string nameClass, string nameMethod)
         {
-            startStandartLogStr = DateTime.Now + " - [INF] " +  nameClass + " - " + nameMethod;
+            startStandartLogStr = DateTime.Now + " - [INF] " + nameClass + " - " + nameMethod;
             StandartLogFile(startStandartLogStr + " - " + "Start");
         }
         public static void Finish()

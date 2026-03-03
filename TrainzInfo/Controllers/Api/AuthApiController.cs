@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
+using TrainzInfoLog;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api

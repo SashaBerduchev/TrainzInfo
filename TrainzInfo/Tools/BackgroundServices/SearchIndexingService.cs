@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoModel.Models.System;
 using TrainzInfoModel.Models.Trains;

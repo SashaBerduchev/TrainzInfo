@@ -22,6 +22,43 @@
         <p><b>Кількість запитів:</b> @count</p>
     }
 </div>
+<!-- Фільтри -->
+<div class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedDepot">
+            <option value="">Всі депо</option>
+            @foreach (var depot in DepotList)
+            {
+                <option value="@depot">@depot</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedName">
+
+            <option value="">Всі назви</option>
+            @foreach (var name in NameList)
+            {
+                <option value="@name">@name</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <select class="form-control" @bind="SelectedFilia">
+            <option value="">Всі філії</option>
+            @foreach (var filia in FiliaList)
+            {
+                <option value="@filia">@filia</option>
+            }
+        </select>
+    </div>
+    <div class="col-12 col-md-4">
+        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    </div>
+</div>
+<div class="mb-4">
+    <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
+</div>
 
 @if (isLoading)
 {
@@ -32,43 +69,6 @@
 }
 else
 {
-    <!-- Фільтри -->
-    <div class="row g-2 mb-4">
-        <div class="col-12 col-md-4">
-            <select class="form-control" @bind="SelectedDepot">
-                <option value="">Всі депо</option>
-                @foreach (var depot in DepotList)
-                {
-                    <option value="@depot">@depot</option>
-                }
-            </select>
-        </div>
-        <div class="col-12 col-md-4">
-            <select class="form-control" @bind="SelectedName">
-
-                <option value="">Всі назви</option>
-                @foreach (var name in NameList)
-                {
-                    <option value="@name">@name</option>
-                }
-            </select>
-        </div>
-        <div class="col-12 col-md-4">
-            <select class="form-control" @bind="SelectedFilia">
-                <option value="">Всі філії</option>
-                @foreach (var filia in FiliaList)
-                {
-                    <option value="@filia">@filia</option>
-                }
-            </select>
-        </div>
-        <div class="col-12 col-md-4">
-            <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
-        </div>
-    </div>
-    <div class="mb-4">
-        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
-    </div>
 
     <div class="row" id="trainsContainer">
         @foreach (var train in ElectricTrains)

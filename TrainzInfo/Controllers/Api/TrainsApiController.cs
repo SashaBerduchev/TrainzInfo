@@ -10,6 +10,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.Mail;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Trains;
 using TrainzInfoShared.DTO.GetDTO;
 

@@ -15,10 +15,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Tools;
 using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.JWT;
 using TrainzInfo.Tools.Mail;
+using TrainzInfoLog;
 
 namespace TrainzInfo
 {

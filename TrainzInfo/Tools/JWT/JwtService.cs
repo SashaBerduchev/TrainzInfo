@@ -6,6 +6,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using TrainzInfoLog;
 
 namespace TrainzInfo.Tools.JWT
 {
@@ -28,7 +29,7 @@ namespace TrainzInfo.Tools.JWT
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName ?? user.Email),
+                new(ClaimTypes.Name, user.UserName ?? user.Email),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
+using TrainzInfoLog;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api

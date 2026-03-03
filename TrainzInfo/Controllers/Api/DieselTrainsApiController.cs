@@ -15,6 +15,7 @@ using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
+using TrainzInfoLog;
 
 namespace TrainzInfo.Controllers.Api
 {

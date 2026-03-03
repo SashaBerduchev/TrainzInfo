@@ -14,6 +14,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Information.Images;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
