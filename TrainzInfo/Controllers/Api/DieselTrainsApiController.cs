@@ -4,15 +4,11 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using System.IO;
-=======
 using System.Data;
->>>>>>> 98b49cfc12452dff8eb354285d390e122296b280
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfoModel.Models.Dictionaries.Addresses;

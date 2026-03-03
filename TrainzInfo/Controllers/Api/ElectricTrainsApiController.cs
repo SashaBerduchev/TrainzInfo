@@ -4,11 +4,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using System.IO;
-=======
 using System.Data;
->>>>>>> 98b49cfc12452dff8eb354285d390e122296b280
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -310,7 +307,7 @@ namespace TrainzInfo.Controllers.Api
                         depot.ElectricTrains = new List<ElectricTrain>();
                     }
                     depot.ElectricTrains.Add(electricTrain);
-                }, IsolationLevel.ReadCommitted);
+                }, IsolationLevel.Serializable);
                 return Ok();
             }
             catch (Exception ex)

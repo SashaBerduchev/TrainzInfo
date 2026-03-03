@@ -5,11 +5,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using System.IO;
-=======
 using System.Data;
->>>>>>> 98b49cfc12452dff8eb354285d390e122296b280
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -487,51 +484,6 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-<<<<<<< HEAD
-=======
-        [HttpPost("deleteapprove/{id}")]
-        //[Authorize(Roles = "Superadmin, Admin")]
-        public async Task<ActionResult> DeleteLocomotive(int id)
-        {
-            try
-            {
-                Log.Init("LocomotivesApiController", "DeleteLocomotive");
-
-                Log.Wright("Start Delete DeleteLocomotive");
-                var locomotive = await _context.Locomotives.FindAsync(id);
-                var linkedDocuments = await _context.DocumentToIndex
-                    .Include(x=>x.Locomotive)
-                    .Where(d => d.Locomotive.id == id)
-                    .ToListAsync();
-
-                // Якщо такі документи є — кажемо EF Core видалити і їх теж
-                if (linkedDocuments.Any())
-                {
-                    _context.DocumentToIndex.RemoveRange(linkedDocuments);
-                }
-                if (locomotive == null)
-                {
-                    return NotFound();
-                }
-                _context.Locomotives.Remove(locomotive);
-                await _context.SaveChangesAsync();
-                Log.Finish();
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                Log.Finish();
-                return BadRequest(ex.ToString());
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
-        }
->>>>>>> 98b49cfc12452dff8eb354285d390e122296b280
 
         [HttpGet("getfilias")]
         [Produces("application/json")]
@@ -681,15 +633,29 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Init("LocomotivesApiController", "DeleteLocomotive");
-
                 Log.Wright("Start Delete DeleteLocomotive");
+
                 var locomotive = await _context.Locomotives.FindAsync(id);
                 if (locomotive == null)
                 {
                     return NotFound();
                 }
+
+                // 1. Знаходимо всі пов'язані записи в таблиці DocumentToIndex
+                var relatedDocuments = await _context.DocumentToIndex
+                    .Where(d => d.Locomotive.id == id)
+                    .ToListAsync();
+
+                // 2. Спочатку видаляємо їх
+                if (relatedDocuments.Any())
+                {
+                    _context.DocumentToIndex.RemoveRange(relatedDocuments);
+                }
+
+                // 3. Тепер база даних дозволить безпечно видалити сам локомотив
                 _context.Locomotives.Remove(locomotive);
                 await _context.SaveChangesAsync();
+
                 Log.Finish();
                 return Ok();
             }
