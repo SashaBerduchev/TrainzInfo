@@ -179,18 +179,23 @@ namespace TrainzInfo.Tools.BackgroundServices
                 string cacheKey = $"news_page_{page}";
 
                 var data = await context.NewsInfos
-                    .AsNoTracking()
-                    .OrderByDescending(n => n.DateTime)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(n => new NewsDTO
-                    {
-                        id = n.id,
-                        NameNews = n.NameNews,
-                        BaseNewsInfo = n.BaseNewsInfo,
-                        DateTime = n.DateTime.ToString("yyyy-MM-dd")
-                    })
-                    .ToListAsync();
+                        .Include(n => n.NewsComments)
+                        .Include(n => n.User)
+                        .Include(n => n.NewsImages)
+                        .OrderByDescending(n => n.DateTime)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .Select(n => new NewsDTO
+                        {
+                            id = n.id,
+                            NameNews = n.NameNews,
+                            BaseNewsInfo = n.BaseNewsInfo,
+                            NewsInfoAll = n.NewsInfoAll,
+                            DateTime = n.DateTime.ToString("yyyy-MM-dd"),
+                            ImgSrc = n.NewsImages.Image != null
+                                ? $"api/news/{n.NewsImages.id}/image?width=300" : null
+                        })
+                        .ToListAsync();
 
                 cache.Set(cacheKey, data,
                     new MemoryCacheEntryOptions()
