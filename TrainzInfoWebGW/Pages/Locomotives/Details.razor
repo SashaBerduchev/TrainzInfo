@@ -212,7 +212,7 @@ else
         if (!await Confirm("Ви впевнені що хочете видалити локомотив?"))
             return;
 
-        var response = await Http.DeleteAsync($"api/locomotives/deleteapprove/{Id}");
+        var response = await Http.PostAsync($"api/locomotives/deleteapprove/{Id}", null);
 
         if (response.IsSuccessStatusCode)
             Nav.NavigateTo("/locomotives");
