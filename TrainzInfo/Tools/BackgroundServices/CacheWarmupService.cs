@@ -18,6 +18,7 @@ namespace TrainzInfo.Tools.BackgroundServices
     public class CacheWarmupService : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
+        private CancellationTokenSource _cacheTokenSource = new CancellationTokenSource();
         public CacheWarmupService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -78,7 +79,10 @@ namespace TrainzInfo.Tools.BackgroundServices
 
 
                 cache.Set(cacheKey, stations,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+                    new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                        .AddExpirationToken(
+                            new CancellationChangeToken(_cacheTokenSource.Token)));
             }
         }
 
@@ -125,7 +129,10 @@ namespace TrainzInfo.Tools.BackgroundServices
                     }).ToListAsync();
 
                 cache.Set(cacheKey, data,
-                    new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+                   new MemoryCacheEntryOptions()
+                       .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                       .AddExpirationToken(
+                           new CancellationChangeToken(_cacheTokenSource.Token)));
             }
         }
 
@@ -156,7 +163,11 @@ namespace TrainzInfo.Tools.BackgroundServices
                         })
                         .ToListAsync();
 
-                cache.Set(cacheKey, data, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(20)));
+                cache.Set(cacheKey, data,
+                    new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                        .AddExpirationToken(
+                            new CancellationChangeToken(_cacheTokenSource.Token)));
             }
         }
 
