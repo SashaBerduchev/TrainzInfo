@@ -68,6 +68,8 @@ namespace TrainzInfo
 
             string connection = "";
             string trace = "";
+
+            Log.Wright("Try add memory cache and hosted services");
             services.AddMemoryCache();
             services.AddHostedService<CacheWarmupService>();
 
@@ -143,6 +145,7 @@ namespace TrainzInfo
                 });
             });
 
+            Log.Wright("Try add JWT services");
             var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
             services.AddSingleton(jwtSettings);
             services.AddSingleton<JwtService>(sp =>
@@ -151,6 +154,7 @@ namespace TrainzInfo
                 return new JwtService(settings.Secret, settings.Issuer);
             });
 
+            Log.Wright("Try add background services");
             services.AddHostedService<SearchIndexingService>();
             services.AddHostedService<UpdateCaches>();
 

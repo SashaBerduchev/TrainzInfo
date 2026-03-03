@@ -193,11 +193,14 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult<LocomotiveDTO>> GetLocomotive(int id)
         {
             string cacheKey = $"locomotives_details_{id}";
+            Log.Init("LocomotivesApiController", "GetLocomotive");
+
+            Log.Wright("Start Get GetLocomotive with id: " + id);
             if (!_cache.TryGetValue(cacheKey, out LocomotiveDTO locomotive))
             {
                 try
                 {
-                    Log.Init("LocomotivesApiController", "GetLocomotive");
+                    
 
                     Log.Wright("Start Get GetLocomotive");
                     locomotive = await _context.Locomotives
@@ -238,6 +241,9 @@ namespace TrainzInfo.Controllers.Api
                             : null
                         }
                     ).FirstOrDefaultAsync();
+
+                    Log.Wright("Locomotive found: " + locomotive?.Seria + " " + locomotive?.Number);
+                    Log.Wright("Caching locomotive details with key: " + cacheKey);
                     var cacheOptions = new MemoryCacheEntryOptions()
                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
                                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
@@ -250,11 +256,8 @@ namespace TrainzInfo.Controllers.Api
                     return BadRequest(ex.ToString());
                     throw;
                 }
-                finally
-                {
-                    Log.Finish();
-                }
             }
+            Log.Finish();
             return Ok(locomotive);
         }
 

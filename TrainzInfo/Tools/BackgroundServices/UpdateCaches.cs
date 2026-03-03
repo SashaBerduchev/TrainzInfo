@@ -57,8 +57,12 @@ namespace TrainzInfo.Tools.BackgroundServices
 
         private async Task UpdateCache(ApplicationContext context, IMemoryCache cache)
         {
+            Log.Wright("UpdateCache: Starting cache update process.");
+            Log.Wright("UpdateCache: Caching stations.");
             await CacheStations(context, cache);
+            Log.Wright("UpdateCache: Caching locomotives.");
             await CacheLocomotives(context, cache);
+            Log.Wright("UpdateCache: Caching news.");
             await CacheNews(context, cache);
         }
 

@@ -26,13 +26,19 @@ namespace TrainzInfo.Tools.BackgroundServices
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            Log.Wright("CacheWarmupService запущено");
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
             var cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
 
+            Log.Wright("Починаємо прогрів кешу...");
+            Log.Wright("Прогрів кешу для новин...");
             await CacheNews(context, cache, cancellationToken);
+            Log.Wright("Прогрів кешу для локомотивів...");
             await CacheLocomotives(context, cache, cancellationToken);
+            Log.Wright("Прогрів кешу для станцій...");
             await CacheStations(context, cache, cancellationToken);
+            Log.Wright("Прогрів кешу завершено");
         }
 
         private async Task CacheStations(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)

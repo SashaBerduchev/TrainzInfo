@@ -38,7 +38,7 @@ namespace TrainzInfoLog
             {
                 string logstr = "------Start log------- \n " + DateTime.Now + "\n" + log + "\n -------End Log--------" + "\n" + "\n" + "\n";
                 Trace.WriteLine(logstr);
-                Console.WriteLine(logstr);
+                //Console.WriteLine(logstr);
                 string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + SQLserversLog);
 
                 lock (_logLock)
