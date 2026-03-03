@@ -4,6 +4,7 @@
 @inject HttpClient Http
 @inject NavigationManager Nav;
 @inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
 @inject IJSRuntime JS
 
 <h1 class="mb-4 text-center">Дизель-поїзди</h1>
@@ -79,7 +80,7 @@
                     <div class="row g-0">
                         <div class="col-12 col-md-4">
                             <img class="img-fluid rounded-start"
-                                 src="@item.Image"
+                                 src="@(Config.ApiBaseUrl + item.Image)"
                                  alt="Дизель-поїзд" />
                         </div>
                         <div class="col-12 col-md-5 p-3">

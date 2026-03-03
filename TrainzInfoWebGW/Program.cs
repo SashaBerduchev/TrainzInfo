@@ -19,5 +19,5 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseUrl) });
-
+builder.Services.AddSingleton(new AppConfig { ApiBaseUrl = apiBaseUrl });
 await builder.Build().RunAsync();

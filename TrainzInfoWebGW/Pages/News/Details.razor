@@ -1,6 +1,6 @@
 ﻿@page "/news/details/{id:int}"
-@using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
+@inject AppConfig Config
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Nav
@@ -36,9 +36,9 @@
                 <div class="col-lg-5 order-1 order-lg-2 mb-4 mb-lg-0">
                     <div class="sticky-lg-top" style="top: 2rem;">
                         <div class="image-wrapper shadow-lg">
-                            @if (!string.IsNullOrWhiteSpace(news.NewsImage))
+                            @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
                             {
-                                <img src="@news.NewsImage" alt="@news.NameNews" class="img-fluid rounded-4" />
+                                <img src="@(Config.ApiBaseUrl + news.ImgSrc)" alt="@news.NameNews" class="img-fluid rounded-4" />
                             }
                             else
                             {
@@ -165,7 +165,7 @@ else
                 : news.BaseNewsInfo.Length > 150
                     ? news.BaseNewsInfo[..150]
                     : news.BaseNewsInfo,
-                    news.NewsImage
+                    news.ImgSrc
         );
     }
 

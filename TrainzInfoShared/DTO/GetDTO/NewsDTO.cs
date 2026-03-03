@@ -10,7 +10,7 @@ namespace TrainzInfoShared.DTO.GetDTO
         public string BaseNewsInfo { get; set; }
         public string NewsInfoAll { get; set; }
         public string DateTime { get; set; }
-        public string NewsImage { get; set; }
+        public string ImgSrc { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public string username { get; set; }
         public string LinkSorce { get; set; }

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -127,8 +130,7 @@ namespace TrainzInfo.Controllers.Api
                     Oblast = dt.DepotList.City.Oblasts.Name,
                     Filia = dt.DepotList.UkrainsRailway.Name,
                     Image = dt.Image != null
-                                        ? $"data:{dt.ImageMimeTypeOfData};base64,{Convert.ToBase64String(dt.Image)}"
-                                        : null,
+                                    ? $"api/diesels/{dt.Id}/image?width=300" : null,
                     ImageMimeTypeOfData = dt.ImageMimeTypeOfData,
                     Station = dt.Stations?.Name
                 })
@@ -146,6 +148,25 @@ namespace TrainzInfo.Controllers.Api
             {
                 Log.Finish();
             }
+        }
+
+
+        [HttpGet("{id}/image")]
+        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
+        {
+            var loco = await _context.DieselTrains.FindAsync(id);
+            if (loco?.Image == null) return NotFound();
+
+            // Тут використовуємо ImageSharp для ресайзу
+            using var image = Image.Load(loco.Image);
+            image.Mutate(x => x.Resize(width, 0));
+
+            var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
+            ms.Position = 0;
+
+            return File(ms, "image/jpeg");
         }
 
         [HttpGet("details/{id}")]

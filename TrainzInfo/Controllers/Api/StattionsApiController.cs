@@ -58,48 +58,28 @@ namespace TrainzInfo.Controllers.Api
                 }
 
 
-                var rawData = await query
+                var result = await query
                     .OrderBy(s => s.id)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .Select(s => new
+                    .Select(s => new StationsDTO
                     {
-                        s.id,
-                        s.Name,
-                        s.DopImgSrc,
-                        s.DopImgSrcSec,
-                        s.DopImgSrcThd,
-                        s.ImageMimeTypeOfData,
+                        id = s.id,
+                        Name = s.Name,
+                        DopImgSrc = s.DopImgSrc,
+                        DopImgSrcSec = s.DopImgSrcSec,
+                        DopImgSrcThd = s.DopImgSrcThd,
+                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
                         // EF Core сам зробить потрібні JOIN, Include не треба писати вручну
                         UkrainsRailways = s.UkrainsRailways.Name,
                         Oblasts = s.Oblasts.Name,
                         Citys = s.Citys.Name,
                         StationInfo = s.StationInfo.BaseInfo,
                         Metro = s.Metro.Name,
-
-                        RawImageBytes = s.StationImages.Image,
-                        RawImageMime = s.StationImages.ImageMimeTypeOfData
+                        StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
                     })
                     .ToListAsync();
 
-                var result = rawData.Select(item => new StationsDTO
-                {
-                    id = item.id,
-                    Name = item.Name,
-                    DopImgSrc = item.DopImgSrc,
-                    DopImgSrcSec = item.DopImgSrcSec,
-                    DopImgSrcThd = item.DopImgSrcThd,
-                    ImageMimeTypeOfData = item.ImageMimeTypeOfData,
-                    UkrainsRailways = item.UkrainsRailways,
-                    Oblasts = item.Oblasts,
-                    Citys = item.Citys,
-                    StationInfo = item.StationInfo,
-                    Metro = item.Metro,
-
-                    // Тут імітуємо роботу вашого getSlowImage, маючи вже завантажені байти
-                    // Або викликаємо його, передавши DTO, якщо метод адаптований
-                    StationImages = getSlowImage(item.RawImageBytes, item.RawImageMime)
-                }).ToList();
                 Log.Wright("Stations successfully retrieved from database");
 
                 return Ok(result);
@@ -116,30 +96,24 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        private string getSlowImage(byte[] imgdata, string imgtype)
+        [HttpGet("{id}/image")]
+        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
         {
-            if (imgdata == null) return null;
+            var loco = await _context.StationImages.FindAsync(id);
+            if (loco?.Image == null) return NotFound();
 
-            using (MemoryStream ms = new MemoryStream(imgdata, 0, imgdata.Length))
-            {
-                int h = 800;
-                int w = 700;
-                using (Image img = Image.Load(ms))
-                {
+            // Тут використовуємо ImageSharp для ресайзу
+            using var image = Image.Load(loco.Image);
+            image.Mutate(x => x.Resize(width, 0));
 
-                    img.Mutate(x => x.Resize(w, h));
-                    using (MemoryStream ms2 = new MemoryStream())
-                    {
-                        img.SaveAsJpeg(ms2);
-                        imgdata = ms2.ToArray();
-                    }
+            var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
+            ms.Position = 0;
 
-                }
-            }
-
-            return imgdata != null ? $"data:{imgtype};base64,{Convert.ToBase64String(imgdata)}" : null;
-
+            return File(ms, "image/jpeg");
         }
+
 
         [HttpGet("details/{id}")]
         public async Task<ActionResult> Details(int id)

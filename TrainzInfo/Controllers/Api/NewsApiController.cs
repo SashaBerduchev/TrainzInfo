@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Claims;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -36,7 +39,7 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getnews")]
         public async Task<ActionResult<List<NewsInfo>>> GetNews(int page = 1)
         {
-            int pageSize = 10;
+            int pageSize = 6;
             try
             {
                 Log.Init("NewsApiController", "GetNews");
@@ -56,15 +59,14 @@ namespace TrainzInfo.Controllers.Api
                         BaseNewsInfo = n.BaseNewsInfo,
                         NewsInfoAll = n.NewsInfoAll,
                         DateTime = n.DateTime.ToString("yyyy-MM-dd"),
-                        NewsImage = n.NewsImages.Image != null
-                            ? $"data:{n.NewsImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.NewsImages.Image)}"
-                            : null
+                        ImgSrc = n.NewsImages.Image != null
+                            ? $"api/news/{n.NewsImages.id}/image?width=300" : null
                     })
                     .ToListAsync();
 
                 return Ok(newsDTOs);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Log.Exceptions(ex.ToString());
                 Log.Wright(ex.ToString());
@@ -77,6 +79,25 @@ namespace TrainzInfo.Controllers.Api
             }
 
         }
+
+        [HttpGet("{id}/image")]
+        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
+        {
+            var loco = await _context.NewsImages.FindAsync(id);
+            if (loco?.Image == null) return NotFound();
+
+            // Тут використовуємо ImageSharp для ресайзу
+            using var image = Image.Load(loco.Image);
+            image.Mutate(x => x.Resize(width, 0));
+
+            var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
+            ms.Position = 0;
+
+            return File(ms, "image/jpeg");
+        }
+
 
         [HttpGet("details/{id}")]
         public async Task<ActionResult<NewsDTO>> GetNewsDetails(int id)
@@ -103,9 +124,8 @@ namespace TrainzInfo.Controllers.Api
                     BaseNewsInfo = news.BaseNewsInfo,
                     NewsInfoAll = news.NewsInfoAll,
                     DateTime = news.DateTime.ToString("yyyy-MM-dd"),
-                    NewsImage = news.NewsImages.Image != null
-                        ? $"data:{news.NewsImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(news.NewsImages.Image)}"
-                        : null
+                    ImgSrc = news.NewsImages.Image != null
+                        ? $"api/news/{news.NewsImages.id}/image?width=500" : null
                 };
                 return Ok(newsDTO);
             }

@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
@@ -18,11 +22,12 @@ namespace TrainzInfo.Controllers.Api
 {
     [ApiController]
     [Route("api/locomotives")]
-    public class LocomotivesApiController : Controller
+    public class LocomotivesApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LocomotivesApiController(ApplicationContext context)
+        public LocomotivesApiController(UserManager<IdentityUser> userManager, ApplicationContext context) : base(userManager, context)
         {
             _context = context;
         }
@@ -85,6 +90,7 @@ namespace TrainzInfo.Controllers.Api
                 [FromQuery] string filia,
                 [FromQuery] string depot,
                 [FromQuery] string seria,
+                [FromQuery] string oblast,
                 [FromQuery] int page = 1)
         {
             try
@@ -112,6 +118,9 @@ namespace TrainzInfo.Controllers.Api
 
                 if (!string.IsNullOrWhiteSpace(seria))
                     query = query.Where(l => l.Seria == seria);
+                if (!string.IsNullOrWhiteSpace(oblast))
+                    query = query.Where(l => l.DepotList.City.Oblasts.Name == oblast);
+
                 query = query.OrderBy(x => x.Locomotive_Series.Seria).OrderBy(x => x.Number);
                 query = query.Skip((page - 1) * pageSize)
                     .Take(pageSize);
@@ -128,9 +137,7 @@ namespace TrainzInfo.Controllers.Api
                     Filia = n.DepotList.UkrainsRailway.Name,
                     Seria = n.Locomotive_Series.Seria,
                     Station = n.Stations.Name,
-                    ImgSrc = n.Image != null
-                                ? $"data:{n.ImageMimeTypeOfData};base64,{Convert.ToBase64String(n.Image)}"
-                                : null,
+                    ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
                     // або формат за потребою
                 }).ToListAsync();
                 return Ok(locoDTO);
@@ -148,11 +155,31 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("{id}/image")]
+        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
+        {
+            var loco = await _context.Locomotives.FindAsync(id);
+            if (loco?.Image == null) return NotFound();
+
+            // Тут використовуємо ImageSharp для ресайзу
+            using var image = Image.Load(loco.Image);
+            image.Mutate(x => x.Resize(width, 0));
+
+            var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
+            ms.Position = 0;
+
+            return File(ms, "image/jpeg");
+        }
+
+
         [HttpGet("getseries")]
         public async Task<ActionResult<List<string>>> GetSeries(
                 [FromQuery] string filia,
                 [FromQuery] string depot,
-                [FromQuery] string seria
+                [FromQuery] string seria,
+                [FromQuery] string oblast
             )
         {
             try
@@ -174,6 +201,8 @@ namespace TrainzInfo.Controllers.Api
 
                 if (!string.IsNullOrEmpty(seria))
                     query = query.Where(l => l.Seria == seria);
+                if(!string.IsNullOrEmpty(oblast))
+                    query = query.Where(l => l.Locomotives.Any(d => d.DepotList.City.Oblasts.Name == oblast));
 
                 query = query.Where(x => x.Locomotives.Count > 0);
 
@@ -227,6 +256,7 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getdepots")]
         public async Task<ActionResult<List<string>>> GetDepots(
             [FromQuery] string filia,
+            [FromQuery] string oblast,
                 [FromQuery] string depot,
                 [FromQuery] string seria)
         {
@@ -249,6 +279,8 @@ namespace TrainzInfo.Controllers.Api
                     query = query.Where(l => l.Name == depot);
                 if (!string.IsNullOrWhiteSpace(seria))
                     query = query.Where(l => l.Locomotives.Any(d => d.Locomotive_Series.Seria == seria));
+                if(!string.IsNullOrWhiteSpace(oblast))
+                    query = query.Where(l => l.City.Oblasts.Name == oblast);
 
                 query = query.Where(x => x.Name.Contains("ТЧ"));
                 query = query.Where(x => x.Locomotives.Count > 0);
@@ -447,45 +479,14 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpPost("deleteapprove/{id}")]
-        //[Authorize(Roles = "Superadmin, Admin")]
-        public async Task<ActionResult> DeleteLocomotive(int id)
-        {
-            try
-            {
-                Log.Init("LocomotivesApiController", "DeleteLocomotive");
-
-                Log.Wright("Start Delete DeleteLocomotive");
-                var locomotive = await _context.Locomotives.FindAsync(id);
-                if (locomotive == null)
-                {
-                    return NotFound();
-                }
-                _context.Locomotives.Remove(locomotive);
-                await _context.SaveChangesAsync();
-                Log.Finish();
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                Log.Finish();
-                return BadRequest(ex.ToString());
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
-        }
 
         [HttpGet("getfilias")]
         [Produces("application/json")]
         public async Task<ActionResult<List<string>>> GetFilias(
                 [FromQuery] string filia,
                 [FromQuery] string depot,
-                [FromQuery] string seria)
+                [FromQuery] string seria,
+                [FromQuery] string oblast)
         {
             try
             {
@@ -498,6 +499,9 @@ namespace TrainzInfo.Controllers.Api
                     .Include(l => l.DepotLists)
                         .ThenInclude(loc => loc.Locomotives)
                             .ThenInclude(ls => ls.Locomotive_Series)
+                    .Include(l => l.DepotLists)
+                        .ThenInclude(loc => loc.City)
+                            .ThenInclude(o => o.Oblasts)
                     .AsQueryable();
                 if (!string.IsNullOrWhiteSpace(filia))
                     query = query.Where(l => l.Name == filia);
@@ -507,6 +511,9 @@ namespace TrainzInfo.Controllers.Api
 
                 if (!string.IsNullOrWhiteSpace(seria))
                     query = query.Where(l => l.DepotLists.Any(d => d.Locomotives.Any(d => d.Locomotive_Series.Seria == seria)));
+
+                if (!string.IsNullOrWhiteSpace(oblast)) 
+                    query = query.Where(l => l.DepotLists.Any(d => d.City.Oblasts.Name == oblast));
 
                 query = query.OrderBy(x => x.Name);
                 filias = await query.Select(x => x.Name).ToListAsync();
@@ -526,6 +533,52 @@ namespace TrainzInfo.Controllers.Api
                 Log.Finish();
             }
         }
+
+        [HttpGet("getoblasts")]
+        public async Task<ActionResult> GetOblasts(
+                [FromQuery] string oblast,
+                [FromQuery] string filia,
+                [FromQuery] string depot,
+                [FromQuery] string seria)
+        {
+            Log.Init("LocomotivesApiController", "GetOblasts");
+            Log.Wright("Start Get GetOblasts");
+
+            try
+            {
+
+               IQueryable<Oblast> query = _context.Oblasts
+                    .Include(c => c.Cities)
+                    .ThenInclude(d => d.DepotLists)
+                    .ThenInclude(ur => ur.UkrainsRailway)
+                    .Include(c => c.Cities)
+                    .ThenInclude(d => d.DepotLists)
+                    .ThenInclude(l => l.Locomotives)
+                    .ThenInclude(ls => ls.Locomotive_Series)
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(oblast))
+                    query = query.Where(o => o.Name == oblast);
+                if (!string.IsNullOrWhiteSpace(filia))
+                    query = query.Where(o => o.Cities.Any(c => c.DepotLists.Any(d => d.UkrainsRailway.Name == filia)));
+                if (!string.IsNullOrWhiteSpace(depot))
+                    query = query.Where(o => o.Cities.Any(c => c.DepotLists.Any(d => d.Name == depot))); 
+                if (!string.IsNullOrWhiteSpace(seria))
+                    query = query.Where(o => o.Cities.Any(c => c.DepotLists.Any(d => d.Locomotives.Any(l => l.Locomotive_Series.Seria == seria))));
+
+                List<string> oblasts = await query.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
+                return Ok(oblasts);
+            } catch (Exception ex)
+            {
+                Log.Wright("ERROR");
+                Log.Exceptions(ex.ToString());
+                return BadRequest(ex.ToString());
+            } finally
+            {
+                Log.Finish();
+            }
+        }
+
 
         [HttpGet("getdepotslist")]
         [Produces("application/json")]
@@ -559,12 +612,48 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+
+
         [HttpGet("allobl")]
         public async Task<ActionResult> GetAllOblasts()
         {
             var obl = await _context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
             return Ok(obl);
         }
+
+        [HttpPost("deleteapprove/{id}")]
+        //[Authorize(Roles = "Superadmin, Admin")]
+        public async Task<ActionResult> DeleteLocomotive(int id)
+        {
+            try
+            {
+                Log.Init("LocomotivesApiController", "DeleteLocomotive");
+
+                Log.Wright("Start Delete DeleteLocomotive");
+                var locomotive = await _context.Locomotives.FindAsync(id);
+                if (locomotive == null)
+                {
+                    return NotFound();
+                }
+                _context.Locomotives.Remove(locomotive);
+                await _context.SaveChangesAsync();
+                Log.Finish();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Exceptions(ex.ToString());
+                Log.Wright(ex.ToString());
+                Log.Finish();
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
 
     }
 }

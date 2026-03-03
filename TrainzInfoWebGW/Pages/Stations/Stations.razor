@@ -3,6 +3,7 @@
 @inject NavigationManager Nav
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
 @inject IJSRuntime JS
 
 
@@ -90,7 +91,7 @@
                     <!-- Картинка -->
                     <div class="col-12 col-md-4">
                         <img class="station-img"
-                             src="@item.StationImages"
+                             src="@(Config.ApiBaseUrl + item.StationImages)"
                              alt="station" />
                     </div>
 
