@@ -1,24 +1,26 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
-using TrainzInfo.Models;
-using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
+using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
 using TrainzInfoShared.DTO.SetDTO;
-using TrainzInfoLog;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -28,10 +30,15 @@ namespace TrainzInfo.Controllers.Api
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private static CancellationTokenSource _cancellationTokenSource = new();
+        private  IMemoryCache _cache;
 
-        public LocomotivesApiController(UserManager<IdentityUser> userManager, ApplicationContext context) : base(userManager, context)
+        public LocomotivesApiController(UserManager<IdentityUser> userManager, ApplicationContext context, IMemoryCache cache) : base(userManager, context)
         {
             _context = context;
+            _userManager = userManager;
+            _cache = cache;
+
         }
 
         [HttpGet("update")]
@@ -99,67 +106,158 @@ namespace TrainzInfo.Controllers.Api
                 [FromQuery] string oblast,
                 [FromQuery] int page = 1)
         {
-            try
+
+            var filters = new
             {
-                Log.Init("LocomotivesApiController", "GetLocomotives");
+                filia = filia?.Trim().ToLower(),
+                depot = depot?.Trim().ToLower(),
+                seria = seria?.Trim().ToLower(),
+                oblast = oblast?.Trim().ToLower(),
+                page
+            };
 
-                Log.Wright("Start Get GetLocomotives");
-                int pageSize = 10;
+            string cacheKey = $"locomotives_{JsonSerializer.Serialize(filters)}";
 
-                IQueryable<Locomotive> query = _context.Locomotives
-                    .Include(d => d.DepotList)
-                        .ThenInclude(c => c.City)
-                            .ThenInclude(o => o.Oblasts)
-                    .Include(u => u.DepotList)
-                        .ThenInclude(ur => ur.UkrainsRailway)
-                    .Include(ls => ls.Locomotive_Series)
-                    .Include(x => x.Stations)
-                    .AsQueryable();
-
-                if (!string.IsNullOrWhiteSpace(filia))
-                    query = query.Where(l => l.DepotList.UkrainsRailway.Name == filia);
-
-                if (!string.IsNullOrWhiteSpace(depot))
-                    query = query.Where(l => l.DepotList.Name == depot);
-
-                if (!string.IsNullOrWhiteSpace(seria))
-                    query = query.Where(l => l.Seria == seria);
-                if (!string.IsNullOrWhiteSpace(oblast))
-                    query = query.Where(l => l.DepotList.City.Oblasts.Name == oblast);
-
-                query = query.OrderBy(x => x.Locomotive_Series.Seria).OrderBy(x => x.Number);
-                query = query.Skip((page - 1) * pageSize)
-                    .Take(pageSize);
-
-                List<LocomotiveDTO> locoDTO = await query
-                .Select(n => new LocomotiveDTO
+            if (!_cache.TryGetValue(cacheKey, out List<LocomotiveDTO> locoDTO))
+            {
+                try
                 {
-                    Id = n.id,
-                    Number = n.Number,
-                    Speed = n.Speed,
-                    Depot = n.DepotList.Name,
-                    City = n.DepotList.City.Name,
-                    Oblast = n.DepotList.City.Oblasts.Name,
-                    Filia = n.DepotList.UkrainsRailway.Name,
-                    Seria = n.Locomotive_Series.Seria,
-                    Station = n.Stations.Name,
-                    ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
-                    // або формат за потребою
-                }).ToListAsync();
-                return Ok(locoDTO);
+                    Log.Init("LocomotivesApiController", "GetLocomotives");
+
+                    Log.Wright("Start Get GetLocomotives");
+                    int pageSize = 10;
+
+                    IQueryable<Locomotive> query = _context.Locomotives
+                        .Include(d => d.DepotList)
+                            .ThenInclude(c => c.City)
+                                .ThenInclude(o => o.Oblasts)
+                        .Include(u => u.DepotList)
+                            .ThenInclude(ur => ur.UkrainsRailway)
+                        .Include(ls => ls.Locomotive_Series)
+                        .Include(x => x.Stations)
+                        .AsQueryable();
+
+                    if (!string.IsNullOrWhiteSpace(filia))
+                        query = query.Where(l => l.DepotList.UkrainsRailway.Name == filia);
+
+                    if (!string.IsNullOrWhiteSpace(depot))
+                        query = query.Where(l => l.DepotList.Name == depot);
+
+                    if (!string.IsNullOrWhiteSpace(seria))
+                        query = query.Where(l => l.Seria == seria);
+                    if (!string.IsNullOrWhiteSpace(oblast))
+                        query = query.Where(l => l.DepotList.City.Oblasts.Name == oblast);
+
+                    query = query.OrderBy(x => x.Locomotive_Series.Seria).ThenBy(x => x.Number);
+                    query = query.Skip((page - 1) * pageSize)
+                        .Take(pageSize);
+
+                    locoDTO = await query
+                    .Select(n => new LocomotiveDTO
+                    {
+                        Id = n.id,
+                        Number = n.Number,
+                        Speed = n.Speed,
+                        Depot = n.DepotList.Name,
+                        City = n.DepotList.City.Name,
+                        Oblast = n.DepotList.City.Oblasts.Name,
+                        Filia = n.DepotList.UkrainsRailway.Name,
+                        Seria = n.Locomotive_Series.Seria,
+                        Station = n.Stations.Name,
+                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
+                        // або формат за потребою
+                    }).ToListAsync();
+
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                    _cache.Set(cacheKey, locoDTO, cacheOptions);
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions(ex.ToString());
+                    Log.Wright(ex.ToString());
+                    return BadRequest();
+                    throw;
+                }
+                finally
+                {
+                    Log.Finish();
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                return BadRequest();
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
+            return Ok(locoDTO);
         }
+
+
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<LocomotiveDTO>> GetLocomotive(int id)
+        {
+            string cacheKey = $"locomotives_details_{id}";
+            if (!_cache.TryGetValue(cacheKey, out LocomotiveDTO locomotive))
+            {
+                try
+                {
+                    Log.Init("LocomotivesApiController", "GetLocomotive");
+
+                    Log.Wright("Start Get GetLocomotive");
+                    locomotive = await _context.Locomotives
+                        .Include(x => x.DepotList)
+                        .ThenInclude(x => x.City)
+                        .ThenInclude(x => x.Oblasts)
+                        .Include(x => x.DepotList)
+                        .ThenInclude(x => x.UkrainsRailway)
+                        .Include(x => x.Locomotive_Series)
+                        .Include(x => x.Stations)
+                        .ThenInclude(x => x.StationImages)
+                        .Include(x => x.Stations)
+                        .ThenInclude(x => x.StationInfo)
+                        .Include(x => x.LocomotiveBaseInfo)
+                        .Where(x => x.id == id)
+                        .Select(xs => new LocomotiveDTO
+                        {
+                            Id = xs.id,
+                            Number = xs.Number,
+                            Speed = xs.Speed,
+                            Depot = xs.Depot,
+                            City = xs.DepotList.City.Name,
+                            Oblast = xs.DepotList.City.Oblasts.Name,
+                            Filia = xs.DepotList.UkrainsRailway.Name,
+                            Seria = xs.Locomotive_Series.Seria,
+
+                            // Логіка для картинки локомотива
+                            ImgSrc = xs.Image != null
+                            ? $"data:{xs.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.Image)}"
+                            : null,
+
+                            Station = xs.Stations.Name,
+                            StationInformation = xs.Stations.StationInfo.BaseInfo,
+
+                            // Логіка для картинки станції
+                            StationImages = xs.Stations.StationImages.Image != null
+                            ? $"data:{xs.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.Stations.StationImages.Image)}"
+                            : null
+                        }
+                    ).FirstOrDefaultAsync();
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                               .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                               .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                    _cache.Set(cacheKey, locomotive, cacheOptions);
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions(ex.ToString());
+                    Log.Wright(ex.ToString());
+                    return BadRequest(ex.ToString());
+                    throw;
+                }
+                finally
+                {
+                    Log.Finish();
+                }
+            }
+            return Ok(locomotive);
+        }
+
 
         [HttpGet("{id}/image")]
         [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
@@ -409,6 +507,9 @@ namespace TrainzInfo.Controllers.Api
 
                     _context.Locomotives.Add(locomotive);
                 }, IsolationLevel.Serializable);
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
                 return Ok();
             }
             catch (Exception ex)
@@ -424,66 +525,6 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpGet("details/{id}")]
-        public async Task<ActionResult<LocomotiveDTO>> GetLocomotive(int id)
-        {
-            try
-            {
-                Log.Init("LocomotivesApiController", "GetLocomotive");
-
-                Log.Wright("Start Get GetLocomotive");
-                LocomotiveDTO locomotive = await _context.Locomotives
-                    .Include(x => x.DepotList)
-                    .ThenInclude(x => x.City)
-                    .ThenInclude(x => x.Oblasts)
-                    .Include(x => x.DepotList)
-                    .ThenInclude(x => x.UkrainsRailway)
-                    .Include(x => x.Locomotive_Series)
-                    .Include(x => x.Stations)
-                    .ThenInclude(x => x.StationImages)
-                    .Include(x => x.Stations)
-                    .ThenInclude(x => x.StationInfo)
-                    .Include(x => x.LocomotiveBaseInfo)
-                    .Where(x => x.id == id)
-                    .Select(xs => new LocomotiveDTO
-                    {
-                        Id = xs.id,
-                        Number = xs.Number,
-                        Speed = xs.Speed,
-                        Depot = xs.Depot,
-                        City = xs.DepotList.City.Name,
-                        Oblast = xs.DepotList.City.Oblasts.Name,
-                        Filia = xs.DepotList.UkrainsRailway.Name,
-                        Seria = xs.Locomotive_Series.Seria,
-
-                        // Логіка для картинки локомотива
-                        ImgSrc = xs.Image != null
-                        ? $"data:{xs.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.Image)}"
-                        : null,
-
-                        Station = xs.Stations.Name,
-                        StationInformation = xs.Stations.StationInfo.BaseInfo,
-
-                        // Логіка для картинки станції
-                        StationImages = xs.Stations.StationImages.Image != null
-                        ? $"data:{xs.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.Stations.StationImages.Image)}"
-                        : null
-                    }
-                ).FirstOrDefaultAsync();
-                return Ok(locomotive);
-            }
-            catch (Exception ex)
-            {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                return BadRequest(ex.ToString());
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
-        }
 
 
         [HttpGet("getfilias")]
@@ -656,7 +697,9 @@ namespace TrainzInfo.Controllers.Api
                 // 3. Тепер база даних дозволить безпечно видалити сам локомотив
                 _context.Locomotives.Remove(locomotive);
                 await _context.SaveChangesAsync();
-
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
                 Log.Finish();
                 return Ok();
             }

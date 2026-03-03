@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
@@ -15,6 +19,7 @@ using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Images;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoShared.DTO.GetDTO;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace TrainzInfo.Controllers.Api
@@ -23,9 +28,12 @@ namespace TrainzInfo.Controllers.Api
     public class StattionsApiController : Controller
     {
         private readonly ApplicationContext _context;
-        public StattionsApiController(ApplicationContext context)
+        private CancellationTokenSource _cancellationTokenSource = new();
+        private IMemoryCache _cache;
+        public StattionsApiController(ApplicationContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         [HttpGet("get-stations")]
@@ -36,65 +44,80 @@ namespace TrainzInfo.Controllers.Api
         {
             Log.Init(this.ToString(), nameof(GetStations));
 
+            var filters = new
+            {
+                filia = filia?.Trim().ToLower(),
+                name = name?.Trim().ToLower(),
+                oblast = oblast?.Trim().ToLower(),
+                page
+            };
 
+            string cacheKey = $"stations_{JsonSerializer.Serialize(filters)}";
             int pageSize = 7;
-
-            Log.Wright("Getting stations from database");
-            try
+            if (!_cache.TryGetValue(cacheKey, out List<StationsDTO> stations))
             {
-                IQueryable<Stations> query = _context.Stations;
 
-                // 2. Фільтрація (залишається майже без змін)
-                if (!string.IsNullOrEmpty(filia))
+                Log.Wright("Getting stations from database");
+                try
                 {
-                    query = query.Where(s => s.UkrainsRailways.Name == filia);
-                }
-                if (!string.IsNullOrEmpty(name))
-                {
-                    query = query.Where(s => s.Name.Contains(name));
-                }
-                if (!string.IsNullOrEmpty(oblast))
-                {
-                    query = query.Where(s => s.Oblasts.Name == oblast);
-                }
+                    IQueryable<Stations> query = _context.Stations;
 
-
-                var result = await query
-                    .OrderBy(s => s.id)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(s => new StationsDTO
+                    // 2. Фільтрація (залишається майже без змін)
+                    if (!string.IsNullOrEmpty(filia))
                     {
-                        id = s.id,
-                        Name = s.Name,
-                        DopImgSrc = s.DopImgSrc,
-                        DopImgSrcSec = s.DopImgSrcSec,
-                        DopImgSrcThd = s.DopImgSrcThd,
-                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
-                        // EF Core сам зробить потрібні JOIN, Include не треба писати вручну
-                        UkrainsRailways = s.UkrainsRailways.Name,
-                        Oblasts = s.Oblasts.Name,
-                        Citys = s.Citys.Name,
-                        StationInfo = s.StationInfo.BaseInfo,
-                        Metro = s.Metro.Name,
-                        StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
-                    })
-                    .ToListAsync();
+                        query = query.Where(s => s.UkrainsRailways.Name == filia);
+                    }
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        query = query.Where(s => s.Name.Contains(name));
+                    }
+                    if (!string.IsNullOrEmpty(oblast))
+                    {
+                        query = query.Where(s => s.Oblasts.Name == oblast);
+                    }
 
-                Log.Wright("Stations successfully retrieved from database");
 
-                return Ok(result);
+                    stations = await query
+                        .OrderBy(s => s.id)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .Select(s => new StationsDTO
+                        {
+                            id = s.id,
+                            Name = s.Name,
+                            DopImgSrc = s.DopImgSrc,
+                            DopImgSrcSec = s.DopImgSrcSec,
+                            DopImgSrcThd = s.DopImgSrcThd,
+                            ImageMimeTypeOfData = s.ImageMimeTypeOfData,
+                            // EF Core сам зробить потрібні JOIN, Include не треба писати вручну
+                            UkrainsRailways = s.UkrainsRailways.Name,
+                            Oblasts = s.Oblasts.Name,
+                            Citys = s.Citys.Name,
+                            StationInfo = s.StationInfo.BaseInfo,
+                            Metro = s.Metro.Name,
+                            StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
+                        })
+                        .ToListAsync();
+
+                    Log.Wright("Stations successfully retrieved from database");
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                    _cache.Set(cacheKey, stations, cacheOptions);
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions($"Error retrieving stations: {ex.ToString()}");
+                    Log.Wright("Error retrieving stations: " + ex.Message);
+                    return StatusCode(500, "Internal server error");
+                }
+                finally
+                {
+                    Log.Finish();
+                }
+
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions($"Error retrieving stations: {ex.ToString()}");
-                Log.Wright("Error retrieving stations: " + ex.Message);
-                return StatusCode(500, "Internal server error");
-            }
-            finally
-            {
-                Log.Finish();
-            }
+            return Ok(stations);
         }
 
         [HttpGet("{id}/image")]
@@ -366,6 +389,9 @@ namespace TrainzInfo.Controllers.Api
 
                 _context.Stations.Add(station);
                 await _context.SaveChangesAsync();
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
                 Log.Wright("Station successfully created in database");
                 return Ok(new { station.id });
             }
@@ -478,6 +504,9 @@ namespace TrainzInfo.Controllers.Api
                 }
                 _context.Stations.Remove(station);
                 await _context.SaveChangesAsync();
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
                 Log.Wright("Station successfully deleted from database");
                 return Ok();
             }

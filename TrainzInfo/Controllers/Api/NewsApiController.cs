@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -9,6 +11,7 @@ using System.Data;
 using System.IdentityModel.Claims;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Tools;
@@ -29,57 +32,71 @@ namespace TrainzInfo.Controllers.Api
         UserManager<IdentityUser> _userManager;
         private Mail _mail;
         private readonly ApplicationContext _context;
-        public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail)
+        private static CancellationTokenSource _newsCacheTokenSource = new();
+        private IMemoryCache _cache;
+        public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail, IMemoryCache cache)
              : base(userManager, context)
         {
             _context = context;
             _userManager = userManager;
             _mail = mail;
             _signInManager = signInManager;
+            _cache = cache;
         }
         [Produces("application/json")]
         [HttpGet("getnews")]
         public async Task<ActionResult<List<NewsInfo>>> GetNews(int page = 1)
         {
             int pageSize = 6;
-            try
-            {
-                Log.Init("NewsApiController", "GetNews");
 
-                Log.Wright("Start Get NewsInfos with Comments");
-                var newsDTOs = await _context.NewsInfos
-                    .Include(n => n.NewsComments)
-                    .Include(n => n.User)
-                    .Include(n => n.NewsImages)
-                    .OrderByDescending(n => n.DateTime)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(n => new NewsDTO
-                    {
-                        id = n.id,
-                        NameNews = n.NameNews,
-                        BaseNewsInfo = n.BaseNewsInfo,
-                        NewsInfoAll = n.NewsInfoAll,
-                        DateTime = n.DateTime.ToString("yyyy-MM-dd"),
-                        ImgSrc = n.NewsImages.Image != null
-                            ? $"api/news/{n.NewsImages.id}/image?width=300" : null
-                    })
-                    .ToListAsync();
-
-                return Ok(newsDTOs);
-            }
-            catch (Exception ex)
+            string cacheKey = $"news_page_{page}";
+            if (!_cache.TryGetValue(cacheKey, out List<NewsDTO> newsDTOs))
             {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                return BadRequest();
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
 
+                try
+                {
+                    Log.Init("NewsApiController", "GetNews");
+
+                    Log.Wright("Start Get NewsInfos with Comments");
+                    newsDTOs = await _context.NewsInfos
+                        .Include(n => n.NewsComments)
+                        .Include(n => n.User)
+                        .Include(n => n.NewsImages)
+                        .OrderByDescending(n => n.DateTime)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize)
+                        .Select(n => new NewsDTO
+                        {
+                            id = n.id,
+                            NameNews = n.NameNews,
+                            BaseNewsInfo = n.BaseNewsInfo,
+                            NewsInfoAll = n.NewsInfoAll,
+                            DateTime = n.DateTime.ToString("yyyy-MM-dd"),
+                            ImgSrc = n.NewsImages.Image != null
+                                ? $"api/news/{n.NewsImages.id}/image?width=300" : null
+                        })
+                        .ToListAsync();
+
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                                .AddExpirationToken(new CancellationChangeToken(_newsCacheTokenSource.Token));
+
+                    _cache.Set(cacheKey, newsDTOs, cacheOptions);
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Exceptions(ex.ToString());
+                    Log.Wright(ex.ToString());
+                    return BadRequest();
+                    throw;
+                }
+                finally
+                {
+                    Log.Finish();
+                }
+            }
+            return Ok(newsDTOs);
         }
 
         [HttpGet("{id}/image")]
@@ -104,44 +121,52 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("details/{id}")]
         public async Task<ActionResult<NewsDTO>> GetNewsDetails(int id)
         {
-            try
+            string cacheKey = $"news_detail_{id}";
+            if (!_cache.TryGetValue(cacheKey, out NewsDTO newsDTO))
             {
-                Log.Init("NewsApiController", "GetNewsDetails");
+                try
+                {
+                   
+                    var news = await _context.NewsInfos
+                        .Include(n => n.NewsComments)
+                        .Include(n => n.User)
+                        .Include(n => n.NewsImages)
+                        .Where(n => n.id == id)
+                        .FirstOrDefaultAsync();
+                    if (news == null)
+                    {
+                        return NotFound();
+                    }
 
-                Log.Wright("Start Get NewsInfo Details with Comments");
-                var news = await _context.NewsInfos
-                    .Include(n => n.NewsComments)
-                    .Include(n => n.User)
-                    .Include(n => n.NewsImages)
-                    .Where(n => n.id == id)
-                    .FirstOrDefaultAsync();
-                if (news == null)
-                {
-                    return NotFound();
+                    newsDTO = new NewsDTO
+                    {
+                        id = news.id,
+                        NameNews = news.NameNews,
+                        BaseNewsInfo = news.BaseNewsInfo,
+                        NewsInfoAll = news.NewsInfoAll,
+                        DateTime = news.DateTime.ToString("yyyy-MM-dd"),
+                        ImgSrc = news.NewsImages.Image != null
+                            ? $"api/news/{news.NewsImages.id}/image?width=500" : null
+                    };
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
+                                .AddExpirationToken(new CancellationChangeToken(_newsCacheTokenSource.Token));
+
+                    _cache.Set(cacheKey, newsDTO, cacheOptions);
                 }
-                var newsDTO = new NewsDTO
+                catch (Exception ex)
                 {
-                    id = news.id,
-                    NameNews = news.NameNews,
-                    BaseNewsInfo = news.BaseNewsInfo,
-                    NewsInfoAll = news.NewsInfoAll,
-                    DateTime = news.DateTime.ToString("yyyy-MM-dd"),
-                    ImgSrc = news.NewsImages.Image != null
-                        ? $"api/news/{news.NewsImages.id}/image?width=500" : null
-                };
-                return Ok(newsDTO);
+                    Log.Exceptions(ex.ToString());
+                    Log.Wright(ex.ToString());
+                    return BadRequest();
+                    throw;
+                }
+                finally
+                {
+                    Log.Finish();
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions(ex.ToString());
-                Log.Wright(ex.ToString());
-                return BadRequest();
-                throw;
-            }
-            finally
-            {
-                Log.Finish();
-            }
+            return Ok(newsDTO);
         }
 
 
@@ -213,8 +238,12 @@ namespace TrainzInfo.Controllers.Api
                         number = news.ObjectName;
                     }, IsolationLevel.ReadCommitted);
                 }
+
                 user = await _userManager.FindByEmailAsync(newsInfo.username);
                 await _mail.SendNewsMessage(newNewsId, user);
+                _newsCacheTokenSource.Cancel();
+                _newsCacheTokenSource.Dispose();
+                _newsCacheTokenSource = new CancellationTokenSource();
                 return Ok(number);
             }
             catch (Exception ex)
@@ -243,7 +272,7 @@ namespace TrainzInfo.Controllers.Api
                     .Include(n => n.User)
                     .Include(n => n.NewsImages)
                     .Where(n => n.id == id)
-                    .Select(x=> new NewsSetDTO
+                    .Select(x => new NewsSetDTO
                     {
                         id = x.id,
                         NameNews = x.NameNews,
@@ -284,7 +313,7 @@ namespace TrainzInfo.Controllers.Api
                 Log.Init("NewsApiController", "EditNews");
 
                 Log.Wright("Start Edit NewsInfo");
-                var existingNews = await _context.NewsInfos.Include(x=>x.NewsImages).Where(x=>x.id == newsInfo.id).FirstOrDefaultAsync();
+                var existingNews = await _context.NewsInfos.Include(x => x.NewsImages).Where(x => x.id == newsInfo.id).FirstOrDefaultAsync();
                 if (existingNews == null)
                 {
                     return NotFound();

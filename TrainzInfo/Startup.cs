@@ -102,6 +102,7 @@ namespace TrainzInfo
 
             }
 
+            services.AddMemoryCache();
 
             Log.Wright(trace);
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
