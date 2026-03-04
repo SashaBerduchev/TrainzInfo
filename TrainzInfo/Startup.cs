@@ -26,7 +26,7 @@ namespace TrainzInfo
     public class Startup
     {
         public static bool DEBUG_MODE = true;
-        public static bool START_IN_PROD_DB = true;
+        public static bool START_IN_PROD_DB = false;
         static string _connectionString = "";
 
         public Startup(IConfiguration configuration)
@@ -74,6 +74,8 @@ namespace TrainzInfo
             services.AddMemoryCache();
             services.AddHostedService<CacheWarmupService>();
             services.AddSingleton<NewsCacheService>();
+            services.AddSingleton<LocomotivesCacheService>();
+            services.AddSingleton<StationsCacheService>();
 
             Log.Wright("Try add DB context");
             Log.Wright("Try add session");

@@ -20,15 +20,21 @@ namespace TrainzInfo.Tools.BackgroundServices
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly NewsCacheService _newsCacheService;
-        private CancellationTokenSource _cacheTokenSource = new CancellationTokenSource();
-        public CacheWarmupService(IServiceProvider serviceProvider, NewsCacheService newsCacheService)
+        private readonly LocomotivesCacheService _locoCacheService;
+        private readonly StationsCacheService _stationCacheService;
+        public CacheWarmupService(IServiceProvider serviceProvider, NewsCacheService newsCacheService, 
+            LocomotivesCacheService locoCacheService,
+            StationsCacheService stationsCacheService)
         {
             _serviceProvider = serviceProvider;
             _newsCacheService = newsCacheService;
+            _locoCacheService = locoCacheService;
+            _stationCacheService = stationsCacheService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            Log.Init("CacheWarmupService", nameof(StartAsync));
             Log.Wright("CacheWarmupService запущено");
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
@@ -42,6 +48,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             Log.Wright("Прогрів кешу для станцій...");
             await CacheStations(context, cache, cancellationToken);
             Log.Wright("Прогрів кешу завершено");
+            Log.Finish();
         }
 
         private async Task CacheStations(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
@@ -86,12 +93,11 @@ namespace TrainzInfo.Tools.BackgroundServices
                     })
                     .ToListAsync();
 
-
+                IChangeToken token = _stationCacheService.GetToken();
                 cache.Set(cacheKey, stations,
                     new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
-                        .AddExpirationToken(
-                            new CancellationChangeToken(_cacheTokenSource.Token)));
+                        .AddExpirationToken(token));
             }
         }
 
@@ -137,11 +143,11 @@ namespace TrainzInfo.Tools.BackgroundServices
                         ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
                     }).ToListAsync();
 
+                var token = _locoCacheService.GetToken();
                 cache.Set(cacheKey, data,
                    new MemoryCacheEntryOptions()
                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
-                       .AddExpirationToken(
-                           new CancellationChangeToken(_cacheTokenSource.Token)));
+                       .AddExpirationToken(token));
             }
         }
 

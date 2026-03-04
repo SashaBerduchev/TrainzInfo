@@ -23,7 +23,7 @@ namespace TrainzInfoLog
 
         public static void Init(string nameClass, string nameMethod)
         {
-            startStandartLogStr = DateTime.Now + " - [INF] " + nameClass + " - " + nameMethod;
+            startStandartLogStr = "[INF] " + nameClass + " - " + nameMethod;
             StandartLogFile(startStandartLogStr + " - " + "Start");
         }
         public static void Finish()

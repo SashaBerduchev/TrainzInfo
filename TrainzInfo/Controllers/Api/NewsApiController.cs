@@ -245,9 +245,6 @@ namespace TrainzInfo.Controllers.Api
 
                 user = await _userManager.FindByEmailAsync(newsInfo.username);
                 await _mail.SendNewsMessage(newNewsId, user);
-                _newsCacheTokenSource.Cancel();
-                _newsCacheTokenSource.Dispose();
-                _newsCacheTokenSource = new CancellationTokenSource();
                 _newsCacheService?.Clear();
                 return Ok(number);
             }
