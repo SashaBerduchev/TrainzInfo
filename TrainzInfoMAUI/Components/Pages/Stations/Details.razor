@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
 @inject IJSRuntime JS
 
 <h1 class="news-page-title">@stations?.Name</h1>
@@ -14,9 +15,9 @@
         <div class="row g-4 align-items-start">
             <!-- Картинка -->
             <div class="col-md-4 text-center">
-                @if (!string.IsNullOrEmpty(stations.StationImages))
+                @if (!string.IsNullOrEmpty(stations.ImgSrc))
                 {
-                    <img src="@stations.StationImages" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
+                    <img src="@(Config.ApiBaseUrl + stations.ImgSrc)" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
                 }
                 else
                 {
@@ -57,66 +58,69 @@
             @((MarkupString)stations.AllInfo)
         </div>
     </div>
-
-}
-else
-{
-    <p>Завантаження інформації...</p>
-}
-
-
-@if (schedule is null)
-{
-    <p>Відсутні дані...</p>
-}
-else
-{
-    <!-- Таблиця для великих екранів -->
-    <div class="table-responsive d-none d-md-block">
-        <table class="table table-striped table-bordered text-center align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Номер поїзда</th>
-                    <th>Початок маршруту</th>
-                    <th>Кінець маршруту</th>
-                    <th>Прибуття</th>
-                    <th>Відправлення</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in schedule)
-                {
+    @if (schedule is null)
+    {
+        <p>Відсутні дані...</p>
+    }
+    else
+    {
+        <!-- Таблиця для великих екранів -->
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-striped table-bordered text-center align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <td style="font-size:18px">@item.NumberTrain</td>
-                        <td>@item.TrainFrom</td>
-                        <td>@item.TrainTo</td>
-                        <td>@item.TimeOfArrive</td>
-                        <td>@item.TimeOfDepet</td>
+                        <th>Номер поїзда</th>
+                        <th>Початок маршруту</th>
+                        <th>Кінець маршруту</th>
+                        <th>Прибуття</th>
+                        <th>Відправлення</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var item in schedule)
+                    {
+                        <tr>
+                            <td style="font-size:18px">@item.NumberTrain</td>
+                            <td>@item.TrainFrom</td>
+                            <td>@item.TrainTo</td>
+                            <td>@item.TimeOfArrive</td>
+                            <td>@item.TimeOfDepet</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Картки для мобільних -->
-    <div class="d-block d-md-none">
-        @foreach (var item in schedule)
-        {
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">
-                          Поїзд номер  @item.Train
-                    </h5>
-                    <p><b>Початок маршруту</b> @item.TrainFrom</p>
-                    <p><b>Кінець маршруту</b> @item.TrainTo</p>
-                    <p><b>Прибуття</b> @item.TimeOfArrive</p>
-                    <p><b>Відправлення</b> @item.TimeOfDepet</p>
+        <!-- Картки для мобільних -->
+        <div class="d-block d-md-none">
+            @foreach (var item in schedule)
+            {
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Поїзд номер  @item.Train
+                        </h5>
+                        <p><b>Початок маршруту</b> @item.TrainFrom</p>
+                        <p><b>Кінець маршруту</b> @item.TrainTo</p>
+                        <p><b>Прибуття</b> @item.TimeOfArrive</p>
+                        <p><b>Відправлення</b> @item.TimeOfDepet</p>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="d-flex justify-content-center align-items-center"
+         style="min-height: 60vh;">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
 }
+
+
+
 
 
 @if (ErrorMessage is not null)

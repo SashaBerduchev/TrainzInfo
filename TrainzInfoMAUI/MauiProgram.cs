@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
+using TrainzInfoMAUI.Tools;
 using TrainzInfoWebGW.Tools;
 
 namespace TrainzInfoMAUI
@@ -38,6 +39,7 @@ namespace TrainzInfoMAUI
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(conntring) });
+            builder.Services.AddSingleton(new AppConfig { ApiBaseUrl = conntring });
             return builder.Build();
         }
     }

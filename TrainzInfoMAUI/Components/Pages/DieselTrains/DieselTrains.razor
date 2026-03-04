@@ -1,9 +1,9 @@
 ﻿@page "/diesel-trains"
-@using System.Threading.Tasks
 @using TrainzInfoShared.DTO.GetDTO
 @inject HttpClient Http
 @inject NavigationManager Nav;
 @inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
 @inject IJSRuntime JS
 
 <h1 class="mb-4 text-center">Дизель-поїзди</h1>
@@ -68,7 +68,10 @@
     }
     else if (!dieselTrains.Any())
     {
-        <p class="text-center text-secondary">Нічого не знайдено.</p>
+        <div class="d-flex justify-content-center align-items-center"
+             style="min-height: 60vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
     }
     else
     {
@@ -79,7 +82,7 @@
                     <div class="row g-0">
                         <div class="col-12 col-md-4">
                             <img class="img-fluid rounded-start"
-                                 src="@item.Image"
+                                 src="@(Config.ApiBaseUrl + item.Image)"
                                  alt="Дизель-поїзд" />
                         </div>
                         <div class="col-12 col-md-5 p-3">
