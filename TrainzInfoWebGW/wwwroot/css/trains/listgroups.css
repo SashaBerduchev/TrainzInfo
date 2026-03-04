@@ -1,0 +1,11 @@
+﻿.list-group-train-item {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+    .list-group-train-item:hover {
+        background-color: #f8f9fa;
+    }
