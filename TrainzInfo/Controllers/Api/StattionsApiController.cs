@@ -6,6 +6,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -13,7 +14,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Services;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.DB;
 using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Images;
@@ -31,10 +34,12 @@ namespace TrainzInfo.Controllers.Api
         private readonly ApplicationContext _context;
         private CancellationTokenSource _cancellationTokenSource = new();
         private IMemoryCache _cache;
-        public StattionsApiController(ApplicationContext context, IMemoryCache cache)
+        private readonly StationsCacheService _stationsCache;
+        public StattionsApiController(ApplicationContext context, IMemoryCache cache, StationsCacheService stationsCache)
         {
             _context = context;
             _cache = cache;
+            _stationsCache = stationsCache;
         }
 
         [HttpGet("get-stations")]
@@ -96,14 +101,15 @@ namespace TrainzInfo.Controllers.Api
                             Citys = s.Citys.Name,
                             StationInfo = s.StationInfo.BaseInfo,
                             Metro = s.Metro.Name,
-                            StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
+                            StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=600" : null
                         })
                         .ToListAsync();
 
                     Log.Wright("Stations successfully retrieved from database");
+                    IChangeToken token = _stationsCache.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                                .AddExpirationToken(token);
                     _cache.Set(cacheKey, stations, cacheOptions);
                 }
                 catch (Exception ex)
@@ -170,18 +176,18 @@ namespace TrainzInfo.Controllers.Api
                         }).ToList(),
 
                         // Передаємо просто байти і тип! Ніяких Convert у запиті!
-                        ImageBytes = xs.StationImages.Image,
+                        ImgSrc = xs.StationImages.Image != null ? $"api/stations/{xs.StationImages.id}/image?width=600" : null,
                         ImageMime = xs.StationImages.ImageMimeTypeOfData,
-
                         StationInfo = xs.StationInfo.AllInfo,
                         BaseInfo = xs.StationInfo.BaseInfo,
                         AllInfo = xs.StationInfo.AllInfo,
                     })
                     .FirstOrDefaultAsync();
                     Log.Wright("Station details successfully retrieved from database");
+                    IChangeToken token = _stationsCache.GetToken();
                     _cache.Set(cacheKey, station, new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(TimeSpan.FromMinutes(15))
-                        .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token)));
+                        .AddExpirationToken(token));
                 }
                 catch (Exception ex)
                 {
@@ -353,55 +359,54 @@ namespace TrainzInfo.Controllers.Api
             try
             {
                 Log.Wright("Creating new station in database");
+                int stationid = 0;
                 Stations stationsCheck = await _context.Stations.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
                 if (stationsCheck != null)
                 {
                     Log.Wright("Station with the same name already exists in database");
                     return BadRequest("Станція вже є");
                 }
-
-                var station = new Stations
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    Name = stationDto.Name,
-                    City = stationDto.Citys,
-                    Citys = await _context.Cities.FirstOrDefaultAsync(c => c.Name == stationDto.Citys),
-                    Oblast = stationDto.Oblasts,
-                    Oblasts = await _context.Oblasts.FirstOrDefaultAsync(o => o.Name == stationDto.Oblasts),
-                    UkrainsRailways = await _context.UkrainsRailways.FirstOrDefaultAsync(u => u.Name == stationDto.UkrainsRailways),
-                    Railway = stationDto.UkrainsRailways,
-                    DopImgSrc = stationDto.DopImgSrc,
-                    DopImgSrcSec = stationDto.DopImgSrcSec,
-                    DopImgSrcThd = stationDto.DopImgSrcThd,
-                    ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
-                    Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null
-                };
-
-                Log.Wright("Checking for existing station images in database");
-                StationImages stationImages = await _context.StationImages.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
-                if (stationImages != null)
-                {
-                    Log.Wright("Station with the same name already exists in database");
-                    station.StationImages = stationImages;
-                }
-                else
-                {
-                    station.StationImages = new StationImages
+                    var station = new Stations
                     {
                         Name = stationDto.Name,
-                        Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.StationImages.Split(',')[1]) : null,
+                        City = stationDto.Citys,
+                        Citys = await _context.Cities.FirstOrDefaultAsync(c => c.Name == stationDto.Citys),
+                        Oblast = stationDto.Oblasts,
+                        Oblasts = await _context.Oblasts.FirstOrDefaultAsync(o => o.Name == stationDto.Oblasts),
+                        UkrainsRailways = await _context.UkrainsRailways.FirstOrDefaultAsync(u => u.Name == stationDto.UkrainsRailways),
+                        Railway = stationDto.UkrainsRailways,
+                        DopImgSrc = stationDto.DopImgSrc,
+                        DopImgSrcSec = stationDto.DopImgSrcSec,
+                        DopImgSrcThd = stationDto.DopImgSrcThd,
                         ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
-                        CreatedAt = DateTime.UtcNow
+                        Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null
                     };
-                }
 
-
-                _context.Stations.Add(station);
-                await _context.SaveChangesAsync();
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = new CancellationTokenSource();
-                Log.Wright("Station successfully created in database");
-                return Ok(new { station.id });
+                    Log.Wright("Checking for existing station images in database");
+                    StationImages stationImages = await _context.StationImages.Where(s => s.Name == stationDto.Name).FirstOrDefaultAsync();
+                    if (stationImages != null)
+                    {
+                        Log.Wright("Station with the same name already exists in database");
+                        station.StationImages = stationImages;
+                    }
+                    else
+                    {
+                        station.StationImages = new StationImages
+                        {
+                            Name = stationDto.Name,
+                            Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.StationImages.Split(',')[1]) : null,
+                            ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData,
+                            CreatedAt = DateTime.UtcNow
+                        };
+                    }
+                    _context.Stations.Add(station);
+                    stationid = station.id;
+                    _stationsCache.Clear();
+                    Log.Wright("Station successfully created in database");
+                }, IsolationLevel.Serializable);
+                return Ok(new { stationid });
             }
             catch (Exception ex)
             {

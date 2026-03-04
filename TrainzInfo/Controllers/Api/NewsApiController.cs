@@ -17,6 +17,7 @@ using TrainzInfo.Data;
 using TrainzInfo.Migrations;
 using TrainzInfo.Services;
 using TrainzInfo.Tools;
+using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.Mail;
 using TrainzInfoLog;
@@ -37,6 +38,7 @@ namespace TrainzInfo.Controllers.Api
         private static CancellationTokenSource _newsCacheTokenSource = new();
         private static NewsCacheService _newsCacheService;
         private IMemoryCache _cache;
+        
         public NewsApiController(ApplicationContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, Mail mail, IMemoryCache cache, NewsCacheService newsCacheService)
              : base(userManager, context)
         {
@@ -77,13 +79,14 @@ namespace TrainzInfo.Controllers.Api
                             NewsInfoAll = n.NewsInfoAll,
                             DateTime = n.DateTime.ToString("yyyy-MM-dd"),
                             ImgSrc = n.NewsImages.Image != null
-                                ? $"api/news/{n.NewsImages.id}/image?width=300" : null
+                                ? $"api/news/{n.NewsImages.id}/image?width=600&v={DateTime.UtcNow.Ticks}" : null
                         })
                         .ToListAsync();
 
+                    var token = _newsCacheService.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                                .AddExpirationToken(new CancellationChangeToken(_newsCacheTokenSource.Token));
+                                .AddExpirationToken(token);
 
                     _cache.Set(cacheKey, newsDTOs, cacheOptions);
 
@@ -104,21 +107,34 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("{id}/image")]
-        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
-        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
+        //[ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 500)
         {
-            var loco = await _context.NewsImages.FindAsync(id);
-            if (loco?.Image == null) return NotFound();
+            string cacheKey = $"news_image_{id}_{width}";
+            if (!_cache.TryGetValue(cacheKey, out byte[] cachedImage))
+            {
+                var loco = await _context.NewsImages.FindAsync(id);
+                if (loco?.Image == null) return NotFound();
 
-            // Тут використовуємо ImageSharp для ресайзу
-            using var image = Image.Load(loco.Image);
-            image.Mutate(x => x.Resize(width, 0));
+                // Тут використовуємо ImageSharp для ресайзу
+                using var image = Image.Load(loco.Image);
+                image.Mutate(x => x.Resize(width, 0));
 
-            var ms = new MemoryStream();
-            image.SaveAsJpeg(ms);
-            ms.Position = 0;
-
-            return File(ms, "image/jpeg");
+                var ms = new MemoryStream();
+                image.SaveAsJpeg(ms);
+                ms.Position = 0;
+                cachedImage = ms.ToArray();
+                IChangeToken token = _newsCacheService.GetToken();
+                _cache.Set(cacheKey, cachedImage, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12),
+                    SlidingExpiration = TimeSpan.FromHours(2),
+                    Priority = CacheItemPriority.High,
+                    
+                }
+                .AddExpirationToken(token));
+            }
+            return File(cachedImage, "image/jpeg");
         }
 
 
@@ -150,11 +166,13 @@ namespace TrainzInfo.Controllers.Api
                         NewsInfoAll = news.NewsInfoAll,
                         DateTime = news.DateTime.ToString("yyyy-MM-dd"),
                         ImgSrc = news.NewsImages.Image != null
-                            ? $"api/news/{news.NewsImages.id}/image?width=500" : null
+                            ? $"api/news/{news.NewsImages.id}/image?width=600" : null
                     };
+
+                    IChangeToken token = _newsCacheService.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
-                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                                .AddExpirationToken(new CancellationChangeToken(_newsCacheTokenSource.Token));
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30)) // кеш 5 хв
+                                .AddExpirationToken(token);
 
                     _cache.Set(cacheKey, newsDTO, cacheOptions);
                 }
@@ -321,7 +339,7 @@ namespace TrainzInfo.Controllers.Api
                     return NotFound();
                 }
                 Log.Wright("NewsInfo Found Successfully");
-              
+
                 existingNews.NameNews = newsInfo.NameNews;
                 existingNews.BaseNewsInfo = newsInfo.BaseNewsInfo;
                 existingNews.NewsInfoAll = newsInfo.NewsInfoAll;

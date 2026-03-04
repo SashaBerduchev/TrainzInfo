@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
+using TrainzInfo.Services;
 using TrainzInfo.Tools.DB;
 using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
@@ -31,13 +32,15 @@ namespace TrainzInfo.Controllers.Api
         private readonly ApplicationContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private static CancellationTokenSource _cancellationTokenSource = new();
+        private static LocomotivesCacheService _locomotivesCache;
         private  IMemoryCache _cache;
 
-        public LocomotivesApiController(UserManager<IdentityUser> userManager, ApplicationContext context, IMemoryCache cache) : base(userManager, context)
+        public LocomotivesApiController(UserManager<IdentityUser> userManager, ApplicationContext context, IMemoryCache cache, LocomotivesCacheService locomotivesCache) : base(userManager, context)
         {
             _context = context;
             _userManager = userManager;
             _cache = cache;
+            _locomotivesCache = locomotivesCache;
 
         }
 
@@ -164,13 +167,14 @@ namespace TrainzInfo.Controllers.Api
                         Filia = n.DepotList.UkrainsRailway.Name,
                         Seria = n.Locomotive_Series.Seria,
                         Station = n.Stations.Name,
-                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
+                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=600" : null
                         // або формат за потребою
                     }).ToListAsync();
 
+                    IChangeToken token = _locomotivesCache.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                                .AddExpirationToken(token);
                     _cache.Set(cacheKey, locoDTO, cacheOptions);
                 }
                 catch (Exception ex)
@@ -200,8 +204,6 @@ namespace TrainzInfo.Controllers.Api
             {
                 try
                 {
-                    
-
                     Log.Wright("Start Get GetLocomotive");
                     locomotive = await _context.Locomotives
                         .Include(x => x.DepotList)
@@ -263,21 +265,34 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpGet("{id}/image")]
-        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
+        //[ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
         public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
         {
-            var loco = await _context.Locomotives.FindAsync(id);
-            if (loco?.Image == null) return NotFound();
+            string cacheKey = $"loco_image_{id}_{width}";
+            if (!_cache.TryGetValue(cacheKey, out byte[] cachedImage))
+            {
+                var loco = await _context.Locomotives.FindAsync(id);
+                if (loco?.Image == null) return NotFound();
 
-            // Тут використовуємо ImageSharp для ресайзу
-            using var image = Image.Load(loco.Image);
-            image.Mutate(x => x.Resize(width, 0));
+                // Тут використовуємо ImageSharp для ресайзу
+                using var image = Image.Load(loco.Image);
+                image.Mutate(x => x.Resize(width, 0));
 
-            var ms = new MemoryStream();
-            image.SaveAsJpeg(ms);
-            ms.Position = 0;
+                var ms = new MemoryStream();
+                image.SaveAsJpeg(ms);
+                ms.Position = 0;
+                cachedImage = ms.ToArray();
+                IChangeToken token = _locomotivesCache.GetToken();
+                _cache.Set(cacheKey, cachedImage, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12),
+                    SlidingExpiration = TimeSpan.FromHours(2),
+                    Priority = CacheItemPriority.High,
 
-            return File(ms, "image/jpeg");
+                }
+                .AddExpirationToken(token));
+            }
+            return File(cachedImage, "image/jpeg");
         }
 
 
@@ -510,9 +525,7 @@ namespace TrainzInfo.Controllers.Api
 
                     _context.Locomotives.Add(locomotive);
                 }, IsolationLevel.Serializable);
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = new CancellationTokenSource();
+                _locomotivesCache.Clear();
                 return Ok();
             }
             catch (Exception ex)

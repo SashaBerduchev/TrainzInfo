@@ -22,14 +22,19 @@ namespace TrainzInfo.Tools.BackgroundServices
         private readonly NewsCacheService _newsCacheService;
         private readonly LocomotivesCacheService _locoCacheService;
         private readonly StationsCacheService _stationCacheService;
-        public CacheWarmupService(IServiceProvider serviceProvider, NewsCacheService newsCacheService, 
+        private readonly ElectricsCacheService _electricsCacheService;
+        private readonly DieselCacheService _dieselCacheService;
+        public CacheWarmupService(IServiceProvider serviceProvider, NewsCacheService newsCacheService,
             LocomotivesCacheService locoCacheService,
-            StationsCacheService stationsCacheService)
+            StationsCacheService stationsCacheService, ElectricsCacheService electricsCacheService,
+            DieselCacheService dieselCacheService)
         {
             _serviceProvider = serviceProvider;
             _newsCacheService = newsCacheService;
             _locoCacheService = locoCacheService;
             _stationCacheService = stationsCacheService;
+            _electricsCacheService = electricsCacheService;
+            _dieselCacheService = dieselCacheService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -47,8 +52,106 @@ namespace TrainzInfo.Tools.BackgroundServices
             await CacheLocomotives(context, cache, cancellationToken);
             Log.Wright("Прогрів кешу для станцій...");
             await CacheStations(context, cache, cancellationToken);
+            await CacheElectrics(context, cache, cancellationToken);
+            await CacheDiesels(context, cache, cancellationToken);
             Log.Wright("Прогрів кешу завершено");
             Log.Finish();
+        }
+
+        private async Task CacheDiesels(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
+        {
+            string filia = null;
+            string model = null;
+            string depot = null;
+            string oblast = null;
+            int pageSize = 10;
+            for (int page = 1; page <= 10; page++)
+            {
+                var filters = new
+                {
+                    filia = filia?.Trim().ToLower(),
+                    depot = depot?.Trim().ToLower(),
+                    model = model?.Trim().ToLower(),
+                    oblast = oblast?.Trim().ToLower(),
+                    page
+                };
+                string cacheKey = $"diesls_{JsonSerializer.Serialize(filters)}";
+
+                var query = context.DieselTrains.AsNoTracking()
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+                var data = await query.Select(dt => new DieselTrainsDTO
+                {
+                    Id = dt.Id,
+                    Name = dt.SuburbanTrainsInfo.Model,
+                    SuburbanTrainsInfo = dt.SuburbanTrainsInfo.BaseInfo,
+                    NumberTrain = dt.NumberTrain,
+                    DepotList = dt.DepotList.Name,
+                    City = dt.DepotList.City.Name,
+                    Oblast = dt.DepotList.City.Oblasts.Name,
+                    Filia = dt.DepotList.UkrainsRailway.Name,
+                    Image = dt.Image != null
+                                        ? $"api/diesels/{dt.Id}/image?width=600" : null,
+                    ImageMimeTypeOfData = dt.ImageMimeTypeOfData,
+                    Station = dt.Stations.Name
+                }).ToListAsync();
+
+                var token = _dieselCacheService.GetToken();
+                cache.Set(cacheKey, data,
+                    new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                        .AddExpirationToken(token));
+            }
+        }
+
+        private async Task CacheElectrics(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
+        {
+            string filia = null;
+            string name = null;
+            string depo = null;
+            int pageSize = 10;
+            for (int page = 1; page <= 10; page++)
+            {
+                var filters = new
+                {
+                    filia = filia?.Trim().ToLower(),
+                    name = name?.Trim().ToLower(),
+                    depo = depo?.Trim().ToLower(),
+                    page
+                };
+
+                string cacheKey = $"electrics_{JsonSerializer.Serialize(filters)}";
+                var query = context.Electrics.AsNoTracking()
+                    .OrderBy(x => x.Model)
+                    .ThenBy(x => x.Trains.Model)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+                var data = await query.Select(x => new ElectricTrainDTO
+                {
+                    id = x.id,
+                    Name = x.Name,
+                    Model = x.Model,
+                    MaxSpeed = x.MaxSpeed,
+                    DepotTrain = x.DepotTrain,
+                    DepotCity = x.DepotCity,
+                    Image = x.Image != null
+                                    ? $"api/electrictrains/{x.id}/image?width=600" : null,
+                    ImageMimeTypeOfData = x.ImageMimeTypeOfData,
+                    DepotList = x.DepotList.Name,
+                    Oblast = x.City.Oblasts.Name,
+                    UkrainsRailway = x.DepotList.UkrainsRailway.Name,
+                    City = x.City.Name,
+                    TrainsInfo = x.Trains.BaseInfo,
+                    ElectrickTrainzInformation = x.ElectrickTrainzInformation.AllInformation,
+                    Station = x.Stations.Name
+                }).ToListAsync();
+                IChangeToken token = _electricsCacheService.GetToken();
+                cache.Set(cacheKey, data,
+                    new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                        .AddExpirationToken(token));
+            }
+
         }
 
         private async Task CacheStations(ApplicationContext context, IMemoryCache cache, CancellationToken cancellationToken)
@@ -89,7 +192,7 @@ namespace TrainzInfo.Tools.BackgroundServices
                         Citys = s.Citys.Name,
                         StationInfo = s.StationInfo.BaseInfo,
                         Metro = s.Metro.Name,
-                        StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=300" : null
+                        StationImages = s.StationImages.Image != null ? $"api/stations/{s.StationImages.id}/image?width=600" : null
                     })
                     .ToListAsync();
 
@@ -140,7 +243,7 @@ namespace TrainzInfo.Tools.BackgroundServices
                         Filia = n.DepotList.UkrainsRailway.Name,
                         Seria = n.Locomotive_Series.Seria,
                         Station = n.Stations.Name,
-                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=300" : null
+                        ImgSrc = n.Image != null ? $"api/locomotives/{n.id}/image?width=600" : null
                     }).ToListAsync();
 
                 var token = _locoCacheService.GetToken();
@@ -174,7 +277,7 @@ namespace TrainzInfo.Tools.BackgroundServices
                             NewsInfoAll = n.NewsInfoAll,
                             DateTime = n.DateTime.ToString("yyyy-MM-dd"),
                             ImgSrc = n.NewsImages.Image != null
-                                ? $"api/news/{n.NewsImages.id}/image?width=300" : null
+                                ? $"api/news/{n.NewsImages.id}/image?width=600" : null
                         })
                         .ToListAsync();
                 var token = _newsCacheService.GetToken();

@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Data;
 using TrainzInfo.Models;
+using TrainzInfo.Services;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfoLog;
@@ -31,11 +32,13 @@ namespace TrainzInfo.Controllers.Api
     {
         private readonly ApplicationContext _context;
         private static CancellationTokenSource _cancellationTokenSource = new();
+        private readonly ElectricsCacheService _electricsCacheService;
         private IMemoryCache _cache;
-        public ElectricTrainsApiController(ApplicationContext context, IMemoryCache cache)
+        public ElectricTrainsApiController(ApplicationContext context, IMemoryCache cache, ElectricsCacheService electricsCacheService)
         {
             _context = context;
             _cache = cache;
+            _electricsCacheService = electricsCacheService;
         }
 
         [HttpGet("update")]
@@ -55,7 +58,7 @@ namespace TrainzInfo.Controllers.Api
                 {
                     if (item.Stations is not null) continue;
 
-                    if(item.Trains == null)
+                    if (item.Trains == null)
                     {
                         SuburbanTrainsInfo suburbanTrainsInfo = await _context.SuburbanTrainsInfos.Where(x => x.Model == item.Name).FirstOrDefaultAsync();
                         item.Trains = suburbanTrainsInfo;
@@ -95,7 +98,7 @@ namespace TrainzInfo.Controllers.Api
             [FromQuery] string filia = null)
         {
             Log.Init(this.ToString(), nameof(GetElectrics));
-            
+
             int pageSize = 5;
 
             var filters = new
@@ -105,7 +108,7 @@ namespace TrainzInfo.Controllers.Api
                 depo = depo?.Trim().ToLower(),
                 page
             };
-            string cacheKey = $"eelctrics_{JsonSerializer.Serialize(filters)}";
+            string cacheKey = $"electrics_{JsonSerializer.Serialize(filters)}";
             if (!_cache.TryGetValue(cacheKey, out List<ElectricTrainDTO> electrics))
             {
                 try
@@ -137,37 +140,37 @@ namespace TrainzInfo.Controllers.Api
                         query = query.Where(x => x.DepotList.UkrainsRailway.Name == filia);
                     }
 
-                    query = query.OrderBy(x => x.Trains.Model).OrderBy(x => x.Model);
+                    query = query.OrderBy(x => x.Trains.Model).ThenBy(x => x.Model);
                     query = query.Skip((page - 1) * pageSize)
                         .Take(pageSize);
 
-                    List<ElectricTrain> electricTrains = await query.ToListAsync();
-                    electrics = electricTrains
-                        .AsParallel()
-                        .Select(x => new ElectricTrainDTO
-                        {
-                            id = x.id,
-                            Name = x.Name,
-                            Model = x.Model,
-                            MaxSpeed = x.MaxSpeed,
-                            DepotTrain = x.DepotTrain,
-                            DepotCity = x.DepotCity,
 
-                            Image = x.Image != null
-                                        ? $"api/electrictrains/{x.id}/image?width=300" : null,
-                            ImageMimeTypeOfData = x.ImageMimeTypeOfData,
-                            DepotList = x.DepotList.Name,
-                            Oblast = x.City.Oblasts.Name,
-                            UkrainsRailway = x.DepotList.UkrainsRailway.Name,
-                            City = x.City.Name,
-                            TrainsInfo = x.Trains?.BaseInfo,
-                            ElectrickTrainzInformation = x.ElectrickTrainzInformation?.AllInformation,
-                            Station = x.Stations?.Name
-                        }).ToList();
+                    electrics = await query.Select(x => new ElectricTrainDTO
+                    {
+                        id = x.id,
+                        Name = x.Name,
+                        Model = x.Model,
+                        MaxSpeed = x.MaxSpeed,
+                        DepotTrain = x.DepotTrain,
+                        DepotCity = x.DepotCity,
+                        Image = x.Image != null
+                                    ? $"api/electrictrains/{x.id}/image?width=600" : null,
+                        ImageMimeTypeOfData = x.ImageMimeTypeOfData,
+                        DepotList = x.DepotList.Name,
+                        Oblast = x.City.Oblasts.Name,
+                        UkrainsRailway = x.DepotList.UkrainsRailway.Name,
+                        City = x.City.Name,
+                        TrainsInfo = x.Trains.BaseInfo,
+                        ElectrickTrainzInformation = x.ElectrickTrainzInformation.AllInformation,
+                        Station = x.Stations.Name
+                    }).ToListAsync();
+
                     Log.Wright("Electrics loaded query: " + query.ToQueryString());
+
+                    IChangeToken token = _electricsCacheService.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                                   .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                                   .AddExpirationToken(token);
                     _cache.Set(cacheKey, electrics, cacheOptions);
                 }
                 catch (Exception ex)
@@ -186,21 +189,34 @@ namespace TrainzInfo.Controllers.Api
 
 
         [HttpGet("{id}/image")]
-        [ResponseCache(Duration = 86400)] // Кешуємо в браузері на добу!
         public async Task<IActionResult> GetImage(int id, [FromQuery] int width = 300)
         {
-            var loco = await _context.Electrics.FindAsync(id);
-            if (loco?.Image == null) return NotFound();
+            string cacheKey = $"diesel_image_{id}_{width}";
+            if (!_cache.TryGetValue(cacheKey, out byte[] cachedImage))
+            {
+                var loco = await _context.Electrics.FindAsync(id);
+                if (loco?.Image == null) return NotFound();
 
-            // Тут використовуємо ImageSharp для ресайзу
-            using var image = Image.Load(loco.Image);
-            image.Mutate(x => x.Resize(width, 0));
+                // Тут використовуємо ImageSharp для ресайзу
+                using var image = Image.Load(loco.Image);
+                image.Mutate(x => x.Resize(width, 0));
 
-            var ms = new MemoryStream();
-            image.SaveAsJpeg(ms);
-            ms.Position = 0;
+                var ms = new MemoryStream();
+                image.SaveAsJpeg(ms);
+                ms.Position = 0;
+                cachedImage = ms.ToArray();
+                IChangeToken token = _electricsCacheService.GetToken();
+                _cache.Set(cacheKey, cachedImage, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12),
+                    SlidingExpiration = TimeSpan.FromHours(2),
+                    Priority = CacheItemPriority.High,
 
-            return File(ms, "image/jpeg");
+                }
+                .AddExpirationToken(token));
+
+            }
+            return File(cachedImage, "image/jpeg");
         }
 
 
@@ -217,67 +233,78 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Details(int id)
         {
             Log.Init(this.ToString(), nameof(Details));
-            
+
             Log.Wright("Get electric train details");
-            try
+            string cacheKey = $"electric_detail_{id}";
+            if (!_cache.TryGetValue(cacheKey, out ElectricTrainDTO electricTrainDTO))
             {
-                ElectricTrain electricTrain = await _context.Electrics
-                    .Include(d => d.DepotList)
-                    .Include(p => p.PlantsCreate)
-                    .Include(k => k.PlantsKvr)
-                    .Include(c => c.City)
-                        .ThenInclude(o => o.Oblasts)
-                    .Include(u => u.DepotList)
-                        .ThenInclude(o => o.UkrainsRailway)
-                    .Include(t => t.Trains)
-                    .Include(e => e.ElectrickTrainzInformation)
-                    .Include(x => x.Stations)
-                        .ThenInclude(s => s.StationInfo)
-                    .Include(x => x.Stations)
-                        .ThenInclude(si => si.StationImages)
-                    .Where(x => x.id == id)
-                    .FirstOrDefaultAsync();
-                if (electricTrain == null)
+                try
                 {
-                    return NotFound();
+                    ElectricTrain electricTrain = await _context.Electrics
+                        .Include(d => d.DepotList)
+                        .Include(p => p.PlantsCreate)
+                        .Include(k => k.PlantsKvr)
+                        .Include(c => c.City)
+                            .ThenInclude(o => o.Oblasts)
+                        .Include(u => u.DepotList)
+                            .ThenInclude(o => o.UkrainsRailway)
+                        .Include(t => t.Trains)
+                        .Include(e => e.ElectrickTrainzInformation)
+                        .Include(x => x.Stations)
+                            .ThenInclude(s => s.StationInfo)
+                        .Include(x => x.Stations)
+                            .ThenInclude(si => si.StationImages)
+                        .Where(x => x.id == id)
+                        .FirstOrDefaultAsync();
+                    if (electricTrain == null)
+                    {
+                        return NotFound();
+                    }
+                    electricTrainDTO = new ElectricTrainDTO
+                    {
+                        id = electricTrain.id,
+                        Name = electricTrain.Name,
+                        Model = electricTrain.Model,
+                        MaxSpeed = electricTrain.MaxSpeed,
+                        DepotTrain = electricTrain.DepotTrain,
+                        DepotCity = electricTrain.DepotCity,
+                        Image = electricTrain.Image != null
+                                    ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
+                                    : null,
+                        ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
+                        DepotList = electricTrain.DepotList.Name,
+                        Oblast = electricTrain.City.Oblasts.Name,
+                        UkrainsRailway = electricTrain.DepotList.UkrainsRailway.Name,
+                        City = electricTrain.City.Name,
+                        TrainsInfo = electricTrain.Trains?.BaseInfo,
+                        BaseInfo = electricTrain.Trains?.BaseInfo,
+                        ElectrickTrainzInformation = electricTrain.ElectrickTrainzInformation?.AllInformation,
+                        Station = electricTrain.Stations?.Name,
+                        StationInformation = electricTrain.Stations?.StationInfo?.BaseInfo,
+                        StationImages = electricTrain.Stations.StationImages.Image
+                            != null ? $"data:{electricTrain.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Stations.StationImages.Image)}"
+                            : null
+                    };
+                    IChangeToken token = _electricsCacheService.GetToken();
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30)) // кеш 5 хв
+                                .AddExpirationToken(token);
+
+                    _cache.Set(cacheKey, electricTrainDTO, cacheOptions);
                 }
-                ElectricTrainDTO electricTrainDTO = new ElectricTrainDTO
+                catch (Exception ex)
                 {
-                    id = electricTrain.id,
-                    Name = electricTrain.Name,
-                    Model = electricTrain.Model,
-                    MaxSpeed = electricTrain.MaxSpeed,
-                    DepotTrain = electricTrain.DepotTrain,
-                    DepotCity = electricTrain.DepotCity,
-                    Image = electricTrain.Image != null
-                                ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
-                                : null,
-                    ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
-                    DepotList = electricTrain.DepotList.Name,
-                    Oblast = electricTrain.City.Oblasts.Name,
-                    UkrainsRailway = electricTrain.DepotList.UkrainsRailway.Name,
-                    City = electricTrain.City.Name,
-                    TrainsInfo = electricTrain.Trains?.BaseInfo,
-                    BaseInfo = electricTrain.Trains?.BaseInfo,
-                    ElectrickTrainzInformation = electricTrain.ElectrickTrainzInformation?.AllInformation,
-                    Station = electricTrain.Stations?.Name,
-                    StationInformation = electricTrain.Stations?.StationInfo?.BaseInfo,
-                    StationImages = electricTrain.Stations.StationImages.Image
-                        != null ? $"data:{electricTrain.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Stations.StationImages.Image)}"
-                        : null
-                };
-                return Ok(electricTrainDTO);
+                    Log.Exceptions($"Error in {this.ToString()} method {nameof(Details)}: {ex.ToString()} ");
+                    Log.Wright($"Error in {this.ToString()} method {nameof(Details)}: {ex.Message} ");
+                    return StatusCode(500, "Internal server error");
+                }
+                finally
+                {
+                    Log.Finish();
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Exceptions($"Error in {this.ToString()} method {nameof(Details)}: {ex.ToString()} ");
-                Log.Wright($"Error in {this.ToString()} method {nameof(Details)}: {ex.Message} ");
-                return StatusCode(500, "Internal server error");
-            }
-            finally
-            {
-                Log.Finish();
-            }
+
+            return Ok(electricTrainDTO);
         }
 
 
@@ -285,7 +312,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Create([FromBody] ElectricTrainSetDTO trainDTO)
         {
             Log.Init(this.ToString(), nameof(Create));
-            
+
             Log.Wright("Create electric train");
             try
             {
@@ -331,9 +358,7 @@ namespace TrainzInfo.Controllers.Api
                     }
                     depot.ElectricTrains.Add(electricTrain);
                 }, IsolationLevel.Serializable);
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = new CancellationTokenSource();
+                _electricsCacheService.Clear();
                 return Ok();
             }
             catch (Exception ex)
@@ -352,7 +377,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Edit([FromBody] ElectricTrainDTO electricTrainDTO)
         {
             Log.Init(this.ToString(), nameof(Edit));
-            
+
             Log.Wright("Edit electric train");
             try
             {
@@ -376,6 +401,7 @@ namespace TrainzInfo.Controllers.Api
                     _context.Electrics.Update(electricTrain);
                     await _context.SaveChangesAsync();
                 }, IsolationLevel.ReadCommitted);
+                _electricsCacheService.Clear();
                 return Ok();
             }
             catch (Exception ex)
@@ -394,17 +420,20 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> Delete(int id)
         {
             Log.Init(this.ToString(), nameof(Delete));
-            
+
             Log.Wright("Delete electric train");
             try
             {
-                ElectricTrain electricTrain = await _context.Electrics.FindAsync(id);
-                if (electricTrain == null)
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    return NotFound();
-                }
-                _context.Electrics.Remove(electricTrain);
-                await _context.SaveChangesAsync();
+                    ElectricTrain electricTrain = await _context.Electrics.FindAsync(id);
+                    if (electricTrain == null)
+                    {
+                        Log.Wright($"Electric train with id {id} not found for deletion");
+                    }
+                    _context.Electrics.Remove(electricTrain);
+                }, IsolationLevel.Serializable);
+                _electricsCacheService.Clear();
                 return Ok();
             }
             catch (Exception ex)
@@ -432,17 +461,17 @@ namespace TrainzInfo.Controllers.Api
                         .ThenInclude(x => x.UkrainsRailway)
                 .AsQueryable();
 
-            if(!string.IsNullOrEmpty(name))
-                query = query.Where(x => x.ElectricTrain.Any(x=>x.Name == name));
-            if(!string.IsNullOrEmpty(filia))
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(x => x.ElectricTrain.Any(x => x.Name == name));
+            if (!string.IsNullOrEmpty(filia))
                 query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.UkrainsRailway.Name == filia));
-            if(!string.IsNullOrEmpty(depot))
+            if (!string.IsNullOrEmpty(depot))
                 query = query.Where(x => x.ElectricTrain.Any(e => e.DepotList.Name == depot));
 
             query = query.Where(x => x.ElectricTrain.Count > 0);
             List<string> names = await query
-                
-                .Select(x=>x.Model)
+
+                .Select(x => x.Model)
                 .ToListAsync();
             return Ok(names);
         }
@@ -470,17 +499,17 @@ namespace TrainzInfo.Controllers.Api
                 .Include(x => x.UkrainsRailway)
                 .AsQueryable();
 
-            if(!string.IsNullOrEmpty(name))
-                query = query.Where(x => x.ElectricTrains.Any(x=>x.Name == name));
-            
-            if(!string.IsNullOrEmpty(filia))
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(x => x.ElectricTrains.Any(x => x.Name == name));
+
+            if (!string.IsNullOrEmpty(filia))
                 query = query.Where(x => x.UkrainsRailway.Name == filia);
 
-            if(!string.IsNullOrEmpty(depot))
+            if (!string.IsNullOrEmpty(depot))
                 query = query.Where(x => x.Name == depot);
 
             query = query.Where(x => x.Name.Contains("РПЧ") && x.ElectricTrains.Count > 0);
-            List<string> depots = await query.Select(x=>x.Name).ToListAsync();
+            List<string> depots = await query.Select(x => x.Name).ToListAsync();
             return Ok(depots);
         }
 
@@ -498,7 +527,7 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getplants")]
         public async Task<ActionResult> GetPlants()
         {
-            List<string> plants = await _context.Plants.Select(x=>x.Name).ToListAsync();
+            List<string> plants = await _context.Plants.Select(x => x.Name).ToListAsync();
             return Ok(plants);
         }
 
@@ -523,10 +552,12 @@ namespace TrainzInfo.Controllers.Api
 
             query = query.Where(x => x.DepotLists.Any(d => d.ElectricTrains.Count > 0));
             var filias = await query
-                .Select(x=>x.Name)
+                .Select(x => x.Name)
                 .ToListAsync();
             return Ok(filias);
         }
+
+
 
         [HttpGet("allobl")]
         public async Task<ActionResult> GetAllOblasts()

@@ -32,9 +32,7 @@ namespace TrainzInfoShared.DTO.GetDTO
         public string ImageMime { get; set; }
 
         // А це поле автоматично згенерує рядок, коли до нього звернуться
-        public string StationImages => ImageBytes != null
-            ? $"data:{ImageMime};base64,{Convert.ToBase64String(ImageBytes)}"
-            : null;
+        public string ImgSrc { get; set; }
         public List<StationsShadulerDTO> stationsShadulers { get; set; }
     }
 }

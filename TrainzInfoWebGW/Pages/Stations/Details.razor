@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
 @inject IJSRuntime JS
 
 <h1 class="news-page-title">@stations?.Name</h1>
@@ -14,9 +15,9 @@
         <div class="row g-4 align-items-start">
             <!-- Картинка -->
             <div class="col-md-4 text-center">
-                @if (!string.IsNullOrEmpty(stations.StationImages))
+                @if (!string.IsNullOrEmpty(stations.ImgSrc))
                 {
-                    <img src="@stations.StationImages" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
+                    <img src="@(Config.ApiBaseUrl + stations.ImgSrc)" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
                 }
                 else
                 {
