@@ -5,22 +5,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using TrainzInfo.Data;
-using TrainzInfo.Services;
+using TrainzInfoApplicationContext;
 using TrainzInfoLog;
+using TrainzInfoServices;
 using TrainzInfoShared.DTO.GetDTO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace TrainzInfo.Tools.BackgroundServices
+namespace TrainzInfoBackgroundServices
 {
     public class UpdateCaches : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-
         public UpdateCaches(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -126,7 +122,7 @@ namespace TrainzInfo.Tools.BackgroundServices
             }
         }
 
-        private void ClearCaches(IMemoryCache cache, NewsCacheService newsCache, LocomotivesCacheService locomotivesCache, 
+        private void ClearCaches(IMemoryCache cache, NewsCacheService newsCache, LocomotivesCacheService locomotivesCache,
             StationsCacheService stationsCache, ElectricsCacheService electricsCache,
             DieselCacheService dieselCache)
         {
@@ -300,8 +296,8 @@ namespace TrainzInfo.Tools.BackgroundServices
             }
 
         }
-        
-        
+
+
         private async Task CacheElectrics(ApplicationContext context, IMemoryCache cache, ElectricsCacheService cacheService)
         {
             string filia = null;

@@ -33,12 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Logs\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\TrainzInfoApplicationContext\TrainzInfoApplicationContext.csproj" />
+    <ProjectReference Include="..\TrainzInfoBackgroundServices\TrainzInfoBackgroundServices.csproj" />
     <ProjectReference Include="..\TrainzInfoLog\TrainzInfoLog.csproj" />
     <ProjectReference Include="..\TrainzInfoModel\TrainzInfoModel.csproj" />
+    <ProjectReference Include="..\TrainzInfoServices\TrainzInfoServices.csproj" />
     <ProjectReference Include="..\TrainzInfoShared\TrainzInfoShared.csproj" />
   </ItemGroup>
 

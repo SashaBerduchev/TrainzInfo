@@ -1,20 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using TrainzInfo.Data;
 using TrainzInfoLog;
 using TrainzInfoModel.Models.Information.Main;
 using TrainzInfoModel.Models.System;
 using TrainzInfoModel.Models.Trains;
+using TrainzInfoApplicationContext;
+using Microsoft.EntityFrameworkCore;
 
-namespace TrainzInfo.Tools.BackgroundServices
+namespace TrainzInfoBackgroundServices
 {
-
     public class SearchIndexingService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
@@ -66,9 +60,9 @@ namespace TrainzInfo.Tools.BackgroundServices
                 .ToListAsync();
             foreach (var train in trains)
             {
-                if(train.From is null)
+                if (train.From is null)
                 {
-                    if(train.StationFrom == "Київ")
+                    if (train.StationFrom == "Київ")
                     {
                         train.StationFrom = "Київ-Пасажирський";
                     }

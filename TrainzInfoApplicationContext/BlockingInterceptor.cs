@@ -1,11 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text;
 using TrainzInfoLog;
 
-namespace TrainzInfo.Tools
+namespace TrainzInfoApplicationContext
 {
     public class BlockingInterceptor : DbCommandInterceptor
     {

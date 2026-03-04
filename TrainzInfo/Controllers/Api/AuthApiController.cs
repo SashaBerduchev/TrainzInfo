@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TrainzInfo.Data;
+
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
+using TrainzInfoApplicationContext;
 using TrainzInfoLog;
 using TrainzInfoShared.DTO.GetDTO;
 

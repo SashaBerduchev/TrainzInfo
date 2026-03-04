@@ -7,8 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using TrainzInfo.Data;
+
 using TrainzInfo.Models;
+using TrainzInfoApplicationContext;
 
 namespace TrainzInfo.Tools.Mail
 {

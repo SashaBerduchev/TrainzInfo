@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -11,16 +10,14 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using TrainzInfo.Data;
-using TrainzInfo.Services;
-using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
+using TrainzInfoApplicationContext;
 using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Information.Additional;
 using TrainzInfoModel.Models.Information.Main;
+using TrainzInfoServices;
 using TrainzInfoShared.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api

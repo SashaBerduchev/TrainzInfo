@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
-using System.Threading;
 
-namespace TrainzInfo.Services
+namespace TrainzInfoServices
 {
     public class DieselCacheService
     {

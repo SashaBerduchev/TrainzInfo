@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using TrainzInfo.Tools;
 using TrainzInfoLog;
 using TrainzInfoModel.Models.Dictionaries.Addresses;
 using TrainzInfoModel.Models.Dictionaries.MetaData;
@@ -14,30 +13,26 @@ using TrainzInfoModel.Models.System;
 using TrainzInfoModel.Models.Trains;
 using TrainzInfoModel.Models.UsersInfo;
 
-namespace TrainzInfo.Data
+namespace TrainzInfoApplicationContext
 {
     public class ApplicationContext : IdentityDbContext
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
-            
-        }
 
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (Startup.GetConfig() == true)
-            {
-                optionsBuilder
-                    .UseSqlServer(Startup.GetConnectionString())
-                    .AddInterceptors(new BlockingInterceptor())
-                    //.EnableSensitiveDataLogging()
-                    .LogTo(Log.SQLLogging, 
-                    LogLevel.Information,
-                    DbContextLoggerOptions.LocalTime)
-                    ; // лог у консоль
-            }
+            optionsBuilder
+        .AddInterceptors(new BlockingInterceptor())
+        //.EnableSensitiveDataLogging()
+        .LogTo(Log.SQLLogging,
+               LogLevel.Information,
+               DbContextLoggerOptions.LocalTime);
+            ; // лог у консоль
         }
+
         public DbSet<Locomotive> Locomotives { get; set; }
         public DbSet<NewsInfo> NewsInfos { get; set; }
         public DbSet<NewsComments> NewsComments { get; set; }
@@ -75,7 +70,5 @@ namespace TrainzInfo.Data
         public DbSet<PlanningUserRouteSave> PlanningUserRouteSaves { get; set; }
         public DbSet<DocumentToIndex> DocumentToIndex { get; set; }
         public DbSet<StatusObject> StatusObjects { get; set; }
-
     }
-
 }

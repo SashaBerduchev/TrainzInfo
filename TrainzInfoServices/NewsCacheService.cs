@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Primitives;
-using System.Threading;
 
-namespace TrainzInfo.Services
+namespace TrainzInfoServices
 {
-    public class LocomotivesCacheService
+    public class NewsCacheService
     {
         private CancellationTokenSource _tokenSource = new CancellationTokenSource();
         public IChangeToken GetToken() => new CancellationChangeToken(_tokenSource.Token);
