@@ -547,10 +547,11 @@ namespace TrainzInfo.Controllers.Api
                 await _context.ExecuteInTransactionAsync( async () =>
                 {
                     City city = depotList.City;
+                    Oblast oblast = city.Oblasts;
                     if (city.Oblasts == null)
                     {
-                        city.Oblasts = await _context.Oblasts.Where(x => x.Name == dieselTrainDto.Oblast).FirstOrDefaultAsync();
-                        city.Oblast = dieselTrainDto.Oblast;
+                        city.Oblasts = oblast;
+                        city.Oblast = oblast.Name;
                     }
                     _context.Cities.Update(city);
                     Stations stations = await _context.Stations.Include(x => x.DieselTrains).Include(x => x.Citys).Where(x => x.Citys.Name == city.Name).FirstOrDefaultAsync();

@@ -67,20 +67,6 @@
                             }
                         </div>
 
-                        <!-- Область -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">
-                                Область
-                            </label>
-                            <InputSelect @bind-Value="diesel.Oblast"
-                                         class="form-select form-select-lg">
-                                @foreach (var item in OblList)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            </InputSelect>
-                        </div>
-
                         <!-- Фото -->
                         <div class="mb-4">
                             <label class="form-label fw-medium">
@@ -151,7 +137,6 @@
         var oblasts = await Http.GetFromJsonAsync<List<string>>("api/diesels/allobl");
         NameList.AddRange(series ?? new List<string>());
         DepotList.AddRange(depots ?? new List<string>());
-        OblList.AddRange(oblasts ?? new List<string>());
     }
     
     private async Task HandleValidSubmit()

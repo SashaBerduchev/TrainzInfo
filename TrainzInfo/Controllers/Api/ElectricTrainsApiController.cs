@@ -337,11 +337,12 @@ namespace TrainzInfo.Controllers.Api
                     .Include(x => x.City)
                         .ThenInclude(x => x.Oblasts)
                     .Where(x => x.Name == trainDTO.DepotList).FirstOrDefaultAsync();
-                    City city = await _context.Cities.Where(x => x.Name == depot.City.Name).FirstOrDefaultAsync();
+                    City city = depot.City;
+                    Oblast oblast = city.Oblasts;
                     if (city.Oblasts == null)
                     {
-                        city.Oblasts = await _context.Oblasts.Where(x => x.Name == trainDTO.Oblast).FirstOrDefaultAsync();
-                        city.Oblast = trainDTO.Oblast;
+                        city.Oblasts = oblast;
+                        city.Oblast = oblast.Name;
                     }
                     _context.Cities.Update(city);
                     SuburbanTrainsInfo suburban = await _context.SuburbanTrainsInfos.Where(x => x.Model == trainDTO.Name).FirstOrDefaultAsync();

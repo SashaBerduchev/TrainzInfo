@@ -17,6 +17,5 @@ namespace TrainzInfoShared.DTO.SetDTO
         public string Image { get; set; }
         public string ImageMimeTypeOfData { get; set; }
         public string DepotList { get; set; }
-        public string Oblast { get; set; }
     }
 }

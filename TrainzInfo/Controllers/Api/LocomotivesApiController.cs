@@ -471,10 +471,11 @@ namespace TrainzInfo.Controllers.Api
                         .FirstOrDefaultAsync();
                     City city = depot.City;
                     Stations stations = await _context.Stations.Include(x => x.Locomotives).Include(x => x.Citys).Where(x => x.Citys.Name == depot.City.Name).FirstOrDefaultAsync();
+                    Oblast oblast = depot.City.Oblasts;
                     if (city.Oblasts == null)
                     {
-                        city.Oblasts = await _context.Oblasts.Where(x => x.Name == locomotiveDTO.Oblast).FirstOrDefaultAsync();
-                        city.Oblast = locomotiveDTO.Oblast;
+                        city.Oblasts = oblast;
+                        city.Oblast = oblast.Name;
                     }
                     _context.Cities.Update(city);
                     var locomotive = new Locomotive

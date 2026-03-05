@@ -12,7 +12,6 @@ namespace TrainzInfoShared.DTO.SetDTO
 
         // Філія / депо / місто / область
         public string Depot { get; set; }
-        public string Oblast { get; set; }
 
         // Зображення
         public string ImgSrc { get; set; }  // URL або base64 string
