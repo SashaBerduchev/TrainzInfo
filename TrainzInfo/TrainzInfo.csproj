@@ -41,6 +41,10 @@
     <ProjectReference Include="..\TrainzInfoShared\TrainzInfoShared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <ProjectReference Include="..\TrainzInfoWebGW\TrainzInfoWebGW.csproj" />
   </ItemGroup>-->

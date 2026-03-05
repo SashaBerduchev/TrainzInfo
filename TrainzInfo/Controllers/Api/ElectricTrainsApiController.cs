@@ -234,55 +234,72 @@ namespace TrainzInfo.Controllers.Api
 
             Log.Wright("Get electric train details");
             string cacheKey = $"electric_detail_{id}";
-            if (!_cache.TryGetValue(cacheKey, out ElectricTrainDTO electricTrainDTO))
+            if (!_cache.TryGetValue(cacheKey, out ElectricTrainDTO electricTrainDTO) || electricTrainDTO is null)
             {
                 try
                 {
-                    ElectricTrain electricTrain = await _context.Electrics
-                        .Include(d => d.DepotList)
-                        .Include(p => p.PlantsCreate)
-                        .Include(k => k.PlantsKvr)
-                        .Include(c => c.City)
-                            .ThenInclude(o => o.Oblasts)
-                        .Include(u => u.DepotList)
-                            .ThenInclude(o => o.UkrainsRailway)
-                        .Include(t => t.Trains)
-                        .Include(e => e.ElectrickTrainzInformation)
-                        .Include(x => x.Stations)
-                            .ThenInclude(s => s.StationInfo)
-                        .Include(x => x.Stations)
-                            .ThenInclude(si => si.StationImages)
+                    var rawData = await _context.Electrics
                         .Where(x => x.id == id)
-                        .FirstOrDefaultAsync();
-                    if (electricTrain == null)
+                        // Include тут не потрібні, EF Core сам зробить потрібні LEFT JOIN
+                        .Select(xs => new
+                        {
+                            xs.id,
+                            xs.Name,
+                            xs.Model,
+                            xs.MaxSpeed,
+                            xs.DepotTrain,
+                            xs.DepotCity,
+                            xs.Image,
+                            xs.ImageMimeTypeOfData,
+                            DepotListName = xs.DepotList.Name,
+                            OblastName = xs.City.Oblasts.Name,
+                            UkrainsRailwayName = xs.DepotList.UkrainsRailway.Name,
+                            CityName = xs.City.Name,
+                            TrainsInfo = xs.Trains.BaseInfo,
+                            ElectrickTrainzInformation = xs.ElectrickTrainzInformation.AllInformation,
+                            StationName = xs.Stations.Name,
+                            StationInformation = xs.Stations.StationInfo.BaseInfo,
+                            StationImage = xs.Stations.StationImages.Image,
+                            StationImageMime = xs.Stations.StationImages.ImageMimeTypeOfData
+                        }).FirstOrDefaultAsync();
+
+                    // Якщо дійсно нічого не знайдено
+                    if (rawData == null)
                     {
-                        return NotFound();
+                        return null;
                     }
+
+                    // 2. Безпечно мапимо дані та конвертуємо в Base64 вже в пам'яті (C#)
                     electricTrainDTO = new ElectricTrainDTO
                     {
-                        id = electricTrain.id,
-                        Name = electricTrain.Name,
-                        Model = electricTrain.Model,
-                        MaxSpeed = electricTrain.MaxSpeed,
-                        DepotTrain = electricTrain.DepotTrain,
-                        DepotCity = electricTrain.DepotCity,
-                        Image = electricTrain.Image != null
-                                    ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
-                                    : null,
-                        ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
-                        DepotList = electricTrain.DepotList.Name,
-                        Oblast = electricTrain.City.Oblasts.Name,
-                        UkrainsRailway = electricTrain.DepotList.UkrainsRailway.Name,
-                        City = electricTrain.City.Name,
-                        TrainsInfo = electricTrain.Trains?.BaseInfo,
-                        BaseInfo = electricTrain.Trains?.BaseInfo,
-                        ElectrickTrainzInformation = electricTrain.ElectrickTrainzInformation?.AllInformation,
-                        Station = electricTrain.Stations?.Name,
-                        StationInformation = electricTrain.Stations?.StationInfo?.BaseInfo,
-                        StationImages = electricTrain.Stations.StationImages.Image
-                            != null ? $"data:{electricTrain.Stations.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Stations.StationImages.Image)}"
+                        id = rawData.id,
+                        Name = rawData.Name,
+                        Model = rawData.Model,
+                        MaxSpeed = rawData.MaxSpeed,
+                        DepotTrain = rawData.DepotTrain,
+                        DepotCity = rawData.DepotCity,
+
+                        Image = rawData.Image != null
+                            ? $"data:{rawData.ImageMimeTypeOfData};base64,{Convert.ToBase64String(rawData.Image)}"
+                            : null,
+                        ImageMimeTypeOfData = rawData.ImageMimeTypeOfData,
+
+                        DepotList = rawData.DepotListName,
+                        Oblast = rawData.OblastName,
+                        UkrainsRailway = rawData.UkrainsRailwayName,
+                        City = rawData.CityName,
+                        TrainsInfo = rawData.TrainsInfo,
+                        BaseInfo = rawData.TrainsInfo,
+                        ElectrickTrainzInformation = rawData.ElectrickTrainzInformation,
+
+                        Station = rawData.StationName,
+                        StationInformation = rawData.StationInformation,
+
+                        StationImages = rawData.StationImage != null
+                            ? $"data:{rawData.StationImageMime};base64,{Convert.ToBase64String(rawData.StationImage)}"
                             : null
                     };
+
                     IChangeToken token = _electricsCacheService.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(30)) // кеш 5 хв
@@ -414,7 +431,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             Log.Init(this.ToString(), nameof(Delete));
@@ -422,21 +439,23 @@ namespace TrainzInfo.Controllers.Api
             Log.Wright("Delete electric train");
             try
             {
+                var electric = await _context.Electrics.FindAsync(id);
+                if (electric == null) return NotFound();
                 await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    ElectricTrain electricTrain = await _context.Electrics.FindAsync(id);
-                    if (electricTrain == null)
-                    {
-                        Log.Wright($"Electric train with id {id} not found for deletion");
-                    }
-                    _context.Electrics.Remove(electricTrain);
+                    // 2. Знаходимо всі пов'язані документи та видаляємо їх
+                    var relatedDocuments = _context.DocumentToIndex.Where(d => d.Electric.id == id);
+                    _context.DocumentToIndex.RemoveRange(relatedDocuments);
+
+                    // 3. Тепер безпечно видаляємо сам потяг
+                    _context.Electrics.Remove(electric);
                 }, IsolationLevel.Serializable);
                 _electricsCacheService.Clear();
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.Exceptions($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Delete)}: {ex.ToString()} ");
                 Log.Wright($"Error in {this.ToString()} method {nameof(Delete)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }

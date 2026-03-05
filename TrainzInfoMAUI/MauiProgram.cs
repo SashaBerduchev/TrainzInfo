@@ -14,7 +14,7 @@ namespace TrainzInfoMAUI
             string conntring = "";
             if (DEBUG_MODE == true)
             {
-                conntring = "https://localhost:44321/";
+                conntring = "https://localhost:5001/";
             }
             else
             {
