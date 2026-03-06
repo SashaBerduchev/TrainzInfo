@@ -283,16 +283,21 @@ namespace TrainzInfo.Controllers.Api
         }
 
         [HttpGet("getcitys")]
-        public async Task<ActionResult> GetCitys()
+        public async Task<ActionResult> GetCitys([FromQuery] string oblast)
         {
             Log.Init(this.ToString(), nameof(GetCitys));
-
+            Log.Wright("Try load citys");
             try
             {
-                var citys = await _context.Cities
+                Log.Wright("Getting citys from database");
+                IQueryable<City> query = _context.Cities
+                    .Include(o => o.Oblasts)
                     .OrderBy(c => c.Name)
-                    .Select(c => c.Name)
-                    .ToListAsync();
+                    .AsQueryable();
+                if (!string.IsNullOrEmpty(oblast))
+                    query = query.Where(c => c.Oblasts.Name == oblast);
+
+                var citys = await query.Select(x=>x.Name).ToListAsync();
                 Log.Wright("Citys successfully retrieved from database");
                 return Ok(citys);
             }

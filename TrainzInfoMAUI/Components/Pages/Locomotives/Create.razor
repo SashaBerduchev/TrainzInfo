@@ -2,128 +2,142 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 
-<h4>Локомотиви</h4>
-<hr />
-
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <div class="card shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h4 class="mb-4 fw-semibold">🚆 Новий локомотив</h4>
-
-                    <EditForm Model="@locomotive" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger mb-3" />
-
-                        <!-- Серія -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">
-                                Серія
-                                <small class="text-muted">(наприклад ДС3, ЧС4)</small>
-                            </label>
-                            <InputSelect @bind-Value="locomotive.Seria"
-                                         class="form-select form-select-lg">
-                                @foreach (var item in SeriaList)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            </InputSelect>
-                        </div>
-
-                        <!-- Номер -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">
-                                Номер локомотива
-                            </label>
-                            <InputText @bind-Value="locomotive.Number"
-                                       class="form-control form-control-lg"
-                                       placeholder="001, 002..." />
-                        </div>
-
-                        <!-- Депо -->
-                        <div class="mb-3 position-relative">
-                            <label class="form-label fw-medium">Депо</label>
-                            <InputText @bind-Value="depo"
-                                       class="form-control form-control-lg"
-                                       placeholder="Почніть вводити депо..."
-                                       @oninput="OnInputChanged" />
-
-                            @if (filteredDepot?.Any() == true)
-                            {
-                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1 dropdown"
-                                    style="z-index:1000;">
-                                    @foreach (var item in filteredDepot)
-                                    {
-                                        <li class="list-group-item list-group-item-action"
-                                            style="cursor:pointer;"
-                                            @onclick="() => SelectItem(item)">
-                                            @item
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-
-                        <div class="row">
-                            <!-- Швидкість -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">
-                                    Конструкційна швидкість
-                                </label>
-                                <InputNumber @bind-Value="locomotive.Speed"
-                                             class="form-control form-control-lg"
-                                             placeholder="км/год" />
-                            </div>
-
-                            
-                        </div>
-
-                        <!-- Фото -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">
-                                Фото локомотива
-                            </label>
-                            <InputFile class="form-control"
-                                       OnChange="HandleFileSelected" />
-
-                            @if (!string.IsNullOrEmpty(imagePreview))
-                            {
-                                <div class="mt-3 text-center">
-                                    <img src="@imagePreview"
-                                         class="img-thumbnail rounded-3"
-                                         style="max-height:180px" />
-                                </div>
-                            }
-                        </div>
-
-                        <!-- Кнопка -->
-                        <div class="d-flex justify-content-end">
-                            <button type="submit"
-                                    class="btn btn-primary btn-lg px-4">
-                                Зберегти
-                            </button>
-                        </div>
-                    </EditForm>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(errors))
-            {
-                <div class="alert alert-danger mt-3 rounded-3">
-                    <strong>Помилка збереження</strong><br />
-                    @errors
-                </div>
-            }
+@if (!_isLoaded)
+{
+    @* Гарний лоадер, поки йде перевірка прав та завантаження списків *@
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3 text-muted">Перевірка доступу та завантаження депо...</p>
         </div>
     </div>
-</div>
+}
+else
+{
 
-<div>
-    <NavLink href="/locomotives">Back to List</NavLink>
-</div>
+    <h4>Локомотив</h4>
+    <hr />
 
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h4 class="mb-4 fw-semibold">🚆 Новий локомотив</h4>
+
+                        <EditForm Model="@locomotive" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+
+                            <!-- Серія -->
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">
+                                    Серія
+                                    <small class="text-muted">(наприклад ДС3, ЧС4)</small>
+                                </label>
+                                <InputSelect @bind-Value="locomotive.Seria"
+                                             class="form-select form-select-lg">
+                                    @foreach (var item in SeriaList)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <!-- Номер -->
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">
+                                    Номер локомотива
+                                </label>
+                                <InputText @bind-Value="locomotive.Number"
+                                           class="form-control form-control-lg"
+                                           placeholder="001, 002..." />
+                            </div>
+
+                            <!-- Депо -->
+                            <div class="mb-3 position-relative">
+                                <label class="form-label fw-medium">Депо</label>
+                                <InputText @bind-Value="depo"
+                                           class="form-control form-control-lg"
+                                           placeholder="Почніть вводити депо..."
+                                           @oninput="OnInputChanged" />
+
+                                @if (filteredDepot?.Any() == true)
+                                {
+                                    <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1 dropdown"
+                                        style="z-index:1000;">
+                                        @foreach (var item in filteredDepot)
+                                        {
+                                            <li class="list-group-item list-group-item-action"
+                                                style="cursor:pointer;"
+                                                @onclick="() => SelectItem(item)">
+                                                @item
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+
+                            <div class="row">
+                                <!-- Швидкість -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-medium">
+                                        Конструкційна швидкість
+                                    </label>
+                                    <InputNumber @bind-Value="locomotive.Speed"
+                                                 class="form-control form-control-lg"
+                                                 placeholder="км/год" />
+                                </div>
+
+
+                            </div>
+
+                            <!-- Фото -->
+                            <div class="mb-4">
+                                <label class="form-label fw-medium">
+                                    Фото локомотива
+                                </label>
+                                <InputFile class="form-control"
+                                           OnChange="HandleFileSelected" />
+
+                                @if (!string.IsNullOrEmpty(imagePreview))
+                                {
+                                    <div class="mt-3 text-center">
+                                        <img src="@imagePreview"
+                                             class="img-thumbnail rounded-3"
+                                             style="max-height:180px" />
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Кнопка -->
+                            <div class="d-flex justify-content-end">
+                                <button type="submit"
+                                        class="btn btn-primary btn-lg px-4">
+                                    Зберегти
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(errors))
+                {
+                    <div class="alert alert-danger mt-3 rounded-3">
+                        <strong>Помилка збереження</strong><br />
+                        @errors
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <NavLink href="/locomotives">Back to List</NavLink>
+    </div>
+}
 @code {
     private LocomotiveSetDTO locomotive = new LocomotiveSetDTO();
 
@@ -136,13 +150,28 @@
     private string depo;
     private string imagePreview;
     private string errors;
+    private bool IsPublisherOrAdminOrSuperAdmin;
+    private bool _isLoaded = false; // Флаг стану
 
     protected override async Task OnInitializedAsync()
     {
-        await Load();
-        // Підписка на скрол через JS
-        //await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
-        // Завантажуємо локомотиви з API
+        try
+        {
+            // 1. Спочатку перевіряємо, чи можна користувачу взагалі тут бути
+            await CheckRoles();
+
+            // 2. Якщо CheckRoles не зробив редирект, вантажимо дані для випадаючих списків
+            await Load();
+        }
+        catch (Exception ex)
+        {
+            errors = $"Помилка ініціалізації: {ex.Message}";
+        }
+        finally
+        {
+            // 3. Відкриваємо інтерфейс
+            _isLoaded = true;
+        }
     }
 
     private async Task Load()
@@ -157,6 +186,38 @@
         DepotList.AddRange(depots ?? new List<string>());
         OblList.AddRange(oblasts ?? new List<string>());
     }
+
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Admin");
+                IsPublisherOrAdminOrSuperAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+                Navigation.NavigateTo("/erroraccess");
+            }
+        }
+    }
+
     private async Task HandleValidSubmit()
     {
         var result = await Http.PostAsJsonAsync("api/locomotives/create", locomotive);

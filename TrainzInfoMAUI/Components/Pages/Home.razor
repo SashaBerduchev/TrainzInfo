@@ -47,39 +47,51 @@
     }
     else
     {
-        <div class="row g-3">
-
+        <div class="row g-4">
             @foreach (var news in filteredNews)
             {
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm news-card">
-                        @*  Картинка новости – placeholder, если не задана *@
-                        @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
-                        {
-                            <img src="@(Config.ApiBaseUrl + news.ImgSrc)"
-                                 alt="Новина"
-                                 class="card-img-top img-fluid rounded" />
-                        }
-                        else
-                        {
-                            <div class="placeholder-img d-flex align-items-center justify-content-center">
-                                <span class="text-muted">Без картинки</span>
+                <div class="col-md-6 col-lg-4">
+                    <div class="news-card-modern h-100 shadow-sm border-0">
+                        @* Секція зображення з бейджем *@
+                        <div class="news-img-container position-relative">
+                            @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
+                            {
+                                <img src="@(Config.ApiBaseUrl + news.ImgSrc)"
+                                     alt="Новина"
+                                     class="news-img" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-news-img d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-newspaper text-muted fs-1"></i>
+                                </div>
+                            }
+                            <div class="news-date-badge">
+                                <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd.MM.yyyy") @* Тут можна підставити реальну дату *@
                             </div>
-                        }
+                        </div>
 
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-2">@((MarkupString)news.NameNews)</h5>
-                            <p class="card-text flex-grow-1">@((MarkupString)news.BaseNewsInfo)</p>
+                        <div class="card-body p-4 d-flex flex-column">
+                            @* Заголовок новини *@
+                            <h5 class="news-title mb-3">
+                                @((MarkupString)news.NameNews)
+                            </h5>
 
+                            @* Короткий опис *@
+                            <div class="news-excerpt flex-grow-1 mb-4">
+                                @((MarkupString)news.BaseNewsInfo)
+                            </div>
+
+                            @* Кнопки дій *@
                             <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-                                <NavLink href="@($"/news/details/{news.id}")" class="btn btn-primary btn-sm px-3">
-                                    Детальніше
+                                <NavLink href="@($"/news/details/{news.id}")" class="btn btn-main-sm">
+                                    Читати далі <i class="bi bi-arrow-right ms-1"></i>
                                 </NavLink>
 
                                 @if (IsAdmin)
                                 {
-                                    <NavLink href="@($"/news/edit/{news.id}")" class="btn btn-warning btn-sm shadow-sm text-dark">
-                                        <i class="bi bi-gear-fill me-1"></i> Редагувати
+                                    <NavLink href="@($"/news/edit/{news.id}")" class="btn btn-outline-warning btn-sm border-0">
+                                        <i class="bi bi-pencil-square"></i>
                                     </NavLink>
                                 }
                             </div>

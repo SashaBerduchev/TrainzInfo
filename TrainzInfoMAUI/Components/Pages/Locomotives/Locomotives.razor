@@ -71,52 +71,90 @@ else
         <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
     </div>
 
-    <!-- Список локомотивів -->
     <div class="row" id="locomotiveContainer">
         @if (locomotives is null)
         {
-            <p>Локомотиви відсутні, застосуйте інший фільтр</p>
-        }else{
+            <div class="col-12 text-center py-5">
+                <div class="no-data-icon mb-3">🔍</div>
+                <h5 class="text-muted">Локомотиви відсутні, застосуйте інший фільтр</h5>
+            </div>
+        }
+        else
+        {
             @foreach (var item in locomotives)
             {
-                <div class="col-12 mb-4 loco-card">
-                    <div class="card shadow-sm">
+                <div class="col-12 mb-4">
+                    <div class="loco-card-modern shadow-sm border-0">
                         <div class="row g-0">
-                            <div class="col-12 col-md-4">
-                                <img class="img-fluid rounded-start"
+                            <div class="col-12 col-md-4 position-relative overflow-hidden">
+                                <img class="loco-img"
                                      src="@(Config.ApiBaseUrl + item.ImgSrc)"
-                                     alt="Локомотив" />
+                                     alt="@item.Seria" />
+                                <div class="speed-badge">
+                                    ⚡ @item.Speed <small>км/год</small>
+                                </div>
                             </div>
-                            <div class="col-12 col-md-5 p-3">
-                                <h5>@item.Seria №@item.Number</h5>
-                                <p><b>Філія:</b> @item.Filia</p>
-                                <p><b>Депо:</b> @item.Depot</p>
-                                <p><b>Область:</b> @item.Oblast</p>
-                                <p><b>Місто:</b> @item.City</p>
-                                <p><b>Станція:</b> @item.Station </p>
-                                <p><b>Максимальна швидкість:</b> @item.Speed км/год</p>
+
+                            <div class="col-12 col-md-5 p-4 border-end-md">
+                                <div class="d-flex align-items-center mb-2">
+                                    <h3 class="loco-title mb-0">@item.Seria</h3>
+                                    <span class="loco-number ms-2">№@item.Number</span>
+                                </div>
+
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="label">Філія</span>
+                                        <span class="value">@item.Filia</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">Депо</span>
+                                        <span class="value">@item.Depot</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">Локація</span>
+                                        <span class="value">@item.Oblast, @item.City</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">Станція</span>
+                                        @* Використовуємо кастомний клас для більшого шрифту станції *@
+                                        <span class="value station-highlight">@item.Station</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-                                <button class="btn btn-outline-info mb-2" @onclick="() => ViewDetails(item.Id)">Детальна інформація</button>
-                                <button class="btn btn-outline-success mb-2" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">Фото користувачів</button>
 
-                                @if (IsAdminOrPublisher)
-                                {
-                                    <button class="btn btn-outline-primary mb-2" @onclick="() => EditLocomotive(item.Id)">Редагувати</button>
-                                }
+                            <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
+                                <button class="btn btn-main" @onclick="() => ViewDetails(item.Id)">
+                                    <i class="bi bi-info-circle"></i> Детальніше
+                                </button>
+                                <button class="btn btn-secondary-light" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">
+                                    <i class="bi bi-camera"></i> Галерея
+                                </button>
 
-                                @if (IsAdmin)
+                                @if (IsAdminOrPublisher || IsAdmin)
                                 {
-                                    <button class="btn btn-outline-warning mb-2" @onclick="() => AddImage(item.Id)">Додати зображення</button>
-                                    <button class="btn btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">Видалити</button>
+                                    <div class="admin-actions mt-2 pt-2 border-top">
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @if (IsAdminOrPublisher)
+                                            {
+                                                <button class="btn btn-sm btn-outline-primary flex-grow-1" @onclick="() => EditLocomotive(item.Id)">
+                                                    ред.
+                                                </button>
+                                            }
+                                            @if (IsAdmin)
+                                            {
+                                                <button class="btn btn-sm btn-outline-warning" @onclick="() => AddImage(item.Id)">+ фото</button>
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">видалити</button>
+                                            }
+                                        </div>
+                                    </div>
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
-                }
             }
-            </div>
+        }
+    </div>
 }
 
 @code {

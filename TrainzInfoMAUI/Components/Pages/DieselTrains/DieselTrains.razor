@@ -78,30 +78,62 @@
     {
         @foreach (var item in dieselTrains)
         {
-            <div class="col-12 mb-4 diesel-card">
-                <div class="card shadow-sm">
+            <div class="col-12 mb-4">
+                <div class="loco-card-modern shadow-sm border-0">
                     <div class="row g-0">
-                        <div class="col-12 col-md-4">
-                            <img class="img-fluid rounded-start"
+                        <div class="col-12 col-md-4 position-relative overflow-hidden">
+                            <img class="loco-img"
                                  src="@(Config.ApiBaseUrl + item.Image)"
-                                 alt="Дизель-поїзд" />
+                                 alt="Дизель-поїзд @item.Name" />
+                            @* Якщо в моделі дизелів з'явиться швидкість, можна додати speed-badge тут *@
                         </div>
-                        <div class="col-12 col-md-5 p-3">
-                            <h5>@item.Name — №@item.NumberTrain</h5>
-                            <p><b>Депо:</b> @item.DepotList</p>
-                            <p><b>Філія:</b> @item.Filia</p>
-                            <p><b>Область:</b> @item.Oblast</p>
-                            <p><b>Місто:</b> @item.City</p>
-                            <p><b>Станція:</b> @item.Station</p>
+
+                        <div class="col-12 col-md-5 p-4 border-end-md">
+                            <div class="d-flex align-items-center mb-2">
+                                <h3 class="loco-title mb-0">@item.Name</h3>
+                                <span class="loco-number ms-2">№@item.NumberTrain</span>
+                            </div>
+
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Депо</span>
+                                    <span class="value">@item.DepotList</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Філія</span>
+                                    <span class="value">@item.Filia</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Локація</span>
+                                    <span class="value">@item.Oblast, @item.City</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Станція</span>
+                                    <span class="value station-highlight">@item.Station</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-                            <NavLink class="btn btn-info mb-2" href="@($"/diesel-trains/details/{item.Id}")">Детально</NavLink>
+
+                        <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
+                            <NavLink class="btn btn-main" href="@($"/diesel-trains/details/{item.Id}")">
+                                <i class="bi bi-info-circle"></i> Детально
+                            </NavLink>
 
                             @if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
                             {
-                                <NavLink class="btn btn-outline-warning mb-2" href="@($"/diesel-trains/add-image/{item.Id}")">Додати зображення</NavLink>
-                                <NavLink class="btn btn-success mb-2" href="@($"/diesel-trains/edit/{item.Id}")">Редагувати</NavLink>
-                                <button class="btn btn-danger" @onclick="() => DeleteTrain(item.Id)">Видалити</button>
+                                <div class="admin-actions mt-2 pt-2 border-top">
+                                    <div class="d-flex flex-column gap-2">
+                                        <NavLink class="btn btn-sm btn-outline-warning w-100" href="@($"/diesel-trains/add-image/{item.Id}")">
+                                            <i class="bi bi-image"></i> Додати фото
+                                        </NavLink>
+                                        <NavLink class="btn btn-sm btn-outline-primary w-100" href="@($"/diesel-trains/edit/{item.Id}")">
+                                            <i class="bi bi-pencil"></i> Редагувати
+                                        </NavLink>
+                                        <button class="btn btn-sm btn-outline-danger w-100" @onclick="() => DeleteTrain(item.Id)">
+                                            <i class="bi bi-trash"></i> Видалити
+                                        </button>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>

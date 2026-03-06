@@ -84,48 +84,57 @@
 
     @foreach (var item in stationsList)
     {
-        <div class="col-12 mb-4 station-card">
-            <div class="card shadow-sm">
+        <div class="col-12 mb-4">
+            <div class="loco-card-modern shadow-sm border-0">
                 <div class="row g-0">
-
-                    <!-- Картинка -->
-                    <div class="col-12 col-md-4">
-                        <img class="station-img"
+                    <div class="col-12 col-md-4 position-relative overflow-hidden">
+                        <img class="loco-img"
                              src="@(Config.ApiBaseUrl + item.StationImages)"
-                             alt="station" />
+                             alt="@item.Name" />
+                        <div class="speed-badge">
+                            📍 Станція
+                        </div>
                     </div>
 
-                    <!-- Інформація -->
-                    <div class="col-12 col-md-5 p-3">
-                        <h5>@item.Name</h5>
-                        <p><b>Область:</b> @item.Oblasts</p>
-                        <p><b>Місто:</b> @item.Citys</p>
-                        <p><b>Філія:</b> @item.UkrainsRailways</p>
+                    <div class="col-12 col-md-5 p-4 border-end-md">
+                        <div class="d-flex align-items-center mb-2">
+                            <h3 class="loco-title mb-0 station-highlight">@item.Name</h3>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Область</span>
+                                <span class="value">@item.Oblasts</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Місто / НП</span>
+                                <span class="value">@item.Citys</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Філія (Залізниця)</span>
+                                <span class="value">@item.UkrainsRailways</span>
+                            </div>
+                            @* Можна додати ще один параметр, наприклад, клас станції або тип *@
+                            <div class="info-item">
+                                <span class="label">Статус</span>
+                                <span class="value">Діюча</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Кнопки -->
-                    <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-
-
-                        <a class="btn btn-primary mb-2 w-100" href="/stations/details/@item.id">
-                            Інформація
+                    <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
+                        <a class="btn btn-main w-100" href="/stations/details/@item.id">
+                            <i class="bi bi-geo-alt"></i> Інформація
                         </a>
+
                         @if (IsAdmin)
                         {
-                            <a class="btn btn-outline-info mb-2 w-100" href="/stations/edit/@item.id">
-                                Редагувати
-                            </a>
+                            <div class="admin-actions mt-2 pt-2 border-top">
+                                <a class="btn btn-sm btn-outline-primary w-100" href="/stations/edit/@item.id">
+                                    <i class="bi bi-pencil"></i> Редагувати
+                                </a>
+                            </div>
                         }
-                        
-
-                        @* @if (item.HasUsersPhotos)
-                        {
-                            <a class="btn btn-warning mb-2 w-100" href="/users-photos/@item.Id">
-                                Фотографії користувачів
-                            </a>
-                        } *@
-
-                        <!-- Рольова логіка при потребі -->
                     </div>
                 </div>
             </div>

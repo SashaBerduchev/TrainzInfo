@@ -92,17 +92,19 @@ else
                             <label class="form-label fw-bold">Час прибуття</label>
                             <input type="time"
                                    class="form-control"
-                                   value="@trainsSheduller.Arrival.ToString("HH:mm")"
+                                   value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
                                    @onchange="OnChangeArrival" />
                         </div>
 
+                        <!-- Час відправки -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Час відправки</label>
                             <input type="time"
                                    class="form-control"
-                                   value="@trainsSheduller.Departure.ToString("HH:mm")"
+                                   value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
                                    @onchange="OnChangeDeparture" />
                         </div>
+
                         <!-- Кнопка зберегти -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg" @onclick="HandleValidSubmit">

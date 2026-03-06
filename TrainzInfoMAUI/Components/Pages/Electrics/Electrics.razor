@@ -73,35 +73,67 @@ else
     <div class="row" id="trainsContainer">
         @foreach (var train in ElectricTrains)
         {
-            <div class="col-12 mb-4 train-card">
-                <div class="card shadow-sm fade-in">
+            <div class="col-12 mb-4">
+                <div class="loco-card-modern shadow-sm border-0 fade-in">
                     <div class="row g-0">
-                        <div class="col-12 col-md-4">
-                            <img class="img-fluid rounded-start" src="@(Config.ApiBaseUrl + train.Image)" alt="@train.Name" />
+                        <div class="col-12 col-md-4 position-relative overflow-hidden">
+                            <img class="loco-img"
+                                 src="@(Config.ApiBaseUrl + train.Image)"
+                                 alt="@train.Name" />
+                            <div class="speed-badge">
+                                ⚡ @train.MaxSpeed <small>км/год</small>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-5 p-3">
-                            <h5>@train.Name - @train.Model</h5>
-                            <p><b>Депо:</b> @train.DepotList</p>
-                            <p><b>Філія:</b> @train.UkrainsRailway</p>
-                            <p><b>Область:</b> @train.Oblast</p>
-                            <p><b>Місто:</b> @train.City</p>
-                            <p><b>Станція:</b> @train.Station</p>
-                            <p><b>Максимальна швидкість:</b> @train.MaxSpeed км/год</p>
+
+                        <div class="col-12 col-md-5 p-4 border-end-md">
+                            <div class="d-flex align-items-center mb-2">
+                                <h3 class="loco-title mb-0">@train.Name</h3>
+                                <span class="loco-number ms-2">@train.Model</span>
+                            </div>
+
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Депо</span>
+                                    <span class="value">@train.DepotList</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Філія</span>
+                                    <span class="value">@train.UkrainsRailway</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Локація</span>
+                                    <span class="value">@train.Oblast, @train.City</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Станція</span>
+                                    <span class="value station-highlight">@train.Station</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-3 d-flex flex-column justify-content-center p-3">
-                            <button class="btn btn-info mb-2" @onclick="() => ViewDetails(train.id)">Детально</button>
+
+                        <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
+                            <button class="btn btn-main" @onclick="() => ViewDetails(train.id)">
+                                <i class="bi bi-info-circle"></i> Детально
+                            </button>
 
                             @if (IsSuperAdmin)
                             {
-                                <button class="btn btn-success mb-2" @onclick="() => EditTrain(train.id)">Редагувати</button>
-                                <button class="btn btn-danger" @onclick="() => DeleteTrain(train.id)">Видалити</button>
+                                <div class="admin-actions mt-2 pt-2 border-top">
+                                    <div class="d-flex flex-column gap-2">
+                                        <button class="btn btn-sm btn-outline-success w-100" @onclick="() => EditTrain(train.id)">
+                                            <i class="bi bi-pencil"></i> Редагувати
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger w-100" @onclick="() => DeleteTrain(train.id)">
+                                            <i class="bi bi-trash"></i> Видалити
+                                        </button>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>
                 </div>
             </div>
         }
-
     </div>
 }
 
