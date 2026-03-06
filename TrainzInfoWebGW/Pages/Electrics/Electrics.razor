@@ -22,10 +22,10 @@
         <p><b>Кількість запитів:</b> @count</p>
     }
 </div>
-<!-- Фільтри -->
-<div class="row g-2 mb-4">
-    <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedDepot">
+<div class="row g-2 mb-4 align-items-end">
+    <div class="col-12 col-md-3">
+        <label class="small fw-bold text-muted ms-1">Депо</label>
+        <select class="form-select shadow-sm" value="@SelectedDepot" @onchange="OnDepotChanged">
             <option value="">Всі депо</option>
             @foreach (var depot in DepotList)
             {
@@ -33,9 +33,10 @@
             }
         </select>
     </div>
-    <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedName">
 
+    <div class="col-12 col-md-3">
+        <label class="small fw-bold text-muted ms-1">Назва</label>
+        <select class="form-select shadow-sm" value="@SelectedName" @onchange="OnNameChanged">
             <option value="">Всі назви</option>
             @foreach (var name in NameList)
             {
@@ -43,8 +44,10 @@
             }
         </select>
     </div>
-    <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedFilia">
+
+    <div class="col-12 col-md-3">
+        <label class="small fw-bold text-muted ms-1">Філія</label>
+        <select class="form-select shadow-sm" value="@SelectedFilia" @onchange="OnFiliaChanged">
             <option value="">Всі філії</option>
             @foreach (var filia in FiliaList)
             {
@@ -52,12 +55,12 @@
             }
         </select>
     </div>
-    <div class="col-12 col-md-4">
-        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+
+    <div class="col-12 col-md-3">
+        <button class="btn btn-outline-secondary w-100 shadow-sm" @onclick="ClearFilter">
+            <i class="bi bi-arrow-clockwise"></i> Скинути фільтр
+        </button>
     </div>
-</div>
-<div class="mb-4">
-    <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
 </div>
 
 @if (isLoading)
@@ -255,6 +258,27 @@ else
             }
         }
     }
+
+
+    private async Task OnDepotChanged(ChangeEventArgs e)
+    {
+        SelectedDepot = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnNameChanged(ChangeEventArgs e)
+    {
+        SelectedName = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnFiliaChanged(ChangeEventArgs e)
+    {
+        SelectedFilia = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+
     private async Task ApplyFilter()
     {
         currentPage = 1;

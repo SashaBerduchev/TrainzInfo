@@ -19,10 +19,10 @@
         <button class="btn btn-info mb-2" @onclick="AddStation">Додати станцію</button>
     }
 </div>
-<!-- Фільтри -->
-<div class="row g-2 mb-4">
+<div class="row g-2 mb-4 align-items-end">
     <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedFilia">
+        <label class="small fw-bold text-muted ms-1">Філія</label>
+        <select class="form-select shadow-sm" value="@SelectedFilia" @onchange="OnFiliaChanged">
             <option value="">Всі філії</option>
             @foreach (var f in Filias)
             {
@@ -32,7 +32,8 @@
     </div>
 
     <div class="col-12 col-md-4">
-        <select class="form-control" @bind="SelectedOblast">
+        <label class="small fw-bold text-muted ms-1">Область</label>
+        <select class="form-select shadow-sm" value="@SelectedOblast" @onchange="OnOblastChanged">
             <option value="">Всі області</option>
             @foreach (var o in Oblasts)
             {
@@ -40,32 +41,38 @@
             }
         </select>
     </div>
-    <div class="form-group position-relative">
-        <label>Станції</label>
-        <InputText @bind-Value="SelectedName" class="form-control" placeholder="Почніть вводити назву станції..."
-                   @oninput="OnInputChanged" />
 
-        @if (filteredStations?.Any() == true)
-        {
-            <ul class="list-group position-absolute w-100 dropdown" style="z-index:1000;">
-                @foreach (var item in filteredStations)
-                {
-                    <li class="list-group-item list-group-item-action "
-                        style="cursor:pointer;"
-                        @onclick="() => SelectItem(item)">
-                        @item
-                    </li>
-                }
-            </ul>
-        }
-    </div>
-    <div class="col-12 mt-2">
-        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+    <div class="col-12 col-md-4">
+        <div class="form-group position-relative">
+            <label class="small fw-bold text-muted ms-1">Назва станції</label>
+            <input type="text"
+                   value="@SelectedName"
+                   class="form-control shadow-sm"
+                   placeholder="Почніть вводити..."
+                   @oninput="OnStationInput" />
+
+            @if (filteredStations?.Any() == true)
+            {
+                <ul class="list-group position-absolute w-100 shadow dropdown-menu show" style="z-index:1050; max-height: 200px; overflow-y: auto;">
+                    @foreach (var item in filteredStations)
+                    {
+                        <li class="list-group-item list-group-item-action"
+                            style="cursor:pointer;"
+                            @onclick="() => SelectStationFromList(item)">
+                            @item
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
     </div>
 </div>
 
-<button class="btn btn-secondary mb-4" @onclick="ClearFilter">Скинути фільтр</button>
-
+<div class="d-flex gap-2 mb-4">
+    <button class="btn btn-outline-secondary btn-sm shadow-sm" @onclick="ClearFilter">
+        <i class="bi bi-x-lg"></i> Скинути всі фільтри
+    </button>
+</div>  
 
 
 <!-- Список станцій -->
@@ -231,6 +238,48 @@
         }
         isLoading = false;
     }
+
+
+    private async Task OnFiliaChanged(ChangeEventArgs e)
+    {
+        SelectedFilia = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    // 2. Коли міняємо Область
+    private async Task OnOblastChanged(ChangeEventArgs e)
+    {
+        SelectedOblast = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    // 3. Коли вводимо текст у поле станції
+    private async Task OnStationInput(ChangeEventArgs e)
+    {
+        SelectedName = e.Value?.ToString() ?? "";
+        
+        // Логіка підказок (Dropdown)
+        if (SelectedName.Length >= 2)
+        {
+            // Наприклад, шукаємо в загальному списку станцій
+            // filteredStations = AllStationsNames.Where(s => s.Contains(SelectedName, StringComparison.OrdinalIgnoreCase)).Take(10).ToList();
+        }
+        else
+        {
+            filteredStations = null;
+        }
+
+        await ApplyFilter(); // Фільтруємо основний список відразу
+    }
+
+    // 4. Вибір конкретної станції з випадаючого списку
+    private async Task SelectStationFromList(string item)
+    {
+        SelectedName = item;
+        filteredStations = null; // Ховаємо підказки
+        await ApplyFilter();
+    }
+
 
     protected async Task ApplyFilter()
     {

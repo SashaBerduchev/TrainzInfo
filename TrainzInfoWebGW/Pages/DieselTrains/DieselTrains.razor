@@ -15,9 +15,10 @@
     <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
 }
 
-<div class="row g-2 mb-3">
+<div class="row g-2 mb-3 align-items-end">
     <div class="col-12 col-md-3">
-        <select class="form-control" @bind="selectedFilia">
+        <label class="small fw-bold text-muted ms-1">Філія</label>
+        <select class="form-select shadow-sm" value="@selectedFilia" @onchange="OnFiliaChanged">
             <option value="">Всі філії</option>
             @foreach (var f in filias)
             {
@@ -25,8 +26,10 @@
             }
         </select>
     </div>
+
     <div class="col-12 col-md-3">
-        <select class="form-control" @bind="selectedOblast">
+        <label class="small fw-bold text-muted ms-1">Область</label>
+        <select class="form-select shadow-sm" value="@selectedOblast" @onchange="OnOblastChanged">
             <option value="">Всі області</option>
             @foreach (var o in oblasts)
             {
@@ -34,8 +37,10 @@
             }
         </select>
     </div>
+
     <div class="col-12 col-md-3">
-        <select class="form-control" @bind="selectedDepo">
+        <label class="small fw-bold text-muted ms-1">Депо</label>
+        <select class="form-select shadow-sm" value="@selectedDepo" @onchange="OnDepoChanged">
             <option value="">Всі депо</option>
             @foreach (var d in depos)
             {
@@ -43,8 +48,10 @@
             }
         </select>
     </div>
+
     <div class="col-12 col-md-3">
-        <select class="form-control" @bind="selectedModel">
+        <label class="small fw-bold text-muted ms-1">Модель</label>
+        <select class="form-select shadow-sm" value="@selectedModel" @onchange="OnModelChanged">
             <option value="">Всі моделі</option>
             @foreach (var m in models)
             {
@@ -52,12 +59,13 @@
             }
         </select>
     </div>
-    <div class="col-12 mt-2">
-        <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
-    </div>
 </div>
 
-<button class="btn btn-secondary mb-3" @onclick="ClearFilter">Скинути фільтр</button>
+<div class="mb-4">
+    <button class="btn btn-outline-secondary shadow-sm" @onclick="ClearFilter">
+        <i class="bi bi-arrow-clockwise"></i> Скинути фільтри
+    </button>
+</div>
 
 <div class="row" id="dieselContainer">
     @if (loading == false)
@@ -240,6 +248,31 @@
         isLoading = false;
         StateHasChanged();
     }
+
+    private async Task OnFiliaChanged(ChangeEventArgs e)
+    {
+        selectedFilia = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnOblastChanged(ChangeEventArgs e)
+    {
+        selectedOblast = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnDepoChanged(ChangeEventArgs e)
+    {
+        selectedDepo = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnModelChanged(ChangeEventArgs e)
+    {
+        selectedModel = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
     private async Task ApplyFilter()
     {
         currentPage = 1;

@@ -27,16 +27,17 @@ else
     
 
     <!-- Фільтри -->
-    <div class="row g-2 mb-3">
+    <div class="row g-2 mb-3 align-items-end">
         <div class="col-12 col-md-3">
-            <select class="form-control" @bind="SelectedFilia">
+            <label class="small fw-bold text-muted ms-1">Філія / Область</label>
+            <select class="form-select mb-1" @onchange="OnFiliaChanged">
                 <option value="">Всі філії</option>
                 @foreach (var f in FiliaList)
                 {
                     <option value="@f">@f</option>
                 }
             </select>
-            <select class="form-control" @bind="SelectedObl">
+            <select class="form-select" @onchange="OnOblastChanged">
                 <option value="">Всі області</option>
                 @foreach (var o in OblastList)
                 {
@@ -44,8 +45,10 @@ else
                 }
             </select>
         </div>
+
         <div class="col-12 col-md-3">
-            <select class="form-control" @bind="SelectedDepot">
+            <label class="small fw-bold text-muted ms-1">Депо</label>
+            <select class="form-select" @onchange="OnDepotChanged">
                 <option value="">Всі депо</option>
                 @foreach (var d in DepotList)
                 {
@@ -53,8 +56,10 @@ else
                 }
             </select>
         </div>
+
         <div class="col-12 col-md-3">
-            <select class="form-control" @bind="SelectedSeria">
+            <label class="small fw-bold text-muted ms-1">Серія</label>
+            <select class="form-select" @onchange="OnSeriaChanged">
                 <option value="">Всі серії</option>
                 @foreach (var s in SeriaList)
                 {
@@ -62,8 +67,12 @@ else
                 }
             </select>
         </div>
+
         <div class="col-12 col-md-3">
-            <button class="btn btn-info w-100" @onclick="ApplyFilter">Відобразити</button>
+            @* Кнопку можна залишити як "Скинути" або просто для краси, бо фільтр і так працює *@
+            <button class="btn btn-outline-secondary w-100" @onclick="ClearFilter">
+                <i class="bi bi-arrow-clockwise"></i> Скинути
+            </button>
         </div>
     </div>
 
@@ -268,6 +277,31 @@ else
         await CheckRoles();
         StateHasChanged();
     }
+
+    private async Task OnFiliaChanged(ChangeEventArgs e)
+    {
+        SelectedFilia = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnOblastChanged(ChangeEventArgs e)
+    {
+        SelectedObl = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnDepotChanged(ChangeEventArgs e)
+    {
+        SelectedDepot = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnSeriaChanged(ChangeEventArgs e)
+    {
+        SelectedSeria = e.Value?.ToString() ?? "";
+        await ApplyFilter();
+    }
+
     private async Task ApplyFilter()
     {
         // Переходим к первой странице и очищаем состояние

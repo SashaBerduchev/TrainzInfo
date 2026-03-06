@@ -14,11 +14,25 @@
                     <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger mb-3" />
-
+                      
                         <!-- Назва станції -->
                         <div class="mb-3">
                             <label class="form-label fw-medium">Назва станції</label>
                             <InputText @bind-Value="stationsDTO.Name" class="form-control form-control-lg" placeholder="Напр. Київ-Пасажирський" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Область</label>
+                            <InputSelect ValueExpression="@(() => stationsDTO.Oblasts)"
+                                         Value="@stationsDTO.Oblasts"
+                                         ValueChanged="@((string value) => OnOblastChanged(value))"
+                                         class="form-select form-select-lg">
+                                <option value="">Оберіть область...</option> @* Тепер він там, де має бути *@
+                                @foreach (var item in OblastList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </InputSelect>
                         </div>
 
                         <!-- Місто -->
@@ -54,20 +68,7 @@
                                         <option value="@item">@item</option>
                                     }
                                 </InputSelect>
-                            </div>
-
-                            <!-- Область -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Область</label>
-                            <option value="">Області</option>
-
-                                <InputSelect @bind-Value="stationsDTO.Oblasts" class="form-select form-select-lg">
-                                    @foreach (var item in OblastList)
-                                    {
-                                        <option value="@item">@item</option>
-                                    }
-                                </InputSelect>
-                            </div>
+                            </div>                           
                         </div>
 
                         <!-- Картинка -->
@@ -144,6 +145,13 @@
         Console.WriteLine($"Станція: {stationsDTO.Name}, Місто: {city}, Філія: {stationsDTO.UkrainsRailways}");
     }
 
+    private async Task OnOblastChanged(string value)
+    {
+        citys.Clear();
+        stationsDTO.Oblasts = value;
+        citys = await Http.GetFromJsonAsync<List<string>>($"api/stations/getcitys?oblast={value}");
+    }
+
     private async Task OnInputChanged(ChangeEventArgs e)
     {
         city = e.Value?.ToString() ?? "";
@@ -167,7 +175,7 @@
                 {
                     filteredCitys = citys
                         .Where(x => x.Contains(city, StringComparison.OrdinalIgnoreCase))
-                        .Take(7)
+                        .Take(30)
                         .ToList();
                 }
                 StateHasChanged();
