@@ -193,11 +193,14 @@ else
     {
         if (!await Confirm("Ви впевнені що хочете видалити електричку?"))
             return;
-        var response = await Http.DeleteAsync($"api/electrictrains/deleteapprove/{Id}");
+        var response = await Http.PostAsync($"api/electrictrains/delete/{Id}", null);
         if (response.IsSuccessStatusCode)
-            Nav.NavigateTo("/diesel-trains");
-        else
+            Nav.NavigateTo("/electric-trains");
+        else{
+            Console.WriteLine(response);
+            Console.WriteLine(response.Content);
             ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+        }
     }
 
     private async Task<bool> Confirm(string message)

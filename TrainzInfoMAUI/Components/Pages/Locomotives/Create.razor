@@ -77,19 +77,7 @@
                                              placeholder="км/год" />
                             </div>
 
-                            <!-- Область -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">
-                                    Область
-                                </label>
-                                <InputSelect @bind-Value="locomotive.Oblast"
-                                             class="form-select form-select-lg">
-                                    @foreach (var item in OblList)
-                                    {
-                                        <option value="@item">@item</option>
-                                    }
-                                </InputSelect>
-                            </div>
+                            
                         </div>
 
                         <!-- Фото -->
