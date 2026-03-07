@@ -4,7 +4,7 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 
-
+<PageTitle>Дизель-поїзд @Title</PageTitle>
 <h3>@Title</h3>
 
 @if (IsLoading)
@@ -18,7 +18,7 @@ else if (Error != null)
 {
     <div class="alert alert-danger">@Error</div>
     <div>
-        <NavLink href="/locomotives">Back to List</NavLink>
+        <NavLink href="/diesel-trains">Повернутися назад</NavLink>
     </div>
 }
 else

@@ -3,7 +3,7 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
-
+<PageTitle>Електричка @electricTrain?.Name</PageTitle>
 <h3>@Title</h3>
 
 @if (IsLoading)
@@ -17,7 +17,7 @@ else if (Error != null)
 {
     <div class="alert alert-danger">@Error</div>
     <div>
-        <NavLink href="/locomotives">Back to List</NavLink>
+        <NavLink href="/locomotives">Назад</NavLink>
     </div>
 }
 else

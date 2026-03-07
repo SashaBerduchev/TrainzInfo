@@ -4,6 +4,8 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider Auth
 
+<PageTitle>@Model?.Name</PageTitle>
+
 <h3 class="text-center mb-4">@Model?.Name</h3>
 
 @if (loading)

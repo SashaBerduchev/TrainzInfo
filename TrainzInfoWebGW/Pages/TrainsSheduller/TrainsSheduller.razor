@@ -4,6 +4,8 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
+
+<PageTitle>Поїзд @Train?.Number</PageTitle>
 <h3 class="fw-bold text-center mb-3">
     Поїзд № @Train?.Number <br />
     сполученням: @Train?.StationFrom – @Train?.StationTo
