@@ -9,22 +9,60 @@
 
 <h3>Авторизація</h3>
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="d-flex justify-content-center align-items-center" style="min-height: 400px;">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
 
-    <input @bind="loginModel.Email" placeholder="Email" class="form-control mb-2" />
-    <input @bind="loginModel.Password" placeholder="Пароль" type="password" class="form-control mb-2" />
-
-    <button class="btn btn-primary">Увійти</button>
-
-    @if (!string.IsNullOrEmpty(LoginError))
-    {
-        <div class="alert alert-danger mt-2">
-            @LoginError
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-primary">Авторизація</h3>
+            <p class="text-muted small">Будь ласка, введіть ваші дані для входу</p>
         </div>
-    }
-</EditForm>
+
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(LoginError))
+            {
+                <div class="alert alert-danger d-flex align-items-center py-2 mb-3" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div class="small">@LoginError</div>
+                </div>
+            }
+
+            <div class="mb-3">
+                <label class="form-label fw-medium">Email</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                    <input @bind="loginModel.Email"
+                           type="email"
+                           placeholder="name@example.com"
+                           class="form-control border-start-0 bg-light shadow-none" />
+                </div>
+                <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-medium">Пароль</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                    <input @bind="loginModel.Password"
+                           type="password"
+                           placeholder="••••••••"
+                           class="form-control border-start-0 bg-light shadow-none" />
+                </div>
+                <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-3 hover-effect">
+                Увійти
+            </button>
+
+            <div class="text-center mt-3">
+                <a href="#" class="text-decoration-none small text-muted">Забули пароль?</a>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
 
 @code {
     private LoginModel loginModel = new();

@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
     min-height: 56px; /* Змінили height на min-height */
-    padding-top: 36px; /* Додали відступ на висоту шторки Android */
+    padding-top: 43px; /* Додали відступ на висоту шторки Android */
     padding-bottom: 0px;
     padding-left: 12px;
     padding-right: 12px;
