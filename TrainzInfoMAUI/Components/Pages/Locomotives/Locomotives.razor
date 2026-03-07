@@ -5,166 +5,178 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject AppConfig Config
 
-<h1 class="mb-4 text-center">Локомотиви</h1>
+<PageTitle>Локомотиви</PageTitle>
 
-<div class="mb-3">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-6">Локомотиви</MudText>
+
     @if (IsAdmin)
     {
-        <button class="btn btn-info mb-2" @onclick="AddLocomotive">Додати локомотив</button>
-        <button class="btn btn-info mb-2" @onclick="UpdateInfo">Оновити дані</button>
-        <p><b>Кількість запитів:</b> @count</p>
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="AddLocomotive">
+                    Додати локомотив
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Refresh" OnClick="UpdateInfo">
+                    Оновити дані
+                </MudButton>
+                <MudSpacer />
+                <MudText Typo="Typo.body2"><b>Кількість запитів:</b> @count</MudText>
+            </MudStack>
+        </MudPaper>
     }
-</div>
-@if (isLoading)
-{
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-}
-else
-{
-    
 
-    <!-- Фільтри -->
-    <div class="row g-2 mb-3 align-items-end">
-        <div class="col-12 col-md-3">
-            <label class="small fw-bold text-muted ms-1">Філія / Область</label>
-            <select class="form-select mb-1" @onchange="OnFiliaChanged">
-                <option value="">Всі філії</option>
-                @foreach (var f in FiliaList)
-                {
-                    <option value="@f">@f</option>
-                }
-            </select>
-            <select class="form-select" @onchange="OnOblastChanged">
-                <option value="">Всі області</option>
-                @foreach (var o in OblastList)
-                {
-                    <option value="@o">@o</option>
-                }
-            </select>
-        </div>
+    <MudPaper Elevation="3" Class="pa-6 mb-8 rounded-xl">
+        <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+            <MudItem xs="12" md="3">
+                <MudStack Spacing="1">
+                    <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v=> OnFiliaChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
+                        @foreach (var f in FiliaList)
+                        {
+                            <MudSelectItem Value="@f">@f</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="string" Label="Область" Value="@SelectedObl" ValueChanged="@(v=>OnOblastChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("")">Всі області</MudSelectItem>
+                        @foreach (var o in OblastList)
+                        {
+                            <MudSelectItem Value="@o">@o</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudStack>
+            </MudItem>
 
-        <div class="col-12 col-md-3">
-            <label class="small fw-bold text-muted ms-1">Депо</label>
-            <select class="form-select" @onchange="OnDepotChanged">
-                <option value="">Всі депо</option>
-                @foreach (var d in DepotList)
-                {
-                    <option value="@d">@d</option>
-                }
-            </select>
-        </div>
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Депо" Value="@SelectedDepot" ValueChanged="@(v=> OnDepotChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                    <MudSelectItem Value="@("")">Всі депо</MudSelectItem>
+                    @foreach (var d in DepotList)
+                    {
+                        <MudSelectItem Value="@d">@d</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
 
-        <div class="col-12 col-md-3">
-            <label class="small fw-bold text-muted ms-1">Серія</label>
-            <select class="form-select" @onchange="OnSeriaChanged">
-                <option value="">Всі серії</option>
-                @foreach (var s in SeriaList)
-                {
-                    <option value="@s">@s</option>
-                }
-            </select>
-        </div>
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Серія" Value="@SelectedSeria" ValueChanged="@(v=> OnSeriaChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                    <MudSelectItem Value="@("")">Всі серії</MudSelectItem>
+                    @foreach (var s in SeriaList)
+                    {
+                        <MudSelectItem Value="@s">@s</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
 
-        <div class="col-12 col-md-3">
-            @* Кнопку можна залишити як "Скинути" або просто для краси, бо фільтр і так працює *@
-            <button class="btn btn-outline-secondary w-100" @onclick="ClearFilter">
-                <i class="bi bi-arrow-clockwise"></i> Скинути
-            </button>
-        </div>
-    </div>
+            <MudItem xs="12" md="3">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
+                           OnClick="ClearFilter" FullWidth="true" Size="Size.Large">
+                    Скинути
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
 
-    <div class="mb-4">
-        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
-    </div>
-
-    <div class="row" id="locomotiveContainer">
-        @if (locomotives is null)
-        {
-            <div class="col-12 text-center py-5">
-                <div class="no-data-icon mb-3">🔍</div>
-                <h5 class="text-muted">Локомотиви відсутні, застосуйте інший фільтр</h5>
-            </div>
-        }
-        else
-        {
-            @foreach (var item in locomotives)
+    @if (isLoading)
+    {
+        <MudGrid>
+            @foreach (var i in Enumerable.Range(0, 4))
             {
-                <div class="col-12 mb-4">
-                    <div class="loco-card-modern shadow-sm border-0">
-                        <div class="row g-0">
-                            <div class="col-12 col-md-4 position-relative overflow-hidden">
-                                <img class="loco-img"
-                                     src="@(Config.ApiBaseUrl + item.ImgSrc)"
-                                     alt="@item.Seria" />
-                                <div class="speed-badge">
-                                    ⚡ @item.Speed <small>км/год</small>
+                <MudItem xs="12">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="150px" Class="rounded-lg mb-4" />
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <div id="locomotiveContainer">
+            @if (locomotives is null || !locomotives.Any())
+            {
+                <MudPaper Class="d-flex flex-column align-center justify-center py-12" Elevation="0">
+                    <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Default" Style="font-size: 6rem;" />
+                    <MudText Typo="Typo.h5" Color="Color.Secondary" Class="mt-4">Локомотиви не знайдені</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">Спробуйте змінити параметри фільтрації</MudText>
+                </MudPaper>
+            }
+            else
+            {
+                @foreach (var item in locomotives)
+                {
+                    <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl loco-card-hover">
+                        <MudGrid Spacing="0">
+                            <MudItem xs="12" md="4" Class="position-relative">
+                                <MudImage Src="@(Config.ApiBaseUrl + item.ImgSrc)" Alt="@item.Seria"
+                                          ObjectFit="ObjectFit.Cover" Height="220" Width="400" Class="w-100" />
+                                <div class="speed-tag">
+                                    <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Small" Class="mr-1" />
+                                    @item.Speed <small>км/год</small>
                                 </div>
-                            </div>
+                            </MudItem>
 
-                            <div class="col-12 col-md-5 p-4 border-end-md">
-                                <div class="d-flex align-items-center mb-2">
-                                    <h3 class="loco-title mb-0">@item.Seria</h3>
-                                    <span class="loco-number ms-2">№@item.Number</span>
+                            <MudItem xs="12" md="5" Class="pa-6">
+                                <div class="d-flex align-center mb-4">
+                                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@item.Seria</MudText>
+                                    <MudChip T="string" Variant="Variant.Text" Color="Color.Secondary" Class="ml-2 px-3 fw-bold">№@item.Number</MudChip>
                                 </div>
 
-                                <div class="info-grid">
-                                    <div class="info-item">
-                                        <span class="label">Філія</span>
-                                        <span class="value">@item.Filia</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <span class="label">Депо</span>
-                                        <span class="value">@item.Depot</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <span class="label">Локація</span>
-                                        <span class="value">@item.Oblast, @item.City</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <span class="label">Станція</span>
-                                        @* Використовуємо кастомний клас для більшого шрифту станції *@
-                                        <span class="value station-highlight">@item.Station</span>
-                                    </div>
-                                </div>
-                            </div>
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="6">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                                        <MudText Typo="Typo.body1" Class="fw-medium">@item.Filia</MudText>
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Депо</MudText>
+                                        <MudText Typo="Typo.body1" Class="fw-medium">@item.Depot</MudText>
+                                    </MudItem>
+                                    <MudItem xs="12" Class="mt-2">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Станція / Локація</MudText>
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <MudIcon Icon="@Icons.Material.Filled.Place" Size="Size.Small" Color="Color.Error" />
+                                            <MudText Typo="Typo.body1" Class="fw-bold mud-text-primary">@item.Station</MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-2">(@item.Oblast, @item.City)</MudText>
+                                        </MudStack>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudItem>
 
-                            <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
-                                <button class="btn btn-main" @onclick="() => ViewDetails(item.Id)">
-                                    <i class="bi bi-info-circle"></i> Детальніше
-                                </button>
-                                <button class="btn btn-secondary-light" @onclick="() => ViewUserPhotos(item.Seria, item.Number)">
-                                    <i class="bi bi-camera"></i> Галерея
-                                </button>
+                            <MudItem xs="12" md="3" Class="pa-4 mud-bg-background-grey d-flex flex-column justify-center gap-3 border-l-md">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Info" OnClick="() => ViewDetails(item.Id)" FullWidth="true">
+                                    Детальніше
+                                </MudButton>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                                           StartIcon="@Icons.Material.Filled.PhotoLibrary" OnClick="() => ViewUserPhotos(item.Seria, item.Number)" FullWidth="true">
+                                    Галерея
+                                </MudButton>
 
                                 @if (IsAdminOrPublisher || IsAdmin)
                                 {
-                                    <div class="admin-actions mt-2 pt-2 border-top">
-                                        <div class="d-flex flex-wrap gap-1">
-                                            @if (IsAdminOrPublisher)
-                                            {
-                                                <button class="btn btn-sm btn-outline-primary flex-grow-1" @onclick="() => EditLocomotive(item.Id)">
-                                                    ред.
-                                                </button>
-                                            }
-                                            @if (IsAdmin)
-                                            {
-                                                <button class="btn btn-sm btn-outline-warning" @onclick="() => AddImage(item.Id)">+ фото</button>
-                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteLocomotive(item.Id)">видалити</button>
-                                            }
-                                        </div>
+                                    <MudDivider Class="my-1" />
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @if (IsAdminOrPublisher)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" Size="Size.Small"
+                                                           OnClick="() => EditLocomotive(item.Id)" Title="Редагувати" />
+                                        }
+                                        @if (IsAdmin)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.AddAPhoto" Color="Color.Success" Size="Size.Small"
+                                                           OnClick="() => AddImage(item.Id)" Title="Додати фото" />
+                                            <MudSpacer />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small"
+                                                           OnClick="() => DeleteLocomotive(item.Id)" Title="Видалити" />
+                                        }
                                     </div>
                                 }
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                }
             }
-        }
-    </div>
-}
+        </div>
+    }
+</MudContainer>
+
 
 @code {
     private List<LocomotiveDTO> locomotives = new();
@@ -202,7 +214,7 @@ else
         await Load();
         // Підписка на скрол через JS
         await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
-        // Завантажуємо локомотиви з API  
+        // Завантажуємо локомотиви з API
     }
 
     private async Task Load()
@@ -243,7 +255,7 @@ else
                     var urlfilia = $"api/locomotives/getfilias{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
                     $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
                     $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
-                    $"{( $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
                     var urldepo = $"api/locomotives/getdepots{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
                     $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
                     $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
@@ -278,27 +290,27 @@ else
         StateHasChanged();
     }
 
-    private async Task OnFiliaChanged(ChangeEventArgs e)
+    private async Task OnFiliaChanged(string value)
     {
-        SelectedFilia = e.Value?.ToString() ?? "";
+        SelectedFilia = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnOblastChanged(ChangeEventArgs e)
+    private async Task OnOblastChanged(string value)
     {
-        SelectedObl = e.Value?.ToString() ?? "";
+        SelectedObl = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnDepotChanged(ChangeEventArgs e)
+    private async Task OnDepotChanged(string value)
     {
-        SelectedDepot = e.Value?.ToString() ?? "";
+        SelectedDepot = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnSeriaChanged(ChangeEventArgs e)
+    private async Task OnSeriaChanged(string value)
     {
-        SelectedSeria = e.Value?.ToString() ?? "";
+        SelectedSeria = value ?? "";
         await ApplyFilter();
     }
 

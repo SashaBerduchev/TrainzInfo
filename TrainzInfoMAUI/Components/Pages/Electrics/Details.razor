@@ -3,144 +3,147 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
+<PageTitle>Електричка @electricTrain?.Name</PageTitle>
 
-<h3>@Title</h3>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Color="Color.Primary" Class="mb-6">@Title</MudText>
 
-@if (IsLoading)
-{
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-}
-else if (Error != null)
-{
-    <div class="alert alert-danger">@Error</div>
-    <div>
-        <NavLink href="/locomotives">Back to List</NavLink>
-    </div>
-}
-else
-{
-    <div class="container my-4">
-        <hr />
+    @if (IsLoading)
+    {
+        <MudPaper Class="d-flex flex-column align-center justify-center py-12" Elevation="0">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body1" Class="mt-4">Отримуємо дані про склад...</MudText>
+        </MudPaper>
+    }
+    else if (Error != null)
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="my-4">@Error</MudAlert>
+        <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" Variant="Variant.Text" Href="/electric-trains">
+            Назад до списку
+        </MudButton>
+    }
+    else
+    {
+        <MudDivider Class="mb-6" />
 
-        <div class="bg-light p-3 rounded">
-            <div class="row g-3 align-items-center">
-
-                <!-- Зображення -->
-                <div class="col-12 col-md-5 text-center">
+        <MudCard Elevation="4" Class="mb-8 rounded-xl overflow-hidden">
+            <MudGrid Spacing="0">
+                <MudItem xs="12" md="5">
                     @if (electricTrain.Image != null)
                     {
-                        <img class="img-fluid rounded-start"
-                             src="@electricTrain.Image"
-                             alt="Локомотив" />
+                        <MudImage Src="@electricTrain.Image" Alt="Електропоїзд" Fluid="true"
+                                  Class="object-cover h-100 w-100" Style="min-height: 300px;" />
                     }
                     else
                     {
-                        <p>Зображення відсутнє</p>
+                        <div class="d-flex align-center justify-center mud-bg-background-grey h-100" style="min-height: 300px;">
+                            <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" Color="Color.Default" />
+                        </div>
                     }
-                </div>
+                </MudItem>
 
-                <!-- Інформація -->
-                <div class="col-12 col-md-7 bg-light p-3 rounded">
-                    <h4>@electricTrain.Name - @electricTrain.Model</h4>
-                    <p>Місто прописки: @electricTrain.City</p>
-                    <p>Депо прописки: @electricTrain.DepotList</p>
-                    <p>Місто прописки: @electricTrain.City</p>
-                    <p>Філія: @electricTrain.UkrainsRailway</p>
-                </div>
+                <MudItem xs="12" md="7" Class="pa-8">
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold mb-4">
+                        @electricTrain.Name <span class="mud-text-secondary">@electricTrain.Model</span>
+                    </MudText>
 
-            </div>
-        </div>
-        <div class="mt-4">
-            <p class="fs-5">@electricTrain.BaseInfo</p>
-            <p class="fs-5">@electricTrain.AllInfo</p>
-        </div>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="6">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.LocationCity" Color="Color.Info" />
+                                <MudText><b>Місто:</b> @electricTrain.City</MudText>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Warehouse" Color="Color.Info" />
+                                <MudText><b>Депо:</b> @electricTrain.DepotList</MudText>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Info" />
+                                <MudText><b>Філія:</b> @electricTrain.UkrainsRailway</MudText>
+                            </MudStack>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudPaper Elevation="0" Class="mt-6 pa-4 mud-bg-background-grey rounded-lg">
+                        <MudText Typo="Typo.body1" Style="line-height: 1.6;">@electricTrain.BaseInfo</MudText>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudCard>
 
         @if (electricTrain.Station != null)
         {
-            <div class="news-detail-card card shadow-sm mb-5">
-                <div class="row g-4 align-items-start">
-                    <!-- Картинка -->
-                    <div class="col-md-4 text-center">
-                        @if (string.IsNullOrEmpty(electricTrain.StationImages))
+            <MudCard Elevation="2" Class="mb-8 pa-4 border-l-4 mud-border-primary">
+                <MudGrid>
+                    <MudItem xs="12" md="4">
+                        @if (!string.IsNullOrEmpty(electricTrain.StationImages))
                         {
-                            <img src="@electricTrain.StationImages" class="img-fluid rounded news-detail-img" alt="Станція" />
+                            <MudImage Src="@electricTrain.StationImages" Alt="@electricTrain.Station"
+                                      Fluid="true" Class="rounded shadow-sm" />
                         }
-                        else
-                        {
-                            <img src="@electricTrain.StationImages" class="card-img-top" alt="@electricTrain.Station" />
-                        }
-                    </div>
-
-                    <!-- Текстова частина -->
-                    <div class="col-md-8">
-                        <dl class="row mb-3">
-                            <dt class="col-sm-3">Назва</dt>
-                            <dd class="col-sm-9 news-text">@electricTrain.Station</dd>
-                        </dl>
-
-                        <!-- Кнопки -->
-                        <div class="d-flex flex-wrap gap-2 mt-3">
-                            @* @if (CanComment != null)
-                    {
-                        <button class="btn btn-info btn-sm" @onclick="() => NavUserPhoto(stations.id)">Коментувати</button>
-                        <button class="btn btn-info btn-sm" @onclick="() => NavStationShad(stations.id)">
-                            Коментарі + @CommentCount
-                        </button>
-                    } *@
-
-
+                    </MudItem>
+                    <MudItem xs="12" md="8">
+                        <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">@electricTrain.Station</MudText>
+                        <MudStack Row="true" Spacing="4">
+                            <MudText><strong>Місто:</strong> @electricTrain.City</MudText>
+                            <MudText><strong>Область:</strong> @electricTrain.Oblast</MudText>
+                        </MudStack>
+                        <div class="mt-4 mud-text-secondary">
+                            @((MarkupString)electricTrain.StationInformation)
                         </div>
-                    </div>
-                    <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
-                        🔗 Поділитися посиланням
-                    </button>
-                </div>
-            </div>
-        }
-        else
-        {
-            <p>Завантаження інформації...</p>
-        }
-        <!-- Publisher/Admin -->
-        @if (IsPublisherOrAdmin)
-        {
-            <div class="mt-3 text-center">
-                <a class="btn btn-info" href="/edit-info/@electricTrain.id" target="_blank">
-                    Редагувати додаткову інформацію
-                </a>
-            </div>
+                    </MudItem>
+                </MudGrid>
+            </MudCard>
         }
 
-        <!-- Superadmin -->
-        @if (IsSuperadmin)
+        <MudPaper Elevation="0" Class="pa-4 mb-8">
+            <MudText Typo="Typo.h6" Class="mb-2">Додаткова інформація</MudText>
+            <MudText Typo="Typo.body1" Style="white-space: pre-line;">@electricTrain.AllInfo</MudText>
+        </MudPaper>
+
+        @if (IsPublisherOrAdmin || IsSuperadmin)
         {
-            <div class="mt-3 d-flex flex-wrap gap-2">
-                <a class="btn btn-success" href="/locomotive/edit/@electricTrain.id">Редагувати</a>
-                <a class="btn btn-success" href="/locomotive/add-image/@electricTrain.id">Додати зображення</a>
-                <button class="btn btn-danger w-100 w-md-auto" @onclick="DeleteElectics">
-                    Видалити
-                </button>
-            </div>
+            <MudPaper Class="pa-6 mb-8 mud-theme-dark rounded-xl">
+                <MudText Typo="Typo.h6" Class="mb-4">Панель керування</MudText>
+                <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
+                    @if (IsPublisherOrAdmin)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Info"
+                                   Href="@($"/edit-info/{electricTrain.id}")" Target="_blank">
+                            Редагувати дод. інфо
+                        </MudButton>
+                    }
+                    @if (IsSuperadmin)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                   Href="@($"/locomotive/edit/{electricTrain.id}")">Редагувати</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                   Href="@($"/locomotive/add-image/{electricTrain.id}")">Додати фото</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                                   OnClick="DeleteElectics">Видалити</MudButton>
+                    }
+                </MudStack>
+            </MudPaper>
         }
+
         @if (ErrorMessage is not null)
         {
-            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-            <div class="alert alert-danger mt-2">
-                <p>@ErrorMessage</p>
-            </div>
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6">
+                Помилка збереження, зверніться до адміністратора: @ErrorMessage
+            </MudAlert>
         }
-    </div>
 
-    <div class="mb-3">
-        <NavLink class="btn btn-secondary d-flex align-items-center gap-2" href="/electric-trains">
-            <i class="fa-solid fa-arrow-left"></i>
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack"
+                   Href="/electric-trains" Class="mb-10">
             Повернутися до списку
-        </NavLink>
-    </div>
-}
+        </MudButton>
+    }
+</MudContainer>
+
 
 @code {
     [Parameter] public int Id { get; set; }
@@ -211,15 +214,5 @@ else
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
     }
 
-    private async Task ShareCurrentUri()
-    {
-        string currentUrl = $"https://www.trainzinfo.com.ua/electric-trains/details/{Id}";
 
-        await Share.Default.RequestAsync(new ShareTextRequest
-        {
-            Uri = currentUrl,
-            Title = electricTrain?.Model ?? "TrainzInfo",
-            Text = $"Електропоїзд {electricTrain?.Model}"
-        });
-    }
 }

@@ -3,107 +3,108 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<h4>Створення станції</h4>
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl shadow-xl">
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <div class="card shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h4 class="mb-4 fw-semibold">🚉 Нова станція</h4>
-                    <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger mb-3" />
-                      
-                        <!-- Назва станції -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">Назва станції</label>
-                            <InputText @bind-Value="stationsDTO.Name" class="form-control form-control-lg" placeholder="Напр. Київ-Пасажирський" />
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-medium">Область</label>
-                            <InputSelect ValueExpression="@(() => stationsDTO.Oblasts)"
-                                         Value="@stationsDTO.Oblasts"
-                                         ValueChanged="@((string value) => OnOblastChanged(value))"
-                                         class="form-select form-select-lg">
-                                <option value="">Оберіть область...</option> @* Тепер він там, де має бути *@
-                                @foreach (var item in OblastList)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            </InputSelect>
-                        </div>
-
-                        <!-- Місто -->
-                        <div class="mb-3 position-relative">
-                            <label class="form-label fw-medium">Місто</label>
-                            <InputText @bind-Value="city" class="form-control form-control-lg"
-                                       placeholder="Почніть вводити місто..."
-                                       @oninput="OnInputChanged" />
-
-                            @if (filteredCitys?.Any() == true)
-                            {
-                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1 dropdown" style="z-index:1000;">
-                                    @foreach (var item in filteredCitys)
-                                    {
-                                        <li class="list-group-item list-group-item-action"
-                                            style="cursor:pointer;"
-                                            @onclick="() => SelectItem(item)">
-                                            @item
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-
-                        <div class="row">
-                            <!-- Філія -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Філія</label>
-                            <option value="">Філії</option>
-                                <InputSelect @bind-Value="stationsDTO.UkrainsRailways" class="form-select form-select-lg">
-                                    @foreach (var item in FiliasList)
-                                    {
-                                        <option value="@item">@item</option>
-                                    }
-                                </InputSelect>
-                            </div>                           
-                        </div>
-
-                        <!-- Картинка -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">Фото станції</label>
-                            <InputFile class="form-control" OnChange="HandleFileSelected" />
-
-                            @if (!string.IsNullOrEmpty(imagePreview))
-                            {
-                                <div class="mt-3 text-center">
-                                    <img src="@imagePreview" class="img-thumbnail rounded-3" style="max-height:180px" />
-                                </div>
-                            }
-                        </div>
-
-                        <!-- Кнопки -->
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg px-4">Зберегти</button>
-                        </div>
-                    </EditForm>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-danger mt-3 rounded-3">
-                    <strong>Помилка збереження</strong><br />
-                    @ErrorMessage
-                </div>
-            }
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.House" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
+            <MudText Typo="Typo.h4" Class="fw-bold">Нова станція</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">Додавання об'єкта залізничної інфраструктури</MudText>
         </div>
-    </div>
 
+        <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
 
-</div>
+            <MudStack Spacing="4">
+
+                @* Назва станції *@
+                <MudTextField Label="Назва станції" @bind-Value="stationsDTO.Name"
+                              Variant="Variant.Outlined" Placeholder="Напр. Київ-Пасажирський"
+                              Required="true" For="@(() => stationsDTO.Name)" />
+
+                <MudGrid Spacing="2">
+                    @* Область *@
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Область"
+                                   Value="@stationsDTO.Oblasts"
+                                   ValueChanged="OnOblastChanged"
+                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            <MudSelectItem Value="@("")">Оберіть область...</MudSelectItem>
+                            @foreach (var item in OblastList)
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    @* Філія (Залізниця) *@
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Філія" @bind-Value="stationsDTO.UkrainsRailways"
+                                   Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            <MudSelectItem Value="@("")">Оберіть філію...</MudSelectItem>
+                            @foreach (var item in FiliasList)
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+
+                @* Місто - Автозаповнення *@
+                <MudAutocomplete T="string" Label="Місто" @bind-Value="stationsDTO.Citys"
+                                 SearchFunc="@SearchCity"
+                                 Variant="Variant.Outlined"
+                                 Placeholder="Почніть вводити місто..."
+                                 ResetValueOnEmptyText="true"
+                                 CoerceText="true" CoerceValue="true"
+                                 AdornmentIcon="@Icons.Material.Filled.LocationCity" AdornmentColor="Color.Primary" />
+
+                @* Фото станції - Надійний метод *@
+                <div class="d-flex flex-column gap-2">
+                    <InputFile id="stationFileInput" OnChange="HandleFileSelected" style="display:none" />
+
+                    <MudButton HtmlTag="label"
+                               for="stationFileInput"
+                               Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.PhotoCamera"
+                               FullWidth="true"
+                               Class="py-3 rounded-lg border-2 border-dashed">
+                        Завантажити фото станції
+                    </MudButton>
+
+                    @if (!string.IsNullOrEmpty(imagePreview))
+                    {
+                        <MudPaper Elevation="0" Class="pa-2 mud-bg-background-grey rounded-lg d-flex justify-center mt-2">
+                            <MudImage Src="@imagePreview" Height="180" ObjectFit="ObjectFit.Contain" Class="rounded-lg shadow-sm" />
+                        </MudPaper>
+                    }
+                </div>
+
+                @* Помилки збереження *@
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg">
+                        <strong>Помилка збереження:</strong> @ErrorMessage
+                    </MudAlert>
+                }
+
+                @* Кнопка збереження *@
+                <div class="d-flex justify-end mt-4">
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Class="rounded-lg px-10 shadow-lg fw-bold">
+                        Зберегти
+                    </MudButton>
+                </div>
+
+            </MudStack>
+        </EditForm>
+    </MudPaper>
+</MudContainer>
 
 
 
@@ -185,6 +186,17 @@
         {
             // нормально, просто перервано
         }
+    }
+
+    private async Task<IEnumerable<string>> SearchCity(string value, CancellationToken token)
+    {
+        var allCities = (citys ?? new List<string>()).Distinct();
+
+        if (string.IsNullOrEmpty(value))
+            return allCities;
+
+        return allCities
+            .Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
     private void SelectItem(string item)

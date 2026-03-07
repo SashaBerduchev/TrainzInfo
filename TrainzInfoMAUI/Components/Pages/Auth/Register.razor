@@ -3,17 +3,17 @@
 @using static System.Net.WebRequestMethods
 @inject HttpClient Http
 @inject NavigationManager Navigation
-<h3>Реєстрація</h3>
+<PageTitle>Реєстрація | TrainzInfo</PageTitle>
 
-<div class="d-flex justify-content-center align-items-center py-5">
-    <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 450px; width: 100%;">
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center min-vh-100 py-12">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl w-100 shadow-xl">
 
-        <div class="text-center mb-4">
-            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-block p-3 mb-2">
-                <i class="bi bi-person-plus-fill text-primary fs-3"></i>
+        <div class="text-center mb-6">
+            <div class="mud-bg-primary-lighten rounded-circle d-inline-block pa-4 mb-3">
+                <MudIcon Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary" Size="Size.Large" />
             </div>
-            <h3 class="fw-bold text-dark">Створити акаунт</h3>
-            <p class="text-muted small">Приєднуйтесь до нашої спільноти</p>
+            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">Створити акаунт</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">Приєднуйтесь до спільноти TrainzInfo</MudText>
         </div>
 
         <EditForm Model="@registerModel" OnValidSubmit="HandleRegister">
@@ -21,64 +21,70 @@
 
             @if (registerErrors?.Count > 0)
             {
-                <div class="alert alert-danger py-2 px-3 mb-4 rounded-3" role="alert">
-                    <ul class="mb-0 small ps-3">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6 rounded-lg" Dense="true">
+                    <ul class="mb-0 ps-3">
                         @foreach (var error in registerErrors)
                         {
-                            <li>@error.Description</li>
+                            <li><MudText Typo="Typo.caption" Color="Color.Inherit">@error.Description</MudText></li>
                         }
                     </ul>
-                </div>
+                </MudAlert>
             }
 
-            <div class="mb-3">
-                <label class="form-label fw-medium small">Email адреса</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
-                    <input @bind="registerModel.Email"
-                           type="email"
-                           placeholder="example@mail.com"
-                           class="form-control border-start-0 bg-light shadow-none" />
+            <MudStack Spacing="3">
+                <MudTextField T="string" Label="Email адреса"
+                              @bind-Value="registerModel.Email"
+                              For="@(() => registerModel.Email)"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Email"
+                              InputType="InputType.Email"
+                              Immediate="true" />
+
+                <MudTextField T="string" Label="Пароль"
+                              @bind-Value="registerModel.Password"
+                              For="@(() => registerModel.Password)"
+                              Variant="Variant.Outlined"
+                              InputType="@_passInput"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Lock"
+                              AdornmentClickIcon="@_passIcon"
+                              OnAdornmentClick="TogglePass"
+                              Immediate="true" />
+
+                <MudTextField T="string" Label="Підтвердження пароля"
+                              @bind-Value="registerModel.ConfirmPassword"
+                              For="@(() => registerModel.ConfirmPassword)"
+                              Variant="Variant.Outlined"
+                              InputType="@_passInput"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.CheckCircle"
+                              Immediate="true" />
+
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           Class="rounded-lg mt-4 py-3 fw-bold shadow-lg">
+                    Зареєструватися
+                </MudButton>
+
+                <div class="text-center mt-4">
+                    <MudText Typo="Typo.body2">
+                        Вже маєте акаунт?
+                        <MudLink Href="/login" Color="Color.Primary" Class="fw-bold">Увійти</MudLink>
+                    </MudText>
                 </div>
-                <ValidationMessage For="@(() => registerModel.Email)" class="text-danger small" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-medium small">Пароль</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-lock"></i></span>
-                    <input @bind="registerModel.Password"
-                           type="password"
-                           placeholder="••••••••"
-                           class="form-control border-start-0 bg-light shadow-none" />
-                </div>
-                <ValidationMessage For="@(() => registerModel.Password)" class="text-danger small" />
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label fw-medium small">Підтвердження пароля</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-check-circle"></i></span>
-                    <input @bind="registerModel.ConfirmPassword"
-                           type="password"
-                           placeholder="••••••••"
-                           class="form-control border-start-0 bg-light shadow-none" />
-                </div>
-                <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="text-danger small" />
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-3 hover-lift">
-                Зареєструватися
-            </button>
-
-            <div class="text-center mt-4">
-                <p class="small text-muted mb-0">Вже маєте акаунт? <a href="/login" class="text-primary fw-bold text-decoration-none">Увійти</a></p>
-            </div>
+            </MudStack>
         </EditForm>
-    </div>
-</div>
+    </MudPaper>
+</MudContainer>
 
 @code {
+    bool _showPass;
+    InputType _passInput = InputType.Password;
+    string _passIcon = Icons.Material.Filled.VisibilityOff;
     RegisterModel registerModel = new();
 
     List<RegisterErrorsDTO> registerErrors = new();
@@ -104,4 +110,21 @@
         public string Password { get; set; } = "";
         public string ConfirmPassword { get; set; } = "";
     }
+
+    void TogglePass()
+    {
+        if (_showPass)
+        {
+            _showPass = false;
+            _passIcon = Icons.Material.Filled.VisibilityOff;
+            _passInput = InputType.Password;
+        }
+        else
+        {
+            _showPass = true;
+            _passIcon = Icons.Material.Filled.Visibility;
+            _passInput = InputType.Text;
+        }
+    }
+
 }

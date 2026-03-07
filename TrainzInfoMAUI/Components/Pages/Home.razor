@@ -5,111 +5,140 @@
 @inject AuthenticationStateProvider AuthStateProvider
 <PageTitle>TrainzInfo</PageTitle>
 
-<h1 class="display-4 text-center mb-4">Ласкаво просимо на сайт TrainzInfo!</h1>
-
-<div class="text-center">
-    <div class="maincardpage">
-        <div class="main_text">
-            Сайт ТреінзІнфо присвячено любителям залізничного транспорту...
-        </div>
-
-        <div class="btn_main_panel">
-            <NavLink class="btn btn-info btn_news" href="/locomotives" style="width:160px; margin:10px;">Локомотиви</NavLink>
-            <NavLink class="btn btn-info btn_news" href="/electric-trains" style="width:160px; margin:10px;">Електропоїзди</NavLink>
-            <NavLink class="btn btn-info btn_news" href="/diesel-trains" style="width:160px; margin:10px;">Дизель-поїзди</NavLink>
-            <NavLink class="btn btn-info btn_news" href="/stations" style="width:160px; margin:10px;">Станції</NavLink>
-        </div>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8 mb-10">
+    <div class="text-center mb-10">
+        <MudText Typo="Typo.h2" Color="Color.Primary" Class="fw-bold mb-4">
+            Ласкаво просимо на TrainzInfo!
+        </MudText>
+        <MudPaper Elevation="0" Class="pa-6 rounded-xl mud-bg-background-grey">
+            <MudText Typo="Typo.h6" Class="mud-text-secondary">
+                Сайт присвячено шанувальникам залізничного транспорту: локомотиви, електропоїзди та історія залізниці, а також розклад поїздів.
+            </MudText>
+        </MudPaper>
     </div>
-</div>
 
-<div class="text-center mt-4">
-    <input @bind="SearchText"
-           @bind:event="oninput"
-           type="text"
-           class="form-control"
-           placeholder="Пошук новин..."
-           style="max-width:400px; margin:auto;" />
-</div>
+    <MudGrid Justify="Justify.Center" Class="mb-12">
+        @foreach (var (Label, Link, Icon) in new[] {
+                ("Локомотиви", "/locomotives", Icons.Material.Filled.Train),
+                ("Електропоїзди", "/electric-trains", Icons.Material.Filled.ElectricBolt),
+                ("Дизель-поїзди", "/diesel-trains", Icons.Material.Filled.PropaneTank),
+                ("Станції", "/stations", Icons.Material.Filled.Place)
+                })
+        {
+            <MudItem xs="6" sm="3">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Info"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           StartIcon="@Icon"
+                           Href="@Link"
+                           Class="rounded-lg py-4">
+                    @Label
+                </MudButton>
+            </MudItem>
+        }
+    </MudGrid>
 
-@*  Контейнер со списком новостей *@
-<div class="mt-4" id="newsContainer">
+    <div class="d-flex justify-center mb-10">
+        <MudTextField @bind-Value="SearchText"
+                      Placeholder="Пошук новин за назвою..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined"
+                      Clearable="true"
+                      Immediate="true"
+                      Class="max-w-400" />
+    </div>
 
-    @if (allNews is null)
-    {
-        <p class="text-center text-muted">Завантаження…</p>
-    }
-    else if (!filteredNews.Any())
-    {
-        <div class="d-flex justify-content-center align-items-center"
-             style="min-height: 60vh;">
-            <div class="spinner-border text-primary" role="status"></div>
-        </div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var news in filteredNews)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="news-card-modern h-100 shadow-sm border-0">
-                        @* Секція зображення з бейджем *@
-                        <div class="news-img-container position-relative">
-                            @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
-                            {
-                                <img src="@(Config.ApiBaseUrl + news.ImgSrc)"
-                                     alt="Новина"
-                                     class="news-img" />
-                            }
-                            else
-                            {
-                                <div class="placeholder-news-img d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-newspaper text-muted fs-1"></i>
+    <div id="newsContainer">
+        @if (allNews is null)
+        {
+            <MudGrid>
+                @foreach (var i in Enumerable.Range(0, 3))
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard>
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                            <MudCardContent>
+                                <MudSkeleton Width="80%" Height="42px" />
+                                <MudSkeleton Width="100%" />
+                                <MudSkeleton Width="100%" />
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+        else if (!filteredNews.Any())
+        {
+            <div class="text-center py-10">
+                <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Default" Style="font-size: 5rem;" />
+                <MudText Typo="Typo.h5" Color="Color.Secondary">Новин не знайдено</MudText>
+            </div>
+        }
+        else
+        {
+            <MudGrid Spacing="6">
+                @foreach (var news in filteredNews)
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard Elevation="4" Class="h-100 d-flex flex-column rounded-xl hover-elevate">
+                            <div class="position-relative">
+                                @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
+                                {
+                                    <MudCardMedia Image="@(Config.ApiBaseUrl + news.ImgSrc)" Height="220" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-center justify-center mud-bg-background-grey" style="height: 220px;">
+                                        <MudIcon Icon="@Icons.Material.Filled.Newspaper" Size="Size.Large" Color="Color.Default" Style="font-size: 4rem;" />
+                                    </div>
+                                }
+                                <div class="position-absolute px-3 py-1 rounded-pill mud-theme-primary" style="bottom: 10px; right: 10px; opacity: 0.9;">
+                                    <MudText Typo="Typo.caption">
+                                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-1" Style="vertical-align: middle;" />
+                                        @DateTime.Now.ToString("dd.MM.yyyy")
+                                    </MudText>
                                 </div>
-                            }
-                            <div class="news-date-badge">
-                                <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd.MM.yyyy") @* Тут можна підставити реальну дату *@
-                            </div>
-                        </div>
-
-                        <div class="card-body p-4 d-flex flex-column">
-                            @* Заголовок новини *@
-                            <h5 class="news-title mb-3">
-                                @((MarkupString)news.NameNews)
-                            </h5>
-
-                            @* Короткий опис *@
-                            <div class="news-excerpt flex-grow-1 mb-4">
-                                @((MarkupString)news.BaseNewsInfo)
                             </div>
 
-                            @* Кнопки дій *@
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-                                <NavLink href="@($"/news/details/{news.id}")" class="btn btn-main-sm">
-                                    Читати далі <i class="bi bi-arrow-right ms-1"></i>
-                                </NavLink>
+                            <MudCardContent Class="flex-grow-1">
+                                <MudText Typo="Typo.h5" Class="mb-3 fw-bold">@((MarkupString)news.NameNews)</MudText>
+                                <div class="mud-text-secondary mb-4 line-clamp-3">
+                                    @((MarkupString)news.BaseNewsInfo)
+                                </div>
+                            </MudCardContent>
+
+                            <MudCardActions Class="border-t pa-4 d-flex justify-space-between align-center">
+                                <MudButton Variant="Variant.Text"
+                                           Color="Color.Primary"
+                                           EndIcon="@Icons.Material.Filled.ArrowForward"
+                                           Href="@($"/news/details/{news.id}")">
+                                    Читати далі
+                                </MudButton>
 
                                 @if (IsAdmin)
                                 {
-                                    <NavLink href="@($"/news/edit/{news.id}")" class="btn btn-outline-warning btn-sm border-0">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </NavLink>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                   Color="Color.Warning"
+                                                   Size="Size.Small"
+                                                   Href="@($"/news/edit/{news.id}")" />
                                 }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
 
         @if (isLoading)
         {
-            <div class="d-flex justify-content-center align-items-center"
-                 style="min-height: 60vh;">
-                <div class="spinner-border text-primary" role="status"></div>
+            <div class="d-flex justify-center mt-8">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
             </div>
         }
-    }
-</div>
+    </div>
+</MudContainer>
 
 @code {
     private List<NewsDTO> allNews = new();

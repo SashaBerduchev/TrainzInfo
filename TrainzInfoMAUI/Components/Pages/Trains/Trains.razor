@@ -7,158 +7,108 @@
 @inject IJSRuntime JS
 <h1 class="text-center my-4">Призначені поїзди</h1>
 
-<AuthorizeView Roles="Superadmin">
-    <div class="mb-3 d-flex flex-wrap gap-2">
-        <button class="btn btn-info" @onclick="() => AddTrain()">Додати поїзд</button>
-        @* <button class="btn btn-dark" @onclick="() => UpdateTrains>Оновити дані</button> *@
-        @* <button class="btn btn-info" @onclick="() => Nav.NavigateTo("/trains/addtrainexcel")">Додати поїзд з Excel</button>
-        <button class="btn btn-info" @onclick="() => Nav.NavigateTo("/trainsshadules/addstationexcel")">Додати графік з Excel</button> *@
-    </div>
-</AuthorizeView>
-
-<!-- Фільтр -->
-<div class="mb-4">
-    <div class="form-inline d-flex flex-wrap gap-2">
-        <select class="form-control" @bind="selectedNumber">
-            <option value="">Виберіть номер</option>
-            @foreach (var n in numbers)
-            {
-                <option value="@n">@n</option>
-            }
-        </select>
-        <select class="form-control" @bind="selectedFrom">
-            <option value="">Виберіть   станцію відправлення</option>
-            @foreach (var n in stations)
-            {
-                <option value="@n">@n</option>
-            }
-        </select>
-        <select class="form-control" @bind="selectedTo">
-            <option value="">Виберіть станцію прибуття </option>
-            @foreach (var n in stations)
-            {
-                <option value="@n">@n</option>
-            }
-        </select>
-
-        <button class="btn btn-info" @onclick="ApplyFilter">Відобразити</button>
-    </div>
-    <div class="mt-2">
-        <button class="btn btn-secondary" @onclick="ClearFilter">Скинути фільтр</button>
-    </div>
-</div>
-
-@if (trains == null)
+@if (isLoad)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
+    <MudPaper Elevation="4" Class="rounded-xl pa-4 mb-4">
+        @* Заголовок секції для контексту *@
+        <MudText Typo="Typo.h6" Class="mud-text-secondary mb-3">Отримуємо дані про поїзди...</MudText>
+
+        <MudStack Spacing="2">
+            @foreach (var i in Enumerable.Range(0, 5))
+            {
+                <MudPaper Elevation="0" Class="pa-4 mud-bg-background-grey rounded-lg">
+                    <MudGrid Spacing="2" AlignItems="AlignItems.Center">
+                        @* Імітуємо номер (Chip) *@
+                        <MudItem xs="2" sm="1">
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="40px" Height="24px" Class="rounded-pill" />
+                        </MudItem>
+
+                        @* Імітуємо маршрут *@
+                        <MudItem xs="6" sm="4">
+                            <MudSkeleton Width="80%" Height="16px" Class="mb-1" />
+                            <MudSkeleton Width="60%" Height="16px" />
+                        </MudItem>
+
+                        @* Імітуємо тип та назву (тільки для десктопа hide-xs) *@
+                        <MudItem sm="4" Class="d-none d-sm-block">
+                            <MudSkeleton Width="40%" Height="16px" Class="mb-1" />
+                            <MudSkeleton Width="90%" Height="16px" />
+                        </MudItem>
+
+                        @* Імітуємо кнопки дій *@
+                        <MudItem xs="4" sm="3" Class="d-flex justify-end">
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="32px" Height="32px" Class="mr-2" />
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="32px" Height="32px" />
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+        </MudStack>
+
+        @* Пагінація-заглушка *@
+        <div class="d-flex justify-end mt-4">
+            <MudSkeleton Width="150px" Height="20px" />
+        </div>
+    </MudPaper>
 }
 else
 {
-    <!-- Таблиця для великих екранів -->
-    <div class="d-none d-md-block table-responsive mb-5">
-        <table class="table table-striped table-bordered align-middle">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Номер</th>
-                    <th>Прибуття</th>
-                    <th>Відправлення</th>
-                    <th>Тип поїзда</th>
-                    <th>Назва</th>
-                    <th class="text-center">Дії</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in trains)
-                {
-                    <tr>
-                        <td class="fw-bold">@item.Number</td>
-                        <td>@item.StationFrom</td>
-                        <td>@item.StationTo</td>
-                        <td>@item.PassTrainType</td>
-                        <td>@item.NameOfTrain</td>
-                        <td class="text-center">
 
-                            @if (item.TrainsShadulesCount > 0)
-                            {
-                                <button class="btn btn-info btn-sm d-block w-100 mb-2"
-                                        @onclick="@(() => Nav.NavigateTo($"/trains/shedule/{item.Id}"))">
-                                    Розклад
-                                </button>
-                            }
-
-                            <AuthorizeView Roles="Superadmin">
-                                @if (item.TrainsShadulesCount > 0)
-                                {
-                                    <button class="btn btn-success btn-sm d-block w-100 mb-2"
-                                            @onclick="@(() => Nav.NavigateTo($"/trains/edit/{item.Id}"))">
-                                        Редагувати
-                                    </button>
-                                }
-                                @if (item.TrainsShadulesCount <= 0)
-                                {
-                                    <button class="btn btn-outline-danger btn-sm d-block w-100 mb-2"
-                                            @onclick="@(() => Nav.NavigateTo($"/trainsshedules/create/{item.Id}"))">
-                                        Додати розклад
-                                    </button>
-                                }
-                                <button class="btn btn-danger btn-sm d-block w-100 mb-2"
-                                        @onclick="@(() => DeleteSchedule(item.Id))">
-                                    ВИДАЛИТИ
-                                </button>
-                            </AuthorizeView>
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Картки для мобільних -->
-    <div class="d-block d-md-none">
-        @foreach (var item in trains)
-        {
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Поїзд №@item.Number</h5>
-                    <p class="card-text mb-1"><b>Прибуття:</b> @item.StationFrom</p>
-                    <p class="card-text mb-1"><b>Відправлення:</b> @item.StationTo</p>
-                    <p class="card-text mb-1"><b>Тип:</b> @item.PassTrainType</p>
-                    <p class="card-text"><b>Назва:</b> @item.NameOfTrain</p>
-
-                    @if (item.TrainsShadulesCount > 0)
+    <MudTable Items="@trains" Hover="true" Striped="true" Breakpoint="Breakpoint.Sm" Elevation="4" Class="rounded-xl overflow-hidden">
+        <HeaderContent>
+            <MudTh>Номер</MudTh>
+            <MudTh>Маршрут (Звідки - Куди)</MudTh>
+            <MudTh>Тип</MudTh>
+            <MudTh>Назва</MudTh>
+            <MudTh Style="text-align:center">Дії</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Номер">
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="fw-bold">@context.Number</MudChip>
+            </MudTd>
+            <MudTd DataLabel="Маршрут">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.body2"><b>З:</b> @context.StationFrom</MudText>
+                    <MudText Typo="Typo.body2"><b>До:</b> @context.StationTo</MudText>
+                </MudStack>
+            </MudTd>
+            <MudTd DataLabel="Тип">@context.PassTrainType</MudTd>
+            <MudTd DataLabel="Назва"><i>@context.NameOfTrain</i></MudTd>
+            <MudTd DataLabel="Дії">
+                <MudStack Row="true" Justify="Justify.Center" Spacing="1">
+                    @if (context.TrainsShadulesCount > 0)
                     {
-                        <button class="btn btn-info btn-sm w-100 mb-2"
-                                @onclick="@(() => Nav.NavigateTo($"/trains/shedule/{item.Id}"))">
-                            Розклад
-                        </button>
+                        @* Виправили лямбду: @(() => ...) *@
+                        <MudIconButton Icon="@Icons.Material.Filled.Schedule" Color="Color.Info" Size="Size.Small"
+                        OnClick="@(() => Nav.NavigateTo($"/trains/shedule/{context.Id}"))" Title="Розклад" />
                     }
 
-                    <AuthorizeView Roles="Superadmin">
-                        <button class="btn btn-success btn-sm w-100 mb-2"
-                                @onclick="@(() => Nav.NavigateTo($"/trains/edit/{item.Id}"))">
-                            Редагувати
-                        </button>
-
-                        <button class="btn btn-outline-danger btn-sm w-100"
-                                @onclick="@(() => Nav.NavigateTo($"/trainsshadules/create/{item.Number}"))">
-                            Додати розклад
-                        </button>
-                        <button class="btn btn-danger btn-sm w-100"
-                                @onclick="@(() => DeleteSchedule(item.Id))">
-                            ВИДАЛИТИ
-                        </button>
+                    @* Додали Context="userContext" для усунення конфлікту *@
+                    <AuthorizeView Roles="Superadmin" Context="userContext">
+                        <Authorized>
+                            @if (context.TrainsShadulesCount > 0)
+                            {
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Success" Size="Size.Small"
+                                OnClick="@(() => Nav.NavigateTo($"/trains/edit/{context.Id}"))" Title="Редагувати" />
+                            }
+                            else
+                            {
+                                <MudIconButton Icon="@Icons.Material.Filled.AddAlarm" Color="Color.Warning" Size="Size.Small"
+                                OnClick="@(() => Nav.NavigateTo($"/trainsshedules/create/{context.Id}"))" Title="Додати розклад" />
+                            }
+                            @* Виправили лямбду: @(async () => await ...) *@
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small"
+                            OnClick="@(async () => await DeleteSchedule(context.Id))" Title="Видалити" />
+                        </Authorized>
                     </AuthorizeView>
-
-                </div>
-            </div>
-        }
-    </div>
+                </MudStack>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Потягів на сторінці:" />
+        </PagerContent>
+    </MudTable>
 }
-
 @code {
     private List<TrainDTO>? trains;
     private List<string> numbers = new();
@@ -168,6 +118,7 @@ else
     private bool isAdmin = false;
     private List<string> stations = new();
     private bool IsAdmin;
+    private bool isLoad = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -177,6 +128,8 @@ else
 
     private async Task Load()
     {
+        isLoad = true;
+        StateHasChanged();
         var url =
                $"api/trains/gettrains?" +
                $"{(string.IsNullOrWhiteSpace(selectedNumber) ? "" : $"&number={Uri.EscapeDataString(selectedNumber)}")}" +
@@ -188,6 +141,7 @@ else
 
         numbers.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getnumbers"));
         stations.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getstations"));
+        isLoad = false;
     }
     private async Task ApplyFilter()
     {

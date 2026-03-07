@@ -5,136 +5,117 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject AppConfig Config
 @inject IJSRuntime JS
+<PageTitle>Станція @stations?.Name</PageTitle>
 
-<h1 class="news-page-title">@stations?.Name</h1>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Color="Color.Primary" Class="news-page-title mb-6 fw-bold">@stations?.Name</MudText>
 
-@if (stations != null)
-{
+    @if (stations != null)
+    {
+        <MudCard Elevation="4" Class="mb-8 rounded-xl overflow-hidden">
+            <MudGrid Spacing="0">
+                <MudItem xs="12" md="4">
+                    @if (!string.IsNullOrEmpty(stations.ImgSrc))
+                    {
+                        <MudImage Src="@(Config.ApiBaseUrl + stations.ImgSrc)" Alt="@stations.Name"
+                                  Fluid="true" Class="h-100 object-cover w-100" Style="min-height: 250px;" />
+                    }
+                    else
+                    {
+                        <MudImage Src="/images/default-station.jpg" Alt="Станція"
+                                  Fluid="true" Class="h-100 object-cover w-100" Style="min-height: 250px;" />
+                    }
+                </MudItem>
 
-    <div class="card news-detail-card shadow-lg mb-5 p-4">
-        <div class="row g-4 align-items-start">
-            <!-- Картинка -->
-            <div class="col-md-4 text-center">
-                @if (!string.IsNullOrEmpty(stations.ImgSrc))
-                {
-                    <img src="@(Config.ApiBaseUrl + stations.ImgSrc)" class="img-fluid rounded news-detail-img" alt="@stations.Name" />
-                }
-                else
-                {
-                    <img src="/images/default-station.jpg" class="img-fluid rounded news-detail-img" alt="Станція" />
-                }
-            </div>
+                <MudItem xs="12" md="8" Class="pa-8">
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="mb-4">Інформація про станцію</MudText>
 
-            <!-- Текстова частина -->
-            <div class="col-md-8">
-                <h3 class="mb-3 text-primary">@stations.Name</h3>
-                <dl class="row mb-4">
-                    <dt class="col-sm-3 fw-bold">Філія</dt>
-                    <dd class="col-sm-9">@stations.UkrainsRailways</dd>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.UkrainsRailways</MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Місто</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.Citys</MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Область</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.Oblasts</MudText>
+                        </MudItem>
+                    </MudGrid>
 
-                    <dt class="col-sm-3 fw-bold">Місто</dt>
-                    <dd class="col-sm-9">@stations.Citys</dd>
-
-                    <dt class="col-sm-3 fw-bold">Область</dt>
-                    <dd class="col-sm-9">@stations.Oblasts</dd>
-                </dl>
-
-                <!-- Кнопки -->
-                <div class="d-flex flex-wrap gap-2 mt-3">
                     @if (IsAdmin)
                     {
-                        <button class="btn btn-outline-primary btn-sm" @onclick="() => AddInfo()">Додати інформацію</button>
-                        <button class="btn btn-outline-warning btn-sm" @onclick="() => EditStation(stations.id)">Редагувати</button>
-                        <button class="btn btn-outline-success btn-sm" @onclick="() => AddImage(stations.id)">Додати картинку</button>
-                        <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteStation(stations.id)">Видалити станцію</button>
+                        <MudDivider Class="my-6" />
+                        <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" StartIcon="@Icons.Material.Filled.NoteAdd" OnClick="AddInfo" Size="Size.Small">Додати інфо</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => EditStation(stations.id)" Size="Size.Small">Редагувати</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Filled.AddPhotoAlternate" OnClick="() => AddImage(stations.id)" Size="Size.Small">Картинка</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever" OnClick="() => DeleteStation(stations.id)" Size="Size.Small">Видалити</MudButton>
+                        </MudStack>
                     }
-                </div>
-            </div>
-        </div>
+                </MudItem>
+            </MudGrid>
+        </MudCard>
 
-        <!-- Додаткова інформація -->
-        <div class="mt-4">
-            @((MarkupString)stations.BaseInfo)
-            @((MarkupString)stations.AllInfo)
-        </div>
-        <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
-            🔗 Поділитися посиланням
-        </button>
-    </div>
-    @if (schedule is null)
-    {
-        <p>Відсутні дані...</p>
+        <MudPaper Elevation="0" Class="pa-4 mb-8">
+            <MudText Typo="Typo.body1" Style="font-size: 1.1rem; line-height: 1.6;">
+                @((MarkupString)stations.BaseInfo)
+            </MudText>
+            <MudText Typo="Typo.body1" Class="mt-4" Style="font-size: 1.1rem; line-height: 1.6;">
+                @((MarkupString)stations.AllInfo)
+            </MudText>
+        </MudPaper>
+
+        <MudText Typo="Typo.h5" Class="mb-4 ml-2 fw-bold" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" /> Розклад поїздів по станції
+        </MudText>
+
+        @if (schedule is null)
+        {
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Відсутні дані про розклад...</MudAlert>
+        }
+        else
+        {
+            <MudTable Items="@schedule" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="2" Class="rounded-lg mb-8" Striped="true">
+                <HeaderContent>
+                    <MudTh>Номер</MudTh>
+                    <MudTh>Звідки</MudTh>
+                    <MudTh>Куди</MudTh>
+                    <MudTh>Прибуття</MudTh>
+                    <MudTh>Відправлення</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Номер"><MudChip T="string" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@context.NumberTrain</MudChip></MudTd>
+                    <MudTd DataLabel="Звідки">@context.TrainFrom</MudTd>
+                    <MudTd DataLabel="Куди">@context.TrainTo</MudTd>
+                    <MudTd DataLabel="Прибуття"><MudText Color="Color.Success">@context.TimeOfArrive.ToString(@"hh\:mm")</MudText></MudTd>
+                    <MudTd DataLabel="Відправлення"><MudText Color="Color.Error">@context.TimeOfDepet.ToString(@"hh\:mm")</MudText></MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
     }
     else
     {
-        <!-- Таблиця для великих екранів -->
-        <div class="table-responsive d-none d-md-block">
-            <table class="table table-striped table-bordered text-center align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Номер поїзда</th>
-                        <th>Початок маршруту</th>
-                        <th>Кінець маршруту</th>
-                        <th>Прибуття</th>
-                        <th>Відправлення</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in schedule)
-                    {
-                        <tr>
-                            <td style="font-size:18px">@item.NumberTrain</td>
-                            <td>@item.TrainFrom</td>
-                            <td>@item.TrainTo</td>
-                            <td>@item.TimeOfArrive</td>
-                            <td>@item.TimeOfDepet</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Картки для мобільних -->
-        <div class="d-block d-md-none">
-            @foreach (var item in schedule)
-            {
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Поїзд номер  @item.Train
-                        </h5>
-                        <p><b>Початок маршруту</b> @item.TrainFrom</p>
-                        <p><b>Кінець маршруту</b> @item.TrainTo</p>
-                        <p><b>Прибуття</b> @item.TimeOfArrive</p>
-                        <p><b>Відправлення</b> @item.TimeOfDepet</p>
-                    </div>
-                </div>
-            }
+        <div class="d-flex flex-column align-center justify-center" style="min-height: 60vh;">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body1" Class="mt-4">Завантаження даних станції...</MudText>
         </div>
     }
-}
-else
-{
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-}
 
+    @if (ErrorMessage is not null)
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6">
+            <strong>Помилка збереження:</strong> @ErrorMessage
+        </MudAlert>
+    }
 
-
-
-
-@if (ErrorMessage is not null)
-        {
-            <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-            <div class="alert alert-danger mt-2">
-                        <p>@ErrorMessage</p>
-            </div>
-        }
-
-<button class="btn btn-info mt-3" @onclick="Back">До списку станцій</button>
+    <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.ArrowBack"
+               OnClick="Back" Class="mt-4 mb-10 px-8 py-2 rounded-pill">
+        До списку станцій
+    </MudButton>
+</MudContainer>
 @code {
     [Parameter] public int Id { get; set; }
     private string ErrorMessage;
@@ -219,17 +200,5 @@ else
     private async Task<bool> Confirm(string message)
     {
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
-    }
-
-    private async Task ShareCurrentUri()
-    {
-        string currentUrl = $"https://www.trainzinfo.com.ua/stations/details/{Id}";
-
-        await Share.Default.RequestAsync(new ShareTextRequest
-        {
-            Uri = currentUrl,
-            Title = stations?.Name ?? "TrainzInfo",
-            Text = $"Станція {stations?.Name}"
-        });
     }
 }

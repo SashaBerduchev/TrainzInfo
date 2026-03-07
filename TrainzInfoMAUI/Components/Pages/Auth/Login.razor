@@ -7,14 +7,14 @@
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthStateProvider
 
-<h3>Авторизація</h3>
+<PageTitle>Авторизація | TrainzInfo</PageTitle>
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 400px;">
-    <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
-
-        <div class="text-center mb-4">
-            <h3 class="fw-bold text-primary">Авторизація</h3>
-            <p class="text-muted small">Будь ласка, введіть ваші дані для входу</p>
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center min-vh-100">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl w-100 shadow-xl">
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.DirectionsTransit" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
+            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">Вхід</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">Вітаємо у TrainzInfo! Будь ласка, увійдіть</MudText>
         </div>
 
         <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
@@ -22,52 +22,64 @@
 
             @if (!string.IsNullOrEmpty(LoginError))
             {
-                <div class="alert alert-danger d-flex align-items-center py-2 mb-3" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <div class="small">@LoginError</div>
-                </div>
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-4 py-1" Dense="true">
+                    @LoginError
+                </MudAlert>
             }
 
-            <div class="mb-3">
-                <label class="form-label fw-medium">Email</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-                    <input @bind="loginModel.Email"
-                           type="email"
-                           placeholder="name@example.com"
-                           class="form-control border-start-0 bg-light shadow-none" />
+            <MudStack Spacing="4">
+                <MudTextField T="string" Label="Email" @bind-Value="loginModel.Email"
+                              For="@(() => loginModel.Email)"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Email"
+                              Placeholder="name@example.com"
+                              InputType="InputType.Email"
+                              Immediate="true" />
+
+                <MudTextField T="string" Label="Пароль" @bind-Value="loginModel.Password"
+                              For="@(() => loginModel.Password)"
+                              Variant="Variant.Outlined"
+                              InputType="@_passwordInput"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Lock"
+                              AdornmentClickIcon="@_passwordInputIcon"
+                              OnAdornmentClick="TogglePasswordVisibility"
+                              Placeholder="••••••••"
+                              Immediate="true" />
+
+                <div class="d-flex justify-end mt-n2">
+                    <MudLink Href="/forgot-password" Color="Color.Secondary" Underline="Underline.None" Typo="Typo.caption">
+                        Забули пароль?
+                    </MudLink>
                 </div>
-                <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small" />
-            </div>
 
-            <div class="mb-4">
-                <label class="form-label fw-medium">Пароль</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
-                    <input @bind="loginModel.Password"
-                           type="password"
-                           placeholder="••••••••"
-                           class="form-control border-start-0 bg-light shadow-none" />
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           Class="rounded-lg mt-2 py-3 fw-bold shadow-lg">
+                    Увійти
+                </MudButton>
+
+                <div class="text-center mt-4">
+                    <MudText Typo="Typo.body2">
+                        Немає акаунта?
+                        <MudLink Href="/register" Color="Color.Primary" Class="fw-bold">Зареєструватися</MudLink>
+                    </MudText>
                 </div>
-                <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small" />
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-3 hover-effect">
-                Увійти
-            </button>
-
-            <div class="text-center mt-3">
-                <a href="#" class="text-decoration-none small text-muted">Забули пароль?</a>
-            </div>
+            </MudStack>
         </EditForm>
-    </div>
-</div>
-
+    </MudPaper>
+</MudContainer>
 
 @code {
     private LoginModel loginModel = new();
     private string LoginError = "";
-
+    bool _passwordVisibility;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
     private async Task HandleLogin()
     {
         try
@@ -105,6 +117,21 @@
         }
     }
 
+    void TogglePasswordVisibility()
+    {
+        if (_passwordVisibility)
+        {
+            _passwordVisibility = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
+        }
+        else
+        {
+            _passwordVisibility = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
+        }
+    }
     private class LoginModel
     {
         public string Email { get; set; } = "";
