@@ -113,3 +113,37 @@
         border-right: 1px solid #eee !important;
     }
 }
+
+
+.loco-card-hover {
+    transition: all 0.3s ease;
+}
+
+    .loco-card-hover:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+.speed-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+}
+
+.border-l-md {
+    border-left: 1px solid var(--mud-palette-divider);
+}
+
+@* На мобільних телефонах (як твій Pixel 7 Pro) прибираємо лівий бордюр *@ @media (max-width: 960px) {
+    .border-l-md {
+        border-left: none;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
+}

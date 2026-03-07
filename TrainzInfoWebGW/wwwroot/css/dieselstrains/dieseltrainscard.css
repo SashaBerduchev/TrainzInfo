@@ -8,3 +8,24 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
+
+.loco-card-hover {
+    transition: all 0.3s ease;
+}
+
+    .loco-card-hover:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+.border-l-md {
+    border-left: 1px solid var(--mud-palette-divider);
+}
+
+@media (max-width: 960px) {
+    .border-l-md {
+        border-left: none;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
+}

@@ -9,3 +9,27 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+
+.station-card-hover {
+    transition: transform 0.3s ease;
+}
+
+    .station-card-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+.station-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--mud-palette-primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

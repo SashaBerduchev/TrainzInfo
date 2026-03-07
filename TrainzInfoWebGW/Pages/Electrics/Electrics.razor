@@ -7,139 +7,153 @@
 @inject IJSRuntime JS
 
 <PageTitle>Електрички</PageTitle>
-<h1 class="mb-4 text-center">Електропоїзди</h1>
 
-@if (IsSuperAdmin)
-{
-    <b>Кількість записів: @ElectricTrains?.Count</b>
-}
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-6">Електропоїзди</MudText>
 
-<div class="mb-3">
     @if (IsPublisherOrAdminOrSuperAdmin)
     {
-        <button class="btn btn-info mb-2" @onclick="@CreateTrain">Створити електропоїзд</button>
-        <button class="btn btn-info mb-2" @onclick="@ViewTrainModels">Моделі електропоїздів</button>
-        <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
-        <p><b>Кількість запитів:</b> @count</p>
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4" Wrap="Wrap.Wrap">
+                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateTrain">
+                    Створити
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Train" OnClick="ViewTrainModels">
+                    Моделі
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Refresh" OnClick="UpdateData">
+                    Оновити
+                </MudButton>
+                @if (IsSuperAdmin)
+                {
+                    <MudChip T="string" Color="Color.Success" Variant="Variant.Text">Записів: @ElectricTrains?.Count</MudChip>
+                }
+                <MudSpacer />
+                <MudText Typo="Typo.body2"><b>Запитів:</b> @count</MudText>
+            </MudStack>
+        </MudPaper>
     }
-</div>
-<div class="row g-2 mb-4 align-items-end">
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Депо</label>
-        <select class="form-select shadow-sm" value="@SelectedDepot" @onchange="OnDepotChanged">
-            <option value="">Всі депо</option>
-            @foreach (var depot in DepotList)
+
+    <MudPaper Elevation="3" Class="pa-6 mb-8 rounded-xl">
+        <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Депо" Value="@SelectedDepot" ValueChanged="@(v => OnDepotChanged(v))" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі депо</MudSelectItem>
+                    @foreach (var depot in DepotList)
+                    {
+                        <MudSelectItem Value="@depot">@depot</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Назва" Value="@SelectedName" ValueChanged="@(v => OnNameChanged(v))" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі назви</MudSelectItem>
+                    @foreach (var name in NameList)
+                    {
+                        <MudSelectItem Value="@name">@name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v => OnFiliaChanged(v))" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
+                    @foreach (var filia in FiliaList)
+                    {
+                        <MudSelectItem Value="@filia">@filia</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
+                           OnClick="ClearFilter" FullWidth="true" Size="Size.Large">
+                    Скинути
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    @if (isLoading)
+    {
+        <MudGrid>
+            @foreach (var i in Enumerable.Range(0, 3))
             {
-                <option value="@depot">@depot</option>
+                <MudItem xs="12">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="160px" Class="rounded-lg mb-4" />
+                </MudItem>
             }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Назва</label>
-        <select class="form-select shadow-sm" value="@SelectedName" @onchange="OnNameChanged">
-            <option value="">Всі назви</option>
-            @foreach (var name in NameList)
+        </MudGrid>
+    }
+    else
+    {
+        <div id="trainsContainer">
+            @foreach (var train in ElectricTrains)
             {
-                <option value="@name">@name</option>
-            }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Філія</label>
-        <select class="form-select shadow-sm" value="@SelectedFilia" @onchange="OnFiliaChanged">
-            <option value="">Всі філії</option>
-            @foreach (var filia in FiliaList)
-            {
-                <option value="@filia">@filia</option>
-            }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <button class="btn btn-outline-secondary w-100 shadow-sm" @onclick="ClearFilter">
-            <i class="bi bi-arrow-clockwise"></i> Скинути фільтр
-        </button>
-    </div>
-</div>
-
-@if (isLoading)
-{
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-}
-else
-{
-
-    <div class="row" id="trainsContainer">
-        @foreach (var train in ElectricTrains)
-        {
-            <div class="col-12 mb-4">
-                <div class="loco-card-modern shadow-sm border-0 fade-in">
-                    <div class="row g-0">
-                        <div class="col-12 col-md-4 position-relative overflow-hidden">
-                            <img class="loco-img"
-                                 src="@(Config.ApiBaseUrl + train.Image)"
-                                 alt="@train.Name" />
-                            <div class="speed-badge">
-                                ⚡ @train.MaxSpeed <small>км/год</small>
+                <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl train-card-hover">
+                    <MudGrid Spacing="0">
+                        <MudItem xs="12" md="4" Class="position-relative">
+                            <MudImage Src="@(Config.ApiBaseUrl + train.Image)" Alt="@train.Name"
+                                      ObjectFit="ObjectFit.Cover" Height="220" Class="w-100" />
+                            <div class="speed-tag">
+                                <MudIcon Icon="@Icons.Material.Filled.FlashOn" Size="Size.Small" Color="Color.Warning" Class="mr-1" />
+                                @train.MaxSpeed <small>км/год</small>
                             </div>
-                        </div>
+                        </MudItem>
 
-                        <div class="col-12 col-md-5 p-4 border-end-md">
-                            <div class="d-flex align-items-center mb-2">
-                                <h3 class="loco-title mb-0">@train.Name</h3>
-                                <span class="loco-number ms-2">@train.Model</span>
+                        <MudItem xs="12" md="5" Class="pa-6">
+                            <div class="d-flex align-center mb-4">
+                                <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@train.Name</MudText>
+                                <MudText Typo="Typo.h6" Class="ml-3 mud-text-secondary">@train.Model</MudText>
                             </div>
 
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <span class="label">Депо</span>
-                                    <span class="value">@train.DepotList</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Філія</span>
-                                    <span class="value">@train.UkrainsRailway</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Локація</span>
-                                    <span class="value">@train.Oblast, @train.City</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Станція</span>
-                                    <span class="value station-highlight">@train.Station</span>
-                                </div>
-                            </div>
-                        </div>
+                            <MudGrid Spacing="2">
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Депо</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@train.DepotList</MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@train.UkrainsRailway</MudText>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudIcon Icon="@Icons.Material.Filled.Place" Size="Size.Small" Color="Color.Error" />
+                                        <MudText Typo="Typo.body1"><b class="mud-text-primary">@train.Station</b> (@train.Oblast, @train.City)</MudText>
+                                    </MudStack>
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
 
-                        <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
-                            <button class="btn btn-main" @onclick="() => ViewDetails(train.id)">
-                                <i class="bi bi-info-circle"></i> Детально
-                            </button>
+                        <MudItem xs="12" md="3" Class="pa-4 mud-bg-background-grey d-flex flex-column justify-center gap-3">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Info" OnClick="() => ViewDetails(train.id)" FullWidth="true">
+                                Детально
+                            </MudButton>
 
                             @if (IsSuperAdmin)
                             {
-                                <div class="admin-actions mt-2 pt-2 border-top">
-                                    <div class="d-flex flex-column gap-2">
-                                        <button class="btn btn-sm btn-outline-success w-100" @onclick="() => EditTrain(train.id)">
-                                            <i class="bi bi-pencil"></i> Редагувати
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger w-100" @onclick="() => DeleteTrain(train.id)">
-                                            <i class="bi bi-trash"></i> Видалити
-                                        </button>
-                                    </div>
-                                </div>
+                                <MudDivider Class="my-1" />
+                                <MudStack Row="true" Spacing="2">
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Success"
+                                               StartIcon="@Icons.Material.Filled.Edit" OnClick="() => EditTrain(train.id)" FullWidth="true" Size="Size.Small">
+                                        Ред.
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                                               StartIcon="@Icons.Material.Filled.Delete" OnClick="() => DeleteTrain(train.id)" FullWidth="true" Size="Size.Small">
+                                        Вид.
+                                    </MudButton>
+                                </MudStack>
                             }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-}
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+        </div>
+    }
+</MudContainer>
+
 
 @code {
     private List<ElectricTrainDTO> ElectricTrains { get; set; } = new();
@@ -185,6 +199,8 @@ else
         if (isLoading || allLoaded) return;
 
         isLoading = true;
+        StateHasChanged();
+        await Task.Yield();
 
         if (!string.IsNullOrEmpty(depotNameFromQuery))
         {
@@ -261,21 +277,21 @@ else
     }
 
 
-    private async Task OnDepotChanged(ChangeEventArgs e)
+    private async Task OnDepotChanged(string value)
     {
-        SelectedDepot = e.Value?.ToString() ?? "";
+        SelectedDepot = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnNameChanged(ChangeEventArgs e)
+    private async Task OnNameChanged(string value)
     {
-        SelectedName = e.Value?.ToString() ?? "";
+        SelectedName = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnFiliaChanged(ChangeEventArgs e)
+    private async Task OnFiliaChanged(string value)
     {
-        SelectedFilia = e.Value?.ToString() ?? "";
+        SelectedFilia = value ?? "";
         await ApplyFilter();
     }
 

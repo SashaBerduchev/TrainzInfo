@@ -4,107 +4,61 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient Http
 @inject NavigationManager Nav
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-
-        <!-- Лівий логотип -->
-        <a class="navbar-brand" href="/">TrainzInfo</a>
-
-        <!-- Кнопка toggle -->
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Логотип / інший контент справа на desktop -->
-        <div class="d-none d-md-flex align-items-center">
-            <img class="img-fluid rounded" style="max-height:50px;"
-                 src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto" />
-        </div>
+<MudNavMenu Bordered="true">
+    <div class="pa-4 d-flex align-center gap-3">
+        <MudIcon Icon="@Icons.Material.Filled.DirectionsTransit" Color="Color.Primary" Size="Size.Large" />
+        <MudText Typo="Typo.h6" Class="fw-bold">TrainzInfo</MudText>
     </div>
-</div>
 
+    <MudDivider Class="mb-4" />
 
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Головна</MudNavLink>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link menu-link" href="" Match="NavLinkMatch.All">
-                <i class="fas fa-home"></i>
-                <span>Головна</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link menu-link" href="ukrains-railways">
-                <i class="fas fa-train"></i>
-                <span>Українська залізниця</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link menu-link" href="trains">
-                <i class="fas fa-list"></i>
-                <span>Список поїздів</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link menu-link d-flex align-items-center" href="about">
-                @* Додаємо display: inline-flex та align-self: center *@
-                <i class="bi bi-train-front me-2 mb-0" style="font-size: 1.2rem; display: inline-flex; align-self: center; transform: translateY(-1px);"></i>
-                <span class="mb-0" style="line-height: 1;">Про нас</span>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link menu-link d-flex align-items-center" href="@YouTubeUrl" target="_blank">
-                <div class="d-flex align-items-center justify-content-center" style="width: 1.5rem; height: 1.2rem; margin-right: 0.5rem;">
-                    <i class="bi bi-youtube mb-0" style="font-size: 1.3rem; color: #FF0000; line-height: 0; display: inline-block; transform: translateY(-0.5px);"></i>
-                </div>
-                <span class="mb-0">YouTube канал</span>
-            </NavLink>
-        </div>
-    </nav>
+    <MudNavLink Href="ukrains-railways" Icon="@Icons.Material.Filled.Map">Українська залізниця</MudNavLink>
 
-    <!-- Блок авторизації -->
+    <MudNavGroup Title="Рухомий склад" Icon="@Icons.Material.Filled.Train" Expanded="true">
+        <MudNavLink Href="locomotives" Icon="@Icons.Material.Filled.DirectionsRailway">Локомотиви</MudNavLink>
+        <MudNavLink Href="electric-trains" Icon="@Icons.Material.Filled.ElectricBolt">Електропоїзди</MudNavLink>
+        <MudNavLink Href="diesel-trains" Icon="@Icons.Material.Filled.PropaneTank">Дизель-поїзди</MudNavLink>
+    </MudNavGroup>
 
-    <ul class="nav d-flex align-items-center" style="margin-left:auto; gap:10px; list-style:none; padding:0;">
+    <MudNavLink Href="about" Icon="@Icons.Material.Filled.Info">Про нас</MudNavLink>
+
+    <MudNavLink Href="@YouTubeUrl" Target="_blank" Icon="@Icons.Custom.Brands.YouTube" IconColor="Color.Error">
+        YouTube канал
+    </MudNavLink>
+
+    <MudSpacer />
+    <MudDivider Class="my-2" />
+
+    <div class="pa-2">
         <AuthorizeView>
             <Authorized>
-                <li class="nav-item d-flex align-items-center gap-2">
-
-                    <button class="btn btn-light shadow-sm d-flex align-items-center gap-2 px-3"
-                            @onclick="Profile">
-                        <i class="fa-solid fa-user text-primary"></i>
-                        <span>Мій профіль</span>
-                    </button>
-
-                    <button class="btn btn-danger shadow-sm d-flex align-items-center gap-2 px-3"
-                            @onclick="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Вийти</span>
-                    </button>
-
-                </li>
+                <MudNavGroup Title="@context.User.Identity?.Name" Icon="@Icons.Material.Filled.Person" Class="mud-text-primary">
+                    <MudNavLink OnClick="Profile" Icon="@Icons.Material.Filled.Badge">Мій профіль</MudNavLink>
+                    <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">Вийти</MudNavLink>
+                </MudNavGroup>
             </Authorized>
-
             <NotAuthorized>
-                <li class="nav-item d-flex align-items-center gap-2">
-
-                    <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2 px-3"
-                            @onclick="Login">
-                        <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>Вхід</span>
-                    </button>
-
-                    <button class="btn btn-outline-primary shadow-sm d-flex align-items-center gap-2 px-3"
-                            @onclick="Register">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Реєстрація</span>
-                    </button>
-
-                </li>
+                <MudStack Spacing="1" Class="px-2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.Login" OnClick="Login">
+                        Вхід
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.PersonAdd" OnClick="Register">
+                        Реєстрація
+                    </MudButton>
+                </MudStack>
             </NotAuthorized>
         </AuthorizeView>
-    </ul>
-</div>
+    </div>
 
+    <div class="d-none d-md-flex justify-center pa-4 mt-auto">
+        <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+                  Alt="TrainzInfo Logo" Fluid="true" Class="rounded-lg opacity-80" Style="max-height: 60px;" />
+    </div>
+</MudNavMenu>
 @code {
     private bool isNavCollapsed = true;
     private string? NavMenuCssClass => isNavCollapsed ? "collapse" : null;

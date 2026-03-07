@@ -8,3 +8,25 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
+
+.train-card-hover {
+    transition: transform 0.3s ease;
+}
+
+    .train-card-hover:hover {
+        transform: scale(1.01);
+    }
+
+.speed-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+}

@@ -82,3 +82,26 @@
     background: #f1faee;
     height: 100%;
 }
+
+
+
+.max-w-400 {
+    max-width: 400px;
+    width: 100%;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hover-elevate {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .hover-elevate:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    }

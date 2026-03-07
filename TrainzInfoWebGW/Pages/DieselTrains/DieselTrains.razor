@@ -8,149 +8,166 @@
 @inject IJSRuntime JS
 
 <PageTitle>Дизель-поїзди</PageTitle>
-<h1 class="mb-4 text-center">Дизель-поїзди</h1>
 
-@if (IsPublisherOrAdminOrSuperAdmin)
-{
-    <button class="btn btn-info mb-3" @onclick="CreateDieselTrain">Створити</button>
-    <button class="btn btn-info mb-2" @onclick="@UpdateData">Оновити дані</button>
-}
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-6">Дизель-поїзди</MudText>
 
-<div class="row g-2 mb-3 align-items-end">
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Філія</label>
-        <select class="form-select shadow-sm" value="@selectedFilia" @onchange="OnFiliaChanged">
-            <option value="">Всі філії</option>
-            @foreach (var f in filias)
-            {
-                <option value="@f">@f</option>
-            }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Область</label>
-        <select class="form-select shadow-sm" value="@selectedOblast" @onchange="OnOblastChanged">
-            <option value="">Всі області</option>
-            @foreach (var o in oblasts)
-            {
-                <option value="@o">@o</option>
-            }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Депо</label>
-        <select class="form-select shadow-sm" value="@selectedDepo" @onchange="OnDepoChanged">
-            <option value="">Всі депо</option>
-            @foreach (var d in depos)
-            {
-                <option value="@d">@d</option>
-            }
-        </select>
-    </div>
-
-    <div class="col-12 col-md-3">
-        <label class="small fw-bold text-muted ms-1">Модель</label>
-        <select class="form-select shadow-sm" value="@selectedModel" @onchange="OnModelChanged">
-            <option value="">Всі моделі</option>
-            @foreach (var m in models)
-            {
-                <option value="@m">@m</option>
-            }
-        </select>
-    </div>
-</div>
-
-<div class="mb-4">
-    <button class="btn btn-outline-secondary shadow-sm" @onclick="ClearFilter">
-        <i class="bi bi-arrow-clockwise"></i> Скинути фільтри
-    </button>
-</div>
-
-<div class="row" id="dieselContainer">
-    @if (loading == false)
+    @if (IsPublisherOrAdminOrSuperAdmin)
     {
-        <div class="d-flex justify-content-center align-items-center"
-             style="min-height: 60vh;">
-            <div class="spinner-border text-primary" role="status"></div>
-        </div>
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateDieselTrain">
+                    Створити
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Refresh" OnClick="UpdateData">
+                    Оновити дані
+                </MudButton>
+            </MudStack>
+        </MudPaper>
     }
-    else if (!dieselTrains.Any())
+
+    <MudPaper Elevation="3" Class="pa-6 mb-8 rounded-xl">
+        <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+            <MudItem xs="12" sm="6" md="3">
+                <MudSelect T="string" Label="Філія" Value="@selectedFilia" ValueChanged="@(v => OnFiliaChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
+                    @foreach (var f in filias)
+                    {
+                        <MudSelectItem Value="@f">@f</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudSelect T="string" Label="Область" Value="@selectedOblast" ValueChanged="@(v => OnOblastChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі області</MudSelectItem>
+                    @foreach (var o in oblasts)
+                    {
+                        <MudSelectItem Value="@o">@o</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="2">
+                <MudSelect T="string" Label="Депо" Value="@selectedDepo" ValueChanged="@(v => OnDepoChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі депо</MudSelectItem>
+                    @foreach (var d in depos)
+                    {
+                        <MudSelectItem Value="@d">@d</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="2">
+                <MudSelect T="string" Label="Модель" Value="@selectedModel" ValueChanged="@(v => OnModelChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі моделі</MudSelectItem>
+                    @foreach (var m in models)
+                    {
+                        <MudSelectItem Value="@m">@m</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="2">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
+                           OnClick="ClearFilter" FullWidth="true" Size="Size.Medium">
+                    Скинути
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    @if (loading == false || !dieselTrains.Any())
     {
-        <div class="d-flex justify-content-center align-items-center"
-             style="min-height: 60vh;">
-            <div class="spinner-border text-primary" role="status"></div>
-        </div>
+        <MudGrid Spacing="6">
+            @foreach (var i in Enumerable.Range(0, 3))
+            {
+                <MudItem xs="12">
+                    <MudPaper Elevation="2" Class="pa-4 rounded-xl">
+                        <MudGrid Spacing="0">
+                            <MudItem xs="12" md="4">
+                                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" Class="rounded-lg" />
+                            </MudItem>
+                            <MudItem xs="12" md="8" Class="pa-6">
+                                <MudSkeleton Width="50%" Height="42px" Class="mb-4" />
+                                <MudSkeleton Width="100%" />
+                                <MudSkeleton Width="100%" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
     }
     else
     {
-        @foreach (var item in dieselTrains)
-        {
-            <div class="col-12 mb-4">
-                <div class="loco-card-modern shadow-sm border-0">
-                    <div class="row g-0">
-                        <div class="col-12 col-md-4 position-relative overflow-hidden">
-                            <img class="loco-img"
-                                 src="@(Config.ApiBaseUrl + item.Image)"
-                                 alt="Дизель-поїзд @item.Name" />
-                            @* Якщо в моделі дизелів з'явиться швидкість, можна додати speed-badge тут *@
-                        </div>
+        <div id="dieselContainer">
+            @foreach (var item in dieselTrains)
+            {
+                <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl loco-card-hover train-card-animate">
+                    <MudGrid Spacing="0">
+                        <MudItem xs="12" md="4">
+                            <MudImage Src="@(Config.ApiBaseUrl + item.Image)" Alt="Дизель-поїзд"
+                                      ObjectFit="ObjectFit.Cover" Height="220" Class="w-100" />
+                        </MudItem>
 
-                        <div class="col-12 col-md-5 p-4 border-end-md">
-                            <div class="d-flex align-items-center mb-2">
-                                <h3 class="loco-title mb-0">@item.Name</h3>
-                                <span class="loco-number ms-2">№@item.NumberTrain</span>
+                        <MudItem xs="12" md="5" Class="pa-6">
+                            <div class="d-flex align-center mb-4">
+                                <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@item.Name</MudText>
+                                <MudChip T="string" Variant="Variant.Text" Color="Color.Secondary" Class="ml-2 fw-bold">№@item.NumberTrain</MudChip>
                             </div>
 
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <span class="label">Депо</span>
-                                    <span class="value">@item.DepotList</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Філія</span>
-                                    <span class="value">@item.Filia</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Локація</span>
-                                    <span class="value">@item.Oblast, @item.City</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="label">Станція</span>
-                                    <span class="value station-highlight">@item.Station</span>
-                                </div>
-                            </div>
-                        </div>
+                            <MudGrid Spacing="1">
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Депо</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@item.DepotList</MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@item.Filia</MudText>
+                                </MudItem>
+                                <MudItem xs="12" Class="mt-2">
+                                    <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Place" Size="Size.Small" Color="Color.Error" />
+                                        <MudText Typo="Typo.body1">
+                                            <b class="mud-text-primary">@item.Station</b> (@item.Oblast, @item.City)
+                                        </MudText>
+                                    </MudStack>
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
 
-                        <div class="col-12 col-md-3 bg-light-subtle d-flex flex-column justify-content-center p-3 gap-2">
-                            <NavLink class="btn btn-main" href="@($"/diesel-trains/details/{item.Id}")">
-                                <i class="bi bi-info-circle"></i> Детально
-                            </NavLink>
+                        <MudItem xs="12" md="3" Class="pa-4 mud-bg-background-grey d-flex flex-column justify-center gap-3 border-l-md">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Info" Href="@($"/diesel-trains/details/{item.Id}")" FullWidth="true">
+                                Детально
+                            </MudButton>
 
                             @if (currentUser != null && (currentUser.Role == "Publisher" || currentUser.Role == "Admin" || currentUser.Role == "Superadmin"))
                             {
-                                <div class="admin-actions mt-2 pt-2 border-top">
-                                    <div class="d-flex flex-column gap-2">
-                                        <NavLink class="btn btn-sm btn-outline-warning w-100" href="@($"/diesel-trains/add-image/{item.Id}")">
-                                            <i class="bi bi-image"></i> Додати фото
-                                        </NavLink>
-                                        <NavLink class="btn btn-sm btn-outline-primary w-100" href="@($"/diesel-trains/edit/{item.Id}")">
-                                            <i class="bi bi-pencil"></i> Редагувати
-                                        </NavLink>
-                                        <button class="btn btn-sm btn-outline-danger w-100" @onclick="() => DeleteTrain(item.Id)">
-                                            <i class="bi bi-trash"></i> Видалити
-                                        </button>
-                                    </div>
-                                </div>
+                                <MudDivider Class="my-1" />
+                                <MudStack Spacing="1">
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small"
+                                               StartIcon="@Icons.Material.Filled.AddAPhoto" Href="@($"/diesel-trains/add-image/{item.Id}")" FullWidth="true">
+                                        Фото
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Small"
+                                               StartIcon="@Icons.Material.Filled.Edit" Href="@($"/diesel-trains/edit/{item.Id}")" FullWidth="true">
+                                        Редагувати
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small"
+                                               StartIcon="@Icons.Material.Filled.Delete" OnClick="() => DeleteTrain(item.Id)" FullWidth="true">
+                                        Видалити
+                                    </MudButton>
+                                </MudStack>
                             }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+        </div>
     }
-</div>
+</MudContainer>
+
+<style>
+    
+</style>
 
 @code {
     private List<DieselTrainsDTO> dieselTrains = new();
@@ -250,27 +267,27 @@
         StateHasChanged();
     }
 
-    private async Task OnFiliaChanged(ChangeEventArgs e)
+    private async Task OnFiliaChanged(string value)
     {
-        selectedFilia = e.Value?.ToString() ?? "";
+        selectedFilia = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnOblastChanged(ChangeEventArgs e)
+    private async Task OnOblastChanged(string value)
     {
-        selectedOblast = e.Value?.ToString() ?? "";
+        selectedOblast = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnDepoChanged(ChangeEventArgs e)
+    private async Task OnDepoChanged(string value)
     {
-        selectedDepo = e.Value?.ToString() ?? "";
+        selectedDepo = value ?? "";
         await ApplyFilter();
     }
 
-    private async Task OnModelChanged(ChangeEventArgs e)
+    private async Task OnModelChanged(string value)
     {
-        selectedModel = e.Value?.ToString() ?? "";
+        selectedModel = value ?? "";
         await ApplyFilter();
     }
 
