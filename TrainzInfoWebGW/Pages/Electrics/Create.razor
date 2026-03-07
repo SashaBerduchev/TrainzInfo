@@ -3,124 +3,99 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<h4>Електричка</h4>
-<hr />
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl">
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <div class="card shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h4 class="mb-4 fw-semibold">🚆 Електропоїзд</h4>
-
-                    <EditForm Model="@electrics" OnValidSubmit="HandleValidSubmit">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger mb-3" />
-
-                        <!-- Назва -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">
-                                Назва електропоїзда
-                            </label>
-                            <InputSelect @bind-Value="electrics.Name"
-                                         class="form-select form-select-lg">
-                                @foreach (var item in NameList)
-                                {
-                                    <option value="@item">@item</option>
-                                }
-                            </InputSelect>
-                        </div>
-
-                        <!-- Модель -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">
-                                Модель
-                            </label>
-                            <InputText @bind-Value="electrics.Model"
-                                       class="form-control form-control-lg"
-                                       placeholder="ЕР9П, ЕР2, ЕПЛ9Т..." />
-                        </div>
-                        <!-- Депо -->
-                        <div class="mb-3 position-relative">
-                            <label class="form-label fw-medium">
-                                Депо
-                            </label>
-                            <InputText @bind-Value="depo"
-                                       class="form-control form-control-lg"
-                                       placeholder="Почніть вводити депо..."
-                                       @oninput="OnInputChanged" />
-
-                            @if (filteredDepot?.Any() == true)
-                            {
-                                <ul class="list-group position-absolute w-100 shadow-sm rounded-3 mt-1 dropdown"
-                                    style="z-index:1000;">
-                                    @foreach (var item in filteredDepot)
-                                    {
-                                        <li class="list-group-item list-group-item-action"
-                                            style="cursor:pointer;"
-                                            @onclick="() => SelectItem(item)">
-                                            @item
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-
-                        <!-- Швидкість -->
-                        <div class="mb-3">
-                            <label class="form-label fw-medium">
-                                Конструкційна швидкість
-                            </label>
-                            <InputNumber @bind-Value="electrics.MaxSpeed"
-                                         class="form-control form-control-lg"
-                                         placeholder="км/год" />
-                        </div>
-
-                        <!-- Фото -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">
-                                Фото електропоїзда
-                            </label>
-                            <InputFile class="form-control"
-                                       OnChange="HandleFileSelected" />
-
-                            @if (!string.IsNullOrEmpty(imagePreview))
-                            {
-                                <div class="mt-3 text-center">
-                                    <img src="@imagePreview"
-                                         class="img-thumbnail rounded-3"
-                                         style="max-height:180px" />
-                                </div>
-                            }
-                        </div>
-
-                        <!-- Кнопка -->
-                        <div class="d-flex justify-content-end">
-                            <button type="submit"
-                                    class="btn btn-primary btn-lg px-4">
-                                Зберегти
-                            </button>
-                        </div>
-                    </EditForm>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrEmpty(errors))
-            {
-                <div class="alert alert-danger mt-3 rounded-3">
-                    <strong>Помилка збереження</strong><br />
-                    @errors
-                </div>
-            }
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.ElectricBolt" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
+            <MudText Typo="Typo.h4" Class="fw-bold">Електропоїзд</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">Додавання нової серії електропоїзда</MudText>
         </div>
-    </div>
-</div>
 
+        <EditForm Model="@electrics" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
 
-<div>
-    <NavLink href="/electric-trains">Повернутися назад</NavLink>
-</div>
+            <MudStack Spacing="4">
 
+                @* Назва електропоїзда *@
+                <MudSelect T="string" Label="Назва електропоїзда" @bind-Value="electrics.Name"
+                           Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                           Required="true" For="@(() => electrics.Name)">
+                    @foreach (var item in NameList)
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+
+                @* Модель *@
+                <MudTextField Label="Модель" @bind-Value="electrics.Model"
+                              Variant="Variant.Outlined" Placeholder="ЕР9П, ЕР2, ЕПЛ9Т..."
+                              Required="true" For="@(() => electrics.Model)" />
+
+                @* Депо - використовуємо MudAutocomplete для зручності *@
+                <MudAutocomplete T="string" Label="Депо" @bind-Value="electrics.DepotList"
+                                 SearchFunc="@SearchDepot"
+                                 Variant="Variant.Outlined"
+                                 Placeholder="Почніть вводити депо..."
+                                 ResetValueOnEmptyText="true"
+                                 CoerceText="true" CoerceValue="true"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+
+                @* Конструкційна швидкість *@
+                <MudNumericField Label="Конструкційна швидкість (км/год)" @bind-Value="electrics.MaxSpeed"
+                                 Variant="Variant.Outlined" Min="0" Max="300" />
+
+                @* Фото - Метод із прихованим InputFile, який тобі підійшов *@
+                <div class="d-flex flex-column gap-2">
+                    <InputFile id="fileInput" OnChange="HandleFileSelected" style="display:none" />
+
+                    <MudButton HtmlTag="label"
+                               for="fileInput"
+                               Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                               FullWidth="true"
+                               Class="py-3 rounded-lg border-2 border-dashed">
+                        Завантажити фото електропоїзда
+                    </MudButton>
+
+                    @if (!string.IsNullOrEmpty(imagePreview))
+                    {
+                        <MudPaper Elevation="0" Class="pa-2 mud-bg-background-grey rounded-lg d-flex justify-center mt-2">
+                            <MudImage Src="@imagePreview" Height="180" ObjectFit="ObjectFit.Contain" Class="rounded-lg shadow-sm" />
+                        </MudPaper>
+                    }
+                </div>
+
+                @* Помилки збереження *@
+                @if (!string.IsNullOrEmpty(errors))
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg">
+                        <strong>Помилка збереження:</strong> @errors
+                    </MudAlert>
+                }
+
+                @* Кнопки дій *@
+                <div class="d-flex justify-space-between align-center mt-6">
+                    <MudButton Variant="Variant.Text" Color="Color.Secondary"
+                               Href="/electric-trains" StartIcon="@Icons.Material.Filled.ArrowBack">
+                        Назад
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Class="rounded-lg px-8 shadow-lg fw-bold">
+                        Зберегти
+                    </MudButton>
+                </div>
+
+            </MudStack>
+        </EditForm>
+    </MudPaper>
+</MudContainer>
 @code {
     private ElectricTrainSetDTO electrics = new ElectricTrainSetDTO();
 
@@ -175,6 +150,14 @@
         }
 
 
+    }
+
+    private async Task<IEnumerable<string>> SearchDepot(string value, CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(value))
+            return DepotList;
+
+        return DepotList.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
     private async Task OnInputChanged(ChangeEventArgs e)

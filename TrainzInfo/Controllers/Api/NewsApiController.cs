@@ -219,14 +219,41 @@ namespace TrainzInfo.Controllers.Api
                             DateTime = DateTime.Now,
                             DateStartActual = DateOnly.FromDateTime(DateTime.UtcNow),
                             LinkSorce = newsInfo.LinkSorce,
-                            DateEndActual = newsInfo.DateEndActual,
+                            DateEndActual = newsInfo.DateEndActual ?? DateOnly.FromDateTime(DateTime.Now),
                             ObjectName = "NEWSINFO - " + currentCount.ToString()
                         };
+                        byte[] imageBytes = null;
+                        string mimeType = null;
+
+                        if (!string.IsNullOrEmpty(newsInfo.NewsImage))
+                        {
+                            if (newsInfo.NewsImage.Contains(","))
+                            {
+                                // Формат з префіксом: data:image/png;base64,XXXX
+                                var parts = newsInfo.NewsImage.Split(',');
+                                imageBytes = Convert.FromBase64String(parts[1]);
+
+                                // Безпечно дістаємо MimeType
+                                var header = parts[0]; // data:image/png;base64
+                                if (header.Contains(":") && header.Contains(";"))
+                                {
+                                    mimeType = header.Split(':')[1].Split(';')[0];
+                                }
+                            }
+                            else
+                            {
+                                // Формат без префікса: просто XXXX
+                                imageBytes = Convert.FromBase64String(newsInfo.NewsImage);
+                                mimeType = newsInfo.ImageMimeTypeOfData; // Беремо тип з DTO
+                            }
+                        }
+
+                        // 2. Використовуємо отримані дані при створенні
                         NewsImage newsImage = new NewsImage
                         {
                             Name = $"NewsImage_{newNews.id}",
-                            Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null,
-                            ImageMimeTypeOfData = newsInfo.NewsImage != null ? newsInfo.NewsImage.Split(';')[0].Split(':')[1] : null,
+                            Image = imageBytes,
+                            ImageMimeTypeOfData = mimeType ?? "image/png", // Значення за замовчуванням
                             CreatedAt = DateTime.Now,
                         };
                         Log.Wright("NewsImage Created Successfully");
@@ -242,20 +269,49 @@ namespace TrainzInfo.Controllers.Api
                     await _context.ExecuteInTransactionAsync(async () =>
                     {
                         NewsInfo news = await _context.NewsInfos
-                        .Include(x => x.NewsImages)
-                        .Where(x => x.ObjectName == newsInfo.ObjectName).FirstOrDefaultAsync();
-                        news.NameNews = newsInfo.NameNews;
-                        news.BaseNewsInfo = newsInfo.BaseNewsInfo;
-                        news.NewsInfoAll = newsInfo.NewsInfoAll;
-                        news.LinkSorce = newsInfo.LinkSorce;
-                        news.DateStartActual = DateOnly.FromDateTime(DateTime.UtcNow);
-                        news.DateEndActual = newsInfo.DateEndActual;
-                        news.NewsImages.Image = newsInfo.NewsImage != null ? Convert.FromBase64String(newsInfo.NewsImage.Split(',')[1]) : null;
+                            .Include(x => x.NewsImages)
+                            .Where(x => x.ObjectName == newsInfo.ObjectName).FirstOrDefaultAsync();
 
-                        Log.Wright("NewsInfo Updated Successfully");
-                        _context.NewsInfos.Update(news);
-                        newNewsId = news.id;
-                        number = news.ObjectName;
+                        if (news != null)
+                        {
+                            news.NameNews = newsInfo.NameNews;
+                            news.BaseNewsInfo = newsInfo.BaseNewsInfo;
+                            news.NewsInfoAll = newsInfo.NewsInfoAll;
+                            news.LinkSorce = newsInfo.LinkSorce;
+                            news.DateStartActual = DateOnly.FromDateTime(DateTime.UtcNow);
+                            news.DateEndActual = newsInfo.DateEndActual ?? DateOnly.FromDateTime(DateTime.Now);
+
+                            // Безпечна обробка зображення
+                            if (!string.IsNullOrEmpty(newsInfo.NewsImage))
+                            {
+                                if (newsInfo.NewsImage.Contains(","))
+                                {
+                                    // Формат з префіксом data:image/...;base64,
+                                    var parts = newsInfo.NewsImage.Split(',');
+                                    if (parts.Length > 1)
+                                    {
+                                        news.NewsImages.Image = Convert.FromBase64String(parts[1]);
+
+                                        // Оновлюємо MimeType, якщо він є в рядку
+                                        var headerParts = parts[0].Split(':');
+                                        if (headerParts.Length > 1)
+                                        {
+                                            news.NewsImages.ImageMimeTypeOfData = headerParts[1].Split(';')[0];
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // Формат без префікса — чистий Base64
+                                    news.NewsImages.Image = Convert.FromBase64String(newsInfo.NewsImage);
+                                }
+                            }
+
+                            Log.Wright("NewsInfo Updated Successfully");
+                            _context.NewsInfos.Update(news);
+                            newNewsId = news.id;
+                            number = news.ObjectName;
+                        }
                     }, IsolationLevel.ReadCommitted);
                 }
 
@@ -341,7 +397,7 @@ namespace TrainzInfo.Controllers.Api
                 existingNews.NameNews = newsInfo.NameNews;
                 existingNews.BaseNewsInfo = newsInfo.BaseNewsInfo;
                 existingNews.NewsInfoAll = newsInfo.NewsInfoAll;
-                existingNews.DateEndActual = newsInfo.DateEndActual;
+                existingNews.DateEndActual = newsInfo.DateEndActual ?? DateOnly.FromDateTime(DateTime.Now);
                 existingNews.DateTime = DateTime.UtcNow;
                 existingNews.LinkSorce = newsInfo.LinkSorce;
 

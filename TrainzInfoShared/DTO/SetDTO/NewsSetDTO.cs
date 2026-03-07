@@ -14,7 +14,7 @@ namespace TrainzInfoShared.DTO.SetDTO
         public string NewsInfoAll { get; set; }
         public string DateTime { get; set; }
         [Required(ErrorMessage = "Дата початку актуалізації обо'язково")]
-        public DateOnly DateEndActual { get; set; }
+        public DateOnly? DateEndActual { get; set; }
         [Required(ErrorMessage = "Посилання на першоджерело обо'язково")]
         public string LinkSorce { get; set; }
         [Required(ErrorMessage = "Зображення обо'язково")]
