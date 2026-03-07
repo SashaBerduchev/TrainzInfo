@@ -57,6 +57,9 @@
             @((MarkupString)stations.BaseInfo)
             @((MarkupString)stations.AllInfo)
         </div>
+        <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
+            🔗 Поділитися посиланням
+        </button>
     </div>
     @if (schedule is null)
     {
@@ -216,5 +219,17 @@ else
     private async Task<bool> Confirm(string message)
     {
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
+    private async Task ShareCurrentUri()
+    {
+        string currentUrl = $"https://www.trainzinfo.com.ua/stations/details/{Id}";
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Uri = currentUrl,
+            Title = stations?.Name ?? "TrainzInfo",
+            Text = $"Станція {stations?.Name}"
+        });
     }
 }

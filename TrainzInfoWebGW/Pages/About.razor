@@ -1,0 +1,75 @@
+﻿@page "/about"
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">TrainzInfo</h1>
+        <p class="lead">Твій персональний залізничний інформатор</p>
+        <hr class="mx-auto" style="width: 100px; height: 3px; background-color: var(--bs-primary);">
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="mb-4">
+                <h3 class="h4 mb-3">Про проєкт</h3>
+                <p>
+                    <strong>TrainzInfo</strong> — це мультиплатформовий застосунок, створений для залізничних ентузіастів та професіоналів.
+                    Ми об’єднуємо оперативні дані, аналітику та зручний інтерфейс, щоб зробити взаємодію з залізничним транспортом
+                    простішою та зрозумілішою.
+                </p>
+                <p>
+                    Проєкт народився з ідеї створити єдину точку доступу до інформації про рух поїздів та стан інфраструктури,
+                    яка буде однаково зручною як на десктопі, так і на смартфоні.
+                </p>
+            </section>
+
+            <section>
+                <h3 class="h4 mb-3">Ключові переваги</h3>
+                <div class="list-group shadow-sm">
+                    <div class="list-group-item d-flex align-items-center">
+                        <i class="bi bi-cpu me-3 text-primary"></i>
+                        <span><strong>Висока швидкість:</strong> Оптимізовано на базі .NET 10.</span>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center">
+                        <i class="bi bi-phone me-3 text-primary"></i>
+                        <span><strong>Кросплатформенність:</strong> Єдина кодова база для Windows та мобільних пристроїв.</span>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center">
+                        <i class="bi bi-clock-history me-3 text-primary"></i>
+                        <span><strong>Актуальність:</strong> Постійне оновлення даних у реальному часі.</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm bg-light mb-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Технології</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><span class="badge bg-dark">C# 14 / .NET 10</span></li>
+                        <li class="mb-2"><span class="badge bg-info text-dark">Blazor Hybrid</span></li>
+                        <li class="mb-2"><span class="badge bg-purple" style="background-color: #512bd4; color: white;">.NET MAUI</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Версія застосунку</h5>
+                    <p class="display-6 mb-0 text-white">1.0.0</p>
+                    <small>Release Candidate (2026)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <blockquote class="blockquote">
+            <p class="fst-italic">"TrainzInfo — залізниця у твоїй кишені."</p>
+        </blockquote>
+    </div>
+</div>
+
+@code {
+    // Тут можна додати логіку отримання версії з Assembly, якщо потрібно
+}

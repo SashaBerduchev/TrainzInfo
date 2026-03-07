@@ -45,6 +45,21 @@
                 <span>Список поїздів</span>
             </NavLink>
         </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link menu-link d-flex align-items-center" href="about">
+                @* Додаємо display: inline-flex та align-self: center *@
+                <i class="bi bi-train-front me-2 mb-0" style="font-size: 1.2rem; display: inline-flex; align-self: center; transform: translateY(-1px);"></i>
+                <span class="mb-0" style="line-height: 1;">Про нас</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link menu-link d-flex align-items-center" href="@YouTubeUrl" target="_blank">
+                <div class="d-flex align-items-center justify-content-center" style="width: 1.5rem; height: 1.2rem; margin-right: 0.5rem;">
+                    <i class="bi bi-youtube mb-0" style="font-size: 1.3rem; color: #FF0000; line-height: 0; display: inline-block; transform: translateY(-0.5px);"></i>
+                </div>
+                <span class="mb-0">YouTube канал</span>
+            </NavLink>
+        </div>
     </nav>
 
     <!-- Блок авторизації -->
@@ -95,6 +110,7 @@
     private string? NavMenuCssClass => isNavCollapsed ? "collapse" : null;
     List<UkrainsRailwaysDTO> railways = new();
     private AuthenticationState? authState;
+    private string YouTubeUrl = "https://www.youtube.com/@RailwayUkraine";
 
     [CascadingParameter] private Task<AuthenticationState> AuthStateTask { get; set; }
     private bool isAuthenticated;

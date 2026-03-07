@@ -18,7 +18,7 @@ else if (Error != null)
 {
     <div class="alert alert-danger">@Error</div>
     <div>
-        <NavLink href="/locomotives">Back to List</NavLink>
+        <NavLink href="/diesel-trains">Back to List</NavLink>
     </div>
 }
 else
@@ -58,7 +58,9 @@ else
             <p class="fs-5">@dieselTrains.BaseInfo</p>
             <p class="fs-5">@dieselTrains.AllInfo</p>
         </div>
-
+        <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
+            🔗 Поділитися посиланням
+        </button>
         @if (dieselTrains.Station != null)
         {
             <div class="news-detail-card card shadow-sm mb-5">
@@ -207,4 +209,17 @@ else
     {
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
     }
+
+    private async Task ShareCurrentUri()
+    {
+        string currentUrl = $"https://www.trainzinfo.com.ua/diesel-trains/details/{Id}";
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Uri = currentUrl,
+            Title = dieselTrains?.Name ?? "TrainzInfo",
+            Text = $"Дизель-поїзд {dieselTrains?.Name}"
+        });
+    }
+
 }

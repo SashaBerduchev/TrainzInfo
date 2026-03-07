@@ -100,6 +100,9 @@ else
                             @((MarkupString)Locomotive.StationInformation)
                         </div>
                     </div>
+                    <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
+                        🔗 Поділитися посиланням
+                    </button>
                 </div>
             </div>
         }
@@ -235,5 +238,16 @@ else
     public class City
     {
         public string Name { get; set; }
+    }
+    private async Task ShareCurrentUri()
+    {
+        string currentUrl = $"https://www.trainzinfo.com.ua/locomotives/details/{Id}";
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Uri = currentUrl,
+            Title = Locomotive?.Seria?? "TrainzInfo",
+            Text = $"Локомотив {Locomotive?.Seria}"
+        });
     }
 }

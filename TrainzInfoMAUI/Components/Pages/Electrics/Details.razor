@@ -94,6 +94,9 @@ else
 
                         </div>
                     </div>
+                    <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
+                        🔗 Поділитися посиланням
+                    </button>
                 </div>
             </div>
         }
@@ -208,5 +211,15 @@ else
         return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
     }
 
+    private async Task ShareCurrentUri()
+    {
+        string currentUrl = $"https://www.trainzinfo.com.ua/electric-trains/details/{Id}";
 
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Uri = currentUrl,
+            Title = electricTrain?.Model ?? "TrainzInfo",
+            Text = $"Електропоїзд {electricTrain?.Model}"
+        });
+    }
 }

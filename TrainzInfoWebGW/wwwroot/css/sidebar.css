@@ -107,3 +107,18 @@
         display: inline;
     }
 }
+
+
+.menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3); /* Напівпрозорий фон */
+    z-index: 99; /* Нижче ніж side-menu, але вище за основний контент */
+}
+
+.side-menu {
+    z-index: 100; /* Переконайся, що меню має вищий z-index */
+}

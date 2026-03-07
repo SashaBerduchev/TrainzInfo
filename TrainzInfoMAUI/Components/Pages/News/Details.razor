@@ -1,5 +1,4 @@
 ﻿@page "/news/details/{id:int}"
-@inject NavigationManager Navigation
 @inject AppConfig Config
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
@@ -52,11 +51,15 @@
                         <div class="mt-3 p-3 rounded-3 bg-light-subtle border border-dashed text-center">
                             <small class="text-muted italic">Інформаційна служба залізниці</small>
                         </div>
+                        <button class="btn btn-outline-secondary" @onclick="ShareCurrentUri">
+                            🔗 Поділитися посиланням
+                        </button>
                     </div>
                 </div>
             </div>
 
             <footer class="mt-5 pt-4 border-top d-flex flex-wrap gap-2">
+                
                 @if (CanComment)
                 {
                     <button class="btn btn-info px-4 py-2 rounded-pill fw-bold" @onclick="() => NavigateToComment(news.id)">
@@ -172,21 +175,33 @@ else
 
     private void NavigateToComment(int newsId)
     {
-        Navigation.NavigateTo($"/newscomments/create/{newsId}");
+        Nav.NavigateTo($"/newscomments/create/{newsId}");
     }
 
     private void NavigateToComments(int newsId)
     {
-        Navigation.NavigateTo($"/newscomments/{newsId}");
+        Nav.NavigateTo($"/newscomments/{newsId}");
     }
 
     private void EditNews(int newsId)
     {
-        Navigation.NavigateTo($"/news/edit/{newsId}");
+        Nav.NavigateTo($"/news/edit/{newsId}");
     }
 
     private void AddImage(int newsId)
     {
-        Navigation.NavigateTo($"/news/addimage/{newsId}");
+        Nav.NavigateTo($"/news/addimage/{newsId}");
+    }
+
+    private async Task ShareCurrentUri()
+    {
+        string currentUrl = $"https://www.trainzinfo.com.ua/news/details/{Id}";
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Uri = currentUrl,
+            Title = news?.NameNews ?? "TrainzInfo",
+            Text = "Читайте новину на сайті TrainzInfo!"
+        });
     }
 }

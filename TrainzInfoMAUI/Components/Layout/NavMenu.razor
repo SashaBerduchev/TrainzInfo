@@ -2,11 +2,10 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 
-<!-- TOP BAR -->
 <div class="top-bar">
     <div class="top-bar-left">
         <button class="burger" @onclick="ToggleNavMenu">☰</button>
-        <a class="brand" href="/">TrainzInfo</a>
+        <a class="brand" href="/" @onclick="CloseMenu">TrainzInfo</a>
     </div>
 
     <div class="top-bar-right">
@@ -15,20 +14,38 @@
     </div>
 </div>
 
-<!-- SIDE MENU -->
+@if (!isNavCollapsed)
+{
+    <div class="menu-backdrop" @onclick="CloseMenu"></div>
+}
+
 <div class="side-menu @(isNavCollapsed ? "hidden" : "visible")">
 
-    <nav class="menu">
-        <NavLink href="/" Match="NavLinkMatch.All" class="menu-link">
-            🏠 Головна
+    <nav class="menu d-flex flex-column">
+        @* Додаємо @onclick="CloseMenu" до кожного NavLink *@
+        <NavLink href="/" Match="NavLinkMatch.All" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
+            <i class="bi bi-house-door-fill me-3" style="font-size: 1.2rem;"></i>
+            <span>Головна</span>
         </NavLink>
 
-        <NavLink href="ukrains-railways" class="menu-link">
-            🚆 Українська залізниця
+        <NavLink href="ukrains-railways" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
+            <i class="bi bi-train-lightrail-front-fill me-3" style="font-size: 1.2rem;"></i>
+            <span>Українська залізниця</span>
         </NavLink>
 
-        <NavLink href="trains" class="menu-link">
-            📋 Список поїздів
+        <NavLink href="trains" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
+            <i class="bi bi-card-list me-3" style="font-size: 1.2rem;"></i>
+            <span>Список поїздів</span>
+        </NavLink>
+
+        <NavLink href="about" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
+            <i class="bi bi-train-front-fill me-3" style="font-size: 1.2rem;"></i>
+            <span>Про нас</span>
+        </NavLink>
+
+        <NavLink href="@YouTubeUrl" target="_blank" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
+            <i class="bi bi-youtube me-3" style="font-size: 1.4rem; color: #FF0000; line-height: 1;"></i>
+            <span>YouTube канал</span>
         </NavLink>
     </nav>
 
@@ -48,13 +65,17 @@
 </div>
 
 @code {
+    private string YouTubeUrl = "https://www.youtube.com/@RailwayUkraine";
     private bool isNavCollapsed = true;
 
-    private void ToggleNavMenu()
-        => isNavCollapsed = !isNavCollapsed;
+    private void ToggleNavMenu() => isNavCollapsed = !isNavCollapsed;
 
-    private void Login() => Nav.NavigateTo("/login");
-    private void Register() => Nav.NavigateTo("/register");
-    private void Profile() => Nav.NavigateTo("/profile");
-    private void Logout() => Nav.NavigateTo("/logout");
+    // Метод для примусового закриття
+    private void CloseMenu() => isNavCollapsed = true;
+
+    // Оновлені методи навігації (додано CloseMenu)
+    private void Login() { CloseMenu(); Nav.NavigateTo("/login"); }
+    private void Register() { CloseMenu(); Nav.NavigateTo("/register"); }
+    private void Profile() { CloseMenu(); Nav.NavigateTo("/profile"); }
+    private void Logout() { CloseMenu(); Nav.NavigateTo("/logout"); }
 }
