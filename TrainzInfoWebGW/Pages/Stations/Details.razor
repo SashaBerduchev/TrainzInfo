@@ -90,8 +90,8 @@
                     <MudTd DataLabel="Номер"><MudChip T="string" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@context.NumberTrain</MudChip></MudTd>
                     <MudTd DataLabel="Звідки">@context.TrainFrom</MudTd>
                     <MudTd DataLabel="Куди">@context.TrainTo</MudTd>
-                    <MudTd DataLabel="Прибуття"><MudText Color="Color.Success">@context.TimeOfArrive.ToString("HH:mm")</MudText></MudTd>
-                    <MudTd DataLabel="Відправлення"><MudText Color="Color.Error">@context.TimeOfDepet.ToString("HH:mm")</MudText></MudTd>
+                    <MudTd DataLabel="Прибуття"><MudText Color="Color.Success">@context.TimeOfArrive.ToString(@"hh\:mm")</MudText></MudTd>
+                    <MudTd DataLabel="Відправлення"><MudText Color="Color.Error">@context.TimeOfDepet.ToString(@"hh\:mm")</MudText></MudTd>
                 </RowTemplate>
             </MudTable>
         }
