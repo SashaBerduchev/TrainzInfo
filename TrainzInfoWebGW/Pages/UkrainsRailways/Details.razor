@@ -6,61 +6,85 @@
 
 <PageTitle>@Model?.Name</PageTitle>
 
-<h3 class="text-center mb-4">@Model?.Name</h3>
+<PageTitle>@Model?.Name</PageTitle>
+
+<MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4 mb-6" Color="Color.Primary">
+    @Model?.Name
+</MudText>
 
 @if (loading)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-2">Завантаження деталей...</MudText>
+    </MudStack>
 }
 else if (Model == null)
 {
-    <p class="text-danger text-center">Дані не знайдено.</p>
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mx-auto" Style="max-width: 400px;">
+        Дані не знайдено.
+    </MudAlert>
 }
 else
 {
-    <div class="d-flex flex-wrap justify-content-center mb-4">
-        <button class="btn btn-info m-2"
-                @onclick='() => Nav.NavigateTo($"/depotlists?filialsName={Model.Name}")'>
+    @* Блок кнопок навігації *@
+    <MudStack Row="true" Wrap="Wrap.Wrap" Justify="Justify.Center" Class="mb-6" Spacing="2">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Info"
+                   StartIcon="@Icons.Material.Filled.List"
+                   OnClick='() => Nav.NavigateTo($"/depotlists?filialsName={Model.Name}")'>
             Список депо
-        </button>
+        </MudButton>
 
-        <button class="btn btn-success m-2"
-                @onclick='() => Nav.NavigateTo($"/stations?filialsName={Model.Name}")'>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   StartIcon="@Icons.Material.Filled.Train"
+                   OnClick='() => Nav.NavigateTo($"/stations?filialsName={Model.Name}")'>
             Список станцій
-        </button>
+        </MudButton>
 
         @if (IsSuperAdmin)
         {
-            <button class="btn btn-info m-2"
-                    @onclick='() => Nav.NavigateTo($"/ukrains-railways/{Model.id}/add-image")'>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Info"
+                       StartIcon="@Icons.Material.Filled.AddPhotoAlternate"
+                       OnClick='() => Nav.NavigateTo($"/ukrains-railways/{Model.id}/add-image")'>
                 Додати зображення
-            </button>
+            </MudButton>
         }
-    </div>
+    </MudStack>
 
-    <div class="card shadow-sm mb-4">
-        <div class="row g-0 align-items-center">
-            <div class="col-12 col-md-5 text-center p-3">
-                <img class="img-fluid rounded"
-                     src="@Model.Image"
-                     alt="@Model.Name" />
-            </div>
+    @* Основна картка з інформацією *@
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudCard Elevation="4" Class="rounded-lg overflow-hidden">
+            <MudGrid Spacing="0">
+                @* Зображення *@
+                <MudItem xs="12" md="5" Class="pa-4 d-flex align-center justify-center bg-light-grey">
+                    <MudImage Src="@Model.Image"
+                              Alt="@Model.Name"
+                              Fluid="true"
+                              Class="rounded shadow-sm"
+                              Style="max-height: 400px; object-fit: contain;" />
+                </MudItem>
 
-            <div class="col-12 col-md-7 p-3">
-                <p class="h5 mb-3">
-                    <b>Назва:</b> @Model.Name
-                </p>
+                @* Контент *@
+                <MudItem xs="12" md="7" Class="pa-6">
+                    <MudText Typo="Typo.h5" Class="mb-2"><b>Назва:</b> @Model.Name</MudText>
 
-                <p class="h5">
-                    <b>Інформація:</b>
-                </p>
-                <p>@((MarkupString)Model.Information)</p>
-            </div>
-        </div>
-    </div>
+                    <MudDivider Class="my-4" />
+
+                    <MudText Typo="Typo.h6" GutterBottom="true">
+                        <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-2" />
+                        Інформація:
+                    </MudText>
+
+                    <MudText Typo="Typo.body1" Class="mud-text-secondary">
+                        @((MarkupString)Model.Information)
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </MudCard>
+    </MudContainer>
 }
 
 

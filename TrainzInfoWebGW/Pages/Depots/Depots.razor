@@ -4,94 +4,113 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 
-<h1 class="text-center mb-3">Список депо</h1>
+<PageTitle>Список депо</PageTitle>
+
+<MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">Список депо</MudText>
 
 @if (!string.IsNullOrEmpty(filia?.Name))
 {
-    <h4 class="text-center text-muted">@filia?.Name</h4>
+    <MudText Typo="Typo.h6" Align="Align.Center" Color="Color.Secondary" Class="mb-4">
+        @filia?.Name
+    </MudText>
 }
 
 @if (User != null && UserCanManage)
 {
-    <div class="mb-3 text-center">
-        <button class="btn btn-info mx-2 mb-2" @onclick="CreateDepot">Додати</button>
-        <button class="btn btn-warning mx-2 mb-2" @onclick="UpdateForce">Націоналізувати</button>
-    </div>
+    <MudStack Row="true" Justify="Justify.Center" Class="mb-6" Spacing="2">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Info"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateDepot">
+            Додати
+        </MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Warning"
+                   StartIcon="@Icons.Material.Filled.Gavel"
+                   OnClick="UpdateForce">
+            Націоналізувати
+        </MudButton>
+    </MudStack>
 }
 
 @if (depots == null)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-4">Завантаження списку депо...</MudText>
+    </MudStack>
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-light">
-                <tr class="text-center">
-                    <th>Назва</th>
-                    <th>Станція</th>
-                    <th>Дії</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in depots)
+    <MudTable Items="@depots"
+              Hover="true"
+              Breakpoint="Breakpoint.Sm"
+              Elevation="4"
+              Class="rounded-lg"
+              Dense="false">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<dynamic, object>(x => x.Name)">Назва</MudTableSortLabel></MudTh>
+            <MudTh>Станція</MudTh>
+            <MudTh Style="text-align: center">Дії</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Назва">
+                <MudText Typo="Typo.body1"><b>@context.Name</b></MudText>
+                @if (context.City != null)
                 {
-                    <tr>
-                        <td>
-                            @if (item.City != null)
-                            {
-                                <span class="fw-bold">@item.Name</span><br />
-                                <small class="text-muted">@item.City</small>
-                            }
-                            else
-                            {
-                                @item.Name
-                            }
-                        </td>
-
-                        <td>@item.City</td>
-
-                        <td class="text-center">
-                            <div class="d-flex flex-wrap justify-content-center gap-2">
-
-                                @if (UserCanManage)
-                                {
-                                    <button class="btn btn-success btn-sm" @onclick="() => Edit(item.Id)">
-                                        Редагувати
-                                    </button>
-                                }
-
-                                @if ( item.LocomotivesCount > 0)
-                                {
-                                    <button class="btn btn-info btn-sm"
-                                            @onclick="() => GoToLocomotives(item.Name)">
-                                        Локомотиви
-                                    </button>
-                                }
-                                @if (item.ElectricTrainsCount > 0)
-                                {
-                                    <button class="btn btn-info btn-sm" @onclick="() => GoToElectrics(item.Name)">
-                                        Електрички
-                                    </button>
-                                }
-                                @if (item.DieselTrainsCount != null && item.DieselTrainsCount > 0)
-                                {
-                                    <button class="btn btn-info btn-sm" @onclick="() => GoToDiesels(item.Name)">
-                                        Дизель-поїзди
-                                    </button>
-                                }
-
-                            </div>
-                        </td>
-                    </tr>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@context.City</MudText>
                 }
-            </tbody>
-        </table>
-    </div>
+            </MudTd>
+            <MudTd DataLabel="Станція">@context.City</MudTd>
+            <MudTd DataLabel="Дії" Style="text-align: center">
+                <MudStack Row="true" Spacing="1" Justify="Justify.Center" Wrap="Wrap.Wrap">
+
+                    @if (UserCanManage)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Color="Color.Success"
+                                       Size="Size.Small"
+                                       Variant="Variant.Outlined"
+                                       OnClick="() => Edit(context.Id)"
+                                       Title="Редагувати" />
+                    }
+
+                    @if (context.LocomotivesCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToLocomotives(context.Name)">
+                            Локомотиви (@context.LocomotivesCount)
+                        </MudButton>
+                    }
+
+                    @if (context.ElectricTrainsCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToElectrics(context.Name)">
+                            Електрички
+                        </MudButton>
+                    }
+
+                    @if (context.DieselTrainsCount != null && context.DieselTrainsCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToDiesels(context.Name)">
+                            Дизелі
+                        </MudButton>
+                    }
+                </MudStack>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager InfoFormat="{first_item}-{last_item} з {all_items}" RowsPerPageString="Рядків на сторінці:" />
+        </PagerContent>
+    </MudTable>
 }
 
 
