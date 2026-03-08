@@ -5,38 +5,47 @@
 
 <PageTitle>Філії</PageTitle>
 
-<h1 class="text-center mb-4">Філії Української залізниці</h1>
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true" Class="mt-4 mb-8">
+    Філії Української залізниці
+</MudText>
 
 @if (railways == null)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-4">Завантаження даних...</MudText>
+    </MudStack>
 }
 else
 {
-    <div class="container">
-        <div class="row">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudGrid Spacing="4" Justify="Justify.Center">
             @foreach (var item in railways)
             {
-                <div class="col-12 col-md-6 mb-3">
-                    <button class="btn btn-info w-100 text-wrap py-3"
-                            @onclick="() => ViewDetails(item.id)">
-                        <span class="h5">@item.Name</span>
-                    </button>
-                </div>
+                <MudItem xs="12" md="6">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Info"
+                               FullWidth="true"
+                               Size="Size.Large"
+                               OnClick="@(() => ViewDetails(item.id))"
+                               Style="height: 80px; text-transform: none;"
+                               Elevation="4">
+                        <MudText Typo="Typo.h6">@item.Name</MudText>
+                    </MudButton>
+                </MudItem>
             }
-        </div>
 
-        <div class="text-center mt-4">
-            <img class="img-fluid rounded shadow"
-                 src="@image"
-                 alt="Мапа Укрзалізниці" />
-        </div>
-    </div>
+            <MudItem xs="12" Class="d-flex justify-center mt-8">
+                <MudImage Src="@image"
+                          Alt="Мапа Укрзалізниці"
+                          Fluid="true"
+                          ObjectFit="ObjectFit.Cover"
+                          Class="rounded-lg shadow-lg"
+                          Style="max-width: 100%; border: 1px solid #eee;" />
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
 }
-
 @code {
     private List<UkrainsRailwaysDTO> railways;
     private string mainMapImgSrc = "/api/mainimage/getimage?name=MainMap"; // приклад API для картинки

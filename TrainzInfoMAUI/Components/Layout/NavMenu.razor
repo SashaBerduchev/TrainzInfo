@@ -1,81 +1,100 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
+@implements IDisposable
 
-<div class="top-bar">
-    <div class="top-bar-left">
-        <button class="burger" @onclick="ToggleNavMenu">☰</button>
-        <a class="brand" href="/" @onclick="CloseMenu">TrainzInfo</a>
-    </div>
+<MudAppBar Elevation="1" Dense="true" Color="Color.Primary" Fixed="true">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+    <MudSpacer />
+    <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+              Alt="Logo" Height="35" Class="rounded-lg" />
+</MudAppBar>
 
-    <div class="top-bar-right">
-        <img src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
-             class="logo" />
-    </div>
-</div>
+<MudDrawer @bind-Open="_drawerOpen" Elevation="2" Variant="@DrawerVariant.Temporary" Width="280px">
 
-@if (!isNavCollapsed)
-{
-    <div class="menu-backdrop" @onclick="CloseMenu"></div>
-}
+    @* 1. ВІДСТУП ЗВЕРХУ: Додаємо padding-top, щоб напис "Меню" не залазив під годинник *@
+    <MudDrawerHeader Style="padding-top: 45px;">
+        @* 3. ЧОРНИЙ ТЕКСТ: Задаємо колір явно *@
+        <MudText Typo="Typo.h6" Style="color: black; font-weight: bold;">Меню</MudText>
+    </MudDrawerHeader>
 
-<div class="side-menu @(isNavCollapsed ? "hidden" : "visible")">
+    <MudNavMenu Bordered="true">
+        @* 2. ЗАКРИТТЯ МЕНЮ: Додано OnClick="CloseDrawer" до кожного пункту
+           3. ЧОРНИЙ ТЕКСТ: Додано Style="color: black;" до кожного пункту 
+        *@
+        <MudNavLink href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home"
+                    OnClick="CloseDrawer">
+            Головна
+        </MudNavLink>
 
-    <nav class="menu d-flex flex-column">
-        @* Додаємо @onclick="CloseMenu" до кожного NavLink *@
-        <NavLink href="/" Match="NavLinkMatch.All" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
-            <i class="bi bi-house-door-fill me-3" style="font-size: 1.2rem;"></i>
-            <span>Головна</span>
-        </NavLink>
+        <MudNavLink href="ukrains-railways" Icon="@Icons.Material.Filled.Map"
+                    OnClick="CloseDrawer">
+            Українська залізниця
+        </MudNavLink>
 
-        <NavLink href="ukrains-railways" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
-            <i class="bi bi-train-lightrail-front-fill me-3" style="font-size: 1.2rem;"></i>
-            <span>Українська залізниця</span>
-        </NavLink>
+        <MudNavLink href="trains" Icon="@Icons.Material.Filled.FormatListBulleted"
+                    OnClick="CloseDrawer">
+            Список поїздів
+        </MudNavLink>
 
-        <NavLink href="trains" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
-            <i class="bi bi-card-list me-3" style="font-size: 1.2rem;"></i>
-            <span>Список поїздів</span>
-        </NavLink>
+        <MudNavLink href="about" Icon="@Icons.Material.Filled.Info"
+                    OnClick="CloseDrawer">
+            Про нас
+        </MudNavLink>
 
-        <NavLink href="about" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
-            <i class="bi bi-train-front-fill me-3" style="font-size: 1.2rem;"></i>
-            <span>Про нас</span>
-        </NavLink>
+        <MudNavLink href="@YouTubeUrl" Target="_blank" Icon="@Icons.Custom.Brands.YouTube"
+                    IconColor="Color.Error" OnClick="CloseDrawer">
+            YouTube канал
+        </MudNavLink>
 
-        <NavLink href="@YouTubeUrl" target="_blank" class="menu-link d-flex align-items-center" @onclick="CloseMenu">
-            <i class="bi bi-youtube me-3" style="font-size: 1.4rem; color: #FF0000; line-height: 1;"></i>
-            <span>YouTube канал</span>
-        </NavLink>
-    </nav>
+        <MudDivider Class="my-2" />
 
-    <div class="auth-block">
         <AuthorizeView>
             <Authorized>
-                <button class="btn light" @onclick="Profile">👤 Профіль</button>
-                <button class="btn danger" @onclick="Logout">🚪 Вийти</button>
+                <MudNavLink OnClick="Profile" Icon="@Icons.Material.Filled.Person" Style="color: black;">Профіль</MudNavLink>
+                <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error" Style="color: black;">Вийти</MudNavLink>
             </Authorized>
-
             <NotAuthorized>
-                <button class="btn primary" @onclick="Login">🔐 Вхід</button>
-                <button class="btn outline" @onclick="Register">➕ Реєстрація</button>
+                <MudNavLink OnClick="Login" Icon="@Icons.Material.Filled.Login" IconColor="Color.Primary" Style="color: black;">Вхід</MudNavLink>
+                <MudNavLink OnClick="Register" Icon="@Icons.Material.Filled.PersonAdd" Style="color: black;">Реєстрація</MudNavLink>
             </NotAuthorized>
         </AuthorizeView>
-    </div>
-</div>
+    </MudNavMenu>
+</MudDrawer>
+
 
 @code {
-    private string YouTubeUrl = "https://www.youtube.com/@RailwayUkraine";
-    private bool isNavCollapsed = true;
+    bool _drawerOpen = false;
 
-    private void ToggleNavMenu() => isNavCollapsed = !isNavCollapsed;
+    [Parameter] public string YouTubeUrl { get; set; } = "https://www.youtube.com/@RailwayUkraine";
 
-    // Метод для примусового закриття
-    private void CloseMenu() => isNavCollapsed = true;
+    protected override void OnInitialized()
+    {
+        // Підписуємося на подію переходу між сторінками
+        Nav.LocationChanged += OnLocationChanged;
+    }
 
-    // Оновлені методи навігації (додано CloseMenu)
-    private void Login() { CloseMenu(); Nav.NavigateTo("/login"); }
-    private void Register() { CloseMenu(); Nav.NavigateTo("/register"); }
-    private void Profile() { CloseMenu(); Nav.NavigateTo("/profile"); }
-    private void Logout() { CloseMenu(); Nav.NavigateTo("/logout"); }
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        // Якщо меню відкрите під час переходу — закриваємо його
+        if (_drawerOpen)
+        {
+            _drawerOpen = false;
+            StateHasChanged(); // Примусово кажемо UI оновитися
+        }
+    }
+
+    void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+    void CloseDrawer() => _drawerOpen = false;
+    public void Dispose()
+    {
+        // Обов'язково відписуємося, щоб не було витоку пам'яті
+        Nav.LocationChanged -= OnLocationChanged;
+    }
+
+    // Для кнопок авторизації (де немає href) просто міняємо статус
+    private void Profile() { _drawerOpen = false; /* Навігація */ }
+    private void Logout() { _drawerOpen = false; /* Логіка */ }
+    private void Login() { _drawerOpen = false; /* Логіка */ }
+    private void Register() { _drawerOpen = false; /* Логіка */ }
 }

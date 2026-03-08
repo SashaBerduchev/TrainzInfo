@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using CommunityToolkit.Maui;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
@@ -39,6 +40,7 @@ namespace TrainzInfoMAUI
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddMudServices();
+            builder.UseMauiCommunityToolkit();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(conntring) });
             builder.Services.AddSingleton(new AppConfig { ApiBaseUrl = conntring });
             return builder.Build();

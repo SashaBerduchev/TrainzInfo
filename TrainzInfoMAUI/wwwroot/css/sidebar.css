@@ -122,3 +122,40 @@
 .side-menu {
     z-index: 100; /* Переконайся, що меню має вищий z-index */
 }
+/* Допоміжний стиль, щоб всі іконки в меню стали білими та трохи більшими */
+.mud-nav-menu .mud-nav-link .mud-nav-link-icon {
+    color: white !important;
+    font-size: 1.75rem; /* Збільшуємо іконки */
+}
+
+/* Колір тексту для груп */
+.mud-nav-group-button {
+    color: white !important;
+}
+
+/* Стиль для тексту посилань */
+.mud-nav-link {
+    color: rgba(255,255,255,0.85) !important;
+}
+
+    .mud-nav-link.active {
+        color: white !important;
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+.white-nav-link .mud-nav-link-icon {
+    color: white !important;
+}
+
+/* Додатково для всього тексту в цих посиланнях */
+.white-nav-link {
+    color: black !important;
+}
+
+.mud-appbar {
+    /* Збільшуємо висоту всієї панелі, щоб помістився і статус-бар, і контент */
+    height: calc(var(--mud-appbar-height) + 24px) !important;
+    padding-top: 45px !important;
+}
+.mud-main-content {
+    padding-top: calc(var(--mud-appbar-height) + 45px) !important;
+}
