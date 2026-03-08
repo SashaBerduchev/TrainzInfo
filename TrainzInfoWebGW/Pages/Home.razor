@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject AppConfig Config
+@inject NavigationManager Nav
 @inject HttpClient Http
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthStateProvider
@@ -69,61 +70,73 @@
                 }
             </MudGrid>
         }
-        else if (!filteredNews.Any())
+       @*  else if (!filteredNews.Any())
         {
             <div class="text-center py-10">
                 <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Default" Style="font-size: 5rem;" />
                 <MudText Typo="Typo.h5" Color="Color.Secondary">Новин не знайдено</MudText>
             </div>
-        }
+        } *@
         else
         {
             <MudGrid Spacing="6">
                 @foreach (var news in filteredNews)
                 {
                     <MudItem xs="12" md="6" lg="4">
-                        <MudCard Elevation="4" Class="h-100 d-flex flex-column rounded-xl hover-elevate">
-                            <div class="position-relative">
-                                @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
-                                {
-                                    <MudCardMedia Image="@(Config.ApiBaseUrl + news.ImgSrc)" Height="220" />
-                                }
-                                else
-                                {
-                                    <div class="d-flex align-center justify-center mud-bg-background-grey" style="height: 220px;">
-                                        <MudIcon Icon="@Icons.Material.Filled.Newspaper" Size="Size.Large" Color="Color.Default" Style="font-size: 4rem;" />
+                        <MudCard Elevation="4" Class="h-100 d-flex flex-column rounded-xl hover-elevate overflow-hidden">
+
+                            @* Клікабельна обгортка через звичайний div *@
+                            <div class="d-flex flex-column flex-grow-1 w-100"
+                                 style="cursor: pointer;"
+                                 @onclick="@(() => Nav.NavigateTo($"/news/details/{news.id}"))">
+
+                                @* 1. Картинка (займає верхню частину) *@
+                                <div class="w-100 position-relative">
+                                    @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
+                                    {
+                                        <MudCardMedia Image="@(Config.ApiBaseUrl + news.ImgSrc)" Height="220" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-center justify-center mud-bg-background-grey" style="height: 220px; width: 100%;">
+                                            <MudIcon Icon="@Icons.Material.Filled.Newspaper" Size="Size.Large" Color="Color.Default" Style="font-size: 4rem;" />
+                                        </div>
+                                    }
+
+                                    @* Дата *@
+                                    <div class="position-absolute px-3 py-1 rounded-pill mud-theme-primary"
+                                         style="bottom: 10px; right: 10px; opacity: 0.9; z-index: 2;">
+                                        <MudText Typo="Typo.caption">
+                                            <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-1" Style="vertical-align: middle;" />
+                                            @news.DateTime.ToString()
+                                        </MudText>
                                     </div>
-                                }
-                                <div class="position-absolute px-3 py-1 rounded-pill mud-theme-primary" style="bottom: 10px; right: 10px; opacity: 0.9;">
-                                    <MudText Typo="Typo.caption">
-                                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-1" Style="vertical-align: middle;" />
-                                        @news.DateTime.ToString()
-                                    </MudText>
                                 </div>
+
+                                @* 2. Текстовий контент (під картинкою) *@
+                                <MudCardContent Class="pa-4 w-100">
+                                    <MudText Typo="Typo.h5" Class="mb-3 fw-bold mud-text-primary" Style="line-height: 1.2; min-height: 2.4em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        @((MarkupString)news.NameNews)
+                                    </MudText>
+                                    <div class="mud-text-secondary line-clamp-3">
+                                        @((MarkupString)news.BaseNewsInfo)
+                                    </div>
+                                </MudCardContent>
+
                             </div>
 
-                            <MudCardContent Class="flex-grow-1">
-                                <MudText Typo="Typo.h5" Class="mb-3 fw-bold">@((MarkupString)news.NameNews)</MudText>
-                                <div class="mud-text-secondary mb-4 line-clamp-3">
-                                    @((MarkupString)news.BaseNewsInfo)
-                                </div>
-                            </MudCardContent>
-
-                            <MudCardActions Class="border-t pa-4 d-flex justify-space-between align-center">
-                                <MudButton Variant="Variant.Text"
-                                           Color="Color.Primary"
-                                           EndIcon="@Icons.Material.Filled.ArrowForward"
-                                           Href="@($"/news/details/{news.id}")">
-                                    Читати далі
-                                </MudButton>
-
+                            @* 3. Нижня панель *@
+                            <MudCardActions Class="border-t pa-4 d-flex justify-end align-center mt-auto" @onclick:stopPropagation="true">
                                 @if (IsAdmin)
                                 {
                                     <MudIconButton Icon="@Icons.Material.Filled.Edit"
                                                    Color="Color.Warning"
                                                    Size="Size.Small"
-                                                   Href="@($"/news/edit/{news.id}")" />
+                                                   Variant="Variant.Outlined"
+                                                   OnClick="@(() => Nav.NavigateTo($"/news/edit/{news.id}"))"
+                                                   Class="mr-2" />
                                 }
+                                <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" Size="Size.Medium" />
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -133,9 +146,33 @@
 
         @if (isLoading)
         {
-            <div class="d-flex justify-center mt-8">
-                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-            </div>
+            <MudGrid>
+                @foreach (var i in Enumerable.Range(0, 6)) @* Показуємо 6 фейкових карток *@
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard Elevation="4" Class="h-100 rounded-xl overflow-hidden">
+                            @* Скелетон для зображення *@
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="220px" Width="100%" />
+
+                            <MudCardContent Class="pa-4">
+                                @* Скелетон для заголовка (2 рядки) *@
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="30px" Width="80%" Class="mb-2" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="30px" Width="60%" Class="mb-4" />
+
+                                @* Скелетон для опису (3 рядки) *@
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="100%" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="100%" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="40%" />
+                            </MudCardContent>
+
+                            <MudCardActions Class="border-t pa-4 d-flex justify-end">
+                                @* Скелетон для іконки внизу *@
+                                <MudSkeleton SkeletonType="SkeletonType.Circle" Width="24px" Height="24px" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
         }
     </div>
 </MudContainer>
