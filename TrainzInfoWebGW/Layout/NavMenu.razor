@@ -4,41 +4,34 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient Http
 @inject NavigationManager Nav
-<MudNavMenu Bordered="true" Class="mud-text-white">
+<MudNavMenu Bordered="true">
     <div class="pa-4 d-flex align-center gap-3">
         <MudIcon Icon="@Icons.Material.Filled.DirectionsTransit" Color="Color.Primary" Size="Size.Large" />
         <MudText Typo="Typo.h6" Class="fw-bold">TrainzInfo</MudText>
     </div>
 
-    <MudDivider Class="mb-4" Style="background-color: rgba(255,255,255,0.1);" />
+    @* Убрали жестко заданный белый цвет у разделителя *@
+    <MudDivider Class="mb-4" />
 
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Inherit" Class="mud-text-white py-3" Style="font-size: 1.1rem;">Головна</MudNavLink>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Головна</MudNavLink>
 
-    <MudNavLink Href="ukrains-railways" Icon="@Icons.Material.Filled.Map" IconColor="Color.Inherit" Class="mud-text-white py-3" Style="font-size: 1.1rem;">Українська залізниця</MudNavLink>
+    <MudNavLink Href="ukrains-railways" Icon="@Icons.Material.Filled.Map" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Українська залізниця</MudNavLink>
 
-    <MudNavGroup Title="Рухомий склад" Icon="@Icons.Material.Filled.Train" IconColor="Color.Inherit" Expanded="true" Class="mud-text-white" Style="font-size: 1.1rem;">
-        <MudNavLink Href="locomotives" Icon="@Icons.Material.Filled.DirectionsRailway" IconColor="Color.Inherit" Class="white-nav-link">
-            <MudText Typo="Typo.body1" Style="font-size: 1.1rem; color: white !important;">Локомотиви</MudText>
-        </MudNavLink>
+    <MudNavGroup Title="Рухомий склад" Icon="@Icons.Material.Filled.Train" IconColor="Color.Inherit" Expanded="true" Class="py-3" Style="font-size: 1.1rem;">
+        @* Убрали вложенные MudText и color: white !important; *@
+        <MudNavLink Href="locomotives" Icon="@Icons.Material.Filled.DirectionsRailway" IconColor="Color.Inherit" Style="font-size: 1.1rem;">Локомотиви</MudNavLink>
 
-        <MudNavLink Href="electric-trains" Icon="@Icons.Material.Filled.ElectricBolt" IconColor="Color.Inherit" Class="white-nav-link">
-            <MudText Typo="Typo.body1" Style="font-size: 1.1rem; color: white !important;">Електропоїзди</MudText>
-        </MudNavLink>
+        <MudNavLink Href="electric-trains" Icon="@Icons.Material.Filled.ElectricBolt" IconColor="Color.Inherit" Style="font-size: 1.1rem;">Електропоїзди</MudNavLink>
 
-        <MudNavLink Href="diesel-trains" Icon="@Icons.Material.Filled.PropaneTank" IconColor="Color.Inherit" Class="white-nav-link">
-            <MudText Typo="Typo.body1" Style="font-size: 1.1rem; color: white !important;">Дизель-поїзди</MudText>
-        </MudNavLink>
+        <MudNavLink Href="diesel-trains" Icon="@Icons.Material.Filled.PropaneTank" IconColor="Color.Inherit" Style="font-size: 1.1rem;">Дизель-поїзди</MudNavLink>
     </MudNavGroup>
-    <MudNavLink Href="trains" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Inherit" Class="mud-text-white py-3">
-        <MudText Typo="Typo.h6" Style="font-size: 1.1rem;">Розклад поїздів</MudText>
-    </MudNavLink>
 
-    <MudNavLink Href="about" Icon="@Icons.Material.Filled.Info" IconColor="Color.Inherit" Class="mud-text-white py-3">
-        <MudText Typo="Typo.h6" Style="font-size: 1.1rem;">Про нас</MudText>
-    </MudNavLink>
-    <MudNavLink Href="@YouTubeUrl" Target="_blank" Icon="@Icons.Custom.Brands.YouTube" IconColor="Color.Error" Class="mud-text-white py-3">
-        <MudText Typo="Typo.h6" Style="font-size: 1.1rem;">YouTube канал</MudText>
-    </MudNavLink>
+    @* Убрали вложенные MudText для чистоты кода *@
+    <MudNavLink Href="trains" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Розклад поїздів</MudNavLink>
+
+    <MudNavLink Href="about" Icon="@Icons.Material.Filled.Info" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Про нас</MudNavLink>
+
+    <MudNavLink Href="@YouTubeUrl" Target="_blank" Icon="@Icons.Custom.Brands.YouTube" IconColor="Color.Error" Class="py-3" Style="font-size: 1.1rem;">YouTube канал</MudNavLink>
 
     <MudSpacer />
     <MudDivider Class="my-2" />
@@ -53,7 +46,6 @@
             </Authorized>
             <NotAuthorized>
                 <MudStack Spacing="1" Class="px-2">
-                    @* Кнопка Вхід *@
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
                                FullWidth="true"
@@ -62,7 +54,6 @@
                         Вхід
                     </MudButton>
 
-                    @* Кнопка Реєстрація — тепер теж Filled *@
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
                                FullWidth="true"

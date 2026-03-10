@@ -129,12 +129,12 @@
 }
 
 /* Колір тексту для груп */
-.mud-nav-group-button {
+/*.mud-nav-group-button {
     color: white !important;
-}
+}*/
 
 /* Стиль для тексту посилань */
-.mud-nav-link {
+/*.mud-nav-link {
     color: rgba(255,255,255,0.85) !important;
 }
 
@@ -144,9 +144,9 @@
     }
 .white-nav-link .mud-nav-link-icon {
     color: white !important;
-}
+}*/
 
 /* Додатково для всього тексту в цих посиланнях */
-.white-nav-link {
+/*.white-nav-link {
     color: white !important;
-}
+}*/
