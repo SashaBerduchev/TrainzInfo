@@ -56,6 +56,10 @@
                             <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
                                        StartIcon="@Icons.Material.Filled.Map" OnClick="FixOblCities">Виправити адреси</MudButton>
                         </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Map" OnClick="MainImages">Основні зображення сайту</MudButton>
+                        </MudItem>
                     </MudGrid>
                 </MudPaper>
             </MudItem>
@@ -232,6 +236,10 @@
     private void CreateMail()
     {
         Nav.NavigateTo("/mail/create");
+    }
+    private void MainImages()
+    {
+        Nav.NavigateTo("/mainimages");
     }
     private async Task CheckRoles()
     {
