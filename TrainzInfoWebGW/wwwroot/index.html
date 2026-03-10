@@ -66,10 +66,18 @@
         <div class="loading-progress-text"></div>
     </div>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
+    <div id="blazor-error-ui" class="error-ui-container">
+        <div class="error-ui-content">
+            <span class="error-icon">⚠️</span>
+            <div class="error-text">
+                <strong>Упс! Щось пішло не так.</strong>
+                <p>Помилка застосунку, прохання звернутися до адміністратора.</p>
+            </div>
+            <div class="error-actions">
+                <a href="." class="reload">Оновити сторінку</a>
+                <span class="dismiss">✕</span>
+            </div>
+        </div>
     </div>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>

@@ -113,3 +113,94 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+
+/* Контейнер по умолчанию скрыт самим Blazor */
+#blazor-error-ui {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    border-left: 6px solid #e74c3c; /* Красная полоска сбоку */
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Контент внутри */
+.error-ui-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.error-icon {
+    font-size: 1.5rem;
+}
+
+.error-text {
+    flex-grow: 1;
+}
+
+    .error-text strong {
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .error-text p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+/* Кнопки */
+.error-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#blazor-error-ui .reload {
+    text-decoration: none;
+    background: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+    #blazor-error-ui .reload:hover {
+        background: #c0392b;
+    }
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #999;
+    padding: 5px;
+}
+
+    #blazor-error-ui .dismiss:hover {
+        color: #333;
+    }
+
+/* Анимация появления */
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
