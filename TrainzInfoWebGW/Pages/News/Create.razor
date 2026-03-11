@@ -8,22 +8,24 @@
 <h4>Новини</h4>
 <hr />
 
-@if (isLoading)
+@if (isLoading || !isEditorsReady)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
+    <div class="d-flex justify-center align-center" style="min-height: 60vh;">
+        <MudStack AlignItems="AlignItems.Center">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">Налаштовуємо редактори...</MudText>
+        </MudStack>
     </div>
 }
-else
-{
+
+@* Ховаємо форму, поки QuillJS не відрендериться *@
+<div style="@(isEditorsReady ? "display: block;" : "visibility: hidden; position: absolute; left: -9999px;")">
     <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mb-10">
         <MudPaper Elevation="4" Class="pa-8 rounded-xl shadow-xl">
 
             <div class="text-center mb-6">
                 <MudIcon Icon="@Icons.Material.Filled.Newspaper" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
                 <MudText Typo="Typo.h4" Class="fw-bold">Створення новини</MudText>
-                @* Замість (number != 0) використовуй порівняння з рядком "0" *@
                 @if (!string.IsNullOrEmpty(number) && number != "0")
                 {
                     <MudText Typo="Typo.subtitle1" Color="Color.Secondary">ID Новини: @number</MudText>
@@ -35,36 +37,37 @@ else
 
                 <MudStack Spacing="4">
 
-                    @* Назва новини (з підтримкою CKEditor) *@
+                    @* Назва новини *@
                     <div class="mud-input-control mb-4">
-                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1">Назва новини</MudText>
-                        <div class="mt-1 border rounded-lg pa-1">
-                            <textarea id="editorName" class="form-control"></textarea>
-                        </div>
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Назва новини</MudText>
+                        <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                            <MudExRichTextEdit @bind-Value="news.NameNews" Height="150" />
+                        </MudPaper>
                     </div>
 
                     @* Короткий опис *@
                     <div class="mud-input-control mb-4">
-                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1">Короткий опис</MudText>
-                        <div class="mt-1 border rounded-lg pa-1">
-                            <textarea id="editorBase"></textarea>
-                        </div>
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Короткий опис</MudText>
+                        <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                            <MudExRichTextEdit @bind-Value="news.BaseNewsInfo" Height="150" />
+                        </MudPaper>
                     </div>
 
                     @* Повний текст новини *@
                     <div class="mud-input-control mb-4">
-                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1">Повний текст новини</MudText>
-                        <div class="mt-1 border rounded-lg pa-1">
-                            <textarea id="editorFull"></textarea>
-                        </div>
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Повний текст новини</MudText>
+                        <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                            <MudExRichTextEdit @bind-Value="news.NewsInfoAll" Height="300" />
+                        </MudPaper>
                     </div>
 
                     <MudGrid Spacing="2">
                         @* Посилання *@
                         <MudItem xs="12" md="6">
+                            @* Додав Lines="3", щоб було зручно вводити кілька посилань, як ми робили на минулій сторінці *@
                             <MudTextField Label="Посилання на першоджерело" @bind-Value="news.LinkSorce"
                                           Variant="Variant.Outlined" Adornment="Adornment.Start"
-                                          AdornmentIcon="@Icons.Material.Filled.Link" />
+                                          AdornmentIcon="@Icons.Material.Filled.Link" Lines="3" />
                         </MudItem>
 
                         @* Дата *@
@@ -73,9 +76,9 @@ else
                         </MudItem>
                     </MudGrid>
 
-                    @* Фото новини - перевірений метод із прихованим InputFile *@
+                    @* Фото новини *@
                     <div class="d-flex flex-column gap-2 mt-2">
-                        <InputFile id="newsFileInput" OnChange="HandleFileSelected" style="display:none" />
+                        <InputFile id="newsFileInput" OnChange="HandleFileSelected" style="display:none" accept="image/*" />
 
                         <MudButton HtmlTag="label"
                                    for="newsFileInput"
@@ -121,7 +124,7 @@ else
             </EditForm>
         </MudPaper>
     </MudContainer>
-}
+</div>
 @if (!string.IsNullOrEmpty(errors))
 {
     <div class="alert alert-danger mt-3">
@@ -143,29 +146,30 @@ else
     private string number;
     private string submitAction = "";
     private bool isLoading = false;
+    private bool isEditorsReady = false;
     private bool isSave = false;
     private string errors;
 
     protected override Task OnInitializedAsync()
     {
         news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow);
+        news.NameNews = string.Empty;
+        news.BaseNewsInfo = string.Empty;
+        news.NewsInfoAll = string.Empty;
+        news.LinkSorce = string.Empty;
         return base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
-            isLoading = true;
-
-            // Ініціалізація CKEditor через JS Interop
-            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorBase", DotNetObjectReference.Create(this), "SetBaseNewsInfo");
-            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorFull", DotNetObjectReference.Create(this), "SetNewsInfoAll");
-            await JS.InvokeVoidAsync("initCKEditorForCreateNews", "editorName", DotNetObjectReference.Create(this), "SetNewsName");
-            isLoading = false;
+            await Task.Delay(1500); // Даємо QuillJS час побудувати панелі
+            isEditorsReady = true;
+            StateHasChanged(); // Кажемо Blazor прибрати спінер
         }
     }
+
 
     private DateTime? DateAdapter
     {
@@ -257,9 +261,9 @@ else
             {
                 var email = user.Identity.Name;
                 var roles = user.Claims
-                                .Where(c => c.Type == ClaimTypes.Role)
-                                .Select(c => c.Value)
-                                .ToList();
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
 
                 news.username = email;
 
@@ -285,7 +289,7 @@ else
                 await stream.CopyToAsync(ms);
 
                 var buffer = ms.ToArray();
-                // Формуємо рядок для відображення в <img> тегу
+                // Формуємо рядок для відображення в
                 imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
 
                 // Записуємо дані в модель

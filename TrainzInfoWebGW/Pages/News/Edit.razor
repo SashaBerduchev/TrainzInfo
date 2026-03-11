@@ -2,200 +2,251 @@
 @using TrainzInfoShared.DTO.GetDTO
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@inject IJSRuntime JS
 
-<h1>Редагувати новину</h1>
+<h4>Редагувати новину</h4>
 <hr />
 
-@if (news == null)
+@* Показуємо спінер, поки вантажаться дані з БД АБО поки налаштовується QuillJS *@
+@if (isLoading || !isEditorsReady)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
+    <div class="d-flex justify-center align-center" style="min-height: 60vh;">
+        <MudStack AlignItems="AlignItems.Center">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">Завантаження та налаштування...</MudText>
+        </MudStack>
     </div>
 }
-else
-{
-    <h5>@news.ObjectName</h5>
-    <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
 
-        <div class="form-group">
-            <label>Назва новини</label>
-            <textarea @ref="editorNewsName"></textarea>
-        </div>
+@* Ховаємо форму, поки все не буде готово *@
+<div style="@(isEditorsReady ? "display: block;" : "visibility: hidden; position: absolute; left: -9999px;")">
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mb-10">
+        <MudPaper Elevation="4" Class="pa-8 rounded-xl shadow-xl">
 
-        <div class="form-group mt-2">
-            <label>Короткий опис</label>
-            <textarea @ref="editorShortRef"></textarea>
-        </div>
+            <div class="text-center mb-6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
+                <MudText Typo="Typo.h4" Class="fw-bold">Редагування новини</MudText>
+                @if (news != null && !string.IsNullOrEmpty(news.ObjectName))
+                {
+                    <MudText Typo="Typo.subtitle1" Color="Color.Secondary">ID Новини: @news.ObjectName</MudText>
+                }
+            </div>
 
-        <div class="form-group mt-2">
-            <label>Повний текст</label>
-            <textarea @ref="editorFullRef"></textarea>
-        </div>
-
-        <div class="form-group mt-2">
-            <label>Завантажити картинку</label>
-            <InputFile OnChange="HandleFileSelected" />
-            @if (!string.IsNullOrEmpty(imagePreview))
+            @if (news != null)
             {
-                <div class="mt-2">
-                    <img src="@imagePreview" alt="preview" width="150" class="img-thumbnail" />
-                </div>
-            }
-        </div>
+                <EditForm Model="@news" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-        <div class="form-group mt-3">
-            <button type="submit" class="btn btn-secondary" @onclick="@(() => submitAction = "apply")">Застосувати</button>
-            <button type="submit" class="btn btn-primary" @onclick="@(() => submitAction = "ok")">Ок</button>
-            <button type="button" class="btn btn-secondary" @onclick="GoBack">Назад</button>
-        </div>
+                    <MudStack Spacing="4">
+
+                        @* Назва новини *@
+                        <div class="mud-input-control mb-4">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Назва новини</MudText>
+                            <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                                <MudExRichTextEdit @bind-Value="news.NameNews" Height="150" />
+                            </MudPaper>
+                        </div>
+
+                        @* Короткий опис *@
+                        <div class="mud-input-control mb-4">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Короткий опис</MudText>
+                            <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                                <MudExRichTextEdit @bind-Value="news.BaseNewsInfo" Height="150" />
+                            </MudPaper>
+                        </div>
+
+                        @* Повний текст новини *@
+                        <div class="mud-input-control mb-4">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-1 mb-1 d-block">Повний текст новини</MudText>
+                            <MudPaper Elevation="0" Outlined="true" Class="pa-1">
+                                <MudExRichTextEdit @bind-Value="news.NewsInfoAll" Height="300" />
+                            </MudPaper>
+                        </div>
+
+                        @* Фото новини *@
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            <InputFile id="newsEditFileInput" OnChange="HandleFileSelected" style="display:none" accept="image/*" />
+
+                            <MudButton HtmlTag="label"
+                                       for="newsEditFileInput"
+                                       Variant="Variant.Outlined"
+                                       Color="Color.Info"
+                                       StartIcon="@Icons.Material.Filled.Image"
+                                       FullWidth="true"
+                                       Class="py-3 rounded-lg border-2 border-dashed">
+                                Змінити головне зображення
+                            </MudButton>
+
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <MudPaper Elevation="0" Class="pa-2 mud-bg-background-grey rounded-lg d-flex justify-center mt-2">
+                                    <MudImage Src="@imagePreview" Height="200" ObjectFit="ObjectFit.Contain" Class="rounded-lg shadow-sm" />
+                                </MudPaper>
+                            }
+                        </div>
+
+                        @* Кнопки дій *@
+                        <div class="d-flex justify-end gap-4 mt-6">
+                            <MudButton Variant="Variant.Text"
+                                       Color="Color.Default"
+                                       Size="Size.Large"
+                                       OnClick="GoBack"
+                                       Class="rounded-lg px-6">
+                                Назад
+                            </MudButton>
+
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       Size="Size.Large"
+                                       OnClick="@(() => submitAction = "apply")"
+                                       Class="rounded-lg px-8">
+                                Застосувати
+                            </MudButton>
+
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       Size="Size.Large"
+                                       StartIcon="@Icons.Material.Filled.Save"
+                                       OnClick="@(() => submitAction = "ok")"
+                                       Class="rounded-lg px-10 shadow-lg fw-bold">
+                                Ок
+                            </MudButton>
+                        </div>
+
+                    </MudStack>
+                </EditForm>
+            }
+        </MudPaper>
 
         @if (!string.IsNullOrEmpty(errors))
         {
-            <div class="alert alert-danger mt-2">@errors</div>
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg">
+                <MudText Typo="Typo.subtitle1" Class="fw-bold">Помилка збереження:</MudText>
+                <MudText Typo="Typo.body2">@errors</MudText>
+            </MudAlert>
         }
-    </EditForm>
-
-    if (errors != null)
-    {
-        <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-        <div class="alert alert-danger mt-2">
-            <p>@errors</p>
-        </div>
-    }
-}
+    </MudContainer>
+</div>
 
 @code {
     [Parameter] public int Id { get; set; }
     private NewsSetDTO news;
     private string errors;
     private string imagePreview;
-    private ElementReference editorShortRef;
-    private ElementReference editorFullRef;
-    private ElementReference editorNewsName;
-    private bool editorShortInitialized = false;
-    private bool editorFullInitialized = false;
-    private bool editoNameNewsInitialized = false;
     private string submitAction = "";
+    
+    private bool isLoading = true;
+    private bool isEditorsReady = false;
     private bool isSave = false;
+
     protected override async Task OnInitializedAsync()
     {
+        isLoading = true;
         try
         {
             news = await Http.GetFromJsonAsync<NewsSetDTO>($"api/news/geteditnews/{Id}");
+            
+            if (news != null)
+            {
+                // ОБОВ'ЯЗКОВО: Захист від null для редакторів!
+                news.NameNews ??= string.Empty;
+                news.BaseNewsInfo ??= string.Empty;
+                news.NewsInfoAll ??= string.Empty;
+                
+                // Підтягуємо існуючу картинку для прев'ю
+                imagePreview = news.NewsImage;
+            }
         }
         catch (Exception ex)
         {
             errors = ex.Message;
+        }
+        finally
+        {
+            // Дані завантажено, вимикаємо спінер завантаження даних
+            isLoading = false;
         }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) return;
-        if (!editorShortInitialized && news != null)
+        // Чекаємо 1.5 сек ТІЛЬКИ коли дані вже є (!isLoading), а редактори ще не готові
+        if (!isLoading && !isEditorsReady && news != null)
         {
-            await InitEditorsAsync();
-        }
-
-    }
-    private async Task InitEditorsAsync()
-    {
-        var dotNetRef = DotNetObjectReference.Create(this);
-
-        // Short description
-        if (!editoNameNewsInitialized)
-        {
-            await JS.InvokeVoidAsync(
-                "initCKEditorForEditNews",
-                editorNewsName,
-                dotNetRef,
-                "SetNameNews",
-                news?.NameNews ?? string.Empty);
-            editoNameNewsInitialized = true;
-        }
-
-        // Short description
-        if (!editorShortInitialized)
-        {
-            await JS.InvokeVoidAsync(
-                "initCKEditorForEditNews",
-                editorShortRef,
-                dotNetRef,
-                "SetBaseNewsInfo",
-                news?.BaseNewsInfo ?? string.Empty);
-            editorShortInitialized = true;
-        }
-
-        // Full text
-        if (!editorFullInitialized)
-        {
-            await JS.InvokeVoidAsync(
-                "initCKEditorForEditNews",
-                editorFullRef,
-                dotNetRef,
-                "SetNewsInfoAll",
-                news?.NewsInfoAll ?? string.Empty);
-            editorFullInitialized = true;
+            await Task.Delay(1500);
+            isEditorsReady = true;
+            StateHasChanged();
         }
     }
-
-    [JSInvokable]
-    public void SetNameNews(string value) => news.NameNews = value;
-
-    [JSInvokable]
-    public void SetBaseNewsInfo(string value) => news.BaseNewsInfo = value;
-
-    [JSInvokable]
-    public void SetNewsInfoAll(string value) => news.NewsInfoAll = value;
 
     private async Task HandleValidSubmit()
     {
-        if (isSave)
-        {
-            return;
-        }
+        if (isSave) return;
+
         try
         {
             isSave = true;
-            if (submitAction == "ok")
+            errors = "";
+
+            // Логіка з твого старого коду
+            news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
+            
+            var result = await Http.PostAsJsonAsync("api/news/edit", news);
+            
+            if (result.IsSuccessStatusCode)
             {
-                news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
-                
-                var result = await Http.PostAsJsonAsync("api/news/edit", news);
-                if (result.IsSuccessStatusCode)
+                if (submitAction == "ok")
+                {
                     Navigation.NavigateTo("/");
-                else
-                    errors = await result.Content.ReadAsStringAsync();
-                Console.WriteLine("Помилка при збереженні новини: " + errors);
-            }else if (submitAction == "apply")
+                }
+                else if (submitAction == "apply")
+                {
+                    Console.WriteLine("Зміни успішно застосовано");
+                }
+            }
+            else
             {
-                news.DateEndActual = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30));
-                
-                var result = await Http.PostAsJsonAsync("api/news/edit", news);
-                if (!result.IsSuccessStatusCode)
-                    errors = await result.Content.ReadAsStringAsync();
+                errors = await result.Content.ReadAsStringAsync();
                 Console.WriteLine("Помилка при збереженні новини: " + errors);
             }
-            
         }
         catch (Exception ex)
         {
             errors = ex.Message;
         }
-        isSave = false;
+        finally
+        {
+            isSave = false;
+        }
     }
+
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        var buffer = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffer);
-        imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
-        news.NewsImage = imagePreview;
-        news.ImageMimeTypeOfData = file.ContentType;
+        if (file == null) return;
+
+        try
+        {
+            long maxFileSize = 1024 * 1024 * 5; // 5 МБ
+            using var stream = file.OpenReadStream(maxFileSize);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+
+            var buffer = ms.ToArray();
+            imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+            
+            news.NewsImage = imagePreview;
+            news.ImageMimeTypeOfData = file.ContentType;
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errors = $"Помилка: {ex.Message}";
+        }
     }
+
     private void GoBack() => Navigation.NavigateTo("/");
 }
