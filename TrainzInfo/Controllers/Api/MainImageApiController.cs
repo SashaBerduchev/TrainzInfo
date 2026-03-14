@@ -14,6 +14,8 @@ using ApplicationDBContext;
 using Logging;
 using Services;
 using SharedDTO.DTO.GetDTO;
+using SharedDTO.DTO.SetDTO;
+using TrainzInfo.Tools.DB;
 
 
 namespace TrainzInfo.Controllers.Api
@@ -30,7 +32,7 @@ namespace TrainzInfo.Controllers.Api
         {
             _context = context;
             _userManager = userManager;
-            _imageCache = imageCache; 
+            _imageCache = imageCache;
             _cache = cache;
         }
 
@@ -87,7 +89,7 @@ namespace TrainzInfo.Controllers.Api
         public async Task<ActionResult> GetImage([FromQuery] string name = null)
         {
             Log.Init("MainImageApiController", "GetImage");
-            
+
 
             Log.Wright($"GetImage called with name: {name}");
             if (name == null)
@@ -106,6 +108,75 @@ namespace TrainzInfo.Controllers.Api
 
             return File(mainImage.Image, mainImage.ImageType);
 
+        }
+
+        [HttpGet("getimageedit/{Id}")]
+        public async Task<ActionResult> GetImageEdit(int Id)
+        {
+            Log.Init("MainImageApiController", "GetImageEdit");
+            MainImageGetDTO mainImage = await _context.MainImages
+                .Where(x => x.id == Id)
+                .Select(x => new MainImageGetDTO
+                {
+                    id = x.id,
+                    Name = x.Name,
+                    ImageType = x.ImageType,
+                    ImgSrc = x.Image != null ? $"api/mainimage/{x.id}/image?width=1000" : null
+                })
+                .FirstOrDefaultAsync();
+            Log.Wright($"GetImageEdit called for ID: {Id}, Image found: {mainImage.Name}, Type: {mainImage.ImageType}");
+            Log.Finish();
+            // Повертаємо байти прямо, а не Base64
+            return Ok(mainImage);
+        }
+
+        [HttpPut("update")]
+        public async Task<ActionResult> PutImageEdit([FromBody] MainImageSetDTO imageSetDTO)
+        {
+            Log.Init("MainImageApiController", "PutImageEdit");
+            Log.Wright($"PutImageEdit called for ID: {imageSetDTO.Id}, Image provided: {!string.IsNullOrEmpty(imageSetDTO.Image)}, ImageType: {imageSetDTO.ImgType}");
+            try
+            {
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    var imageEntity = await _context.MainImages.FindAsync(imageSetDTO.Id);
+                    if (imageEntity == null)
+                        throw new Exception("Image not found");
+
+                    if (!string.IsNullOrEmpty(imageSetDTO.Image))
+                    {
+                        string base64Data = imageSetDTO.Image;
+
+                        // Перевіряємо, чи є префікс "data:...;base64,"
+                        if (base64Data.Contains(","))
+                        {
+                            // Беремо тільки ту частину, що йде ПІСЛЯ коми
+                            base64Data = base64Data.Split(',')[1];
+                        }
+
+                        imageEntity.Image = Convert.FromBase64String(base64Data);
+                        imageEntity.ImageType = imageSetDTO.ImgType;
+                    }
+                    else
+                    {
+                        imageEntity.Image = null;
+                        imageEntity.ImageType = null;
+                    }
+                    _context.MainImages.Update(imageEntity);
+                }, System.Data.IsolationLevel.ReadCommitted);
+                Log.Wright("Update ok");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Wright("ERROR: " + ex.Message);
+                Log.Exceptions(ex.ToString());
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                Log.Finish();
+            }
         }
     }
 }

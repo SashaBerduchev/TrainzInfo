@@ -5,26 +5,25 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 <MudNavMenu Bordered="true">
-    <div class="pa-2 d-flex align-center gap-4">
-        @* Головне зображення сайту *@
-        <div class="relative">
-            <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
-                      Alt="TrainzInfo Logo"
-                      Fluid="true"
-                      Class="rounded-circle shadow-sm border-2 border-solid mud-border-primary"
-                      Style="height: 50px; width: 50px; object-fit: cover; transition: transform 0.3s ease;"
-                      @onmouseover="e => { /* можна додати ефект */ }" />
+    <div class="mud-navmenu-header d-flex align-center justify-center relative mb-3 overflow-hidden"
+         style="height: 140px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+    
+        @* Задній план - розмита версія фото для глибини (optional, but cool) *@
+        <div class="absolute inset-0 z-0"
+             style="background: url('https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto') center/cover no-repeat; filter: blur(10px) brightness(0.5);">
         </div>
 
-        @* Назва з невеликим відступом та акцентом *@
-        <div class="d-flex flex-column">
-            <MudText Typo="Typo.h5" Class="fw-bold mud-text-primary" Style="letter-spacing: 1px; line-height: 1;">
-                TrainzInfo
-            </MudText>
-            <MudText Typo="Typo.caption" Class="mud-text-secondary" Style="font-size: 0.7rem; text-transform: uppercase;">
-                Інформаційна система залізниці
-            </MudText>
+        @* Основне зображення на весь розмір *@
+        <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+                  Alt="TrainzInfo Header"
+                  Class="absolute inset-0 z-10 w-100 h-100 opacity-90"
+                  Style="object-fit: cover; object-position: center;" />
+
+        @* Легкий градієнт зверху для кращого сприйняття (щоб не зливалося з темною темою) *@
+        <div class="absolute inset-0 z-20"
+             style="background: linear-gradient(180deg, rgba(39,39,47,0.8) 0%, rgba(39,39,47,0) 100%);">
         </div>
+
     </div>
 
     @* Убрали жестко заданный белый цвет у разделителя *@

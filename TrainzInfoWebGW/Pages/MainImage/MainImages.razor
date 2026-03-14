@@ -32,6 +32,13 @@ else
                                 <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@img.Name</MudText>
                                 <MudChip T="string" Variant="Variant.Text" Color="Color.Secondary" Class="ml-2 px-3 fw-bold">№@img.Name</MudChip>
                             </div>
+
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Color="Color.Surface"
+                                           Variant="Variant.Filled"
+                                           OnClick="@(() => Nav.NavigateTo($"/mainimages/edit/{img.id}"))"
+                                           Class="absolute ma-2 shadow-lg"
+                                           Style="top:0; right:0; background-color: rgba(var(--mud-palette-primary-rgb), 0.8); backdrop-filter: blur(4px);" />
                         </MudItem>
                     </MudItem>
                 </MudGrid>
