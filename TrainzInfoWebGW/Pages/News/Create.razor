@@ -1,9 +1,9 @@
 ﻿@page "/news/create"
-@using TrainzInfoShared.DTO.GetDTO
+@using SharedDTO.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
-@inject IJSRuntime JS
+@inject ISnackbar Snackbar
 
 <h4>Новини</h4>
 <hr />
@@ -185,13 +185,6 @@
         }
     }
 
-    [JSInvokable]
-    public void SetNewsName(string value) => news.NameNews = value;
-    [JSInvokable]
-    public void SetBaseNewsInfo(string value) => news.BaseNewsInfo = value;
-
-    [JSInvokable]
-    public void SetNewsInfoAll(string value) => news.NewsInfoAll = value;
 
     private async Task HandleValidSubmit()
     {
@@ -222,12 +215,14 @@
             if (result.IsSuccessStatusCode)
             {
                 Console.WriteLine("Новина успішно створена" + result);
+                Snackbar.Add("Новина успішно створена!", Severity.Success);
                 number = await result.Content.ReadAsStringAsync();
                 Console.WriteLine("Номер новини: " + number);
             }
             else
             {
                 errors = await result.Content.ReadAsStringAsync();
+                Snackbar.Add("Помилка при створенні новини: " + errors, Severity.Error);
             }
         }
         else if (submitAction == "ok")

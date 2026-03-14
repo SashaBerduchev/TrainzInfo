@@ -1,5 +1,5 @@
 ﻿@page "/stations"
-@using TrainzInfoShared.DTO.GetDTO
+@using SharedDTO.DTO.GetDTO
 @inject NavigationManager Nav
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
@@ -8,7 +8,7 @@
 
 <PageTitle>Станції</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10" Style="height: calc(100vh - 64px); overflow-y: auto; display: block;">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
     <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-2">Станції</MudText>
 
     @if (!string.IsNullOrEmpty(CurrentFilia))
@@ -80,7 +80,7 @@
             @* 1. Завжди відображаємо вже завантажені картки *@
             @foreach (var item in stationsList)
             {
-                <MudPaper @key="item.id" Elevation="4" Class="mb-6 overflow-hidden rounded-xl station-card-hover">
+                <MudPaper @key="item.id" Elevation="4" Class="mb-6 overflow-hidden rounded-xl station-card station-card-hover">
                     <MudGrid Spacing="0">
                         <MudItem xs="12" md="4" Class="position-relative">
                             <MudImage Src="@(Config.ApiBaseUrl + item.StationImages)" Alt="@item.Name"
@@ -191,6 +191,7 @@
 
     protected async Task LoadStations()
     {
+        Console.WriteLine($"Завантаження сторінки {currentPage}...  isLoading: {isLoading}, allLoaded: {allLoaded}");
         if (isLoading || allLoaded) return;
 
         isLoading = true;
@@ -219,6 +220,7 @@
         {
             stationsList.AddRange(stationsPage);
             //ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            Console.WriteLine($"Завантажено сторінку {currentPage} з {stationsPage.Count} станціями");
             currentPage++;
             StateHasChanged();
         }

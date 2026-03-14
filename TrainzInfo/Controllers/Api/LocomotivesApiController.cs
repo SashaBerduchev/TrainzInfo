@@ -15,14 +15,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using TrainzInfo.Tools.DB;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Dictionaries.Addresses;
-using TrainzInfoModel.Models.Information.Additional;
-using TrainzInfoModel.Models.Information.Main;
-using TrainzInfoServices;
-using TrainzInfoShared.DTO.GetDTO;
-using TrainzInfoShared.DTO.SetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Dictionaries.Addresses;
+using ModelDB.Models.Information.Additional;
+using ModelDB.Models.Information.Main;
+using Services;
+using SharedDTO.DTO.GetDTO;
+using SharedDTO.DTO.SetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

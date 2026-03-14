@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TrainzInfoApplicationContext;
+using ApplicationDBContext;
 
 
 #nullable disable
@@ -224,7 +224,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.Addresses.City", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -255,7 +255,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.Addresses.Oblast", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -276,7 +276,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Oblasts");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.IpAdresses", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.IpAdresses", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -306,7 +306,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("IpAdresses");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.MailSettings", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.MailSettings", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -343,7 +343,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MailSettings");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.MainImages", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.MainImages", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -365,7 +365,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MainImages");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.Plants", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -385,7 +385,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Plants");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.SendEmail", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.SendEmail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -421,7 +421,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("SendEmails");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -438,7 +438,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("TypeOfPassTrains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.DepotList", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -469,7 +469,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Depots");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.ElectrickTrainzInformation", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.ElectrickTrainzInformation", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -494,7 +494,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("ElectrickTrainzInformation");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.LocomotiveBaseInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.LocomotiveBaseInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -515,7 +515,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("LocomotiveBaseInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.Locomotive_series", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.Locomotive_series", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -532,7 +532,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Locomotive_Series");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.StationInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.StationInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -557,7 +557,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("StationInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.SuburbanTrainsInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -582,7 +582,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("SuburbanTrainsInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.NewsImage", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Images.NewsImage", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -614,7 +614,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsImages");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.StationImages", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Images.StationImages", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -640,7 +640,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("StationImages");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.DieselTrains", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.DieselTrains", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -683,7 +683,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("DieselTrains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.ElectricTrain", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.ElectricTrain", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -776,7 +776,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Electrics");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Locomotive", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -838,7 +838,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Metro", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Metro", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -863,7 +863,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Metros");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.MetroLines", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -894,7 +894,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroStation", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.MetroStation", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -931,7 +931,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("MetroStations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsComments", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.NewsComments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -961,7 +961,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsComments");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.NewsInfo", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1002,7 +1002,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("NewsInfos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Stations", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1078,7 +1078,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.UkrainsRailways", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.UkrainsRailways", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1108,7 +1108,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRoute", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1137,7 +1137,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("PlanningUserRoutes");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRouteSave", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1167,7 +1167,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("PlanningUserRouteSaves");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserTrains", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1198,7 +1198,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("PlanningUserTrains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.StationsShadule", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.StationsShadule", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1246,7 +1246,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("StationsShadules");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.Train", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1295,7 +1295,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("Trains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.TrainsShadule", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.TrainsShadule", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1341,7 +1341,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("TrainsShadule");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.RailwayUsersPhoto", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.RailwayUsersPhoto", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1371,7 +1371,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("RailwayUsersPhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.UserLocomotivePhotos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1413,7 +1413,7 @@ namespace TrainzInfo.Migrations
                     b.ToTable("UserLocomotivePhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserTrainzPhoto", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.UserTrainzPhoto", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -1503,16 +1503,16 @@ namespace TrainzInfo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.Addresses.City", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", "Oblasts")
+                    b.HasOne("ModelDB.Models.Dictionaries.Addresses.Oblast", "Oblasts")
                         .WithMany("Cities")
                         .HasForeignKey("Oblastsid");
 
                     b.Navigation("Oblasts");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.IpAdresses", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.IpAdresses", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
@@ -1521,7 +1521,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("IdentityUser");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.SendEmail", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.SendEmail", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ToUser")
                         .WithMany()
@@ -1530,13 +1530,13 @@ namespace TrainzInfo.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.DepotList", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "City")
+                    b.HasOne("ModelDB.Models.Dictionaries.Addresses.City", "City")
                         .WithMany("DepotLists")
                         .HasForeignKey("Cityid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailway")
+                    b.HasOne("ModelDB.Models.Information.Main.UkrainsRailways", "UkrainsRailway")
                         .WithMany("DepotLists")
                         .HasForeignKey("UkrainsRailwayid");
 
@@ -1545,26 +1545,26 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailway");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Images.NewsImage", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Images.NewsImage", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.NewsInfo", null)
+                    b.HasOne("ModelDB.Models.Information.Main.NewsInfo", null)
                         .WithOne("NewsImages")
-                        .HasForeignKey("TrainzInfoModel.Models.Information.Images.NewsImage", "NewsInfoId")
+                        .HasForeignKey("ModelDB.Models.Information.Images.NewsImage", "NewsInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.DieselTrains", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.DieselTrains", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
+                    b.HasOne("ModelDB.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("DieselTrains")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany("DieselTrains")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", "SuburbanTrainsInfo")
+                    b.HasOne("ModelDB.Models.Information.Additional.SuburbanTrainsInfo", "SuburbanTrainsInfo")
                         .WithMany("DieselTrains")
                         .HasForeignKey("SuburbanTrainsInfoid");
 
@@ -1575,33 +1575,33 @@ namespace TrainzInfo.Migrations
                     b.Navigation("SuburbanTrainsInfo");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.ElectricTrain", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.ElectricTrain", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "City")
+                    b.HasOne("ModelDB.Models.Dictionaries.Addresses.City", "City")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("Cityid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
+                    b.HasOne("ModelDB.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.ElectrickTrainzInformation", "ElectrickTrainzInformation")
+                    b.HasOne("ModelDB.Models.Information.Additional.ElectrickTrainzInformation", "ElectrickTrainzInformation")
                         .WithMany()
                         .HasForeignKey("ElectrickTrainzInformationid");
 
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", "PlantsCreate")
+                    b.HasOne("ModelDB.Models.Dictionaries.MetaData.Plants", "PlantsCreate")
                         .WithMany()
                         .HasForeignKey("PlantsCreateid");
 
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.Plants", "PlantsKvr")
+                    b.HasOne("ModelDB.Models.Dictionaries.MetaData.Plants", "PlantsKvr")
                         .WithMany()
                         .HasForeignKey("PlantsKvrid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany("ElectricTrains")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", "Trains")
+                    b.HasOne("ModelDB.Models.Information.Additional.SuburbanTrainsInfo", "Trains")
                         .WithMany("ElectricTrain")
                         .HasForeignKey("Trainsid");
 
@@ -1620,21 +1620,21 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Trains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Locomotive", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.DepotList", "DepotList")
+                    b.HasOne("ModelDB.Models.Information.Additional.DepotList", "DepotList")
                         .WithMany("Locomotives")
                         .HasForeignKey("DepotListid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.LocomotiveBaseInfo", "LocomotiveBaseInfo")
+                    b.HasOne("ModelDB.Models.Information.Additional.LocomotiveBaseInfo", "LocomotiveBaseInfo")
                         .WithMany()
                         .HasForeignKey("LocomotiveBaseInfoid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.Locomotive_series", "Locomotive_Series")
+                    b.HasOne("ModelDB.Models.Information.Additional.Locomotive_series", "Locomotive_Series")
                         .WithMany("Locomotives")
                         .HasForeignKey("Locomotive_Seriesid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany("Locomotives")
                         .HasForeignKey("Stationsid");
 
@@ -1647,31 +1647,31 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.MetroLines", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Metro", "Metro")
+                    b.HasOne("ModelDB.Models.Information.Main.Metro", "Metro")
                         .WithMany("MetroLines")
                         .HasForeignKey("Metroid");
 
                     b.Navigation("Metro");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroStation", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.MetroStation", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.MetroLines", "MetroLines")
+                    b.HasOne("ModelDB.Models.Information.Main.MetroLines", "MetroLines")
                         .WithMany("Stations")
                         .HasForeignKey("MetroLinesid");
 
                     b.Navigation("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsComments", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.NewsComments", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.NewsInfo", "NewsInfo")
+                    b.HasOne("ModelDB.Models.Information.Main.NewsInfo", "NewsInfo")
                         .WithMany("NewsComments")
                         .HasForeignKey("NewsInfoid");
 
@@ -1680,7 +1680,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("NewsInfo");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.NewsInfo", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -1689,29 +1689,29 @@ namespace TrainzInfo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Stations", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.City", "Citys")
+                    b.HasOne("ModelDB.Models.Dictionaries.Addresses.City", "Citys")
                         .WithMany("Stations")
                         .HasForeignKey("Citysid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Metro", "Metro")
+                    b.HasOne("ModelDB.Models.Information.Main.Metro", "Metro")
                         .WithMany()
                         .HasForeignKey("Metroid");
 
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", "Oblasts")
+                    b.HasOne("ModelDB.Models.Dictionaries.Addresses.Oblast", "Oblasts")
                         .WithMany("Stations")
                         .HasForeignKey("Oblastsid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Images.StationImages", "StationImages")
+                    b.HasOne("ModelDB.Models.Information.Images.StationImages", "StationImages")
                         .WithMany()
                         .HasForeignKey("StationImagesid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Additional.StationInfo", "StationInfo")
+                    b.HasOne("ModelDB.Models.Information.Additional.StationInfo", "StationInfo")
                         .WithMany()
                         .HasForeignKey("StationInfoid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
+                    b.HasOne("ModelDB.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
                         .WithMany("Stations")
                         .HasForeignKey("UkrainsRailwaysid");
 
@@ -1728,9 +1728,9 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRoute", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
+                    b.HasOne("ModelDB.Models.PlanningRoute.PlanningUserRouteSave", null)
                         .WithMany("PlanningUserRoute")
                         .HasForeignKey("PlanningUserRouteSaveID");
 
@@ -1741,7 +1741,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRouteSave", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -1750,13 +1750,13 @@ namespace TrainzInfo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserTrains", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserTrains", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", null)
+                    b.HasOne("ModelDB.Models.PlanningRoute.PlanningUserRouteSave", null)
                         .WithMany("PlanningUserTrains")
                         .HasForeignKey("PlanningUserRouteSaveID");
 
-                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
+                    b.HasOne("ModelDB.Models.Trains.Train", "Train")
                         .WithMany()
                         .HasForeignKey("TrainID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1771,17 +1771,17 @@ namespace TrainzInfo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.StationsShadule", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.StationsShadule", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany("StationsShadules")
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
+                    b.HasOne("ModelDB.Models.Trains.Train", "Train")
                         .WithMany("StationsShadules")
                         .HasForeignKey("Trainid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
+                    b.HasOne("ModelDB.Models.Information.Main.UkrainsRailways", "UkrainsRailways")
                         .WithMany("stationsShadules")
                         .HasForeignKey("UkrainsRailwaysid");
 
@@ -1792,17 +1792,17 @@ namespace TrainzInfo.Migrations
                     b.Navigation("UkrainsRailways");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.Train", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "From")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "From")
                         .WithMany()
                         .HasForeignKey("Fromid");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "To")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "To")
                         .WithMany()
                         .HasForeignKey("Toid");
 
-                    b.HasOne("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", "TypeOfPassTrain")
+                    b.HasOne("ModelDB.Models.Dictionaries.MetaData.TypeOfPassTrain", "TypeOfPassTrain")
                         .WithMany("Trains")
                         .HasForeignKey("TypeOfPassTrainid");
 
@@ -1813,17 +1813,17 @@ namespace TrainzInfo.Migrations
                     b.Navigation("TypeOfPassTrain");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.TrainsShadule", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.TrainsShadule", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", null)
+                    b.HasOne("ModelDB.Models.PlanningRoute.PlanningUserRoute", null)
                         .WithMany("TrainsShadule")
                         .HasForeignKey("PlanningUserRouteID");
 
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
 
-                    b.HasOne("TrainzInfoModel.Models.Trains.Train", "Train")
+                    b.HasOne("ModelDB.Models.Trains.Train", "Train")
                         .WithMany("TrainsShadules")
                         .HasForeignKey("Trainid");
 
@@ -1832,34 +1832,34 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Train");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.RailwayUsersPhoto", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.RailwayUsersPhoto", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany("railwayUsersPhotos")
                         .HasForeignKey("Stationsid");
 
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserLocomotivePhotos", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.UserLocomotivePhotos", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Locomotive", "Locomotive")
+                    b.HasOne("ModelDB.Models.Information.Main.Locomotive", "Locomotive")
                         .WithMany("UserLocomotivesPhoto")
                         .HasForeignKey("Locomotiveid");
 
                     b.Navigation("Locomotive");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.UsersInfo.UserTrainzPhoto", b =>
+            modelBuilder.Entity("ModelDB.Models.UsersInfo.UserTrainzPhoto", b =>
                 {
-                    b.HasOne("TrainzInfoModel.Models.Information.Main.Stations", "Stations")
+                    b.HasOne("ModelDB.Models.Information.Main.Stations", "Stations")
                         .WithMany()
                         .HasForeignKey("Stationsid");
 
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.City", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.Addresses.City", b =>
                 {
                     b.Navigation("DepotLists");
 
@@ -1868,19 +1868,19 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.Addresses.Oblast", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.Addresses.Oblast", b =>
                 {
                     b.Navigation("Cities");
 
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
+            modelBuilder.Entity("ModelDB.Models.Dictionaries.MetaData.TypeOfPassTrain", b =>
                 {
                     b.Navigation("Trains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.DepotList", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.DepotList", b =>
                 {
                     b.Navigation("DieselTrains");
 
@@ -1889,41 +1889,41 @@ namespace TrainzInfo.Migrations
                     b.Navigation("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.Locomotive_series", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.Locomotive_series", b =>
                 {
                     b.Navigation("Locomotives");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Additional.SuburbanTrainsInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Additional.SuburbanTrainsInfo", b =>
                 {
                     b.Navigation("DieselTrains");
 
                     b.Navigation("ElectricTrain");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Locomotive", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Locomotive", b =>
                 {
                     b.Navigation("UserLocomotivesPhoto");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Metro", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Metro", b =>
                 {
                     b.Navigation("MetroLines");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.MetroLines", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.MetroLines", b =>
                 {
                     b.Navigation("Stations");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.NewsInfo", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.NewsInfo", b =>
                 {
                     b.Navigation("NewsComments");
 
                     b.Navigation("NewsImages");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.Stations", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.Stations", b =>
                 {
                     b.Navigation("DieselTrains");
 
@@ -1936,7 +1936,7 @@ namespace TrainzInfo.Migrations
                     b.Navigation("railwayUsersPhotos");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Information.Main.UkrainsRailways", b =>
+            modelBuilder.Entity("ModelDB.Models.Information.Main.UkrainsRailways", b =>
                 {
                     b.Navigation("DepotLists");
 
@@ -1945,19 +1945,19 @@ namespace TrainzInfo.Migrations
                     b.Navigation("stationsShadules");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRoute", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRoute", b =>
                 {
                     b.Navigation("TrainsShadule");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.PlanningRoute.PlanningUserRouteSave", b =>
+            modelBuilder.Entity("ModelDB.Models.PlanningRoute.PlanningUserRouteSave", b =>
                 {
                     b.Navigation("PlanningUserRoute");
 
                     b.Navigation("PlanningUserTrains");
                 });
 
-            modelBuilder.Entity("TrainzInfoModel.Models.Trains.Train", b =>
+            modelBuilder.Entity("ModelDB.Models.Trains.Train", b =>
                 {
                     b.Navigation("StationsShadules");
 

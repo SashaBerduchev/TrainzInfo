@@ -18,7 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrainzInfoShared\TrainzInfoShared.csproj" />
+    <ProjectReference Include="..\SharedDTO\SharedDTO.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 

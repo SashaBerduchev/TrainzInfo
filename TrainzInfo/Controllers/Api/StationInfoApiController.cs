@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Information.Additional;
-using TrainzInfoModel.Models.Information.Main;
-using TrainzInfoShared.DTO.GetDTO;
-using TrainzInfoShared.DTO.SetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Information.Additional;
+using ModelDB.Models.Information.Main;
+using SharedDTO.DTO.GetDTO;
+using SharedDTO.DTO.SetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

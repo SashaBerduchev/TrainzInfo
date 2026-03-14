@@ -11,11 +11,11 @@ using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.RequestDTO;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Information.Main;
-using TrainzInfoModel.Models.Trains;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Information.Main;
+using ModelDB.Models.Trains;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

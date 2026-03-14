@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Information.Main;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Information.Main;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

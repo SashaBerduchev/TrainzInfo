@@ -7,9 +7,9 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 
 using TrainzInfo.Models;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Dictionaries.MetaData;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Dictionaries.MetaData;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TrainzInfo.Tools.Mail

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.JWT;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

@@ -127,11 +127,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TrainzInfoShared\TrainzInfoShared.csproj" />
+      <Folder Include="Properties\PublishProfiles\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\PublishProfiles\" />
+      <ProjectReference Include="..\SharedDTO\SharedDTO.csproj" />
     </ItemGroup>
 
 </Project>

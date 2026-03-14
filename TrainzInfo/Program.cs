@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TrainzInfo.Tools;
-using TrainzInfoLog;
+using Logging;
 
 namespace TrainzInfo
 {

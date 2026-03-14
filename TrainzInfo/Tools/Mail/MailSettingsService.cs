@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using TrainzInfo.Models;
-using TrainzInfoApplicationContext;
-using TrainzInfoModel.Models.Dictionaries.MetaData;
+using ApplicationDBContext;
+using ModelDB.Models.Dictionaries.MetaData;
 
 namespace TrainzInfo.Tools.Mail
 {

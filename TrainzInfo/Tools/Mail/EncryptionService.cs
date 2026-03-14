@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using System;
-using TrainzInfoLog;
+using Logging;
 
 namespace TrainzInfo.Tools.Mail
 {

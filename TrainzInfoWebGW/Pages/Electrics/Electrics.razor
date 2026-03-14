@@ -1,5 +1,5 @@
 ﻿@page "/electric-trains"
-@using TrainzInfoShared.DTO.GetDTO
+@using SharedDTO.DTO.GetDTO
 @inject NavigationManager Nav
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
@@ -75,7 +75,7 @@
         </MudGrid>
     </MudPaper>
 
-    @if (isLoading)
+    @if (isLoading && (ElectricTrains == null || !ElectricTrains.Any()))
     {
         <MudGrid>
             @foreach (var i in Enumerable.Range(0, 3))
@@ -91,7 +91,7 @@
         <div id="trainsContainer">
             @foreach (var train in ElectricTrains)
             {
-                <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl train-card-hover">
+                <MudPaper @key="train.id" Elevation="4" Class="mb-6 overflow-hidden rounded-xl train-card train-card-hover">
                     <MudGrid Spacing="0">
                         <MudItem xs="12" md="4" Class="position-relative">
                             <MudImage Src="@(Config.ApiBaseUrl + train.Image)" Alt="@train.Name"
@@ -150,6 +150,20 @@
                     </MudGrid>
                 </MudPaper>
             }
+
+            @if (isLoading) @* А это дозагрузка внизу *@
+            {
+                @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" /> *@
+                <MudGrid>
+                    @foreach (var i in Enumerable.Range(0, 1))
+                    {
+                        <MudItem xs="12">
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="160px" Class="rounded-lg mb-4" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            }
+
         </div>
     }
 </MudContainer>
@@ -240,6 +254,7 @@
                 isFilterLoad = true;
             }
             currentPage++;
+            Console.WriteLine("Page: " + currentPage);
         }
 
         isLoading = false;

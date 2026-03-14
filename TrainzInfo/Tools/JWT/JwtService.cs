@@ -6,7 +6,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TrainzInfoLog;
+using Logging;
 
 namespace TrainzInfo.Tools.JWT
 {

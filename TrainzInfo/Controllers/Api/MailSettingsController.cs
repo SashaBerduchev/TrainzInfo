@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.Mail;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Dictionaries.MetaData;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Dictionaries.MetaData;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

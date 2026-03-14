@@ -8,10 +8,10 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoServices;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using Services;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Tools.BackgroundServices
 {

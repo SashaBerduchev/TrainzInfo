@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.PlanningRoute;
-using TrainzInfoModel.Models.Trains;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.PlanningRoute;
+using ModelDB.Models.Trains;
+using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {

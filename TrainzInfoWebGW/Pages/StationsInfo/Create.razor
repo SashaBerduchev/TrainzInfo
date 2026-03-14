@@ -1,81 +1,112 @@
 ﻿@page "/stationsinfo/create/{stationName}"
 @inject NavigationManager Navigation
 @inject HttpClient Http
-@inject IJSRuntime JS
-
-<h3>Ініформація про станцію: @stationName</h3>
-<hr />
-
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="@info" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+@inject ISnackbar Snackbar
 
 
-            <!-- Короткий опис (CKEditor) -->
-            <div class="form-group mt-2">
-                <label>Короткий опис</label>
-                <textarea id="editorBase"></textarea>
-            </div>
+<PageTitle>Створення опису: @stationName</PageTitle>
 
-            <!-- Повний текст новини (CKEditor) -->
-            <div class="form-group mt-2">
-                <label>Повний опис</label>
-                <textarea id="editorFull"></textarea>
-            </div>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Elevation="4" Class="pa-6 rounded-xl">
+        <MudStack Spacing="4">
+            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">
+                <MudIcon Icon="@Icons.Material.Filled.EditNote" Size="Size.Large" Class="mr-2" />
+                Інформація про станцію: @stationName
+            </MudText>
 
+            <MudDivider />
 
-            <!-- Кнопка створення -->
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">Зберегти</button>
-            </div>
-        </EditForm>
+            <EditForm Model="@info" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
 
-        @if (!string.IsNullOrEmpty(errors))
-        {
-            <div class="alert alert-danger mt-3">
-                <h5>Помилка збереження:</h5>
-                <p>@errors</p>
-            </div>
-        }
-    </div>
-</div>
+                <MudGrid Spacing="3">
+                    @* Короткий опис *@
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle1" Class="mb-2 fw-bold">Короткий опис</MudText>
+                        <MudExRichTextEdit @bind-Value="info.BaseInfo"
+                                           Height="250"
+                                           Placeholder="Введіть основну інформацію про станцію..."
+                                           Class="mud-ex-rich-text-custom" />
+                        <ValidationMessage For="@(() => info.BaseInfo)" />
+                    </MudItem>
+
+                    @* Повний опис *@
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle1" Class="mb-2 fw-bold">Повний опис</MudText>
+                        <MudExRichTextEdit @bind-Value="info.AllInfo"
+                                           Height="450"
+                                           Placeholder="Детальна історія, колійний розвиток тощо..."
+                                           Class="mud-ex-rich-text-custom" />
+                        <ValidationMessage For="@(() => info.AllInfo)" />
+                    </MudItem>
+
+                    @* Ошибки *@
+                    @if (!string.IsNullOrEmpty(errors))
+                    {
+                        <MudItem xs="12">
+                            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg">
+                                @errors
+                            </MudAlert>
+                        </MudItem>
+                    }
+
+                    @* Кнопки *@
+                    <MudItem xs="12" Class="d-flex justify-end gap-4 mt-4">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="Cancel">
+                            Скасувати
+                        </MudButton>
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.Save">
+                            Зберегти дані
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
 @code {
-    [Parameter] 
+    [Parameter]
     public string? stationName { get; set; }
     private StationInfoDTO info = new StationInfoDTO();
 
     private string errors = "";
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender)
+        info.Name = stationName;
+    }
+
+ 
+    private async Task HandleValidSubmit()
+    {
+        errors = "";
+        try
         {
-            // Ініціалізація CKEditor через JS Interop
-            await JS.InvokeVoidAsync("initCKEditorForStationInfo", "editorBase", DotNetObjectReference.Create(this), "SetBase");
-            await JS.InvokeVoidAsync("initCKEditorForStationInfo", "editorFull", DotNetObjectReference.Create(this), "SetFull");
-            info.Name = stationName;
+            var result = await Http.PostAsJsonAsync("api/StationInfoApi/create", info);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Інформацію про станцію {stationName} успішно збережено!", Severity.Success);
+                Navigation.NavigateTo("/stations");
+            }
+            else
+            {
+                errors = await result.Content.ReadAsStringAsync();
+                Snackbar.Add("Помилка при збереженні", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = ex.Message;
+            Snackbar.Add("Критична помилка з'єднання", Severity.Error);
         }
     }
 
-    [JSInvokable]
-    public void SetBase(string value) => info.BaseInfo = value;
-
-    [JSInvokable]
-    public void SetFull(string value) => info.AllInfo = value;
-
-    private async Task HandleValidSubmit()
+    public void Cancel()
     {
-        info.Name = stationName;
-        var result = await Http.PostAsJsonAsync("api/StationInfoApi/create", info);
-        if (result.IsSuccessStatusCode)
-        {
-            Navigation.NavigateTo("/stations");
-        }
-        else
-        {
-            errors = await result.Content.ReadAsStringAsync();
-        }
+        Navigation.NavigateTo("/stations");
     }
 }

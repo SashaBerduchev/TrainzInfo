@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Dictionaries.MetaData;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Dictionaries.MetaData;
 
 namespace TrainzInfo.Controllers.Api
 {

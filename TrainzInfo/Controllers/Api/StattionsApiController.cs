@@ -14,13 +14,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using TrainzInfo.Tools.DB;
-using TrainzInfoApplicationContext;
-using TrainzInfoLog;
-using TrainzInfoModel.Models.Dictionaries.Addresses;
-using TrainzInfoModel.Models.Information.Images;
-using TrainzInfoModel.Models.Information.Main;
-using TrainzInfoServices;
-using TrainzInfoShared.DTO.GetDTO;
+using ApplicationDBContext;
+using Logging;
+using ModelDB.Models.Dictionaries.Addresses;
+using ModelDB.Models.Information.Images;
+using ModelDB.Models.Information.Main;
+using Services;
+using SharedDTO.DTO.GetDTO;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace TrainzInfo.Controllers.Api

@@ -17,10 +17,10 @@ using System.Threading.Tasks;
 using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.JWT;
 using TrainzInfo.Tools.Mail;
-using TrainzInfoApplicationContext;
-using TrainzInfoBackgroundServices;
-using TrainzInfoLog;
-using TrainzInfoServices;
+using ApplicationDBContext;
+using BackgroundServices;
+using Logging;
+using Services;
 
 namespace TrainzInfo
 {
