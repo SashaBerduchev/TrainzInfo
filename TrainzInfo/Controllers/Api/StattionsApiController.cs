@@ -459,7 +459,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpPut("edit")]
+        [HttpPost("edit")]
         public async Task<ActionResult> EditStation([FromBody] StationEditDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(EditStation));

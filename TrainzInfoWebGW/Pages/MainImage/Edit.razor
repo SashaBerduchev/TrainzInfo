@@ -132,7 +132,7 @@
     {
         try
         {
-            var response = await Http.PutAsJsonAsync("api/mainimage/update", updateModel);
+            var response = await Http.PostAsJsonAsync("api/mainimage/update", updateModel);
             if (response.IsSuccessStatusCode)
             {
                 Snackbar.Add("Зображення успішно оновлено!", Severity.Success);

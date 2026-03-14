@@ -204,7 +204,7 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpPut("update")]
+        [HttpPost("update")]
         public async Task<ActionResult> UpdateSheduller([FromBody] TrainCreateRequest trainCreateRequest)
         {
             Log.Init(this.ToString(), nameof(UpdateSheduller));

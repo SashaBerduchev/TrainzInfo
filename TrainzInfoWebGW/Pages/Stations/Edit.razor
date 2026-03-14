@@ -154,7 +154,7 @@
         ErrorMessage = "";
         try
         {
-            var result = await Http.PutAsJsonAsync($"api/stations/edit", stationsDTO);
+            var result = await Http.PostAsJsonAsync($"api/stations/edit", stationsDTO);
             if (result.IsSuccessStatusCode)
             {
                 Snackbar.Add("Дані станції успішно оновлено!", Severity.Success);

@@ -177,7 +177,7 @@ else
         trainCreateRequest.TrainsShedullers = trainsShedullers;
         try
         {
-            var response = await Http.PutAsJsonAsync($"api/trainsshaduller/update", trainCreateRequest);
+            var response = await Http.PostAsJsonAsync($"api/trainsshaduller/update", trainCreateRequest);
             if (response.IsSuccessStatusCode)
             {
                 HasUnsavedChanges = false;

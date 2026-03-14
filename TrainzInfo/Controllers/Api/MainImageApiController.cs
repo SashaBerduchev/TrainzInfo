@@ -130,7 +130,7 @@ namespace TrainzInfo.Controllers.Api
             return Ok(mainImage);
         }
 
-        [HttpPut("update")]
+        [HttpPost("update")]
         public async Task<ActionResult> PutImageEdit([FromBody] MainImageSetDTO imageSetDTO)
         {
             Log.Init("MainImageApiController", "PutImageEdit");
