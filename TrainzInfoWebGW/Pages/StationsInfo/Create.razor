@@ -2,7 +2,7 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject ISnackbar Snackbar
-
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Створення опису: @stationName</PageTitle>
 
@@ -72,14 +72,43 @@
     [Parameter]
     public string? stationName { get; set; }
     private StationInfoDTO info = new StationInfoDTO();
-
+    private bool IsAdmin = false;
     private string errors = "";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await CheckRoles();
         info.Name = stationName;
     }
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
 
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+                Navigation.NavigateTo("/erroraccess");
+            }
+        }
+    }
  
     private async Task HandleValidSubmit()
     {

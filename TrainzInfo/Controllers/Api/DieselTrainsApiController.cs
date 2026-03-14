@@ -19,17 +19,19 @@ using ModelDB.Models.Information.Additional;
 using ModelDB.Models.Information.Main;
 using Services;
 using SharedDTO.DTO.GetDTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace TrainzInfo.Controllers.Api
 {
     [Route("api/diesels")]
-    public class DieselTrainsApiController : Controller
+    public class DieselTrainsApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
         private readonly IMemoryCache _cache;
         private DieselCacheService _dieselCacheService;
 
-        public DieselTrainsApiController(ApplicationContext context, IMemoryCache cache, DieselCacheService dieselCacheService)
+        public DieselTrainsApiController(ApplicationContext context, IMemoryCache cache, DieselCacheService dieselCacheService, UserManager<IdentityUser> userManager)
+        :base(userManager, context)
         {
             _context = context;
             _cache = cache;

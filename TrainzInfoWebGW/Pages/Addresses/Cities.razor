@@ -1,0 +1,126 @@
+﻿@page "/cities"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject AppConfig Config
+@inject NavigationManager Nav
+
+
+<PageTitle>Міста</PageTitle>
+<MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+    <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.AddLocation" OnClick="AddCity">
+        Додати місто
+    </MudButton>
+</MudPaper>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-6">Міста залізничної мережі</MudText>
+
+    @if (isLoading && (cities == null || !cities.Any()))
+    {
+        <MudGrid>
+            @foreach (var i in Enumerable.Range(0, 4))
+            {
+                <MudItem xs="12" sm="6" md="4" @key="@($"skeleton_{i}")">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" Class="rounded-xl mb-4" />
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <div id="citiesContainer">
+            <MudGrid>
+                @foreach (var city in cities)
+                {
+                    <MudItem xs="12" sm="6" md="4" @key="city.Id">
+                        <MudPaper Elevation="4" Class="pa-0 rounded-xl overflow-hidden city-card city-card-hover">
+                            <div class="pa-4">
+                                <MudText Typo="Typo.h5" Class="fw-bold">@city.City</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">@city.Oblast область</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">@city.Region район</MudText>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                           EndIcon="@Icons.Material.Filled.ArrowForward" Class="mt-2">
+                                    Переглянути станції
+                                </MudButton>
+                            </div>
+                        </MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+        </div>
+
+        @if (isLoadingMore)
+        {
+            <div class="d-flex justify-center mt-6">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+    }
+</MudContainer>
+
+
+@code {
+    private List<CityDTO> cities = new();
+    private bool isLoading = true;
+    private bool isLoadingMore = false;
+    private int currentPage = 1;
+    private bool allLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCities();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("addCitiesScrollListener", DotNetObjectReference.Create(this));
+        }
+    }
+
+    private async Task LoadCities()
+    {
+        if (allLoaded) return;
+
+        if (cities.Any()) isLoadingMore = true;
+        else isLoading = true;
+
+        try
+        {
+            var result = await Http.GetFromJsonAsync<List<CityDTO>>($"api/CitiesApi/getcities?page={currentPage}");
+            if (result == null || !result.Any())
+            {
+                allLoaded = true;
+            }
+            else
+            {
+                cities.AddRange(result);
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка загрузки городов: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            isLoadingMore = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        if (!isLoadingMore && !allLoaded)
+        {
+            await LoadCities();
+        }
+    }
+
+    public void AddCity()
+    {
+        Nav.NavigateTo("/cities/create");
+    }
+}

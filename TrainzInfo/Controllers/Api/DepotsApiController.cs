@@ -1,24 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationDBContext;
+using Logging;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ModelDB.Models.Information.Additional;
+using SharedDTO.DTO.GetDTO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using TrainzInfo.Models;
 using TrainzInfo.Tools;
-using ApplicationDBContext;
-using Logging;
-using ModelDB.Models.Information.Additional;
-using SharedDTO.DTO.GetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
     [ApiController]
     [Route("api/depots")]
-    public class DepotsApiController : Controller
+    public class DepotsApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
-        public DepotsApiController(ApplicationContext context)
+        public DepotsApiController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager, context)
         {
             _context = context;
         }

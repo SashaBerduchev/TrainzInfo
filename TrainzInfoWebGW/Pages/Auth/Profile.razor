@@ -60,6 +60,10 @@
                             <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
                                        StartIcon="@Icons.Material.Filled.Map" OnClick="MainImages">Основні зображення сайту</MudButton>
                         </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.LocationCity" OnClick="Cities">Міста</MudButton>
+                        </MudItem>
                     </MudGrid>
                 </MudPaper>
             </MudItem>
@@ -240,6 +244,10 @@
     private void MainImages()
     {
         Nav.NavigateTo("/mainimages");
+    }
+    private void Cities()
+    {
+        Nav.NavigateTo("/cities");
     }
     private async Task CheckRoles()
     {

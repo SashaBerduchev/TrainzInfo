@@ -2,6 +2,7 @@
 @using SharedDTO.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
     <MudPaper Elevation="4" Class="pa-8 rounded-xl shadow-xl">
@@ -118,14 +119,44 @@
     private CancellationTokenSource debounceCts;
     private string ErrorMessage = "";
     private string imagePreview;
-
+    private bool IsAdmin = false;
 
     protected override async Task OnInitializedAsync()
-    {
-        // Імітація завантаження даних
+    { 
+        await CheckRoles();
         citys = await Http.GetFromJsonAsync<List<string>>($"api/stations/getcitys");
         FiliasList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-filias");
         OblastList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-oblasts");
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+                Navigation.NavigateTo("/erroraccess");
+            }
+        }
     }
 
     private async Task HandleValidSubmit()
