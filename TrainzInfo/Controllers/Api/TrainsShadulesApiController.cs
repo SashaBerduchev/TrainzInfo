@@ -160,6 +160,139 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
+        [HttpGet("getedit/{Id}")]
+        public async Task<ActionResult> GetEdit(int Id)
+        {
+            Log.Init(this.ToString(), nameof(GetEdit));
+            try
+            {
+                Log.Wright($"Start loading train with ID: {Id}");
+                Train train = await _context.Trains.Where(x => x.id == Id).FirstOrDefaultAsync();
+                if (train is null)
+                {
+                    Log.Wright($"Train with ID: {Id} not found");
+                    return NotFound($"Train with ID: {Id} not found");
+                }
+                List<TrainsShaduleDTO> trainsShaduleDTO = await _context.TrainsShadule
+                    .Include(x => x.Stations)
+                    .Where(x => x.Train.id == Id)
+                    .Select(x => new TrainsShaduleDTO
+                    {
+                        Id = x.id,
+                        NameStation = x.Stations.Name,
+                        NumberTrain = x.Train.Number.ToString(),
+                        Arrival = x.Arrival,
+                        Departure = x.Departure,
+                        Distance = x.Distance,
+                        IsUsing = x.IsUsing,
+                        StationId = x.Stations.id,
+                        TrainId = x.Train.id
+                    })
+                    .ToListAsync();
+                Log.Wright($"Train with ID: {Id} successfully loaded");
+                return Ok(trainsShaduleDTO);
+            }
+            catch (Exception ex)
+            {
+                Log.Wright($"Failed to load train with ID: {Id}. Exception: {ex}");
+                Log.Exceptions(ex.ToString());
+                return BadRequest($"Failed to load train with ID: {Id}");
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+        [HttpPut("update")]
+        public async Task<ActionResult> UpdateSheduller([FromBody] TrainCreateRequest trainCreateRequest)
+        {
+            Log.Init(this.ToString(), nameof(UpdateSheduller));
+
+
+            TrainDTO trainDTO = trainCreateRequest.Train;
+            int isExist = await _context.TrainsShadule
+                .Include(x => x.Train)
+                .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                .CountAsync();
+            List<TrainsShaduleDTO> shadulesDTO = trainCreateRequest.TrainsShedullers;
+            try
+            {
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    if (isExist > 0)
+                    {
+                        List<TrainsShadule> trainsShadulesDelete = await _context.TrainsShadule
+                            .Include(x => x.Train)
+                            .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                            .ToListAsync();
+
+                        List<StationsShadule> stationsShadulesDelete = await _context.StationsShadules
+                            .Include(x => x.Train)
+                            .Where(x => x.Train.id == trainCreateRequest.Train.Id)
+                            .ToListAsync();
+                        _context.RemoveRange(stationsShadulesDelete);
+                        _context.RemoveRange(trainsShadulesDelete);
+
+                    }
+
+
+                    Train train = await _context.Trains.Where(x => x.id == trainDTO.Id).FirstOrDefaultAsync();
+
+                    List<TrainsShadule> trainsShadules = new List<TrainsShadule>();
+                    foreach (var item in shadulesDTO)
+                    {
+                        Stations stations = await _context.Stations
+                            .Include(x => x.UkrainsRailways)
+                            .Where(x => x.Name == item.NameStation).FirstOrDefaultAsync();
+                        TrainsShadule trainsShadule = new TrainsShadule();
+                        trainsShadule.Arrival = item.Arrival;
+                        trainsShadule.NumberTrain = item.NumberTrain;
+                        trainsShadule.Train = train;
+                        trainsShadule.Departure = item.Departure;
+                        trainsShadule.Stations = stations;
+
+                        StationsShadule stationsShadule = new StationsShadule();
+                        stationsShadule.Train = train;
+                        stationsShadule.NumberTrain = train.Number;
+                        stationsShadule.TimeOfArrive = trainsShadule.Arrival;
+                        stationsShadule.TimeOfDepet = trainsShadule.Departure;
+                        stationsShadule.IsUsing = true;
+                        stationsShadule.UzFilia = stations.Railway;
+                        stationsShadule.UkrainsRailways = stations.UkrainsRailways;
+                        stationsShadule.Stations = stations;
+                        stationsShadule.Station = stations.Name;
+
+
+                        if (train.TrainsShadules is null)
+                            train.TrainsShadules = new List<TrainsShadule>();
+
+                        train.TrainsShadules.Add(trainsShadule);
+
+                        if (stations.StationsShadules is null)
+                            stations.StationsShadules = new List<StationsShadule>();
+                        stations.StationsShadules.Add(stationsShadule);
+
+                        _context.TrainsShadule.Add(trainsShadule);
+                    }
+                }, IsolationLevel.Serializable);
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                Log.Wright($"Failed to save {ex.Message}");
+                Log.Exceptions($"{ex.Message}");
+                return BadRequest(ex.ToString());
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+
+
         [HttpPost("delete/{id}")]
         public async Task<ActionResult> DeleteConfirm(int id)
         {

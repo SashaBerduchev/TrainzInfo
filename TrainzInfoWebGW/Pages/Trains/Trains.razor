@@ -95,7 +95,7 @@ else
                             @if (context.TrainsShadulesCount > 0)
                             {
                                 <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Success" Size="Size.Small"
-                                OnClick="@(() => Nav.NavigateTo($"/trains/edit/{context.Id}"))" Title="Редагувати" />
+                                               OnClick="@(() => Nav.NavigateTo($"/trains-scheduler/edit/{context.Id}"))" Title="Редагувати" />
                             }
                             else
                             {

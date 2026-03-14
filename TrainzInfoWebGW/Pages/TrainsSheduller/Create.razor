@@ -1,159 +1,149 @@
 ﻿@page "/trainsshedules/create/{id:int}"
-@using SharedDTO.DTO.GetDTO
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject IJSRuntime JS
+@inject ISnackbar Snackbar
+
+
+<PageTitle>Розклад поїзда @train?.Number</PageTitle>
 
 @if (isLoading)
 {
-    <div class="d-flex justify-content-center align-items-center"
-         style="min-height: 60vh;">
-        <div class="spinner-border text-primary" role="status"></div>
+    <div class="d-flex justify-center align-center" style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
     </div>
 }
 else
 {
-    <h3>Додати розклад до поїзда: @train.Number</h3>
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mb-10">
+        <MudText Typo="Typo.h4" Class="fw-bold mb-4" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.EventNote" Size="Size.Large" Class="mr-2" />
+            Додати розклад до поїзда: @train?.Number
+        </MudText>
 
-    <!-- Таблиця для великих екранів -->
-    <div class="table-responsive d-none d-md-block">
-        <table class="table table-striped table-bordered text-center align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Назва станції</th>
-                    <th>Прибуття</th>
-                    <th>Відправлення</th>
-                    <th>Відстань</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in trainsShedullers)
-                {
-                    <tr>
-                        <td style="font-size:18px">
-                            @item.NameStation
-                        </td>
-                        <td>@item.Arrival</td>
-                        <td>@item.Departure</td>
-                        <td>@item.Distance</td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-lg cart-btn" @onclick="() => HandleDelete(item)">
-                                <i class="fa-solid fa-basket-shopping"></i>
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+        @* Таблиця розкладу *@
+        <MudTable Items="@trainsShedullers" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="4" Class="rounded-xl mb-8">
+            <HeaderContent>
+                <MudTh>Назва станції</MudTh>
+                <MudTh>Прибуття</MudTh>
+                <MudTh>Відправлення</MudTh>
+                <MudTh>Відстань</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Станція" Style="font-size:16px; font-weight: 500;">@context.NameStation</MudTd>
+                <MudTd DataLabel="Прибуття">@context.Arrival.ToString(@"hh\:mm")</MudTd>
+                <MudTd DataLabel="Відправлення">@context.Departure.ToString(@"hh\:mm")</MudTd>
+                <MudTd DataLabel="Відстань">@context.Distance км</MudTd>
+                <MudTd Style="text-align: right">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(() => HandleDelete(context))" Variant="Variant.Outlined" />
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Typo="Typo.body1" Class="pa-4 text-center">Розклад поки порожній. Додайте першу станцію.</MudText>
+            </NoRecordsContent>
+        </MudTable>
 
-    <NavigationLock ConfirmExternalNavigation="true" OnBeforeInternalNavigation="ConfirmNavigation" />
+        <NavigationLock ConfirmExternalNavigation="true" OnBeforeInternalNavigation="ConfirmNavigation" />
 
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-5">
-
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h5 class="mb-0">Додати станцію</h5>
-                </div>
-
-                <div class="card-body">
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="12" md="7">
+                <MudPaper Elevation="4" Class="pa-6 rounded-xl">
+                    <MudText Typo="Typo.h6" Class="mb-4 fw-bold">Додати станцію зупинки</MudText>
+                    
                     <EditForm Model="@trainsSheduller" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <MudStack Spacing="4">
 
-                        <!-- Станція -->
-                        <div class="mb-3 position-relative">
-                            <label class="form-label fw-bold">Станція</label>
+                            @* Автозаповнення станції *@
+                            <MudAutocomplete T="string" Label="Станція"
+                                             @bind-Value="station"
+                                             SearchFunc="@SearchStations"
+                                             Variant="Variant.Outlined"
+                                             Placeholder="Почніть вводити назву..."
+                                             ResetValueOnEmptyText="true"
+                                             AdornmentIcon="@Icons.Material.Filled.Place"
+                                             AdornmentColor="Color.Primary" />
 
-                            <InputText @bind-Value="station"
-                                       class="form-control"
-                                       placeholder="Почніть вводити назву..."
-                                       @oninput="OnInputChanged" />
+                            <MudGrid>
+                                @* Час прибуття *@
+                                <MudItem xs="12" sm="6">
+                                    <MudTimePicker Label="Час прибуття"
+                                                   @bind-Time="arrivalTime"
+                                                   Variant="Variant.Outlined"
+                                                   AmPm="false" />
+                                </MudItem>
 
-                            @if (filterStations?.Any() == true)
-                            {
-                                <ul class="list-group position-absolute w-100 shadow-sm"
-                                    style="z-index:1000; max-height:180px; overflow-y:auto;">
+                                @* Час відправки *@
+                                <MudItem xs="12" sm="6">
+                                    <MudTimePicker Label="Час відправки"
+                                                   @bind-Time="departureTime"
+                                                   Variant="Variant.Outlined"
+                                                   AmPm="false" />
+                                </MudItem>
+                            </MudGrid>
 
-                                    @foreach (var item in filterStations)
-                                    {
-                                        <li class="list-group-train-item"
-                                            style="cursor:pointer;"
-                                            @onclick="() => SelectStation(item)">
-                                            @item
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-
-                        <!-- Час прибуття -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Час прибуття</label>
-                            <input type="time"
-                                   class="form-control"
-                                   value="@trainsSheduller.Arrival.ToString(@"hh\:mm")"
-                                   @onchange="OnChangeArrival" />
-                        </div>
-
-                        <!-- Час відправки -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Час відправки</label>
-                            <input type="time"
-                                   class="form-control"
-                                   value="@trainsSheduller.Departure.ToString(@"hh\:mm")"
-                                   @onchange="OnChangeDeparture" />
-                        </div>
-
-                        <!-- Кнопка зберегти -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg" @onclick="HandleValidSubmit">
-                                💾 Зберегти станцію
-                            </button>
-                        </div>
-
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       Size="Size.Large"
+                                       StartIcon="@Icons.Material.Filled.AddLocationAlt"
+                                       Class="mt-2 rounded-lg py-3 shadow-lg">
+                                Зберегти станцію в список
+                            </MudButton>
+                        </MudStack>
                     </EditForm>
-                </div>
-            </div>
+                </MudPaper>
 
-            <!-- Кнопка Застосувати -->
-            <div class="d-grid mt-3">
-                <div class="d-flex gap-2 mt-3">
-                    <button type="button" class="btn btn-success btn-lg" @onclick="@(() => SaveChanges("apply"))">
-                        💾 Застосувати
-                    </button>
+                @* Кнопки фінального збереження *@
+                <MudStack Row="true" Spacing="2" Class="mt-6">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Success"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               OnClick="@(() => SaveChanges("apply"))"
+                               Class="rounded-lg py-3">
+                        Застосувати
+                    </MudButton>
 
-                    <button type="button" class="btn btn-success btn-lg" @onclick="@(() => SaveChanges("ok"))">
-                        ✅ Ок
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Success"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.CheckCircle"
+                               OnClick="@(() => SaveChanges("ok"))"
+                               Class="rounded-lg py-3">
+                        ОК
+                    </MudButton>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
 }
 
-@if (ErrorMessage != "")
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-    <div class="alert alert-danger mt-2">
-        <p>@ErrorMessage</p>
-    </div>
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 mx-4 rounded-lg">
+        Помилка збереження: @ErrorMessage
+    </MudAlert>
 }
+
 
 <script>
-    window.preventUnload = function () {
-        window.onbeforeunload = function (e) {
-            e.preventDefault();
-            e.returnValue = '';
-            console.log("preventUnload")
+    window.preventUnload = () => {
+            window.onbeforeunload = (e) => {
+                e.preventDefault();
+                e.returnValue = '';
+            };
+            console.log("Protection Enabled");
         };
-    };
 
-    window.allowUnload = function () {
-            console.log("allowUnload")
-        window.onbeforeunload = null;
-    };
+        window.allowUnload = () => {
+            window.onbeforeunload = null;
+            console.log("Protection Disabled");
+        };
 </script>
 
 
@@ -170,6 +160,18 @@ else
     private bool HasUnsavedChanges = false;
     private bool isSave = false;
     private bool isLoading = false;
+
+    private TimeSpan? arrivalTime
+    {
+        get => trainsSheduller.Arrival;
+        set => trainsSheduller.Arrival = value ?? TimeSpan.Zero;
+    }
+    private TimeSpan? departureTime
+    {
+        get => trainsSheduller.Departure;
+        set => trainsSheduller.Departure = value ?? TimeSpan.Zero;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         trainsSheduller = new TrainsShaduleDTO();
@@ -185,10 +187,18 @@ else
         isLoading = false;
     }
 
+    private async Task<IEnumerable<string>> SearchStations(string value, CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(value)) return new string[0];
+        // Викликай свій метод OnInputChanged або сервіс тут
+        return stations.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
     private async Task HandleValidSubmit()
     {
         await EnableProtection();
         HasUnsavedChanges = true;
+        trainsSheduller.NameStation = station;
         trainsSheduller.NumberTrain = train.Number.ToString();
         trainsShedullers.Add(trainsSheduller);
         StateHasChanged();
@@ -269,15 +279,25 @@ else
             return;
         }
         isSave = true;
-        if (submitAction == "ok")
+        try
         {
-            Console.WriteLine("SaveAndExit");
-            await SaveAndExit();
+            if (submitAction == "ok")
+            {
+                Console.WriteLine("SaveAndExit");
+                await SaveAndExit();
+                Snackbar.Add("Збережено", Severity.Success);
+            }
+            else
+            {
+                Console.WriteLine("SaveWithoutExit");
+                await SaveWithoutExit();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("SaveWithoutExit");
-            await SaveWithoutExit();
+            Console.WriteLine("Помилка при збереженні: " + ex.Message);
+            ErrorMessage = "Помилка при збереженні: " + ex.Message;
+            Snackbar.Add(ErrorMessage, Severity.Error);
         }
         isSave = false;
     }
