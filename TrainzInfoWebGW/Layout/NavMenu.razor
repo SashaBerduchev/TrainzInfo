@@ -5,9 +5,26 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 <MudNavMenu Bordered="true">
-    <div class="pa-4 d-flex align-center gap-3">
-        <MudIcon Icon="@Icons.Material.Filled.DirectionsTransit" Color="Color.Primary" Size="Size.Large" />
-        <MudText Typo="Typo.h6" Class="fw-bold">TrainzInfo</MudText>
+    <div class="pa-2 d-flex align-center gap-4">
+        @* Головне зображення сайту *@
+        <div class="relative">
+            <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+                      Alt="TrainzInfo Logo"
+                      Fluid="true"
+                      Class="rounded-circle shadow-sm border-2 border-solid mud-border-primary"
+                      Style="height: 50px; width: 50px; object-fit: cover; transition: transform 0.3s ease;"
+                      @onmouseover="e => { /* можна додати ефект */ }" />
+        </div>
+
+        @* Назва з невеликим відступом та акцентом *@
+        <div class="d-flex flex-column">
+            <MudText Typo="Typo.h5" Class="fw-bold mud-text-primary" Style="letter-spacing: 1px; line-height: 1;">
+                TrainzInfo
+            </MudText>
+            <MudText Typo="Typo.caption" Class="mud-text-secondary" Style="font-size: 0.7rem; text-transform: uppercase;">
+                Інформаційна система залізниці
+            </MudText>
+        </div>
     </div>
 
     @* Убрали жестко заданный белый цвет у разделителя *@
@@ -66,10 +83,7 @@
         </AuthorizeView>
     </div>
 
-    <div class="d-none d-md-flex justify-center pa-4 mt-auto">
-        <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
-                  Alt="TrainzInfo Logo" Fluid="true" Class="rounded-lg opacity-80" Style="max-height: 60px;" />
-    </div>
+   
 </MudNavMenu>
 @code {
     private bool isNavCollapsed = true;
