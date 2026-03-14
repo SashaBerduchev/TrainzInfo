@@ -250,7 +250,7 @@ namespace TrainzInfo.Controllers.Api
                 _context.Trains.Add(newTrain);
                 await _context.SaveChangesAsync();
                 Log.Wright("Successfully created new train.");
-                await _mail.SendTrainAddMail(newTrain.Number.ToString(), newTrain.StationFrom, newTrain.StationTo, user);
+                //await _mail.SendTrainAddMail(newTrain.Number.ToString(), newTrain.StationFrom, newTrain.StationTo, user);
                 Log.Finish();
                 return Ok(new { Message = "Train created successfully", TrainId = newTrain.id });
             }

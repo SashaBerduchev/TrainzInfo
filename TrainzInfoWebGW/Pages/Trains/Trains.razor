@@ -6,6 +6,12 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JS
 <h1 class="text-center my-4">Призначені поїзди</h1>
+@if(IsAdmin)
+{
+    <div class="d-flex justify-end mb-4">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddTrain">Додати поїзд</MudButton>
+    </div>
+}
 
 @if (isLoad)
 {

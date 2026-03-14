@@ -3,101 +3,92 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject ISnackbar Snackbar
 
-<h3>Поїзд</h3>
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl">
+        <MudText Typo="Typo.h4" Class="fw-bold mb-6 text-center" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Train" Size="Size.Large" Class="mr-2" />
+            Створити поїзд
+        </MudText>
 
-<div class="row">
-    <div class="col-md-4">
         <EditForm Model="@trainDTO" OnValidSubmit="HandleValidSubmit">
             <DataAnnotationsValidator />
-            @* <ValidationSummary /> *@
             
-            <div class="form-group">
-                <label>Номер поїзда</label>
-                <InputNumber @bind-Value="trainDTO.Number" class="form-control" />
-                <ValidationMessage For="@(() => trainDTO.Number)" />
-            </div>
+            <MudStack Spacing="4">
+                
+                @* Номер поїзда *@
+                <MudNumericField Label="Номер поїзда"
+                                 @bind-Value="trainDTO.Number"
+                                 Variant="Variant.Outlined"
+                                 For="@(() => trainDTO.Number)"
+                                 HideSpinButtons="false" />
 
-            <!-- Станція з автодоповненням -->
-               <div class="form-group position-relative">
-                <label>Станція відправлення</label>
-                <InputText Value="@stationFrom"
-                           ValueChanged="SelectStationsFrom"
-                           ValueExpression="() => stationFrom"
-                           class="form-control"
-                           placeholder="Почніть вводити станцію..."
-                           @oninput="OnInputChangedStationFrom" />
+                @* Станція відправлення - Autocomplete *@
+                <MudAutocomplete T="string" Label="Станція відправлення"
+                                 @bind-Value="trainDTO.StationFrom"
+                                 SearchFunc="@SearchStations"
+                                 Variant="Variant.Outlined"
+                                 Placeholder="Почніть вводити станцію..."
+                                 ResetValueOnEmptyText="true"
+                                 CoerceText="true" CoerceValue="true"
+                                 AdornmentIcon="@Icons.Material.Filled.DepartureBoard"
+                                 AdornmentColor="Color.Primary"
+                                 For="@(() => trainDTO.StationFrom)" />
 
-                @if (filterstationsFrom?.Any() == true)
-                {
-                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
-                        @foreach (var item in filterstationsFrom)
-                        {
-                            <li class="list-group-train-item"
-                                style="cursor:pointer;"
-                                @onclick="() => SelectStationsFrom(item)">
-                                @item
-                            </li>
-                        }
-                    </ul>
-                }
-                <ValidationMessage For="@(() => trainDTO.StationFrom)" />
-            </div>
+                @* Станція прибуття - Autocomplete *@
+                <MudAutocomplete T="string" Label="Станція прибуття"
+                                 @bind-Value="trainDTO.StationTo"
+                                 SearchFunc="@SearchStations"
+                                 Variant="Variant.Outlined"
+                                 Placeholder="Почніть вводити станцію..."
+                                 ResetValueOnEmptyText="true"
+                                 CoerceText="true" CoerceValue="true"
+                                 AdornmentIcon="@Icons.Material.Filled.Adb"
+                                 AdornmentColor="Color.Secondary"
+                                 For="@(() => trainDTO.StationTo)" />
 
-            <div class="form-group position-relative">
-                <label>Станція прибуття</label>
-                <InputText Value="@stationTo"
-                           ValueChanged="SelectStationsTo"
-                           ValueExpression="() => stationTo"
-                    class="form-control"
-                    placeholder="Почніть вводити станцію..."
-                    @oninput="OnInputChangedStationTo" />
-
-                @if (filterstationsTo?.Any() == true)
-                {
-                    <ul class="list-group position-absolute w-100" style="z-index:1000;">
-                        @foreach (var item in filterstationsTo)
-                        {
-                            <li class="list-group-train-item"
-                                style="cursor:pointer;"
-                                @onclick="() => SelectStationsTo(item)">
-                                @item
-                            </li>
-                        }
-                    </ul>
-                }
-                <ValidationMessage For="@(() => trainDTO.StationTo)" />
-            </div>
-            <div class="form-group">
-                <label>Тип поїзда</label>
-                <InputSelect @bind-Value="trainDTO.PassTrainType" class="form-control">
+                @* Тип поїзда *@
+                <MudSelect T="string" Label="Тип поїзда"
+                           @bind-Value="trainDTO.PassTrainType"
+                           Variant="Variant.Outlined"
+                           AnchorOrigin="Origin.BottomCenter"
+                           For="@(() => trainDTO.PassTrainType)">
                     @foreach (var item in TypesList)
                     {
-                        <option value="@item">@item</option>
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
                     }
-                </InputSelect>
-                <ValidationMessage For="@(() => trainDTO.PassTrainType)" />
-            </div>
-            <div class="form-group">
-                <label>Назва поїзда якщо фірмовий</label>
-                <InputText @bind-Value="trainDTO.NameOfTrain" class="form-control" />
-                <ValidationMessage For="@(() => trainDTO.NameOfTrain)" />
-            </div>
-            <!-- Кнопка -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
-    </div>
-</div>
-@if (ErrorMessage != "")
-{
-    <H3>"Помилка збереження, зверніться до адміністратора";</H3>
-    <div class="alert alert-danger mt-2">
-        <p>@ErrorMessage</p>
-    </div>
-}
+                </MudSelect>
 
+                @* Назва поїзда *@
+                <MudTextField Label="Назва поїзда (якщо фірмовий)"
+                              @bind-Value="trainDTO.NameOfTrain"
+                              Variant="Variant.Outlined"
+                              Placeholder="Напр. Оберіг"
+                              For="@(() => trainDTO.NameOfTrain)" />
+
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg mt-2">
+                        Помилка збереження: @ErrorMessage
+                    </MudAlert>
+                }
+
+                @* Кнопка дії *@
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           Class="mt-4 rounded-lg py-3 fw-bold shadow-lg">
+                    Створити поїзд
+                </MudButton>
+
+            </MudStack>
+        </EditForm>
+    </MudPaper>
+</MudContainer>
 
 @code {
     private string ErrorMessage = "";
@@ -116,6 +107,18 @@
         stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/getnamesstations");
         TypesList.Add("");
         TypesList.AddRange(await Http.GetFromJsonAsync<List<string>>($"api/trains/gettypes"));
+    }
+
+
+    private async Task<IEnumerable<string>> SearchStations(string value, CancellationToken token)
+    {
+        // Якщо пусто — нічого не показуємо, або повертаємо весь список
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+
+        // Тут має бути виклик твого сервісу або фільтрація списку
+        // Наприклад: return StationsList.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        return stations.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
     private async Task OnInputChangedStationFrom(ChangeEventArgs e)
