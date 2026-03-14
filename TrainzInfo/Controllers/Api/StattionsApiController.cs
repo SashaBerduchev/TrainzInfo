@@ -423,24 +423,23 @@ namespace TrainzInfo.Controllers.Api
 
         }
 
-        [HttpGet("getedit/{id}")]
-        public async Task<ActionResult> GetEditStation(int id)
+        [HttpGet("getedit/{Id}")]
+        public async Task<ActionResult> GetEditStation([FromRoute] int Id)
         {
             Log.Init(this.ToString(), nameof(GetEditStation));
 
             try
             {
-                StationsDTO station = await _context.Stations
-                    .Where(s => s.id == id)
-                    .Select(s => new StationsDTO
+                StationEditDTO station = await _context.Stations
+                    .Where(s => s.id == Id)
+                    .Select(s => new StationEditDTO
                     {
-                        id = s.id,
+                        Id = s.id,
                         Name = s.Name,
-                        DopImgSrc = s.DopImgSrc,
-                        DopImgSrcSec = s.DopImgSrcSec,
-                        DopImgSrcThd = s.DopImgSrcThd,
-                        ImageMimeTypeOfData = s.ImageMimeTypeOfData,
-                        StationImages = s.StationImages.Image != null
+                        Citys = s.City,
+                        Oblasts = s.Oblast,
+                        UkrainsRailways = s.Railway,
+                        OldImage = s.StationImages.Image != null
                                 ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
                                 : null,
                     })
@@ -460,8 +459,8 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpPost("edit")]
-        public async Task<ActionResult> EditStation([FromBody] StationsDTO stationDto)
+        [HttpPut("edit")]
+        public async Task<ActionResult> EditStation([FromBody] StationEditDTO stationDto)
         {
             Log.Init(this.ToString(), nameof(EditStation));
 
@@ -470,24 +469,42 @@ namespace TrainzInfo.Controllers.Api
                 Log.Wright("Editing station in database");
                 var station = await _context.Stations
                     .Include(s => s.StationImages)
-                    .FirstOrDefaultAsync(s => s.id == stationDto.id);
+                    .FirstOrDefaultAsync(s => s.id == stationDto.Id);
                 if (station == null)
                 {
                     Log.Wright("Station not found in database");
                     return NotFound("Станцію не знайдено");
                 }
-                station.Name = stationDto.Name;
-                station.DopImgSrc = stationDto.DopImgSrc;
-                station.DopImgSrcSec = stationDto.DopImgSrcSec;
-                station.DopImgSrcThd = stationDto.DopImgSrcThd;
-                station.ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData;
-                station.Image = stationDto.Image != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null;
-                if (station.StationImages != null)
+                City city = await _context.Cities.Where(c => c.Name == stationDto.Citys).FirstOrDefaultAsync();
+                Oblast oblast = await _context.Oblasts.Where(o => o.Name == stationDto.Oblasts).FirstOrDefaultAsync();
+                UkrainsRailways ukrainsRailways = await _context.UkrainsRailways.Where(u => u.Name == stationDto.UkrainsRailways).FirstOrDefaultAsync();
+
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    station.StationImages.Image = stationDto.StationImages != null ? Convert.FromBase64String(stationDto.Image.Split(',')[1]) : null;
-                    station.StationImages.ImageMimeTypeOfData = stationDto.ImageMimeTypeOfData;
-                }
-                await _context.SaveChangesAsync();
+                    station.Name = stationDto.Name;
+                    station.City = stationDto.Citys;
+                    station.Citys = city;
+                    station.Oblast = stationDto.Oblasts;
+                    station.Oblasts = oblast;
+                    station.UkrainsRailways = ukrainsRailways;
+                    if(station.StationImages != null)
+                    {
+                        StationImages stationImages = station.StationImages;
+                        stationImages.Image = stationDto.NewImage != null ? Convert.FromBase64String(stationDto.NewImage.Split(',')[1]) : null;
+                        stationImages.ImageMimeTypeOfData = stationDto.NewImageType;
+                        _context.StationImages.Update(stationImages);
+                    }
+                    else
+                    {
+                        StationImages stationImages = new StationImages();
+                        stationImages.Name = stationDto.Name;
+                        stationImages.Image = stationDto.NewImage != null ? Convert.FromBase64String(stationDto.NewImage.Split(',')[1]) : null;
+                        stationImages.ImageMimeTypeOfData = stationDto.NewImageType;
+                        station.StationImages = stationImages;
+                    }
+                    _context.Stations.Update(station);
+                }, IsolationLevel.Serializable);
+                _stationsCache.Clear();
                 Log.Wright("Station successfully edited in database");
                 return Ok();
             }
