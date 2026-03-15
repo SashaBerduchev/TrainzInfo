@@ -14,21 +14,16 @@
                    Class="absolute inset-0 z-10 w-100 h-100 pa-0 d-flex align-center justify-center"
                    Style="text-transform: none; overflow: hidden; min-width: 100%;">
 
-            @* Задній план - розмиття *@
+            @* Задній план - розмиття для заповнення фону *@
             <div class="absolute inset-0 z-0"
                  style="background: url('https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto') center/cover no-repeat; filter: blur(10px) brightness(0.5); width: 100%; height: 100%;">
             </div>
 
-            @* Основне зображення - Чітко по центру *@
+            @* Основне зображення - без градієнта *@
             <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
                       Alt="TrainzInfo Header"
-                      Class="z-10 w-100 h-100 opacity-90 transition-zoom"
+                      Class="z-10 w-100 h-100 opacity-95 transition-zoom"
                       Style="object-fit: cover; object-position: center; position: absolute; top: 0; left: 0;" />
-
-            @* Градієнт поверх *@
-            <div class="absolute inset-0 z-20"
-                 style="background: linear-gradient(180deg, rgba(39,39,47,0.8) 0%, rgba(39,39,47,0) 100%); width: 100%; height: 100%;">
-            </div>
         </MudButton>
 
     </div>
