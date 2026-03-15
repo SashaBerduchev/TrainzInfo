@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ApplicationDBContext;
+using BackgroundServices;
+using Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -9,18 +13,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Services;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TrainzInfo.Tools.BackgroundServices;
 using TrainzInfo.Tools.JWT;
 using TrainzInfo.Tools.Mail;
-using ApplicationDBContext;
-using BackgroundServices;
-using Logging;
-using Services;
 
 namespace TrainzInfo
 {
@@ -40,7 +44,7 @@ namespace TrainzInfo
         public void ConfigureServices(IServiceCollection services)
         {
             Log.Init("Startup", nameof(ConfigureServices));
-            
+
             Log.Wright("Try add services");
             services.AddControllers();
 
@@ -179,7 +183,7 @@ namespace TrainzInfo
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             Log.Init("Startup", nameof(Configure));
-            
+
             Log.Wright("Try configure app");
             if (env.IsDevelopment())
             {
@@ -192,7 +196,70 @@ namespace TrainzInfo
             }
 
             app.UseHttpsRedirection();
+
+            app.Use(async (context, next) =>
+            {
+                var path = context.Request.Path.Value?.ToLower();
+
+                if (path != null && path.Contains("/api/"))
+                {
+                    await next();
+                    return;
+                }
+
+                var segments = new Dictionary<string, (string Title, string ApiPath)>
+                    {
+                        { "/locomotives/details/", ("Локомотив", "locomotives") },
+                        { "/diesels/details/", ("Дизель-поїзд", "diesels") },
+                        { "/electrics/details/", ("Електропоїзд", "electrics") },
+                        { "/stations/details/", ("Станція", "stations") }
+                    };
+
+                var matchedKey = segments.Keys.FirstOrDefault(s => path != null && path.Contains(s));
+
+                if (matchedKey != null)
+                {
+                    // Отримуємо ID правильно, ігноруючи можливий '/' в кінці
+                    var id = path.TrimEnd('/').Split('/').Last();
+
+                    // Переконуємось, що ID - це число (щоб не зламати API)
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        var env = context.RequestServices.GetRequiredService<IWebHostEnvironment>();
+                        var filePath = Path.Combine(env.ContentRootPath, "..", "TrainzInfoWebGW", "wwwroot", "index.html");
+
+                        if (File.Exists(filePath))
+                        {
+                            var (categoryName, apiPrefix) = segments[matchedKey];
+                            string imageUrl = $"https://www.trainzinfo.com.ua/api/{apiPrefix}/{id}/image?width=1000";
+
+                            var html = await File.ReadAllTextAsync(filePath);
+
+                            // Формуємо блок тегів (краще в один рядок або з правильними переносами)
+                            string metaTags = $@"
+                                        <meta property=""og:title"" content=""{categoryName} | TrainzInfo"" />
+                                        <meta property=""og:description"" content=""Детальна інформація та фото на TrainzInfo"" />
+                                        <meta property=""og:image"" content=""{imageUrl}"" />
+                                        <meta property=""og:image:type"" content=""image/jpeg"" />
+                                        <meta property=""og:url"" content=""https://www.trainzinfo.com.ua{path}"" />
+                                        <meta property=""og:type"" content=""website"" />
+                                        <meta name=""twitter:card"" content=""summary_large_image"" />
+                                        <meta name=""twitter:image"" content=""{imageUrl}"" />";
+
+                            html = html.Replace("</head>", $"{metaTags}</head>");
+
+                            context.Response.ContentType = "text/html";
+                            await context.Response.WriteAsync(html);
+                            return;
+                        }
+                    }
+                }
+
+                await next();
+            });
+
             app.UseBlazorFrameworkFiles();
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -224,10 +291,10 @@ namespace TrainzInfo
                 endpoints.MapControllers();          // API
                 endpoints.MapFallbackToFile("index.html"); // Blazor WASM
             });
-
+           
             var endpointDataSource = app.ApplicationServices.GetRequiredService<EndpointDataSource>();
             Log.Wright("Try get all registered endpoints");
-            
+
             foreach (var endpoint in endpointDataSource.Endpoints)
             {
                 Log.Wright($"Registered endpoint: {endpoint.DisplayName}");
@@ -238,7 +305,7 @@ namespace TrainzInfo
                 var serviceProvider = scope.ServiceProvider;
                 CreateRoles(serviceProvider).Wait();
             }
-            
+
             var supportedCultures = new[] { new CultureInfo("uk-UA") };
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
@@ -246,8 +313,8 @@ namespace TrainzInfo
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-            
-            
+
+
             Log.Finish();
 
         }
