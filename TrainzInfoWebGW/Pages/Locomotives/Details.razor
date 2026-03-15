@@ -7,7 +7,15 @@
 @inject IJSRuntime JS
 
 <PageTitle>Локомотив @Locomotive?.Seria</PageTitle>
-
+<HeadContent>
+    @if (Locomotive != null)
+    {
+        <meta property="og:title" content="@($"Локомотив {Locomotive.Seria}-{Locomotive.Number}")" />
+        <meta property="og:description" content="Детальна інформація на TrainzInfo" />
+        <meta property="og:image" content="@($"https://www.trainzinfo.com.ua/api/locomotives/{Locomotive.Id}/image?width=1000")" />
+        <meta property="og:url" content="@($"https://www.trainzinfo.com.ua/locomotives/details/{Id}")" />
+    }
+</HeadContent>
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
     <MudText Typo="Typo.h3" Color="Color.Primary" Class="mb-6">@Title</MudText>
 

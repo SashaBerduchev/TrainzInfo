@@ -7,6 +7,17 @@
 @inject IJSRuntime JS
 <PageTitle>Станція @stations?.Name</PageTitle>
 
+<HeadContent>
+    @if (stations != null)
+    {
+        <meta property="og:title" content="@($"Станція {stations.Name}, {stations.Oblasts} область, місто {stations.Citys}")" />
+        <meta property="og:description" content="Детальна інформація на TrainzInfo" />
+        <meta property="og:image" content="@($"https://www.trainzinfo.com.ua/api/locomotives/{stations.id}/image?width=1000")" />
+        <meta property="og:url" content="@($"https://www.trainzinfo.com.ua/stations/details/{Id}")" />
+    }
+</HeadContent>
+
+
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
     <MudText Typo="Typo.h3" Color="Color.Primary" Class="news-page-title mb-6 fw-bold">@stations?.Name</MudText>
 
