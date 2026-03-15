@@ -4,32 +4,38 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient Http
 @inject NavigationManager Nav
+
+
 <MudNavMenu Bordered="true">
     <div class="mud-navmenu-header d-flex align-center justify-center relative mb-3 overflow-hidden"
          style="height: 140px; border-bottom: 1px solid rgba(255,255,255,0.1);">
     
-        @* Задній план - розмита версія фото для глибини (optional, but cool) *@
-        <div class="absolute inset-0 z-0"
-             style="background: url('https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto') center/cover no-repeat; filter: blur(10px) brightness(0.5);">
-        </div>
+        <MudButton OnClick="@(() => Nav.NavigateTo("/"))"
+                   Class="absolute inset-0 z-10 w-100 h-100 pa-0 d-flex align-center justify-center"
+                   Style="text-transform: none; overflow: hidden; min-width: 100%;">
 
-        @* Основне зображення на весь розмір *@
-        <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
-                  Alt="TrainzInfo Header"
-                  Class="absolute inset-0 z-10 w-100 h-100 opacity-90"
-                  Style="object-fit: cover; object-position: center;" />
+            @* Задній план - розмиття *@
+            <div class="absolute inset-0 z-0"
+                 style="background: url('https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto') center/cover no-repeat; filter: blur(10px) brightness(0.5); width: 100%; height: 100%;">
+            </div>
 
-        @* Легкий градієнт зверху для кращого сприйняття (щоб не зливалося з темною темою) *@
-        <div class="absolute inset-0 z-20"
-             style="background: linear-gradient(180deg, rgba(39,39,47,0.8) 0%, rgba(39,39,47,0) 100%);">
-        </div>
+            @* Основне зображення - Чітко по центру *@
+            <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+                      Alt="TrainzInfo Header"
+                      Class="z-10 w-100 h-100 opacity-90 transition-zoom"
+                      Style="object-fit: cover; object-position: center; position: absolute; top: 0; left: 0;" />
+
+            @* Градієнт поверх *@
+            <div class="absolute inset-0 z-20"
+                 style="background: linear-gradient(180deg, rgba(39,39,47,0.8) 0%, rgba(39,39,47,0) 100%); width: 100%; height: 100%;">
+            </div>
+        </MudButton>
 
     </div>
-
     @* Убрали жестко заданный белый цвет у разделителя *@
     <MudDivider Class="mb-4" />
 
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Головна</MudNavLink>
+    @* <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Головна</MudNavLink> *@
 
     <MudNavLink Href="ukrains-railways" Icon="@Icons.Material.Filled.Map" IconColor="Color.Inherit" Class="py-3" Style="font-size: 1.1rem;">Українська залізниця</MudNavLink>
 
@@ -97,7 +103,7 @@
     protected override async Task OnInitializedAsync()
     {
         AuthStateProvider.AuthenticationStateChanged += AuthStateChanged;
-        await((CustomAuthStateProvider)AuthStateProvider).CheckAuthenticationAsync();
+        await ((CustomAuthStateProvider)AuthStateProvider).CheckAuthenticationAsync();
     }
 
     private async void AuthStateChanged(Task<AuthenticationState> task)
