@@ -22,7 +22,7 @@ else
         </MudText>
 
         @* Контейнер для перетягування *@
-        <MudDropContainer T="TrainsShaduleDTO" Items="@trainsShedullers" ItemsSelector="@((item, dropzone) => true)" ItemDropped="ItemUpdated" Class="d-flex flex-column gap-2 mb-8">
+        <MudDropContainer @ref="dropContainer" T="TrainsShaduleDTO" Items="@trainsShedullers" ItemsSelector="@((item, dropzone) => true)" ItemDropped="ItemUpdated" Class="d-flex flex-column gap-2 mb-8">
             <ChildContent>
                 <MudDropZone T="TrainsShaduleDTO" Identifier="schedule" Class="rounded-lg pa-2 mud-bg-background-grey" Style="min-height: 50px;" />
             </ChildContent>
@@ -73,7 +73,7 @@ else
 
 @code {
     [Parameter] public int Id { get; set; } // ID поїзда
-
+    private MudDropContainer<TrainsShaduleDTO> dropContainer;
     private bool isLoading = true;
     private bool HasUnsavedChanges = false;
     private string ErrorMessage = "";
@@ -157,17 +157,28 @@ else
         HasUnsavedChanges = true;
         trainsSheduller.NameStation = station;
         trainsSheduller.NumberTrain = train.Number.ToString();
-        trainsShedullers.Add(trainsSheduller);
+        trainsShedullers.Add(new TrainsShaduleDTO
+        {
+            NameStation = trainsSheduller.NameStation,
+            NumberTrain = train.Number.ToString(),
+            Arrival = trainsSheduller.Arrival,
+            Departure = trainsSheduller.Departure,
+            Distance = trainsSheduller.Distance
+        });
 
+        Console.WriteLine($"Додано зупинку: {trainsSheduller.NameStation}, Прибуття: {trainsSheduller.Arrival}, Відправлення: {trainsSheduller.Departure}, Км: {trainsSheduller.Distance}");
         // Скидаємо форму для наступної зупинки
         trainsSheduller = new TrainsShaduleDTO();
+        trainsShedullers = trainsShedullers.ToList();
         station = "";
+        dropContainer?.Refresh();
         StateHasChanged();
     }
 
     private void HandleDelete(TrainsShaduleDTO item)
     {
         trainsShedullers.Remove(item);
+        dropContainer?.Refresh();
         HasUnsavedChanges = true;
     }
 
@@ -188,6 +199,7 @@ else
             else
             {
                 ErrorMessage = await response.Content.ReadAsStringAsync();
+                Snackbar.Add(ErrorMessage, Severity.Error);
             }
         }
         catch (Exception ex)
