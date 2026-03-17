@@ -5,15 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using TrainzInfo.Models;
-using TrainzInfo.Tools;
 using ApplicationDBContext;
 using Logging;
 using ModelDB.Models.Information.Additional;
 using ModelDB.Models.Information.Main;
 using SharedDTO.DTO.GetDTO;
 using SharedDTO.DTO.SetDTO;
+using Services;
+using TrainzInfo.Tools.DB;
+using System.Data;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -24,11 +24,12 @@ namespace TrainzInfo.Controllers.Api
 
         public readonly ApplicationContext _context;
         public readonly UserManager<IdentityUser> _userManager;
-
-        public StationInfoApiController(ApplicationContext context, UserManager<IdentityUser> userManager) : base(userManager, context)
+        public readonly StationsCacheService _stationsCache;
+        public StationInfoApiController(ApplicationContext context, UserManager<IdentityUser> userManager, StationsCacheService stationsCache) : base(userManager, context)
         {
             _userManager = userManager;
             _context = context;
+            _stationsCache = stationsCache;
         }
 
         [HttpGet("getinfo")]
@@ -59,15 +60,18 @@ namespace TrainzInfo.Controllers.Api
                     return NotFound($"Station with name {stationInfo.Name} not found.");
                 }
 
-                StationInfo newStationInfo = new StationInfo
+                await _context.ExecuteInTransactionAsync(async () =>
                 {
-                    BaseInfo = stationInfo.BaseInfo,
-                    AllInfo = stationInfo.AllInfo,
-                    Name = stations.Name
-                };
-                _context.StationInfos.Add(newStationInfo);
-                stations.StationInfo = newStationInfo;
-                await _context.SaveChangesAsync();
+                    StationInfo newStationInfo = new StationInfo
+                    {
+                        BaseInfo = stationInfo.BaseInfo,
+                        AllInfo = stationInfo.AllInfo,
+                        Name = stations.Name
+                    };
+                    _context.StationInfos.Add(newStationInfo);
+                    stations.StationInfo = newStationInfo;
+                }, IsolationLevel.ReadCommitted);
+                _stationsCache.Clear();
                 return Ok();
             }
             catch (Exception ex)

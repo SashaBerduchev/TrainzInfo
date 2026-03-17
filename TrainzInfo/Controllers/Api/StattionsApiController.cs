@@ -22,21 +22,25 @@ using ModelDB.Models.Information.Main;
 using Services;
 using SharedDTO.DTO.GetDTO;
 using Image = SixLabors.ImageSharp.Image;
+using Microsoft.AspNetCore.Identity;
 
 namespace TrainzInfo.Controllers.Api
 {
     [Route("api/stations")]
-    public class StattionsApiController : Controller
+    public class StattionsApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
         private CancellationTokenSource _cancellationTokenSource = new();
         private IMemoryCache _cache;
         private readonly StationsCacheService _stationsCache;
-        public StattionsApiController(ApplicationContext context, IMemoryCache cache, StationsCacheService stationsCache)
+        private readonly UserManager<IdentityUser> _userManager;
+        public StattionsApiController(ApplicationContext context, IMemoryCache cache, StationsCacheService stationsCache, UserManager<IdentityUser> userManager)
+            :base(userManager, context)
         {
             _context = context;
             _cache = cache;
             _stationsCache = stationsCache;
+            _userManager = userManager;
         }
 
         [HttpGet("get-stations")]

@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-
-using TrainzInfo.Models;
-using TrainzInfo.Tools;
 using TrainzInfo.Tools.DB;
 using TrainzInfo.Tools.RequestDTO;
 using ApplicationDBContext;
@@ -16,16 +12,20 @@ using Logging;
 using ModelDB.Models.Information.Main;
 using ModelDB.Models.Trains;
 using SharedDTO.DTO.GetDTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace TrainzInfo.Controllers.Api
 {
     [ApiController]
     [Route("api/trainsshaduller")]
-    public class TrainsShadulesApiController : Controller
+    public class TrainsShadulesApiController : BaseApiController
     {
         private readonly ApplicationContext _context;
-        public TrainsShadulesApiController(ApplicationContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+        public TrainsShadulesApiController(ApplicationContext context, UserManager<IdentityUser> userManager)
+            : base(userManager, context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
