@@ -202,7 +202,36 @@
 
         await CheckRoles();
         // Завантаження першої сторінки електропоїздів
-        await Load();
+        var queryStr = QueryHelpers.ParseQuery(uri.Query);
+        bool hasFilter = false;
+
+        if (queryStr.TryGetValue("filia", out var filia))
+        {
+            SelectedFilia = filia.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("depot", out var depo))
+        {
+            SelectedDepot = depo.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("name", out var name))
+        {
+            SelectedName = name.ToString();
+            hasFilter = true;
+        }
+
+        // Викликаємо фільтр тільки один раз, якщо хоча б один параметр знайдено
+        if (hasFilter)
+        {
+            await ApplyFilter();
+        }
+        else
+        {
+            await Load();
+        }
 
         // Підписка на JS скрол
         await JS.InvokeVoidAsync("addElectricsScrollListener", DotNetObjectReference.Create(this));
@@ -295,18 +324,33 @@
     private async Task OnDepotChanged(string value)
     {
         SelectedDepot = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["depot"] = string.IsNullOrEmpty(SelectedDepot) ? null : SelectedDepot
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
     }
 
     private async Task OnNameChanged(string value)
     {
         SelectedName = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["name"] = string.IsNullOrEmpty(SelectedName) ? null : SelectedName
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
     }
 
     private async Task OnFiliaChanged(string value)
     {
         SelectedFilia = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["filia"] = string.IsNullOrEmpty(SelectedFilia) ? null : SelectedFilia
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
     }
 
@@ -321,7 +365,7 @@
         DepotList.Clear();
         FiliaList.Clear();
         await Load();                 // загружаем первую страницу
-        await JS.InvokeVoidAsync("revealNewElectricTrainCards");
+        //await JS.InvokeVoidAsync("revealNewElectricTrainCards");
         StateHasChanged();
     }
 

@@ -395,38 +395,54 @@ namespace TrainzInfo.Controllers.Api
         [HttpGet("getedit/{Id}")]
         public async Task<ActionResult> GetEdit([FromRoute] int Id)
         {
-            var electricTrain = await _context.Electrics
-                .Include(x => x.DepotList)
-                .Include(p => p.PlantsCreate)
-                .Include(k => k.PlantsKvr)
-                .Include(c => c.City)
-                    .ThenInclude(o => o.Oblasts)
-                .Include(u => u.DepotList)
-                    .ThenInclude(o => o.UkrainsRailway)
-                .Include(t => t.Trains)
-                .Include(e => e.ElectrickTrainzInformation)
-                .Where(x => x.id == Id)
-                .FirstOrDefaultAsync();
-            if (electricTrain == null) return NotFound();
-            ElectricTrainSetDTO electricTrainSetDTO = new ElectricTrainSetDTO
+            Log.Init(this.ToString(), nameof(GetEdit));
+
+            Log.Wright("Try load data");
+            try
             {
-                id = electricTrain.id,
-                Name = electricTrain.Name,
-                Model = electricTrain.Model,
-                MaxSpeed = electricTrain.MaxSpeed,
-                Image = electricTrain.Image != null
-                            ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
-                            : null,
-                ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
-                DepotList = electricTrain.DepotList.Name
-            };
-            return Ok(electricTrainSetDTO);
+                var electricTrain = await _context.Electrics
+                    .Include(x => x.DepotList)
+                    .Include(p => p.PlantsCreate)
+                    .Include(k => k.PlantsKvr)
+                    .Include(c => c.City)
+                        .ThenInclude(o => o.Oblasts)
+                    .Include(u => u.DepotList)
+                        .ThenInclude(o => o.UkrainsRailway)
+                    .Include(t => t.Trains)
+                    .Include(e => e.ElectrickTrainzInformation)
+                    .Where(x => x.id == Id)
+                    .FirstOrDefaultAsync();
+                if (electricTrain == null) return NotFound();
+                ElectricTrainSetDTO electricTrainSetDTO = new ElectricTrainSetDTO
+                {
+                    id = electricTrain.id,
+                    Name = electricTrain.Name,
+                    Model = electricTrain.Model,
+                    MaxSpeed = electricTrain.MaxSpeed,
+                    Image = electricTrain.Image != null
+                                ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
+                                : null,
+                    ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
+                    DepotList = electricTrain.DepotList.Name
+                };
+                Log.Wright("Data loadet");
+                return Ok(electricTrainSetDTO);
+            }catch(Exception exp)
+            {
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(GetEdit)}: {exp.ToString()} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(GetEdit)}: {exp.Message} ");
+                return StatusCode(500, "Internal server error");
+            }
+            finally
+            {
+                Log.Finish();
+            }
         }
 
         [HttpPost("update")]
-        public async Task<ActionResult> Edit([FromBody] ElectricTrainSetDTO electricTrainDTO)
+        public async Task<ActionResult> Update([FromBody] ElectricTrainSetDTO electricTrainDTO)
         {
-            Log.Init(this.ToString(), nameof(Edit));
+            Log.Init(this.ToString(), nameof(Update));
 
             Log.Wright("Edit electric train");
             try
@@ -448,13 +464,14 @@ namespace TrainzInfo.Controllers.Api
                     electricTrain.DepotCity = city.Name;
                     _context.Electrics.Update(electricTrain);
                 }, IsolationLevel.ReadCommitted);
+                Log.Wright("Electric train updater sucessfull!");
                 _electricsCacheService.Clear();
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.Exceptions($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
-                Log.Wright($"Error in {this.ToString()} method {nameof(Edit)}: {ex.Message} ");
+                Log.Exceptions($"Error in {this.ToString()} method {nameof(Update)}: {ex.ToString()} ");
+                Log.Wright($"Error in {this.ToString()} method {nameof(Update)}: {ex.Message} ");
                 return StatusCode(500, "Internal server error");
             }
             finally

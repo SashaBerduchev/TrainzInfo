@@ -2,7 +2,7 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
-
+@inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
     <MudPaper Elevation="4" Class="pa-8 rounded-xl">
@@ -166,6 +166,7 @@
         {
             // Тут можна викликати сервіс, який додає локомотив в базу через API
             Console.WriteLine($"Додано електричку: {electrics.Name} {electrics.Model}");
+            Snackbar.Add("Збережено", Severity.Success);
             // Після успіху — навігація назад
             Navigation.NavigateTo("/electric-trains");
         }

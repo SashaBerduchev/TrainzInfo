@@ -120,9 +120,9 @@
                     @if (IsSuperadmin)
                     {
                         <MudButton Variant="Variant.Filled" Color="Color.Success"
-                                   Href="@($"/locomotive/edit/{electricTrain.id}")">Редагувати</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                   Href="@($"/locomotive/add-image/{electricTrain.id}")">Додати фото</MudButton>
+                                   Href="@($"/electric-trains/edit/{electricTrain.id}")">Редагувати</MudButton>
+                        @* <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                   Href="@($"/electric-trains/edit/{electricTrain.id}")">Редагувати</MudButton> *@
                         <MudButton Variant="Variant.Filled" Color="Color.Error"
                                    OnClick="DeleteElectics">Видалити</MudButton>
                     }
