@@ -204,3 +204,10 @@ code {
         opacity: 1;
     }
 }
+
+
+.mud-toolbar {
+    padding-top: 20px !important;
+    height: auto !important; /* Щоб висота підлаштувалася під новий відступ */
+    min-height: 84px !important; /* Стандартна висота 64px + твої 20px */
+}
