@@ -546,6 +546,16 @@ namespace TrainzInfo.Controllers.Api
                     .Where(x => x.Name == dieselTrainDto.DepotList).FirstOrDefaultAsync();
                 UkrainsRailways railways = depotList.UkrainsRailway;
 
+                DieselTrains dieselTrainsCheck = await _context.DieselTrains
+                    .Include(x => x.SuburbanTrainsInfo)
+                    .Include(x => x.DepotList)
+                    .Where(x => x.SuburbanTrainsInfo.Model == dieselTrainDto.Name && x.DepotList.Name == dieselTrainDto.DepotList)
+                    .FirstOrDefaultAsync();
+                if( dieselTrainsCheck != null )
+                {
+                    Log.Wright("CreateDieselTrain API: Diesel train already exists");
+                    return BadRequest("Поїзд вже існує");
+                }
                 await _context.ExecuteInTransactionAsync( async () =>
                 {
                     City city = depotList.City;

@@ -540,8 +540,13 @@ namespace TrainzInfo.Controllers.Api
                     Log.Wright("Station not found in database");
                     return NotFound("Станцію не знайдено");
                 }
-                _context.Stations.Remove(station);
-                await _context.SaveChangesAsync();
+
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    var relatedDocs = _context.DocumentToIndex.Include(x => x.Stations).Where(d => d.Stations.id == id);
+                    _context.DocumentToIndex.RemoveRange(relatedDocs);
+                    _context.Stations.Remove(station);
+                }, IsolationLevel.Serializable);
                 _cancellationTokenSource.Cancel();
                 _cancellationTokenSource.Dispose();
                 _cancellationTokenSource = new CancellationTokenSource();
