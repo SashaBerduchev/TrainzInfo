@@ -1,7 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationDBContext;
+using Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using ModelDB.Models.Dictionaries.Addresses;
+using ModelDB.Models.Information.Additional;
+using ModelDB.Models.Information.Main;
+using Services;
+using SharedDTO.DTO.GetDTO;
+using SharedDTO.DTO.SetDTO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System;
@@ -13,14 +23,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TrainzInfo.Tools.DB;
-using ApplicationDBContext;
-using Logging;
-using ModelDB.Models.Dictionaries.Addresses;
-using ModelDB.Models.Information.Additional;
-using ModelDB.Models.Information.Main;
-using Services;
-using SharedDTO.DTO.GetDTO;
-using SharedDTO.DTO.SetDTO;
 
 namespace TrainzInfo.Controllers.Api
 {
@@ -39,7 +41,8 @@ namespace TrainzInfo.Controllers.Api
             _electricsCacheService = electricsCacheService;
         }
 
-        [HttpGet("update")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("updateinformation")]
         public async Task<ActionResult> UpdateInfo()
         {
             try
@@ -389,33 +392,61 @@ namespace TrainzInfo.Controllers.Api
             }
         }
 
-        [HttpPost("edit")]
-        public async Task<ActionResult> Edit([FromBody] ElectricTrainDTO electricTrainDTO)
+        [HttpGet("getedit/{Id}")]
+        public async Task<ActionResult> GetEdit([FromRoute] int Id)
+        {
+            var electricTrain = await _context.Electrics
+                .Include(x => x.DepotList)
+                .Include(p => p.PlantsCreate)
+                .Include(k => k.PlantsKvr)
+                .Include(c => c.City)
+                    .ThenInclude(o => o.Oblasts)
+                .Include(u => u.DepotList)
+                    .ThenInclude(o => o.UkrainsRailway)
+                .Include(t => t.Trains)
+                .Include(e => e.ElectrickTrainzInformation)
+                .Where(x => x.id == Id)
+                .FirstOrDefaultAsync();
+            if (electricTrain == null) return NotFound();
+            ElectricTrainSetDTO electricTrainSetDTO = new ElectricTrainSetDTO
+            {
+                id = electricTrain.id,
+                Name = electricTrain.Name,
+                Model = electricTrain.Model,
+                MaxSpeed = electricTrain.MaxSpeed,
+                Image = electricTrain.Image != null
+                            ? $"data:{electricTrain.ImageMimeTypeOfData};base64,{Convert.ToBase64String(electricTrain.Image)}"
+                            : null,
+                ImageMimeTypeOfData = electricTrain.ImageMimeTypeOfData,
+                DepotList = electricTrain.DepotList.Name
+            };
+            return Ok(electricTrainSetDTO);
+        }
+
+        [HttpPost("update")]
+        public async Task<ActionResult> Edit([FromBody] ElectricTrainSetDTO electricTrainDTO)
         {
             Log.Init(this.ToString(), nameof(Edit));
 
             Log.Wright("Edit electric train");
             try
             {
+                DepotList depot = await _context.Depots
+                    .Include(x => x.City)
+                        .ThenInclude(x => x.Oblasts)
+                    .Where(x => x.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
+                City city = depot.City;
+                Oblast oblast = city.Oblasts;   
                 await _context.ExecuteInTransactionAsync(async () =>
                 {
                     ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
-                    electricTrain.DepotList = await _context.Depots.Where(d => d.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
-                    electricTrain.City = await _context.Cities.Where(c => c.Name == electricTrainDTO.City).FirstOrDefaultAsync();
-                    electricTrain.PlantsCreate = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsCreate).FirstOrDefaultAsync();
-                    electricTrain.PlantsKvr = await _context.Plants.Where(p => p.Name == electricTrainDTO.PlantsKvr).FirstOrDefaultAsync();
-                    electricTrain.Trains = await _context.SuburbanTrainsInfos.Where(t => t.BaseInfo == electricTrainDTO.TrainsInfo).FirstOrDefaultAsync();
-                    electricTrain.ElectrickTrainzInformation = await _context.ElectrickTrainzInformation.Where(e => e.AllInformation == electricTrainDTO.ElectrickTrainzInformation).FirstOrDefaultAsync();
+                    electricTrain.DepotList = depot;
+                    electricTrain.City = city;
                     electricTrain.Name = electricTrainDTO.Name;
                     electricTrain.Model = electricTrainDTO.Model;
                     electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
-                    electricTrain.DepotTrain = electricTrainDTO.DepotTrain;
-                    electricTrain.DepotCity = electricTrainDTO.DepotCity;
-                    electricTrain.LastKvr = electricTrainDTO.LastKvr;
-                    electricTrain.CreatedTrain = electricTrainDTO.CreatedTrain;
-                    electricTrain.PlantCreate = electricTrainDTO.PlantCreate;
+                    electricTrain.DepotCity = city.Name;
                     _context.Electrics.Update(electricTrain);
-                    await _context.SaveChangesAsync();
                 }, IsolationLevel.ReadCommitted);
                 _electricsCacheService.Clear();
                 return Ok();

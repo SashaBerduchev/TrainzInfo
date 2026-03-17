@@ -1,5 +1,4 @@
 ﻿@page "/stations"
-@using SharedDTO.DTO.GetDTO
 @inject NavigationManager Nav
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
@@ -184,7 +183,37 @@
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
         filiasNameFromQuery = query["filialsName"];
-        await LoadStations();
+
+        var queryStr = QueryHelpers.ParseQuery(uri.Query);
+        bool hasFilter = false;
+
+        if (queryStr.TryGetValue("filia", out var filia))
+        {
+            SelectedFilia = CurrentFilia = filia.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("oblast", out var oblast))
+        {
+            SelectedOblast = CurrentOblast = oblast.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("name", out var name))
+        {
+            SelectedName = Currentname = name.ToString();
+            hasFilter = true;
+        }
+
+        // Викликаємо фільтр тільки один раз, якщо хоча б один параметр знайдено
+        if (hasFilter)
+        {
+            await ApplyFilter();
+        }
+        else
+        {
+            await LoadStations();
+        }
 
         await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
     }
@@ -251,6 +280,11 @@
     private async Task OnFiliaChanged(string value)
     {
         SelectedFilia = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["filia"] = string.IsNullOrEmpty(SelectedFilia) ? null : SelectedFilia
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
     }
 
@@ -258,26 +292,12 @@
     private async Task OnOblastChanged(string value)
     {
         SelectedOblast = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["oblast"] = string.IsNullOrEmpty(SelectedOblast) ? null : SelectedOblast
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
-    }
-
-    // 3. Коли вводимо текст у поле станції
-    private async Task OnStationInput(ChangeEventArgs e)
-    {
-        SelectedName = e.Value?.ToString() ?? "";
-        
-        // Логіка підказок (Dropdown)
-        if (SelectedName.Length >= 2)
-        {
-            // Наприклад, шукаємо в загальному списку станцій
-            // filteredStations = AllStationsNames.Where(s => s.Contains(SelectedName, StringComparison.OrdinalIgnoreCase)).Take(10).ToList();
-        }
-        else
-        {
-            filteredStations = null;
-        }
-
-        await ApplyFilter(); // Фільтруємо основний список відразу
     }
 
     private async Task<IEnumerable<string>> SearchStations(string value, CancellationToken token)
@@ -298,6 +318,11 @@
     {
         SelectedName = item;
         filteredStations = null; // Ховаємо підказки
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["name"] = string.IsNullOrEmpty(SelectedName) ? null : SelectedName
+        });
+        Nav.NavigateTo(newUri);
         await ApplyFilter();
     }
 

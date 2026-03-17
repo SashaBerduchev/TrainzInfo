@@ -1,8 +1,7 @@
-﻿@page "/electric-trains/create"
+﻿@page "/electric-trains/edit/{Id:int}"
 @inject NavigationManager Navigation
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
-
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
     <MudPaper Elevation="4" Class="pa-8 rounded-xl">
@@ -97,9 +96,14 @@
         </EditForm>
     </MudPaper>
 </MudContainer>
-@code {
-    private ElectricTrainSetDTO electrics = new ElectricTrainSetDTO();
 
+
+<h3>Edit</h3>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private ElectricTrainSetDTO electrics = new ElectricTrainSetDTO();
     private List<string> NameList = new List<string>();
     private List<string> DepotList = new List<string>();
     private List<string> OblList = new List<string>();
@@ -113,8 +117,28 @@
     protected override async Task OnInitializedAsync()
     {
         await CheckRoles();
+        // Завантажуємо дані електропоїзда для редагування
         await Load();
     }
+
+    private async Task Load()
+    {
+        var result = await Http.GetAsync($"api/electrictrains/getedit/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            electrics = await result.Content.ReadFromJsonAsync<ElectricTrainSetDTO>();
+            // Ініціалізуємо інші списки, якщо потрібно
+            NameList = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getallnames");
+            DepotList = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getalldepots");
+            OblList = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getplants");
+            Plant = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/allobl");
+        }
+        else
+        {
+            errors = $"Не вдалося завантажити дані електропоїзда з ID {Id}. Статус: {result.StatusCode}";
+        }
+    }
+
     private async Task CheckRoles()
     {
         if (AuthStateProvider is CustomAuthStateProvider customAuth)
@@ -145,37 +169,6 @@
         }
     }
 
-    private async Task Load()
-    {
-        NameList.Add("Виберіть назву");
-        DepotList.Add("Виберіть депо");
-        // Імітація завантаження даних — в реальному випадку виклик API
-        var series = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getallnames");
-        var depots = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getalldepots");
-        var plants = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/getplants");
-        var oblasts = await Http.GetFromJsonAsync<List<string>>("api/electrictrains/allobl");
-        NameList.AddRange(series ?? new List<string>());
-        DepotList.AddRange(depots ?? new List<string>());
-        Plant.AddRange(plants ?? new List<string>());
-    }
-
-    private async Task HandleValidSubmit()
-    {
-        var result = await Http.PostAsJsonAsync("api/electrictrains/create", electrics);
-        if (result.IsSuccessStatusCode)
-        {
-            // Тут можна викликати сервіс, який додає локомотив в базу через API
-            Console.WriteLine($"Додано електричку: {electrics.Name} {electrics.Model}");
-            // Після успіху — навігація назад
-            Navigation.NavigateTo("/electric-trains");
-        }
-        else
-        {
-            errors = await result.Content.ReadAsStringAsync();
-            Console.WriteLine($"Помилка: {errors}");
-        }
-    }
-
     private async Task<IEnumerable<string>> SearchDepot(string value, CancellationToken token)
     {
         if (string.IsNullOrEmpty(value))
@@ -183,6 +176,7 @@
 
         return DepotList.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
+
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -198,4 +192,23 @@
         electrics.Image = imagePreview;
         electrics.ImageMimeTypeOfData = file.ContentType;
     }
+
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/electrictrains/update", electrics);
+        if (result.IsSuccessStatusCode)
+        {
+            // Тут можна викликати сервіс, який додає локомотив в базу через API
+            Console.WriteLine($"Додано електричку: {electrics.Name} {electrics.Model}");
+            // Після успіху — навігація назад
+            Navigation.NavigateTo("/electric-trains");
+        }
+        else
+        {
+            errors = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"Помилка: {errors}");
+        }
+    }
+
 }
