@@ -1,0 +1,123 @@
+﻿@page "/ukrains-railways/details/{Id:int}"
+@using SharedDTO.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider Auth
+
+<PageTitle>@Model?.Name</PageTitle>
+
+<PageTitle>@Model?.Name</PageTitle>
+
+<MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4 mb-6" Color="Color.Primary">
+    @Model?.Name
+</MudText>
+
+@if (loading)
+{
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-2">Завантаження деталей...</MudText>
+    </MudStack>
+}
+else if (Model == null)
+{
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mx-auto" Style="max-width: 400px;">
+        Дані не знайдено.
+    </MudAlert>
+}
+else
+{
+    @* Блок кнопок навігації *@
+    <MudStack Row="true" Wrap="Wrap.Wrap" Justify="Justify.Center" Class="mb-6" Spacing="2">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Info"
+                   StartIcon="@Icons.Material.Filled.List"
+                   OnClick='() => Nav.NavigateTo($"/depotlists?filialsName={Model.Name}")'>
+            Список депо
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   StartIcon="@Icons.Material.Filled.Train"
+                   OnClick='() => Nav.NavigateTo($"/stations?filialsName={Model.Name}")'>
+            Список станцій
+        </MudButton>
+
+        @if (IsSuperAdmin)
+        {
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Info"
+                       StartIcon="@Icons.Material.Filled.AddPhotoAlternate"
+                       OnClick='() => Nav.NavigateTo($"/ukrains-railways/{Model.id}/add-image")'>
+                Додати зображення
+            </MudButton>
+        }
+    </MudStack>
+
+    @* Основна картка з інформацією *@
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudCard Elevation="4" Class="rounded-lg overflow-hidden">
+            <MudGrid Spacing="0">
+                @* Зображення *@
+                <MudItem xs="12" md="5" Class="pa-4 d-flex align-center justify-center bg-light-grey">
+                    <MudImage Src="@Model.Image"
+                              Alt="@Model.Name"
+                              Fluid="true"
+                              Class="rounded shadow-sm"
+                              Style="max-height: 400px; object-fit: contain;" />
+                </MudItem>
+
+                @* Контент *@
+                <MudItem xs="12" md="7" Class="pa-6">
+                    <MudText Typo="Typo.h5" Class="mb-2"><b>Назва:</b> @Model.Name</MudText>
+
+                    <MudDivider Class="my-4" />
+
+                    <MudText Typo="Typo.h6" GutterBottom="true">
+                        <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-2" />
+                        Інформація:
+                    </MudText>
+
+                    <MudText Typo="Typo.body1" Class="mud-text-secondary">
+                        @((MarkupString)Model.Information)
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </MudCard>
+    </MudContainer>
+}
+
+
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    UkrainsRailwaysDTO? Model;
+    string ImageUrl = "";
+    bool loading = true;
+    bool IsSuperAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+        await CheckRole();
+    }
+
+    private async Task LoadData()
+    {
+        loading = true;
+
+        Model = await Http.GetFromJsonAsync<UkrainsRailwaysDTO>(
+            $"api/railways/details/{Id}");
+
+        loading = false;
+    }
+
+    private async Task CheckRole()
+    {
+        var authState = await Auth.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        IsSuperAdmin = user.IsInRole("Superadmin");
+    }
+}

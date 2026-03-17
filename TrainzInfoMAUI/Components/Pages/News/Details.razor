@@ -1,0 +1,215 @@
+﻿@page "/news/details/{id:int}"
+@inject NavigationManager Navigation
+@inject AppConfig Config
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+@*  Заголовок страницы новости *@
+<h1 class="news-page-title mb-4">@((MarkupString)news?.NameNews)</h1>
+
+@if (news is not null)
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8 mb-10">
+        <MudText Typo="Typo.h3" Align="Align.Left" Color="Color.Primary" Class="news-page-title mb-6 fw-bold">
+            @((MarkupString)news.NameNews)
+        </MudText>
+
+        <MudCard Elevation="4" Class="rounded-xl overflow-hidden">
+            <MudCardContent Class="pa-6 pa-md-10">
+
+                <header class="mb-8">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
+                        <MudChip T="string" Color="Color.Info" Variant="Variant.Text" Size="Size.Small" Class="px-4">Новини</MudChip>
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Size="Size.Small" Color="Color.Secondary" />
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">@DateTime.Now.ToString("dd.MM.yyyy")</MudText>
+                    </MudStack>
+                </header>
+
+                <MudGrid Spacing="6">
+                    <MudItem xs="12" lg="7" Class="order-2 order-lg-1">
+                        <MudAlert Severity="Severity.Info" Variant="Variant.Text" NoIcon="true"
+                                  Class="news-lead mb-6 border-l-4 mud-border-info pa-4 bg-lighten-5">
+                            <MudText Typo="Typo.body1" Style="font-style: italic; font-weight: 500;">
+                                @((MarkupString)news.BaseNewsInfo)
+                            </MudText>
+                        </MudAlert>
+
+                        <div class="news-main-text" style="line-height: 1.8; font-size: 1.1rem;">
+                            <MudText Typo="Typo.body1" Color="Color.Default">
+                                @((MarkupString)news.NewsInfoAll)
+                            </MudText>
+                        </div>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="5" Class="order-1 order-lg-2">
+                        <div style="position: sticky; top: 100px;">
+                            <MudPaper Elevation="8" Class="rounded-lg overflow-hidden">
+                                @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
+                                {
+                                    <MudImage Src="@(Config.ApiBaseUrl + news.ImgSrc)"
+                                              Alt="@news.NameNews"
+                                              Fluid="true"
+                                              Class="object-cover" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex flex-column align-center justify-center mud-bg-background-grey pa-10" style="min-height: 300px;">
+                                        <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" Color="Color.Default" Style="font-size: 5rem;" />
+                                        <MudText Color="Color.Secondary">Фото відсутнє</MudText>
+                                    </div>
+                                }
+                            </MudPaper>
+
+                            <MudPaper Variant="Variant.Outlined" Class="mt-4 pa-3 border-dashed rounded-lg text-center">
+                                <MudText Typo="Typo.caption" Style="font-style: italic;">
+                                    Інформаційна служба залізниці
+                                </MudText>
+                            </MudPaper>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+
+                <MudDivider Class="mt-10 mb-6" />
+                <div class="d-flex flex-wrap align-center gap-3">
+                    @if (CanComment)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Info"
+                                   StartIcon="@Icons.Material.Filled.Chat"
+                                   OnClick="() => NavigateToComment(news.id)"
+                                   Class="rounded-pill px-6">
+                            Коментувати
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                                   OnClick="() => NavigateToComments(news.id)"
+                                   Class="rounded-pill px-6">
+                            Коментарі (@CommentCount)
+                        </MudButton>
+                    }
+
+                    @if (IsAdmin)
+                    {
+                        <div class="ms-auto d-flex gap-2">
+                            <MudTooltip Text="Редагувати">
+                                <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit"
+                                        Size="Size.Small" OnClick="() => EditNews(news.id)" />
+                            </MudTooltip>
+                            <MudTooltip Text="Додати фото">
+                                <MudFab Color="Color.Success" StartIcon="@Icons.Material.Filled.AddAPhoto"
+                                        Size="Size.Small" OnClick="() => AddImage(news.id)" />
+                            </MudTooltip>
+                        </div>
+                    }
+                </div>
+            </MudCardContent>
+        </MudCard>
+    </MudContainer>
+}
+else
+{
+    <div class="d-flex align-center justify-center" style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private NewsDTO news;
+    private int CommentCount;
+
+    private bool IsAdmin = false;
+    private bool CanComment = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Завантажуємо новину
+        news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/details/{Id}");
+
+        // Приклад: завантаження поточного користувача та кількості коментарів
+        // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
+        CommentCount = await Http.GetFromJsonAsync<int>($"api/comments/getnewscommentscount/{Id}");
+        await CheckRoles();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin") || roles.Contains("Publisher");
+
+                if (user.Identity.Name != null)
+                {
+                    CanComment = true;
+                }
+            }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var uri = new Uri(Nav.Uri);                            // полный URL, например https://app.com/news?id=42
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (!int.TryParse(query["id"], out int newsId))
+        {
+            // id не найден/не число – можно показать ошибку или перейти на другую страницу
+            return;
+        }
+
+        // 2️⃣ Загружаем новость по полученному id
+        var news = await Http.GetFromJsonAsync<NewsDTO>($"api/news/{newsId}");
+
+        if (news == null) return; // ничего не найдено
+
+        // 3️⃣ Обновляем Open Graph‑теги через JS‑интероп
+        await JS.InvokeVoidAsync(
+            "og.setMetaTags",
+            news.NameNews,
+            // если BaseNewsInfo может быть null, берём часть от начала строки,
+            // иначе – саму строку (или обрезаем до 150 символов)
+            string.IsNullOrWhiteSpace(news.BaseNewsInfo)
+                ? ""
+                : news.BaseNewsInfo.Length > 150
+                    ? news.BaseNewsInfo[..150]
+                    : news.BaseNewsInfo,
+                    news.ImgSrc
+        );
+    }
+
+
+    private void NavigateToComment(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/create/{newsId}");
+    }
+
+    private void NavigateToComments(int newsId)
+    {
+        Navigation.NavigateTo($"/newscomments/{newsId}");
+    }
+
+    private void EditNews(int newsId)
+    {
+        Navigation.NavigateTo($"/news/edit/{newsId}");
+    }
+
+    private void AddImage(int newsId)
+    {
+        Navigation.NavigateTo($"/news/addimage/{newsId}");
+    }
+}

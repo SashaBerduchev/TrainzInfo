@@ -1,0 +1,83 @@
+﻿@inherits LayoutComponentBase
+
+
+<MudThemeProvider @ref="_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="_currentTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h6" Class="ml-3">TrainzInfo</MudText>
+        <MudSpacer />
+        @* Перемикач теми *@
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                             Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit"
+                             ToggledIcon="@Icons.Material.Filled.Brightness4" ToggledColor="Color.Inherit"
+                             Title="@(_isDarkMode ? "Світла тема" : "Темна тема")" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu />
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4 pt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider = default!;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Визначаємо системну тему (MAUI підтримує це через MudBlazor)
+            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            
+            // Підписуємося на зміну системної теми (наприклад, якщо користувач змінив її в налаштуваннях Windows)
+            await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemPreferenceChanged);
+            
+            StateHasChanged();
+        }
+    }
+
+    private Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    // Налаштування кольорів палітри
+    private MudTheme _currentTheme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = "#1c3fa0", // Твій синій колір
+            AppbarBackground = "#1c3fa0",
+            Surface = "#ffffff"
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#4a6cf7",
+            Surface = "#1e1e2d", // Колір карток у темній темі
+            Background = "#1a1a27", // Загальний фон
+            AppbarBackground = "#1a1a27",
+            TextPrimary = "#ffffff",
+            Secondary = "#b8c8f8" // Щоб уникнути "рожевого" тексту
+        }
+    };
+}

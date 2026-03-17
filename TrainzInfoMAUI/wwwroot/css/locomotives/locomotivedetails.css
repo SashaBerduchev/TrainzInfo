@@ -1,0 +1,75 @@
+﻿
+/* Загальні стилі */
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Заголовки */
+h3, h4, h5 {
+    font-weight: 600;
+    color: #007bff;
+}
+
+/* Картки */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+/* Зображення */
+.img-fluid {
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+    .img-fluid:hover {
+        transform: scale(1.05);
+    }
+
+/* Кнопки */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .btn:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+/* Список характеристик */
+.list-group-item {
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+}
+
+/* Блоки інформації */
+.news-detail-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}

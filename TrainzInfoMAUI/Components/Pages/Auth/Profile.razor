@@ -1,0 +1,317 @@
+﻿@page "/profile"
+
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+
+<PageTitle>Мій профіль | TrainzInfo</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Color="Color.Primary" Class="fw-bold mb-6">Мій профіль</MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="4" Class="pa-6 rounded-xl d-flex flex-column align-center text-center h-100">
+                <MudAvatar Style="height:120px; width:120px; font-size:2rem;" Class="mb-4 shadow-lg">
+                    <MudImage Src="@userAvatarUrl" Alt="Аватар" />
+                </MudAvatar>
+
+                <MudText Typo="Typo.h5" Class="fw-bold">@userName</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-6">Залізничний ентузіаст</MudText>
+
+                <MudDivider Class="w-100 mb-6" />
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Error"
+                           StartIcon="@Icons.Material.Filled.Logout"
+                           OnClick="Logout"
+                           FullWidth="true"
+                           Class="rounded-lg py-3">
+                    Вийти з акаунта
+                </MudButton>
+            </MudPaper>
+        </MudItem>
+
+        @if (IsAdmin)
+        {
+            <MudItem xs="12" md="8">
+                <MudPaper Elevation="4" Class="pa-6 rounded-xl h-100">
+                    <MudText Typo="Typo.h5" Color="Color.Primary" Class="fw-bold mb-4">Адміністрування</MudText>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Newspaper" OnClick="CreateNews">Створити новину</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Update" OnClick="UpdateNews">Оновити новини</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Mail" OnClick="CreateMail">Поштовий сервіс</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Map" OnClick="FixOblCities">Виправити адреси</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.Map" OnClick="MainImages">Основні зображення сайту</MudButton>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" FullWidth="true" Class="py-3"
+                                       StartIcon="@Icons.Material.Filled.LocationCity" OnClick="Cities">Міста</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudPaper Elevation="4" Class="pa-6 rounded-xl mt-4">
+                <MudText Typo="Typo.h5" Color="Color.Primary" Class="fw-bold mb-2">Побудова маршруту</MudText>
+                <MudText Typo="Typo.body2" Class="mb-6">Оберіть станції, щоб переглянути збережені варіанти або спланувати поїздку.</MudText>
+
+                <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+                    <MudItem xs="12" md="4">
+                        <MudSelect T="string" Label="Станція початку" @bind-Value="SelectedDepeat" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            @foreach (var station in Stations)
+                            {
+                                <MudSelectItem Value="@station.Names">@station.Names</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudSelect T="string" Label="Станція кінця" @bind-Value="SelectedArrival" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            @foreach (var station in Stations)
+                            {
+                                <MudSelectItem Value="@station.Names">@station.Names</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.Route" OnClick="ApllyAndShow" Class="py-3">
+                            Відобразити маршрут
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+
+        @if (planningUserRouteDTOs != null && planningUserRouteDTOs.Count > 0)
+        {
+            @foreach (var route in planningUserRouteDTOs)
+            {
+                <MudItem xs="12">
+                    <MudPaper Elevation="2" Class="pa-6 mt-4 border-l-4 mud-border-primary rounded-lg">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+                            <MudText Typo="Typo.h5" Class="fw-bold">@route.Name</MudText>
+                            <MudSpacer />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => Clear(route.Id)" />
+                        </MudStack>
+
+                        @if (route.Trains != null)
+                        {
+                            @foreach (var train in route.Trains)
+                            {
+                                var trainSchedules = route.trainsShadules
+                                .Where(x => x.NumberTrain == train.Number.ToString())
+                                .ToList();
+
+                                <MudAlert Severity="Severity.Info" Variant="Variant.Text" Icon="@Icons.Material.Filled.Train" Class="mt-6 mb-2">
+                                    <MudText Typo="Typo.subtitle1" Class="fw-bold">
+                                        Поїзд №@train.Number — @train.StationFrom → @train.StationTo
+                                    </MudText>
+                                </MudAlert>
+
+                                <MudTable Items="@trainSchedules" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0" Class="mud-bg-background-grey rounded-lg">
+                                    <HeaderContent>
+                                        <MudTh>Номер</MudTh>
+                                        <MudTh>Станція</MudTh>
+                                        <MudTh>Прибуття</MudTh>
+                                        <MudTh>Відправлення</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="Номер"><b>@context.NumberTrain</b></MudTd>
+                                        <MudTd DataLabel="Станція">@context.NameStation</MudTd>
+                                        <MudTd DataLabel="Прибуття" Class="mud-text-success">@context.Arrival</MudTd>
+                                        <MudTd DataLabel="Відправлення" Class="mud-text-error">@context.Departure</MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            }
+                        }
+                    </MudPaper>
+                </MudItem>
+            }
+        }
+    </MudGrid>
+
+    @if (!string.IsNullOrEmpty(errors))
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-6 rounded-lg shadow">
+            <strong>Помилка збереження:</strong> @errors
+        </MudAlert>
+    }
+</MudContainer>
+@code {
+    private string? userName;
+    private bool IsAdmin { get; set; } = false;
+    private string userAvatarUrl = "https://i.pravatar.cc/80"; // тестовий аватар
+    private UserEmailDTO userEmailDTO = new UserEmailDTO();
+    private string emails = "";
+    private List<StationsNamesDTO> Stations = new List<StationsNamesDTO>();
+    private string SelectedDepeat = "";
+    private string SelectedArrival = "";
+    private string errors = "";
+    public List<PlanninUserRouteDTO> planningUserRouteDTOs;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        await CheckRoles();
+        StateHasChanged();
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            userName = user.Identity.Name;
+            userEmailDTO.Email = user.Identity.Name;
+        }
+        else
+        {
+            // якщо не авторизований, редірект на логін
+            Nav.NavigateTo("/login");
+        }
+        await Loading();
+    }
+
+    private async Task Loading()
+    {
+        Stations = await Http.GetFromJsonAsync<List<StationsNamesDTO>>("api/stations/getallnames");
+
+        var response = await Http.GetAsync(
+                $"api/PlanningUserRoute/getroutes?email={emails}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                planningUserRouteDTOs = null;
+            }
+            else
+            {
+                planningUserRouteDTOs = await response.Content
+                    .ReadFromJsonAsync<List<PlanninUserRouteDTO>>();
+            }
+        }
+        else
+        {
+            planningUserRouteDTOs = null;
+        }
+
+    }
+
+    private void Logout()
+    {
+        // редірект на сторінку логіну або виходу через Identity
+        Nav.NavigateTo("/Identity/Account/Logout");
+    }
+
+    private void CreateNews()
+    {
+        Nav.NavigateTo("/news/create");
+    }
+    private async Task UpdateNews()
+    {
+        var response = await Http.PostAsJsonAsync("api/news/updateall", userEmailDTO);
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            // Обробка помилки
+            Console.WriteLine("Помилка оновлення новин.");
+        }
+    }
+    private void CreateMail()
+    {
+        Nav.NavigateTo("/mail/create");
+    }
+    private void MainImages()
+    {
+        Nav.NavigateTo("/mainimages");
+    }
+    private void Cities()
+    {
+        Nav.NavigateTo("/cities");
+    }
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                userEmailDTO.Email = user.Identity.Name;
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+                emails = email ?? "";
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    public async Task FixOblCities()
+    {
+        var response = await Http.GetStringAsync("api/dbfix/fixcityoblasts");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/");
+    }
+
+
+    public async Task ApllyAndShow()
+    {
+        var response = await Http.GetAsync($"api/PlanningUserRoute/getroutebystations?depeat={SelectedDepeat}&arrival={SelectedArrival}&email={emails}");
+        if (response.IsSuccessStatusCode)
+        {
+            await Loading();
+            StateHasChanged();
+        }
+        else
+        {
+            errors = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    public async Task Clear(int id)
+    {
+        var response = await Http.GetAsync($"api/PlanningUserRoute/clearroutesbyid?routeid={id}");
+        if (response.IsSuccessStatusCode)
+        {
+            await Loading();
+        }
+        else
+        {
+            errors = await response.Content.ReadAsStringAsync();
+        }
+    }
+}

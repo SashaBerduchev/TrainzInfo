@@ -1,0 +1,91 @@
+﻿@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<MudNavMenu Bordered="true" Color="Color.Primary" Class="mud-width-full">
+    @* Хедер з картинкою локомотива *@
+    <div class="mud-navmenu-header d-flex align-center justify-center relative mb-3 overflow-hidden"
+         style="height: 140px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;"
+         @onclick="@(() => Nav.NavigateTo("/"))">
+    
+        @* Задній план - розмиття *@
+        <div class="absolute inset-0 z-0"
+             style="background: url('https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto') center/cover no-repeat; filter: blur(8px) brightness(0.4); width: 100%; height: 100%;">
+        </div>
+
+        @* Основне зображення *@
+        <MudImage Src="https://trainzinfo.com.ua/api/mainimage/getimage?name=MainPhoto"
+                  Alt="TrainzInfo Header"
+                  Class="z-10 w-100 h-100"
+                  Style="object-fit: cover; object-position: center; position: absolute; top: 0; left: 0;" />
+        
+        @* Текст поверх картинки *@
+        <div class="absolute z-20 d-flex align-center justify-center w-100 h-100" style="background: rgba(0,0,0,0.2)">
+            <MudText Typo="Typo.h5" Style="color: white; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">TrainzInfo</MudText>
+        </div>
+    </div>
+
+    <MudDivider Class="mb-4" />
+
+    <MudNavLink Href="ukrains-railways" Icon="@Icons.Material.Filled.Map" IconColor="Color.Inherit" Class="py-2">Українська залізниця</MudNavLink>
+
+    <MudNavGroup Title="Рухомий склад" Icon="@Icons.Material.Filled.Train" IconColor="Color.Inherit" Expanded="true" Class="py-2">
+        <MudNavLink Href="locomotives" Icon="@Icons.Material.Filled.DirectionsRailway" IconColor="Color.Inherit">Локомотиви</MudNavLink>
+        <MudNavLink Href="electric-trains" Icon="@Icons.Material.Filled.ElectricBolt" IconColor="Color.Inherit">Електропоїзди</MudNavLink>
+        <MudNavLink Href="diesel-trains" Icon="@Icons.Material.Filled.PropaneTank" IconColor="Color.Inherit">Дизель-поїзди</MudNavLink>
+    </MudNavGroup>
+
+    <MudNavLink Href="trains" Icon="@Icons.Material.Filled.TableRows" IconColor="Color.Inherit" Class="py-2">Розклад поїздів</MudNavLink>
+    <MudNavLink Href="about" Icon="@Icons.Material.Filled.Info" IconColor="Color.Inherit" Class="py-2">Про нас</MudNavLink>
+    <MudNavLink Href="@YouTubeUrl" Target="_blank" Icon="@Icons.Custom.Brands.YouTube" IconColor="Color.Error" Class="py-2">YouTube канал</MudNavLink>
+
+    <MudDivider Class="my-4" />
+
+    <div class="pa-4">
+        <AuthorizeView>
+            <Authorized>
+                <MudNavGroup Title="@context.User.Identity?.Name" Icon="@Icons.Material.Filled.Person" Color="Color.Primary">
+                    <MudNavLink OnClick="Profile" Icon="@Icons.Material.Filled.Badge">Мій профіль</MudNavLink>
+                    <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">Вийти</MudNavLink>
+                </MudNavGroup>
+            </Authorized>
+            <NotAuthorized>
+                <MudStack Spacing="2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" StartIcon="@Icons.Material.Filled.Login" OnClick="Login">Вхід</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" StartIcon="@Icons.Material.Filled.PersonAdd" OnClick="Register">Реєстрація</MudButton>
+                </MudStack>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</MudNavMenu>
+
+
+@code {
+    private string YouTubeUrl = "https://www.youtube.com/@RailwayUkraine";
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthStateProvider.AuthenticationStateChanged += AuthStateChanged;
+        // Отримуємо початковий стан
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = state.User.Identity?.IsAuthenticated ?? false;
+    }
+
+    private async void AuthStateChanged(Task<AuthenticationState> task)
+    {
+        var authState = await task;
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        AuthStateProvider.AuthenticationStateChanged -= AuthStateChanged;
+    }
+
+    private void Logout() => Nav.NavigateTo("logout");
+    private void Register() => Nav.NavigateTo("register");
+    private void Login() => Nav.NavigateTo("login");
+    private void Profile() => Nav.NavigateTo("profile");
+}

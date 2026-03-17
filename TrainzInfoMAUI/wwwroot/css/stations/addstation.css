@@ -1,0 +1,13 @@
+﻿.card {
+    border: none;
+}
+
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
+}
+
+
+.list-group-item-action:hover {
+    background-color: #f1f5ff;
+}

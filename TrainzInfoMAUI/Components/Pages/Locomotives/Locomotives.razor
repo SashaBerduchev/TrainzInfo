@@ -1,0 +1,397 @@
+﻿@page "/locomotives"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
+
+<PageTitle>Локомотиви</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-6">Локомотиви</MudText>
+
+    @if (IsAdmin)
+    {
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="AddLocomotive">
+                    Додати локомотив
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Refresh" OnClick="UpdateInfo">
+                    Оновити дані
+                </MudButton>
+                <MudSpacer />
+                <MudText Typo="Typo.body2"><b>Кількість запитів:</b> @count</MudText>
+            </MudStack>
+        </MudPaper>
+    }
+
+    <MudPaper Elevation="3" Class="pa-6 mb-8 rounded-xl">
+        <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+            <MudItem xs="12" md="3">
+                <MudStack Spacing="1">
+                    <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v=> OnFiliaChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
+                        @foreach (var f in FiliaList)
+                        {
+                            <MudSelectItem Value="@f">@f</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="string" Label="Область" Value="@SelectedObl" ValueChanged="@(v=>OnOblastChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("")">Всі області</MudSelectItem>
+                        @foreach (var o in OblastList)
+                        {
+                            <MudSelectItem Value="@o">@o</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Депо" Value="@SelectedDepot" ValueChanged="@(v=> OnDepotChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                    <MudSelectItem Value="@("")">Всі депо</MudSelectItem>
+                    @foreach (var d in DepotList)
+                    {
+                        <MudSelectItem Value="@d">@d</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudSelect T="string" Label="Серія" Value="@SelectedSeria" ValueChanged="@(v=> OnSeriaChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                    <MudSelectItem Value="@("")">Всі серії</MudSelectItem>
+                    @foreach (var s in SeriaList)
+                    {
+                        <MudSelectItem Value="@s">@s</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
+                           OnClick="ClearFilter" FullWidth="true" Size="Size.Large">
+                    Скинути
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    @if (isLoading)
+    {
+        <MudGrid>
+            @foreach (var i in Enumerable.Range(0, 4))
+            {
+                <MudItem xs="12">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="150px" Class="rounded-lg mb-4" />
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <div id="locomotiveContainer">
+            @if (locomotives is null || !locomotives.Any())
+            {
+                <MudPaper Class="d-flex flex-column align-center justify-center py-12" Elevation="0">
+                    <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Default" Style="font-size: 6rem;" />
+                    <MudText Typo="Typo.h5" Color="Color.Secondary" Class="mt-4">Локомотиви не знайдені</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Default">Спробуйте змінити параметри фільтрації</MudText>
+                </MudPaper>
+            }
+            else
+            {
+                @foreach (var item in locomotives)
+                {
+                    <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl loco-card-hover">
+                        <MudGrid Spacing="0">
+                            <MudItem xs="12" md="4" Class="position-relative">
+                                <MudImage Src="@(Config.ApiBaseUrl + item.ImgSrc)" Alt="@item.Seria"
+                                          ObjectFit="ObjectFit.Cover" Height="220" Width="400" Class="w-100" />
+                                <div class="speed-tag">
+                                    <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Small" Class="mr-1" />
+                                    @item.Speed <small>км/год</small>
+                                </div>
+                            </MudItem>
+
+                            <MudItem xs="12" md="5" Class="pa-6">
+                                <div class="d-flex align-center mb-4">
+                                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@item.Seria</MudText>
+                                    <MudChip T="string" Variant="Variant.Text" Color="Color.Secondary" Class="ml-2 px-3 fw-bold">№@item.Number</MudChip>
+                                </div>
+
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="6">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                                        <MudText Typo="Typo.body1" Class="fw-medium">@item.Filia</MudText>
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Депо</MudText>
+                                        <MudText Typo="Typo.body1" Class="fw-medium">@item.Depot</MudText>
+                                    </MudItem>
+                                    <MudItem xs="12" Class="mt-2">
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Станція / Локація</MudText>
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <MudIcon Icon="@Icons.Material.Filled.Place" Size="Size.Small" Color="Color.Error" />
+                                            <MudText Typo="Typo.body1" Class="fw-bold mud-text-primary">@item.Station</MudText>
+                                            <MudText Typo="Typo.body2" Class="ml-2">(@item.Oblast, @item.City)</MudText>
+                                        </MudStack>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudItem>
+
+                            <MudItem xs="12" md="3" Class="pa-4 mud-bg-background-grey d-flex flex-column justify-center gap-3 border-l-md">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Info" OnClick="() => ViewDetails(item.Id)" FullWidth="true">
+                                    Детальніше
+                                </MudButton>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                                           StartIcon="@Icons.Material.Filled.PhotoLibrary" OnClick="() => ViewUserPhotos(item.Seria, item.Number)" FullWidth="true">
+                                    Галерея
+                                </MudButton>
+
+                                @if (IsAdminOrPublisher || IsAdmin)
+                                {
+                                    <MudDivider Class="my-1" />
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @if (IsAdminOrPublisher)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" Size="Size.Small"
+                                                           OnClick="() => EditLocomotive(item.Id)" Title="Редагувати" />
+                                        }
+                                        @if (IsAdmin)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.AddAPhoto" Color="Color.Success" Size="Size.Small"
+                                                           OnClick="() => AddImage(item.Id)" Title="Додати фото" />
+                                            <MudSpacer />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small"
+                                                           OnClick="() => DeleteLocomotive(item.Id)" Title="Видалити" />
+                                        }
+                                    </div>
+                                }
+                            </MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                }
+            }
+        </div>
+    }
+</MudContainer>
+
+
+@code {
+    private List<LocomotiveDTO> locomotives = new();
+    private List<LocomotiveDTO> FilteredLocomotives = new();
+    private int count;
+
+    private bool isLoading = false;
+    private int currentPage = 1;
+    private bool allLoaded = false;
+
+    private string SelectedFilia = "";
+    private string SelectedDepot = "";
+    private string SelectedSeria = "";
+    private string SelectedObl = "";
+
+    private bool isFilterLoad = false;
+
+    private List<string> FiliaList = new();
+    private List<string> OblastList = new();
+    private List<string> DepotList = new();
+    private List<string> SeriaList = new();
+
+    // Симуляція авторизації
+    private bool IsLogged => true;
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+    private string depotNameFromQuery;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        depotNameFromQuery = query["depotsName"];
+        await Load();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
+        // Завантажуємо локомотиви з API
+    }
+
+    private async Task Load()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+        try
+        {
+            if (depotNameFromQuery is not null)
+            {
+                SelectedDepot = depotNameFromQuery;
+            }
+            var url =
+               $"api/locomotives/getlocomotives?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedDepot) ? "" : $"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedObl) ? "" : $"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedSeria) ? "" : $"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+            var locomotiveItems = await Http.GetFromJsonAsync<List<LocomotiveDTO>>(url);
+            var locomotivesCount = await Http.GetFromJsonAsync<int>("/api/locomotives/getcount");
+            count = locomotivesCount;
+            if (locomotiveItems == null || locomotiveItems.Count == 0)
+            {
+
+                allLoaded = true;
+            }
+            else
+            {
+                locomotives.AddRange(locomotiveItems);
+                FilteredLocomotives = locomotiveItems;
+                //ApplyFilter(); // оновлюємо відфільтровані новини
+                if (!isFilterLoad)
+                {
+                    var urlfilia = $"api/locomotives/getfilias{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+                    var urldepo = $"api/locomotives/getdepots{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    var urlseria = $"api/locomotives/getseries{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    var urlobl = $"api/locomotives/getoblasts{($"?filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+                    $"{($"&depot={Uri.EscapeDataString(SelectedDepot)}")}" +
+                    $"{($"&oblast={Uri.EscapeDataString(SelectedObl)}")}" +
+                    $"{($"&seria={Uri.EscapeDataString(SelectedSeria)}")}";
+
+                    FiliaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlfilia));
+                    DepotList.AddRange(await Http.GetFromJsonAsync<List<string>>(urldepo));
+                    SeriaList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlseria));
+                    OblastList.AddRange(await Http.GetFromJsonAsync<List<string>>(urlobl));
+                    isFilterLoad = true;
+                }
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження локомотивів: " + ex.Message);
+        }
+
+        isLoading = false;
+        await CheckRoles();
+        StateHasChanged();
+    }
+
+    private async Task OnFiliaChanged(string value)
+    {
+        SelectedFilia = value ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnOblastChanged(string value)
+    {
+        SelectedObl = value ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnDepotChanged(string value)
+    {
+        SelectedDepot = value ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task OnSeriaChanged(string value)
+    {
+        SelectedSeria = value ?? "";
+        await ApplyFilter();
+    }
+
+    private async Task ApplyFilter()
+    {
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        locomotives.Clear();          // если хотите начать с нуля
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
+        OblastList.Clear();
+        await Load();                 // загружаем первую страницу
+        StateHasChanged();
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("revealNewLocoCards");
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    private async Task ClearFilter()
+    {
+        SelectedFilia = SelectedDepot = SelectedSeria = SelectedObl = "";
+        isFilterLoad = false;
+        FiliaList.Clear();
+        DepotList.Clear();
+        SeriaList.Clear();
+        OblastList.Clear();
+        await Load();
+        StateHasChanged();
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("revealNewLocoCards");
+    }
+
+    private void ViewDetails(int id) => Nav.NavigateTo($"/locomotives/details/{id}");
+    private void ViewUserPhotos(string seria, string number) => Nav.NavigateTo($"/userphotos/{seria}/{number}");
+    private void EditLocomotive(int id) => Nav.NavigateTo($"/locomotives/edit/{id}");
+    private void AddImage(int id) => Nav.NavigateTo($"/locomotives/addimage/{id}");
+    private void DeleteLocomotive(int id) => Nav.NavigateTo($"/locomotives/delete/{id}");
+    private void AddLocomotive() => Nav.NavigateTo("/locomotives/create");
+
+    private async Task UpdateInfo()
+    {
+        var response = Http.GetStringAsync("api/locomotives/update");
+        Console.WriteLine(response);
+        Nav.NavigateTo("/locomotives");
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await Load();
+    }
+}

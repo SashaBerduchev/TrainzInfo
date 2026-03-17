@@ -1,0 +1,18 @@
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @* Що бачить користувач, якщо немає прав *@
+                    <MudAlert Severity="Severity.Error">У вас немає доступу до цього розділу.</MudAlert>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <MudAlert Severity="Severity.Info">Сторінку не знайдено.</MudAlert>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

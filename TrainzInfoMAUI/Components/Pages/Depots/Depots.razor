@@ -1,0 +1,169 @@
+﻿@page "/depotlists"
+@using SharedDTO.DTO.GetDTO
+
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<PageTitle>Список депо</PageTitle>
+
+<MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">Список депо</MudText>
+
+@if (!string.IsNullOrEmpty(filia?.Name))
+{
+    <MudText Typo="Typo.h6" Align="Align.Center" Color="Color.Secondary" Class="mb-4">
+        @filia?.Name
+    </MudText>
+}
+
+@if (User != null && UserCanManage)
+{
+    <MudStack Row="true" Justify="Justify.Center" Class="mb-6" Spacing="2">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Info"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateDepot">
+            Додати
+        </MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Warning"
+                   StartIcon="@Icons.Material.Filled.Gavel"
+                   OnClick="UpdateForce">
+            Націоналізувати
+        </MudButton>
+    </MudStack>
+}
+
+@if (depots == null)
+{
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body1" Class="mt-4">Завантаження списку депо...</MudText>
+    </MudStack>
+}
+else
+{
+    <MudTable Items="@depots"
+              Hover="true"
+              Breakpoint="Breakpoint.Sm"
+              Elevation="4"
+              Class="rounded-lg"
+              Dense="false">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<dynamic, object>(x => x.Name)">Назва</MudTableSortLabel></MudTh>
+            <MudTh>Станція</MudTh>
+            <MudTh Style="text-align: center">Дії</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Назва">
+                <MudText Typo="Typo.body1"><b>@context.Name</b></MudText>
+                @if (context.City != null)
+                {
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@context.City</MudText>
+                }
+            </MudTd>
+            <MudTd DataLabel="Станція">@context.City</MudTd>
+            <MudTd DataLabel="Дії" Style="text-align: center">
+                <MudStack Row="true" Spacing="1" Justify="Justify.Center" Wrap="Wrap.Wrap">
+
+                    @if (UserCanManage)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Color="Color.Success"
+                                       Size="Size.Small"
+                                       Variant="Variant.Outlined"
+                                       OnClick="() => Edit(context.Id)"
+                                       Title="Редагувати" />
+                    }
+
+                    @if (context.LocomotivesCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToLocomotives(context.Name)">
+                            Локомотиви (@context.LocomotivesCount)
+                        </MudButton>
+                    }
+
+                    @if (context.ElectricTrainsCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToElectrics(context.Name)">
+                            Електрички
+                        </MudButton>
+                    }
+
+                    @if (context.DieselTrainsCount != null && context.DieselTrainsCount > 0)
+                    {
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Size="Size.Small"
+                                   OnClick="() => GoToDiesels(context.Name)">
+                            Дизелі
+                        </MudButton>
+                    }
+                </MudStack>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager InfoFormat="{first_item}-{last_item} з {all_items}" RowsPerPageString="Рядків на сторінці:" />
+        </PagerContent>
+    </MudTable>
+}
+
+
+@code {
+    public List<DepotListDTO>? depots { get; set; }
+    public UkrainsRailwaysDTO? filia { get; set; }
+    string? filiasNameFromQuery;
+    public UserDto? User { get; set; }
+
+    bool UserCanManage =>
+        User != null &&
+        (User.Role == "Superadmin" ||
+         User.Role == "Admin" ||
+         User.Role == "Publisher");
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        filiasNameFromQuery = query["filialsName"];
+
+        filia = await Http.GetFromJsonAsync<UkrainsRailwaysDTO>($"api/railways/getfiliaByName?filiaName={Uri.EscapeDataString(filiasNameFromQuery)}");
+
+        depots = await Http.GetFromJsonAsync<List<DepotListDTO>>(
+                $"api/depots/getdepots?filiaName={Uri.EscapeDataString(filiasNameFromQuery)}"
+            );
+    }
+
+    void CreateDepot()
+    {
+        Nav.NavigateTo("/depots/create");
+    }
+
+    void UpdateForce()
+    {
+        Nav.NavigateTo("/depots/update-force");
+    }
+
+    void Edit(int id)
+    {
+        Nav.NavigateTo($"/depots/edit/{id}");
+    }
+    void GoToLocomotives(string name)
+    {
+        Nav.NavigateTo($"/locomotives?depotsName={name}");
+    }
+    void GoToElectrics(string name)
+    {
+        Nav.NavigateTo($"/electric-trains?depotsName={name}");
+    }
+    void GoToDiesels(string name)
+    {
+        Nav.NavigateTo($"/diesel-trains?depotsName={name}");
+    }
+}

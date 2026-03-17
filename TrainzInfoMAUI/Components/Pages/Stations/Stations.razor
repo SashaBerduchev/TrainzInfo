@@ -1,0 +1,437 @@
+﻿@page "/stations"
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
+@inject IJSRuntime JS
+
+<PageTitle>Станції</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Align="Align.Center" Color="Color.Primary" Class="fw-bold mb-2">Станції</MudText>
+
+    @if (!string.IsNullOrEmpty(CurrentFilia))
+    {
+        <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Secondary" Class="mb-6">@CurrentFilia</MudText>
+    }
+
+    @if (IsAdmin)
+    {
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.AddLocation" OnClick="AddStation">
+                Додати станцію
+            </MudButton>
+        </MudPaper>
+    }
+
+    <MudPaper Elevation="3" Class="pa-6 mb-8 rounded-xl">
+        <MudGrid Spacing="3" AlignItems="AlignItems.Center">
+            <MudItem xs="12" md="4">
+                <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v => OnFiliaChanged(v))" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
+                    @foreach (var f in Filias)
+                    {
+                        <MudSelectItem Value="@f">@f</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+                <MudSelect T="string" Label="Область" Value="@SelectedOblast" ValueChanged="@(v => OnOblastChanged(v))" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("")">Всі області</MudSelectItem>
+                    @foreach (var o in Oblasts)
+                    {
+                        <MudSelectItem Value="@o">@o</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+                @* Використовуємо крутий Автокомпліт замість звичайного інпуту *@
+                <MudAutocomplete T="string" Label="Назва станції"
+                                 Value="@SelectedName"
+                                 ValueChanged="@(v => SelectStationFromList(v))"
+                                 SearchFunc="@SearchStations"
+                                 Placeholder="Почніть вводити назву..."
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 AdornmentIcon="@Icons.Material.Filled.Search"
+                                 AdornmentColor="Color.Primary"
+                                 Clearable="true" />
+            </MudItem>
+        </MudGrid>
+
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
+                   OnClick="ClearFilter" Class="mt-4">
+            Скинути всі фільтри
+        </MudButton>
+    </MudPaper>
+
+    <div id="stationsContainer">
+        @if (stationsList.Count == 0 && !isLoading)
+        {
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Class="rounded-lg">
+                Нічого не знайдено за вашим запитом.
+            </MudAlert>
+        }
+        else
+        {
+            @* 1. Завжди відображаємо вже завантажені картки *@
+            @foreach (var item in stationsList)
+            {
+                <MudPaper @key="item.id" Elevation="4" Class="mb-6 overflow-hidden rounded-xl station-card station-card-hover">
+                    <MudGrid Spacing="0">
+                        <MudItem xs="12" md="4" Class="position-relative">
+                            <MudImage Src="@(Config.ApiBaseUrl + item.StationImages)" Alt="@item.Name"
+                                      ObjectFit="ObjectFit.Cover" Height="220" Class="w-100" />
+                            <div class="station-badge">
+                                <MudIcon Icon="@Icons.Material.Filled.Place" Size="Size.Small" Class="mr-1" />
+                                Станція
+                            </div>
+                        </MudItem>
+
+                        <MudItem xs="12" md="5" Class="pa-6">
+                            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold mb-4 station-highlight">@item.Name</MudText>
+
+                            <MudGrid Spacing="2">
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Область</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@item.Oblasts</MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Місто / НП</MudText>
+                                    <MudText Typo="Typo.body1" Class="fw-medium">@item.Citys</MudText>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Філія (Залізниця)</MudText>
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudIcon Icon="@Icons.Material.Filled.AccountTree" Size="Size.Small" Color="Color.Info" />
+                                        <MudText Typo="Typo.body1">@item.UkrainsRailways</MudText>
+                                    </MudStack>
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+
+                        <MudItem xs="12" md="3" Class="pa-4 mud-bg-background-grey d-flex flex-column justify-center gap-3">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Map" Href="@($"/stations/details/{item.id}")" FullWidth="true">
+                                Інформація
+                            </MudButton>
+
+                           @*  @if (IsAdmin)
+                            {
+                                <MudDivider Class="my-1" />
+                                <MudButton Variant="Variant.Outlined" Color="Color.Info"
+                                           StartIcon="@Icons.Material.Filled.EditLocation" Href="@($"/stations/edit/{item.id}")" FullWidth="true" Size="Size.Small">
+                                    Редагувати
+                                </MudButton>
+                            } *@
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+
+            @* 2. Показуємо скелетони ПІД списком під час дозавантаження *@
+            @if (isLoading)
+            {
+                <MudGrid>
+                    @foreach (var i in Enumerable.Range(0, 3))
+                    {
+                        <MudItem xs="12">
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" @key="@($"skeleton_{i}")" Height="150px" Class="rounded-xl mb-4" />
+                        </MudItem>
+                    }
+                </MudGrid>
+            }
+        }
+    </div>
+</MudContainer>
+
+<style>
+    
+</style>
+
+
+@code {
+    string? filiasNameFromQuery;
+    List<StationsDTO> stationsList = new();
+    List<string> Filias = new();
+    List<string> Oblasts = new();
+    List<string> StationNames = new();
+    private UserDto CurrentUser { get; set; }
+    private CancellationTokenSource debounceCts;
+    private List<string> filteredStations = new();
+    private bool isFilterLoad = false;
+    string SelectedFilia = "";
+    string SelectedOblast = "";
+    string SelectedName = "";
+
+    string CurrentFilia = "";
+    string CurrentOblast = "";
+    string Currentname = "";
+
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    private bool IsAdmin { get; set; }
+    private bool IsAdminOrPublisher { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        filiasNameFromQuery = query["filialsName"];
+
+        var queryStr = QueryHelpers.ParseQuery(uri.Query);
+        bool hasFilter = false;
+
+        if (queryStr.TryGetValue("filia", out var filia))
+        {
+            SelectedFilia = CurrentFilia = filia.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("oblast", out var oblast))
+        {
+            SelectedOblast = CurrentOblast = oblast.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("name", out var name))
+        {
+            SelectedName = Currentname = name.ToString();
+            hasFilter = true;
+        }
+
+        // Викликаємо фільтр тільки один раз, якщо хоча б один параметр знайдено
+        if (hasFilter)
+        {
+            await ApplyFilter();
+        }
+        else
+        {
+            await LoadStations();
+        }
+
+        await JS.InvokeVoidAsync("addStationsScrollListener", DotNetObjectReference.Create(this));  
+    }
+
+    protected async Task LoadStations()
+    {
+        Console.WriteLine($"Завантаження сторінки {currentPage}...  isLoading: {isLoading}, allLoaded: {allLoaded}");
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+        StateHasChanged();
+        IsAdmin = false;
+        IsAdminOrPublisher = false;
+
+        if(filiasNameFromQuery != null)
+        {
+            SelectedFilia = filiasNameFromQuery;
+        }
+        var url =
+               $"api/stations/get-stations?page={currentPage}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedFilia) ? "" : $"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedName) ? "" : $"&name={Uri.EscapeDataString(SelectedName)}")}" +
+               $"{(string.IsNullOrWhiteSpace(SelectedOblast) ? "" : $"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+        var stationsPage = await Http.GetFromJsonAsync<List<StationsDTO>>(url);
+
+        if (stationsPage == null || stationsPage.Count == 0)
+        {
+            Console.WriteLine("Всі станції завантажено");
+            allLoaded = true;
+        }
+        else
+        {
+            stationsList.AddRange(stationsPage);
+            //ApplyFilter(); // Оновлюємо відфільтровані по фільтрах
+            Console.WriteLine($"Завантажено сторінку {currentPage} з {stationsPage.Count} станціями");
+            currentPage++;
+            StateHasChanged();
+        }
+        
+        if (!isFilterLoad)
+        {
+            var urlfilias = $"api/stations/get-filias{($"?name={Uri.EscapeDataString(SelectedName)}")}" + 
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+            var urloblasts = $"api/stations/get-oblasts{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}"; 
+            var urlstationnames = $"api/stations/get-station-names{($"?name={Uri.EscapeDataString(SelectedName)}")}" +
+            $"{($"&filia={Uri.EscapeDataString(SelectedFilia)}")}" +
+            $"{($"&oblast={Uri.EscapeDataString(SelectedOblast)}")}";
+
+            Filias = await Http.GetFromJsonAsync<List<string>>(urlfilias);
+            Oblasts = await Http.GetFromJsonAsync<List<string>>(urloblasts);
+            StationNames = await Http.GetFromJsonAsync<List<string>>(urlstationnames);
+            isFilterLoad = true;
+        }
+        await CheckRoles();
+        isLoading = false;
+        StateHasChanged();
+    }
+
+
+    private async Task OnFiliaChanged(string value)
+    {
+        SelectedFilia = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["filia"] = string.IsNullOrEmpty(SelectedFilia) ? null : SelectedFilia
+        });
+        Nav.NavigateTo(newUri);
+        await ApplyFilter();
+    }
+
+    // 2. Коли міняємо Область
+    private async Task OnOblastChanged(string value)
+    {
+        SelectedOblast = value ?? "";
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["oblast"] = string.IsNullOrEmpty(SelectedOblast) ? null : SelectedOblast
+        });
+        Nav.NavigateTo(newUri);
+        await ApplyFilter();
+    }
+
+    private async Task<IEnumerable<string>> SearchStations(string value, CancellationToken token)
+    {
+        // Якщо нічого не введено, можна нічого не повертати або повернути весь список
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+
+        // Припустимо, у тебе є список усіх назв станцій AllStationNames.
+        // Якщо його немає, можна фільтрувати безпосередньо stationsList (якщо він завантажений)
+        return StationNames.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+
+        // АБО, якщо ти хочеш шукати саме по об'єктах станцій (наприклад, по Name):
+        // return stationsList.Select(s => s.Name).Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+    // 4. Вибір конкретної станції з випадаючого списку
+    private async Task SelectStationFromList(string item)
+    {
+        SelectedName = item;
+        filteredStations = null; // Ховаємо підказки
+        var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["name"] = string.IsNullOrEmpty(SelectedName) ? null : SelectedName
+        });
+        Nav.NavigateTo(newUri);
+        await ApplyFilter();
+    }
+
+
+    protected async Task ApplyFilter()
+    {
+        // Переходим к первой странице и очищаем состояние
+        currentPage = 1;
+        allLoaded = false;
+        isFilterLoad = false;
+        Filias.Clear();
+        Oblasts.Clear();
+        StationNames.Clear();
+        stationsList.Clear();          // если хотите начать с нуля
+        await LoadStations();                 // загружаем первую страницу
+
+        StateHasChanged();
+    }
+    
+    async Task ClearFilter()
+    {
+        SelectedFilia = "";
+        SelectedOblast = "";
+        SelectedName = "";
+        isFilterLoad = false;
+        currentPage = 1;
+        stationsList.Clear();
+        await LoadStations();
+
+        StateHasChanged();
+    }
+
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        SelectedName = e.Value?.ToString() ?? "";
+
+        // скидаємо попередній debounce
+        debounceCts?.Cancel();
+        debounceCts = new CancellationTokenSource();
+        var token = debounceCts.Token;
+
+        try
+        {
+            await Task.Delay(300, token); // debounce 300 мс
+
+            if (!token.IsCancellationRequested)
+            {
+                if (string.IsNullOrWhiteSpace(SelectedName))
+                {
+                    filteredStations.Clear();
+                }
+                else
+                {
+                    filteredStations = StationNames
+                        .Where(x => x.Contains(SelectedName, StringComparison.OrdinalIgnoreCase))
+                        .Take(7)
+                        .ToList();
+                }
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // нормально, просто перервано
+        }
+    }
+
+    private void SelectItem(string item)
+    {
+        SelectedName = item;
+        filteredStations.Clear();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadStations();
+    }
+
+    private void AddStation() => Nav.NavigateTo("/stations/create");
+}

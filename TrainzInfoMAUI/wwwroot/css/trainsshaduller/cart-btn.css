@@ -1,0 +1,18 @@
+﻿.cart-btn {
+    width: 45px;
+    height: 45px;
+    background: red;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+    .cart-btn:hover {
+        background: #cc0000;
+    }

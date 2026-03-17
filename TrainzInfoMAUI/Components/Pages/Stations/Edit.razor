@@ -1,0 +1,247 @@
+﻿@page "/stations/edit/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+<PageTitle>Редагування станції | TrainzInfo</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mb-10">
+    <MudPaper Elevation="4" Class="pa-8 rounded-xl shadow-xl">
+
+        <div class="text-center mb-6">
+            <MudIcon Icon="@Icons.Material.Filled.EditLocation" Color="Color.Primary" Size="Size.Large" Class="mb-2" />
+            <MudText Typo="Typo.h4" Class="fw-bold">Редагувати станцію</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">ID об'єкта: @Id</MudText>
+        </div>
+
+        @if (stationsDTO == null)
+        {
+            <div class="d-flex justify-center pa-10">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@stationsDTO" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <MudStack Spacing="4">
+
+                    @* Назва станції *@
+                    <MudTextField Label="Назва станції" @bind-Value="stationsDTO.Name"
+                                  Variant="Variant.Outlined" Placeholder="Напр. Київ-Пасажирський"
+                                  Required="true" For="@(() => stationsDTO.Name)" />
+
+                    <MudGrid Spacing="2">
+                        @* Область *@
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="string" Label="Область"
+                                       @bind-Value="stationsDTO.Oblasts"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                                <MudSelectItem Value="@("")">Оберіть область...</MudSelectItem>
+                                @foreach (var item in OblastList)
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+
+                        @* Філія (Залізниця) *@
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="string" Label="Філія" @bind-Value="stationsDTO.UkrainsRailways"
+                                       Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                                <MudSelectItem Value="@("")">Оберіть філію...</MudSelectItem>
+                                @foreach (var item in FiliasList)
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    </MudGrid>
+
+                    @* Місто *@
+                    <MudAutocomplete T="string" Label="Місто" @bind-Value="stationsDTO.Citys"
+                                     SearchFunc="@SearchCity"
+                                     Variant="Variant.Outlined"
+                                     Placeholder="Почніть вводити місто..."
+                                     ResetValueOnEmptyText="true"
+                                     CoerceText="true" CoerceValue="true"
+                                     AdornmentIcon="@Icons.Material.Filled.LocationCity" AdornmentColor="Color.Primary" />
+
+                    @* Фото станції *@
+                    <div class="d-flex flex-column gap-2">
+                        <InputFile id="editStationFileInput" OnChange="HandleFileSelected" style="display:none" />
+
+                        <MudButton HtmlTag="label"
+                                   for="editStationFileInput"
+                                   Variant="Variant.Outlined"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.PhotoCamera"
+                                   FullWidth="true"
+                                   Class="py-3 rounded-lg border-2 border-dashed">
+                            Змінити фото станції
+                        </MudButton>
+
+                        @if (!string.IsNullOrEmpty(imagePreview))
+                        {
+                            <MudPaper Elevation="0" Class="pa-2 mud-bg-background-grey rounded-lg d-flex justify-center mt-2 relative">
+                                <MudImage Src="@imagePreview" Height="180" ObjectFit="ObjectFit.Contain" Class="rounded-lg shadow-sm" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" 
+                                               OnClick="RemoveImage" Class="absolute" Style="top: 10px; right: 10px;" />
+                            </MudPaper>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg">
+                            <strong>Помилка оновлення:</strong> @ErrorMessage
+                        </MudAlert>
+                    }
+
+                    <div class="d-flex justify-space-between mt-4">
+                        <MudButton Variant="Variant.Text" OnClick="Cancel" Class="px-6">Скасувати</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.Update"
+                                   Class="rounded-lg px-10 shadow-lg fw-bold">
+                            Оновити дані
+                        </MudButton>
+                    </div>
+
+                </MudStack>
+            </EditForm>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private StationEditDTO stationsDTO;
+    private string imagePreview;
+    private string ErrorMessage;
+    private bool IsAdmin;
+    // Списки (можна винести в сервіс)
+    private List<string> OblastList = new(); // Приклад
+    private List<string> FiliasList = new(); // Приклад
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            await CheckRoles();
+            stationsDTO = await Http.GetFromJsonAsync<StationEditDTO>($"api/stations/getedit/{Id}");
+            FiliasList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-filias");
+            OblastList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-oblasts");
+            if (stationsDTO != null && !string.IsNullOrEmpty(stationsDTO.OldImage))
+            {
+                Console.WriteLine($"Отримано дані станції: {stationsDTO.Name}, Фото: {stationsDTO.OldImage}");
+                // Підставляємо шлях до існуючого фото
+                imagePreview = stationsDTO.OldImage; 
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка при завантаженні даних станції: {ex.Message}");
+            ErrorMessage = "Не вдалося завантажити дані станції.";
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin");
+
+            }
+            else
+            {
+                Navigation.NavigateTo("/erroraccess");
+            }
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine("HandleValidSubmit " + stationsDTO.Name);
+        if(stationsDTO.NewImage == null)
+        {
+            stationsDTO.NewImage = stationsDTO.OldImage;
+            stationsDTO.NewImageType = stationsDTO.OldImageType;
+        }
+        ErrorMessage = "";
+        try
+        {
+            var result = await Http.PostAsJsonAsync($"api/stations/update", stationsDTO);
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Дані станції успішно оновлено!", Severity.Success);
+                Navigation.NavigateTo($"/stations/details/{Id}");
+            }
+            else
+            {
+                ErrorMessage = await result.Content.ReadAsStringAsync();
+                Snackbar.Add($"Помилка оновлення: {ErrorMessage}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            Snackbar.Add("Помилка: " + ErrorMessage);
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream(maxAllowedSize: 5120000).ReadAsync(buffer);
+            imagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+            stationsDTO.NewImage = imagePreview; // Передаємо нове фото на сервер
+            stationsDTO.NewImageType = file.ContentType; // Передаємо тип файлу
+        }
+    }
+
+    private void RemoveImage()
+    {
+        imagePreview = null;
+        stationsDTO.NewImage = null;
+        stationsDTO.OldImage = null;
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/stations");
+
+    private async Task<IEnumerable<string>> SearchCity(string value, CancellationToken token)
+    {
+        // Твоя логіка пошуку міст
+        return new string[] { "Київ", "Бердичів", "Козятин" }.Where(x => x.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public void OnOblastChanged(string value) => stationsDTO.Oblasts = value;
+
+ 
+}

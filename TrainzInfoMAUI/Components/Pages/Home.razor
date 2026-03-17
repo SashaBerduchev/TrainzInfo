@@ -1,0 +1,286 @@
+﻿@page "/"
+@inject AppConfig Config
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+<PageTitle>TrainzInfo</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8 mb-10">
+    <div class="text-center mb-10">
+        <MudText Typo="Typo.h2" Color="Color.Primary" Class="fw-bold mb-4">
+            Ласкаво просимо на TrainzInfo!
+        </MudText>
+        <MudPaper Elevation="0" Class="pa-6 rounded-xl mud-bg-background-grey">
+            <MudText Typo="Typo.h6" Class="mud-text-secondary">
+                Сайт присвячено шанувальникам залізничного транспорту: локомотиви, електропоїзди та історія залізниці, а також розклад поїздів.
+            </MudText>
+        </MudPaper>
+    </div>
+
+    <MudGrid Justify="Justify.Center" Class="mb-12">
+        @foreach (var (Label, Link, Icon) in new[] {
+                ("Локомотиви", "/locomotives", Icons.Material.Filled.Train),
+                ("Електропоїзди", "/electric-trains", Icons.Material.Filled.ElectricBolt),
+                ("Дизель-поїзди", "/diesel-trains", Icons.Material.Filled.PropaneTank),
+                ("Станції", "/stations", Icons.Material.Filled.Place)
+                })
+        {
+            <MudItem xs="6" sm="3" Class="d-flex">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Info"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           StartIcon="@Icon"
+                           Href="@Link"
+                           Class="rounded-lg py-4">
+                    @Label
+                </MudButton>
+            </MudItem>
+        }
+    </MudGrid>
+
+    <div class="d-flex justify-center mb-10">
+        <MudTextField @bind-Value="SearchText"
+                      Placeholder="Пошук новин за назвою..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined"
+                      Clearable="true"
+                      Immediate="true"
+                      Class="max-w-400" />
+    </div>
+
+    <div id="newsContainer">
+        @if (allNews is null)
+        {
+            <MudGrid>
+                @foreach (var i in Enumerable.Range(0, 3))
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard>
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                            <MudCardContent>
+                                <MudSkeleton Width="80%" Height="42px" />
+                                <MudSkeleton Width="100%" />
+                                <MudSkeleton Width="100%" />
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+       @*  else if (!filteredNews.Any())
+        {
+            <div class="text-center py-10">
+                <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Color="Color.Default" Style="font-size: 5rem;" />
+                <MudText Typo="Typo.h5" Color="Color.Secondary">Новин не знайдено</MudText>
+            </div>
+        } *@
+        else
+        {
+            <MudGrid Spacing="6">
+                @foreach (var news in filteredNews)
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard Elevation="4" Class="h-100 d-flex flex-column rounded-xl hover-elevate overflow-hidden">
+
+                            @* Клікабельна обгортка через звичайний div *@
+                            <div class="d-flex flex-column flex-grow-1 w-100"
+                                 style="cursor: pointer;"
+                                 @onclick="@(() => Nav.NavigateTo($"/news/details/{news.id}"))">
+
+                                @* 1. Картинка (займає верхню частину) *@
+                                <div class="w-100 position-relative">
+                                    @if (!string.IsNullOrWhiteSpace(news.ImgSrc))
+                                    {
+                                        <MudCardMedia Image="@(Config.ApiBaseUrl + news.ImgSrc)" Height="220" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-center justify-center mud-bg-background-grey" style="height: 220px; width: 100%;">
+                                            <MudIcon Icon="@Icons.Material.Filled.Newspaper" Size="Size.Large" Color="Color.Default" Style="font-size: 4rem;" />
+                                        </div>
+                                    }
+
+                                    @* Дата *@
+                                    <div class="position-absolute px-3 py-1 rounded-pill mud-theme-primary"
+                                         style="bottom: 10px; right: 10px; opacity: 0.9; z-index: 2;">
+                                        <MudText Typo="Typo.caption">
+                                            <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-1" Style="vertical-align: middle;" />
+                                            @news.DateTime.ToString()
+                                        </MudText>
+                                    </div>
+                                </div>
+
+                                @* 2. Текстовий контент (під картинкою) *@
+                                <MudCardContent Class="pa-4 w-100">
+                                    <MudText Typo="Typo.h5" Class="mb-3 fw-bold mud-text-primary" Style="line-height: 1.2; min-height: 2.4em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        @((MarkupString)news.NameNews)
+                                    </MudText>
+                                    <div class="mud-text-secondary line-clamp-3">
+                                        @((MarkupString)news.BaseNewsInfo)
+                                    </div>
+                                </MudCardContent>
+
+                            </div>
+
+                            @* 3. Нижня панель *@
+                            <MudCardActions Class="border-t pa-4 d-flex justify-end align-center mt-auto" @onclick:stopPropagation="true">
+                                @if (IsAdmin)
+                                {
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                   Color="Color.Warning"
+                                                   Size="Size.Small"
+                                                   Variant="Variant.Outlined"
+                                                   OnClick="@(() => Nav.NavigateTo($"/news/edit/{news.id}"))"
+                                                   Class="mr-2" />
+                                }
+                                <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary" Size="Size.Medium" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+
+        @if (isLoading)
+        {
+            <MudGrid>
+                @foreach (var i in Enumerable.Range(0, 6)) @* Показуємо 6 фейкових карток *@
+                {
+                    <MudItem xs="12" md="6" lg="4">
+                        <MudCard Elevation="4" Class="h-100 rounded-xl overflow-hidden">
+                            @* Скелетон для зображення *@
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="220px" Width="100%" />
+
+                            <MudCardContent Class="pa-4">
+                                @* Скелетон для заголовка (2 рядки) *@
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="30px" Width="80%" Class="mb-2" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="30px" Width="60%" Class="mb-4" />
+
+                                @* Скелетон для опису (3 рядки) *@
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="100%" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="100%" />
+                                <MudSkeleton SkeletonType="SkeletonType.Text" Height="15px" Width="40%" />
+                            </MudCardContent>
+
+                            <MudCardActions Class="border-t pa-4 d-flex justify-end">
+                                @* Скелетон для іконки внизу *@
+                                <MudSkeleton SkeletonType="SkeletonType.Circle" Width="24px" Height="24px" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+    </div>
+</MudContainer>
+
+@code {
+    private List<NewsDTO> allNews = new();
+    private List<NewsDTO> filteredNews = new();
+    private string searchText = string.Empty;
+    private bool IsAdmin = false;
+    private int currentPage = 1;
+    private bool isLoading = false;
+    private bool allLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNews();
+        // Підписка на скрол через JS
+        await JS.InvokeVoidAsync("addNewsScrollListener", DotNetObjectReference.Create(this));
+
+        await JS.InvokeVoidAsync("showNewsContainer");
+    }
+
+
+    private async Task LoadNews()
+    {
+        if (isLoading || allLoaded) return;
+
+        isLoading = true;
+
+        try
+        {
+            var newItems = await Http.GetFromJsonAsync<List<NewsDTO>>($"api/news/getnews?page={currentPage}");
+            if (newItems == null || newItems.Count == 0)
+            {
+                allLoaded = true;
+            }
+            else
+            {
+                allNews.AddRange(newItems);
+                FilterNews(); // оновлюємо відфільтровані новини
+                currentPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Помилка завантаження новин: " + ex.Message);
+        }
+        await CheckRoles();
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    private void FilterNews()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredNews = allNews.ToList();
+        }
+        else
+        {
+            filteredNews = allNews
+                .Where(x => x.NameNews.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+    private string SearchText
+    {
+        get => searchText;
+        set
+        {
+            searchText = value;
+            FilterNews();
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnScrollNearBottom()
+    {
+        await LoadNews();
+    }
+}

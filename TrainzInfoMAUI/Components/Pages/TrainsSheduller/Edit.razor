@@ -1,0 +1,219 @@
+﻿@page "/trains-scheduler/edit/{Id:int}"
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<PageTitle>Редагування розкладу поїзда @train?.Number</PageTitle>
+
+@if (isLoading)
+{
+    <div class="d-flex justify-center align-center" style="min-height: 60vh;">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+    </div>
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mb-10">
+        <MudText Typo="Typo.h4" Class="fw-bold mb-4" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.SwapVert" Size="Size.Large" Class="mr-2" />
+            Редагувати графік: @train?.Number
+        </MudText>
+
+        @* Контейнер для перетягування *@
+        <MudDropContainer @ref="dropContainer" T="TrainsShaduleDTO" Items="@trainsShedullers" ItemsSelector="@((item, dropzone) => true)" ItemDropped="ItemUpdated" Class="d-flex flex-column gap-2 mb-8">
+            <ChildContent>
+                <MudDropZone T="TrainsShaduleDTO" Identifier="schedule" Class="rounded-lg pa-2 mud-bg-background-grey" Style="min-height: 50px;" />
+            </ChildContent>
+            <ItemRenderer>
+                <MudPaper Elevation="2" Class="pa-4 d-flex align-center justify-space-between rounded-lg mb-2">
+                    <div class="d-flex align-center">
+                        <MudIcon Icon="@Icons.Material.Filled.DragIndicator" Class="mr-4 text-secondary" />
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">@context.NameStation</MudText>
+                            <MudText Typo="Typo.caption">
+                                Прибуття: @context.Arrival.ToString(@"hh\:mm") | Відправлення: @context.Departure.ToString(@"hh\:mm")
+                            </MudText>
+                        </div>
+                    </div>
+                    <div class="d-flex align-center">
+                        <MudText Typo="Typo.body2" Class="mr-4">@context.Distance км</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => HandleDelete(context))" />
+                    </div>
+                </MudPaper>
+            </ItemRenderer>
+        </MudDropContainer>
+
+        <NavigationLock ConfirmExternalNavigation="@HasUnsavedChanges" />
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudPaper Elevation="4" Class="pa-6 rounded-xl">
+                    <MudText Typo="Typo.h6" Class="mb-4">Додати зупинку</MudText>
+                    <EditForm Model="@trainsSheduller" OnValidSubmit="HandleValidSubmit">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="flex-wrap">
+                            <MudAutocomplete T="string" Label="Станція" @bind-Value="station" SearchFunc="@SearchStations" Variant="Variant.Outlined" Dense="true" />
+                            <MudTimePicker Label="Приб." @bind-Time="arrivalTime" Variant="Variant.Outlined" AmPm="false" Dense="true" />
+                            <MudTimePicker Label="Відпр." @bind-Time="departureTime" Variant="Variant.Outlined" AmPm="false" Dense="true" />
+                            <MudNumericField Label="Км" @bind-Value="trainsSheduller.Distance" Variant="Variant.Outlined" Dense="true" />
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="py-3 px-6">Додати</MudButton>
+                        </MudStack>
+                    </EditForm>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+        <MudStack Row="true" Class="mt-6">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" FullWidth="true" StartIcon="@Icons.Material.Filled.Save" OnClick="@(() => SaveChanges("ok"))" Class="py-3 rounded-lg">Зберегти зміни</MudButton>
+        </MudStack>
+    </MudContainer>
+}
+}
+
+@code {
+    [Parameter] public int Id { get; set; } // ID поїзда
+    private MudDropContainer<TrainsShaduleDTO> dropContainer;
+    private bool isLoading = true;
+    private bool HasUnsavedChanges = false;
+    private string ErrorMessage = "";
+    private string station = "";
+    private List<string> stations = new();
+    private TrainDTO train;
+    private List<TrainsShaduleDTO> trainsShedullers = new();
+    private TrainsShaduleDTO trainsSheduller = new();
+    private TrainCreateRequest trainCreateRequest = new();
+    // Хелпери для TimePicker
+    private TimeSpan? arrivalTime { get => trainsSheduller.Arrival; set => trainsSheduller.Arrival = value ?? TimeSpan.Zero; }
+    private TimeSpan? departureTime { get => trainsSheduller.Departure; set => trainsSheduller.Departure = value ?? TimeSpan.Zero; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        try
+        {
+            isLoading = true;
+            // Завантажуємо дані поїзда та його поточний розклад
+            train = await Http.GetFromJsonAsync<TrainDTO>($"api/trains/getedittrain/{Id}");
+            var schedule = await Http.GetFromJsonAsync<List<TrainsShaduleDTO>>($"api/trainsshaduller/getedit/{Id}");
+            stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-station-names");
+            if (schedule != null)
+                trainsShedullers = schedule;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Не вдалося завантажити дані розкладу.";
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+
+    private void ItemUpdated(MudItemDropInfo<TrainsShaduleDTO> dropInfo)
+    {
+        // Видаляємо елемент з поточної позиції
+        trainsShedullers.Remove(dropInfo.Item);
+
+        // Розраховуємо новий індекс безпечно
+        var newIndex = dropInfo.IndexInZone;
+
+        // Якщо індекс за межами списку (наприклад, перетягнули в самий кінець),
+        // просто додаємо в кінець. Якщо ні — вставляємо за індексом.
+        if (newIndex < 0 || newIndex >= trainsShedullers.Count)
+        {
+            trainsShedullers.Add(dropInfo.Item);
+        }
+        else
+        {
+            trainsShedullers.Insert(newIndex, dropInfo.Item);
+        }
+
+        HasUnsavedChanges = true;
+        StateHasChanged(); // Обов'язково оновлюємо UI
+    }
+
+
+    private async Task ReloadStations()
+    {
+        stations.Clear();
+        stations = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-station-names");
+    }
+    private async Task<IEnumerable<string>> SearchStations(string value, CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(value)) return new string[0];
+        // Викликай свій метод OnInputChanged або сервіс тут
+        return stations.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private void HandleValidSubmit()
+    {
+        HasUnsavedChanges = true;
+        trainsSheduller.NameStation = station;
+        trainsSheduller.NumberTrain = train.Number.ToString();
+        trainsShedullers.Add(new TrainsShaduleDTO
+        {
+            NameStation = trainsSheduller.NameStation,
+            NumberTrain = train.Number.ToString(),
+            Arrival = trainsSheduller.Arrival,
+            Departure = trainsSheduller.Departure,
+            Distance = trainsSheduller.Distance
+        });
+
+        Console.WriteLine($"Додано зупинку: {trainsSheduller.NameStation}, Прибуття: {trainsSheduller.Arrival}, Відправлення: {trainsSheduller.Departure}, Км: {trainsSheduller.Distance}");
+        // Скидаємо форму для наступної зупинки
+        trainsSheduller = new TrainsShaduleDTO();
+        trainsShedullers = trainsShedullers.ToList();
+        station = "";
+        dropContainer?.Refresh();
+        StateHasChanged();
+    }
+
+    private void HandleDelete(TrainsShaduleDTO item)
+    {
+        trainsShedullers.Remove(item);
+        dropContainer?.Refresh();
+        HasUnsavedChanges = true;
+    }
+
+    private async Task SaveChanges(string mode)
+    {
+        trainCreateRequest.Train = train;
+        trainCreateRequest.TrainsShedullers = trainsShedullers;
+        try
+        {
+            var response = await Http.PostAsJsonAsync($"api/trainsshaduller/update", trainCreateRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                HasUnsavedChanges = false;
+                Snackbar.Add("Розклад успішно оновлено!", Severity.Success);
+                if (mode == "ok") Navigation.NavigateTo("/trains");
+                else await ReloadStations();
+            }
+            else
+            {
+                ErrorMessage = await response.Content.ReadAsStringAsync();
+                Snackbar.Add(ErrorMessage, Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private async Task ConfirmNavigation(LocationChangingContext context)
+    {
+        if (HasUnsavedChanges)
+        {
+            var confirmed = await JS.InvokeAsync<bool>("confirm", "У вас є незбережені зміни. Ви впевнені, що хочете піти?");
+            if (!confirmed) context.PreventNavigation();
+        }
+    }
+}

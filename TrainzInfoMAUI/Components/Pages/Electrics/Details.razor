@@ -1,0 +1,218 @@
+﻿@page "/electric-trains/details/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+<PageTitle>Електричка @electricTrain?.Name</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Color="Color.Primary" Class="mb-6">@Title</MudText>
+
+    @if (IsLoading)
+    {
+        <MudPaper Class="d-flex flex-column align-center justify-center py-12" Elevation="0">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body1" Class="mt-4">Отримуємо дані про склад...</MudText>
+        </MudPaper>
+    }
+    else if (Error != null)
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="my-4">@Error</MudAlert>
+        <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" Variant="Variant.Text" Href="/electric-trains">
+            Назад до списку
+        </MudButton>
+    }
+    else
+    {
+        <MudDivider Class="mb-6" />
+
+        <MudCard Elevation="4" Class="mb-8 rounded-xl overflow-hidden">
+            <MudGrid Spacing="0">
+                <MudItem xs="12" md="5">
+                    @if (electricTrain.Image != null)
+                    {
+                        <MudImage Src="@electricTrain.Image" Alt="Електропоїзд" Fluid="true"
+                                  Class="object-cover h-100 w-100" Style="min-height: 300px;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-center justify-center mud-bg-background-grey h-100" style="min-height: 300px;">
+                            <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" Color="Color.Default" />
+                        </div>
+                    }
+                </MudItem>
+
+                <MudItem xs="12" md="7" Class="pa-8">
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold mb-4">
+                        @electricTrain.Name <span class="mud-text-secondary">@electricTrain.Model</span>
+                    </MudText>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="6">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.LocationCity" Color="Color.Info" />
+                                <MudText><b>Місто:</b> @electricTrain.City</MudText>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Warehouse" Color="Color.Info" />
+                                <MudText><b>Депо:</b> @electricTrain.DepotList</MudText>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Info" />
+                                <MudText><b>Філія:</b> @electricTrain.UkrainsRailway</MudText>
+                            </MudStack>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudPaper Elevation="0" Class="mt-6 pa-4 mud-bg-background-grey rounded-lg">
+                        <MudText Typo="Typo.body1" Style="line-height: 1.6;">@electricTrain.BaseInfo</MudText>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudCard>
+
+        @if (electricTrain.Station != null)
+        {
+            <MudCard Elevation="2" Class="mb-8 pa-4 border-l-4 mud-border-primary">
+                <MudGrid>
+                    <MudItem xs="12" md="4">
+                        @if (!string.IsNullOrEmpty(electricTrain.StationImages))
+                        {
+                            <MudImage Src="@electricTrain.StationImages" Alt="@electricTrain.Station"
+                                      Fluid="true" Class="rounded shadow-sm" />
+                        }
+                    </MudItem>
+                    <MudItem xs="12" md="8">
+                        <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">@electricTrain.Station</MudText>
+                        <MudStack Row="true" Spacing="4">
+                            <MudText><strong>Місто:</strong> @electricTrain.City</MudText>
+                            <MudText><strong>Область:</strong> @electricTrain.Oblast</MudText>
+                        </MudStack>
+                        <div class="mt-4 mud-text-secondary">
+                            @((MarkupString)electricTrain.StationInformation)
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudCard>
+        }
+
+        <MudPaper Elevation="0" Class="pa-4 mb-8">
+            <MudText Typo="Typo.h6" Class="mb-2">Додаткова інформація</MudText>
+            <MudText Typo="Typo.body1" Style="white-space: pre-line;">@electricTrain.AllInfo</MudText>
+        </MudPaper>
+
+        @if (IsPublisherOrAdmin || IsSuperadmin)
+        {
+            <MudPaper Class="pa-6 mb-8 mud-theme-dark rounded-xl">
+                <MudText Typo="Typo.h6" Class="mb-4">Панель керування</MudText>
+                <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
+                    @if (IsPublisherOrAdmin)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Info"
+                                   Href="@($"/edit-info/{electricTrain.id}")" Target="_blank">
+                            Редагувати дод. інфо
+                        </MudButton>
+                    }
+                    @if (IsSuperadmin)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                   Href="@($"/electric-trains/edit/{electricTrain.id}")">Редагувати</MudButton>
+                        @* <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                   Href="@($"/electric-trains/edit/{electricTrain.id}")">Редагувати</MudButton> *@
+                        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                                   OnClick="DeleteElectics">Видалити</MudButton>
+                    }
+                </MudStack>
+            </MudPaper>
+        }
+
+        @if (ErrorMessage is not null)
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6">
+                Помилка збереження, зверніться до адміністратора: @ErrorMessage
+            </MudAlert>
+        }
+
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack"
+                   Href="/electric-trains" Class="mb-10">
+            Повернутися до списку
+        </MudButton>
+    }
+</MudContainer>
+
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private ElectricTrainDTO? electricTrain;
+    private string? ErrorMessage;
+    private bool IsPublisherOrAdmin = false;
+    private bool IsSuperadmin = false;
+    private string Title = "Електропоїзд";
+    private bool IsLoading = true;
+    private string? Error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            // Авторизація
+            var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = auth.User;
+
+            IsPublisherOrAdmin =
+                user.IsInRole("Publisher") ||
+                user.IsInRole("Admin") ||
+                user.IsInRole("Superadmin");
+
+            IsSuperadmin = user.IsInRole("Superadmin");
+
+            // Завантажуємо локомотив
+            electricTrain = await Http.GetFromJsonAsync<ElectricTrainDTO>($"api/electrictrains/details/{Id}");
+
+            if (electricTrain == null)
+            {
+                Error = "Електричка не знайдено.";
+                return;
+            }
+
+            Title = $"{electricTrain.Name} - {electricTrain.Model}";
+
+
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task DeleteElectics()
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити електричку?"))
+            return;
+        var response = await Http.PostAsync($"api/electrictrains/delete/{Id}", null);
+        if (response.IsSuccessStatusCode)
+            Nav.NavigateTo("/electric-trains");
+        else{
+            Console.WriteLine(response);
+            Console.WriteLine(response.Content);
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
+
+}

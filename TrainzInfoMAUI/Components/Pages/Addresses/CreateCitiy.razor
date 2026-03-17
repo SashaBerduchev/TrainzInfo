@@ -1,0 +1,164 @@
+﻿@page "/cities/create"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+<PageTitle>Додати нове місто</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mb-10">
+    <MudPaper Elevation="4" Class="pa-6 rounded-xl">
+        <MudStack Spacing="4">
+            <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">
+                <MudIcon Icon="@Icons.Material.Filled.LocationCity" Size="Size.Large" Class="mr-2" />
+                Нове місто в мережі
+            </MudText>
+
+            <MudDivider />
+
+            <EditForm Model="@city" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+
+                <MudGrid Spacing="3">
+                    @* Назва міста *@
+                    <MudItem xs="12" sm="6">
+                        <MudTextField Label="Назва міста" @bind-Value="city.City"
+                                      Variant="Variant.Outlined" For="@(() => city.City)" />
+                    </MudItem>
+
+                    @* Область (Випадаючий список) *@
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Область" @bind-Value="city.Oblast"
+                                   Variant="Variant.Outlined" For="@(() => city.Oblast)"
+                                   AnchorOrigin="Origin.BottomCenter">
+                            @foreach (var oblast in UkrainianOblasts)
+                            {
+                                <MudSelectItem Value="@oblast">@oblast</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    @* Район *@
+                    <MudItem xs="12">
+                        <MudTextField Label="Район" @bind-Value="city.Region"
+                                      Variant="Variant.Outlined" For="@(() => city.Region)"
+                                      Placeholder="Наприклад: Фастівський" />
+                    </MudItem>
+
+                   
+
+                    @if (!string.IsNullOrEmpty(errors))
+                    {
+                        <MudItem xs="12">
+                            <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-lg">@errors</MudAlert>
+                        </MudItem>
+                    }
+
+                    <MudItem xs="12" Class="d-flex justify-end gap-4 mt-4">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="Cancel">
+                            Скасувати
+                        </MudButton>
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.Save">
+                            Зберегти місто
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private CityDTO city = new CityDTO();
+    private string errors = "";
+    private bool IsAdmin = false;
+    // Список областей України для вибору
+    private List<string> UkrainianOblasts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckRoles();
+        await Load();
+    }
+
+
+    private async Task Load()
+    {
+        UkrainianOblasts = await Http.GetFromJsonAsync<List<string>>("api/CitiesApi/getoblasts");
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+
+
+    private async Task HandleValidSubmit()
+    {
+        errors = "";
+        try
+        {
+            StateHasChanged();
+            var result = await Http.PostAsJsonAsync("api/CitiesApi/create", city);
+
+            if (result.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Місто {city.City} успішно додано!", Severity.Success);
+                Navigation.NavigateTo("/cities");
+            }
+            else
+            {
+                errors = await result.Content.ReadAsStringAsync();
+                Snackbar.Add("Помилка збереження", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = ex.Message;
+            Snackbar.Add("Помилка зв'язку з сервером", Severity.Error);
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/cities");
+
+    public class CityDTO
+    {
+        public int Id { get; set; }
+        public string City { get; set; }
+        public string Oblast { get; set; }
+        public string Region { get; set; }
+        public string BaseInfo { get; set; }
+        public string AllInfo { get; set; }
+    }
+}

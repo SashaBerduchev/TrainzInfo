@@ -1,0 +1,205 @@
+﻿@page "/trains/shedule/{trainid:int}"
+@using SharedDTO.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+
+<PageTitle>Поїзд @Train?.Number</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudPaper Elevation="0" Class="pa-6 mud-bg-background-grey rounded-xl mb-6 text-center">
+        <MudText Typo="Typo.h3" Color="Color.Primary" Class="fw-bold mb-2">
+            Поїзд № @Train?.Number
+        </MudText>
+        <MudText Typo="Typo.h5" Class="mud-text-secondary">
+            <MudIcon Icon="@Icons.Material.Filled.Route" Class="mr-2" />
+            @Train?.StationFrom – @Train?.StationTo
+        </MudText>
+    </MudPaper>
+
+    @if (IsSuperadmin)
+    {
+        <MudPaper Elevation="2" Class="pa-4 mb-6 mud-theme-dark rounded-lg">
+            <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
+                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.AddLocation" OnClick="AddStop">
+                    Додати зупинку
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Refresh" OnClick="UpdateInfo">
+                    Оновити
+                </MudButton>
+                <MudSpacer />
+                <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteSweep" OnClick="() => DeleteSchedule(Train.Id)">
+                    Видалити графік
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    }
+
+    @if (Schedule is null)
+    {
+        <MudPaper Elevation="4" Class="rounded-xl pa-4 mb-6">
+            <MudText Typo="Typo.h6" Class="mud-text-secondary mb-4 ml-2">Отримуємо графік руху...</MudText>
+
+            <MudStack Spacing="1">
+                @* Заголовок таблиці-заглушки *@
+                <MudPaper Elevation="0" Class="pa-4 mud-bg-background-grey rounded-t-xl d-none d-sm-block">
+                    <MudGrid Spacing="2">
+                        <MudItem sm="2"><MudSkeleton Width="50%" Height="16px" /></MudItem>
+                        <MudItem sm="4"><MudSkeleton Width="60%" Height="16px" /></MudItem>
+                        <MudItem sm="2"><MudSkeleton Width="50%" Height="16px" /></MudItem>
+                        <MudItem sm="2"><MudSkeleton Width="50%" Height="16px" /></MudItem>
+                        @if (IsSuperadmin)
+                        {
+                            <MudItem sm="2"></MudItem>
+                        }
+                    </MudGrid>
+                </MudPaper>
+
+                @* Рядки розкладу *@
+                @foreach (var i in Enumerable.Range(0, 6))
+                {
+                    <MudPaper Elevation="0" Class="pa-4 border-b mud-border-lines-default">
+                        <MudGrid Spacing="2" AlignItems="AlignItems.Center">
+                            @* Номер поїзда *@
+                            <MudItem xs="3" sm="2">
+                                <MudSkeleton Width="40px" Height="20px" />
+                            </MudItem>
+
+                            @* Станція *@
+                            <MudItem xs="9" sm="4">
+                                <MudSkeleton Width="85%" Height="24px" />
+                            </MudItem>
+
+                            @* Прибуття (Success) *@
+                            <MudItem xs="6" sm="2">
+                                <MudSkeleton Width="50px" Height="20px" Class="rounded" />
+                            </MudItem>
+
+                            @* Відправлення (Error) *@
+                            <MudItem xs="6" sm="2">
+                                <MudSkeleton Width="50px" Height="20px" Class="rounded" />
+                            </MudItem>
+
+                            @* Дії *@
+                            @if (IsSuperadmin)
+                            {
+                                <MudItem xs="12" sm="2" Class="d-flex justify-end">
+                                    <MudSkeleton SkeletonType="SkeletonType.Circle" Width="32px" Height="32px" />
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudPaper>
+                }
+            </MudStack>
+        </MudPaper>
+    }
+    else
+    {
+        <MudTable Context="item" Items="@Schedule" Hover="true" Striped="true" Breakpoint="Breakpoint.Sm" Elevation="4" Class="rounded-xl overflow-hidden mb-6">
+            <HeaderContent>
+                <MudTh>Номер</MudTh>
+                <MudTh>Назва станції</MudTh>
+                <MudTh>Прибуття</MudTh>
+                <MudTh>Відправлення</MudTh>
+                @if (IsSuperadmin)
+                {
+                    <MudTh Style="text-align:right">Дії</MudTh>
+                }
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Номер"><b>@item.NumberTrain</b></MudTd>
+                <MudTd DataLabel="Станція">
+                    <MudLink Href="@($"/stations/details/{item.StationId}")"
+                             Color="Color.Primary" Underline="Underline.Hover" Style="cursor:pointer">
+                        @item.NameStation
+                    </MudLink>
+                </MudTd>
+                <MudTd DataLabel="Прибуття" Class="mud-text-success">@item.Arrival</MudTd>
+                <MudTd DataLabel="Відправлення" Class="mud-text-error">@item.Departure</MudTd>
+
+                @if (IsSuperadmin)
+                {
+                    <MudTd DataLabel="Дії" Style="text-align:right">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       OnClick="() => Edit(item.Id)"
+                                       Color="Color.Warning"
+                                       Size="Size.Small" />
+                    </MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    }
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6 rounded-lg">
+            <strong>Помилка:</strong> @ErrorMessage
+        </MudAlert>
+    }
+
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ArrowBack"
+               OnClick="GoBack" Class="py-2 px-6 rounded-pill shadow-lg">
+        До списку поїздів
+    </MudButton>
+</MudContainer>
+
+@code {
+    [Parameter] public int trainid { get; set; }
+
+    private List<TrainsShaduleDTO> Schedule;
+    private TrainDTO Train;
+    private string ErrorMessage = "";
+    private bool IsSuperadmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserRole();
+        await LoadTrain();
+        await LoadSchedule();
+    }
+
+    private async Task LoadUserRole()
+    {
+        var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = auth.User;
+
+        IsSuperadmin = user.IsInRole("Superadmin");
+    }
+
+    private async Task LoadTrain()
+    {
+        Train = await Http.GetFromJsonAsync<TrainDTO>($"api/trains/gettrainbynumber?trainid={trainid}");
+    }
+
+    private async Task LoadSchedule()
+    {
+        Schedule = await Http.GetFromJsonAsync<List<TrainsShaduleDTO>>(
+            $"api/trainsshaduller/getbytrain?trainid={trainid}"
+        );
+    }
+
+    private async Task DeleteSchedule(int id)
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити розклад?"))
+            return;
+
+        var response = await Http.PostAsync($"api/trainsshaduller/delete/{Train.Id}", null);
+
+        if (response.IsSuccessStatusCode)
+            Nav.NavigateTo("/trains");
+
+        else
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
+    void AddStop() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/add");
+    void UpdateInfo() => Nav.NavigateTo($"/trains/{Train.Number}/schedule/update");
+    void Edit(int id) => Nav.NavigateTo($"/trainsshadule/edit/{id}");
+    void GoBack() => Nav.NavigateTo("/trains");
+}

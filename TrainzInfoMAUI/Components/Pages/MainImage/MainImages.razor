@@ -1,0 +1,79 @@
+﻿@page "/mainimages"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
+
+<PageTitle>Головні зображення </PageTitle>
+@if (isLoading)
+{
+    <MudGrid>
+        @foreach (var i in Enumerable.Range(0, 4))
+        {
+            <MudItem xs="12">
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="150px" Class="rounded-lg mb-4" />
+            </MudItem>
+        }
+    </MudGrid>
+}
+else
+{
+    <div id="mainImgContainer">
+        @foreach (var img in mainImages)
+        {
+            <MudPaper Elevation="4" Class="mb-6 overflow-hidden rounded-xl loco-card-hover">
+                <MudGrid Spacing="0">
+                    <MudItem xs="12" md="4" Class="position-relative">
+                        <MudImage Src="@(Config.ApiBaseUrl + img.ImgSrc)" Alt="@img.Name"
+                                  ObjectFit="ObjectFit.Cover" Height="220" Width="400" Class="w-100" />
+                        <MudItem xs="12" md="5" Class="pa-6">
+                            <div class="d-flex align-center mb-4">
+                                <MudText Typo="Typo.h4" Color="Color.Primary" Class="fw-bold">@img.Name</MudText>
+                                <MudChip T="string" Variant="Variant.Text" Color="Color.Secondary" Class="ml-2 px-3 fw-bold">№@img.Name</MudChip>
+                            </div>
+
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Color="Color.Surface"
+                                           Variant="Variant.Filled"
+                                           OnClick="@(() => Nav.NavigateTo($"/mainimages/edit/{img.id}"))"
+                                           Class="absolute ma-2 shadow-lg"
+                                           Style="top:0; right:0; background-color: rgba(var(--mud-palette-primary-rgb), 0.8); backdrop-filter: blur(4px);" />
+                        </MudItem>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
+    </div>
+}
+
+@code {
+    private List<MainImageGetDTO> mainImages = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Http.GetAsync("api/mainimage/getimages");
+            if (response.IsSuccessStatusCode)
+            {
+                mainImages = await response.Content.ReadFromJsonAsync<List<MainImageGetDTO>>() ?? new List<MainImageGetDTO>();
+            }
+            else
+            {
+                // Handle error response
+                Console.Error.WriteLine($"Failed to load main images: {response.ReasonPhrase}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.Error.WriteLine($"Error loading main images: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

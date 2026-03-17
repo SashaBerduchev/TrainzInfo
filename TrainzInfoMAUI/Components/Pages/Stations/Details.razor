@@ -1,0 +1,214 @@
+﻿@page "/stations/details/{id:int}"
+@using SharedDTO.DTO.GetDTO
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AppConfig Config
+@inject IJSRuntime JS
+<PageTitle>Станція @stations?.Name</PageTitle>
+
+<HeadContent>
+    @if (stations != null)
+    {
+        <meta property="og:title" content="@($"Станція {stations.Name}, {stations.Oblasts} область, місто {stations.Citys}")" />
+        <meta property="og:description" content="Детальна інформація на TrainzInfo" />
+        <meta property="og:image" content="@($"https://www.trainzinfo.com.ua/api/stations/{stations.id}/image?width=1000")" />
+        <meta property="og:url" content="@($"https://www.trainzinfo.com.ua/stations/details/{Id}")" />
+    }
+</HeadContent>
+
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6 mb-10">
+    <MudText Typo="Typo.h3" Color="Color.Primary" Class="news-page-title mb-6 fw-bold">@stations?.Name</MudText>
+
+    @if (stations != null)
+    {
+        <MudCard Elevation="4" Class="mb-8 rounded-xl overflow-hidden">
+            <MudGrid Spacing="0">
+                <MudItem xs="12" md="4">
+                    @if (!string.IsNullOrEmpty(stations.ImgSrc))
+                    {
+                        <MudImage Src="@(Config.ApiBaseUrl + stations.ImgSrc)" Alt="@stations.Name"
+                                  Fluid="true" Class="h-100 object-cover w-100" Style="min-height: 250px;" />
+                    }
+                    else
+                    {
+                        <MudImage Src="/images/default-station.jpg" Alt="Станція"
+                                  Fluid="true" Class="h-100 object-cover w-100" Style="min-height: 250px;" />
+                    }
+                </MudItem>
+
+                <MudItem xs="12" md="8" Class="pa-8">
+                    <MudText Typo="Typo.h4" Color="Color.Primary" Class="mb-4">Інформація про станцію</MudText>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Філія</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.UkrainsRailways</MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Місто</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.Citys</MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="4">
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Область</MudText>
+                            <MudText Typo="Typo.body1" Class="fw-bold">@stations.Oblasts</MudText>
+                        </MudItem>
+                    </MudGrid>
+
+                    @if (IsAdmin)
+                    {
+                        <MudDivider Class="my-6" />
+                        <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" StartIcon="@Icons.Material.Filled.NoteAdd" OnClick="AddInfo" Size="Size.Small">Додати інфо</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => EditStation(stations.id)" Size="Size.Small">Редагувати</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever" OnClick="() => DeleteStation(stations.id)" Size="Size.Small">Видалити</MudButton>
+                        </MudStack>
+                    }
+                </MudItem>
+            </MudGrid>
+        </MudCard>
+
+        <MudPaper Elevation="0" Class="pa-4 mb-8">
+            <MudText Typo="Typo.body1" Style="font-size: 1.1rem; line-height: 1.6;">
+                @((MarkupString)stations.BaseInfo)
+            </MudText>
+            <MudText Typo="Typo.body1" Class="mt-4" Style="font-size: 1.1rem; line-height: 1.6;">
+                @((MarkupString)stations.AllInfo)
+            </MudText>
+        </MudPaper>
+
+        <MudText Typo="Typo.h5" Class="mb-4 ml-2 fw-bold" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" /> Розклад поїздів по станції
+        </MudText>
+
+        @if (schedule is null)
+        {
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">Відсутні дані про розклад...</MudAlert>
+        }
+        else
+        {
+            <MudTable Items="@schedule" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="2" Class="rounded-lg mb-8" Striped="true">
+                <HeaderContent>
+                    <MudTh>Номер</MudTh>
+                    <MudTh>Звідки</MudTh>
+                    <MudTh>Куди</MudTh>
+                    <MudTh>Прибуття</MudTh>
+                    <MudTh>Відправлення</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Номер"><MudChip T="string" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@context.NumberTrain</MudChip></MudTd>
+                    <MudTd DataLabel="Звідки">@context.TrainFrom</MudTd>
+                    <MudTd DataLabel="Куди">@context.TrainTo</MudTd>
+                    <MudTd DataLabel="Прибуття"><MudText Color="Color.Success">@context.TimeOfArrive.ToString(@"hh\:mm")</MudText></MudTd>
+                    <MudTd DataLabel="Відправлення"><MudText Color="Color.Error">@context.TimeOfDepet.ToString(@"hh\:mm")</MudText></MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    }
+    else
+    {
+        <div class="d-flex flex-column align-center justify-center" style="min-height: 60vh;">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+            <MudText Typo="Typo.body1" Class="mt-4">Завантаження даних станції...</MudText>
+        </div>
+    }
+
+    @if (ErrorMessage is not null)
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mb-6">
+            <strong>Помилка збереження:</strong> @ErrorMessage
+        </MudAlert>
+    }
+
+    <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.ArrowBack"
+               OnClick="Back" Class="mt-4 mb-10 px-8 py-2 rounded-pill">
+        До списку станцій
+    </MudButton>
+</MudContainer>
+@code {
+    [Parameter] public int Id { get; set; }
+    private string ErrorMessage;
+    private StationsDetailsDTO stations;
+    private List<StationsShadulerDTO> schedule;
+    private UserDto CurrentUser; // або отримуй з авторизації
+
+    private bool IsAdmin = false;
+    private bool CanComment = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stations = await Http.GetFromJsonAsync<StationsDetailsDTO>($"api/stations/details/{Id}");
+        schedule = stations.stationsShadulers;
+        // Приклад: завантаження поточного користувача та кількості коментарів
+        // CurrentUser = await Http.GetFromJsonAsync<UserDto>("api/users/current");
+        // CommentCount = await Http.GetFromJsonAsync<int>($"api/news/{Id}/comments/count");
+        await CheckRoles();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin") || roles.Contains("Publisher");
+
+                if (user.Identity.Name != null)
+                {
+                    CanComment = true;
+                }
+            }
+        }
+    } 
+
+    private void EditStation(int stationsId)
+    {
+        Navigation.NavigateTo($"/stations/edit/{stationsId}");
+    }
+
+    private void AddImage(int stationsId)
+    {
+        Navigation.NavigateTo($"/news/addimage/{stationsId}");
+    }
+    private void Back()
+    {
+        Navigation.NavigateTo($"/stations/");
+    }
+
+    private void AddInfo()
+    {
+        Navigation.NavigateTo($"/stationsinfo/create/{stations.Name}");
+    }
+    private async Task DeleteStation(int id)
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити станцію?"))
+            return;
+
+        var response = await Http.PostAsync($"api/stations/delete/{id}", null);
+
+        if (response.IsSuccessStatusCode)
+            Navigation.NavigateTo("/stations");
+
+        else
+            ErrorMessage = "Помилка видалення: " + await response.Content.ReadAsStringAsync();
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+}

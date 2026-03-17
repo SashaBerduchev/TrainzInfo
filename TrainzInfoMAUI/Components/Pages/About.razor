@@ -1,0 +1,99 @@
+﻿@page "/about"
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 mb-16">
+    <div class="text-center mb-12">
+        <MudIcon Icon="@Icons.Material.Filled.DirectionsTransit" Color="Color.Primary" Style="font-size: 5rem;" />
+        <MudText Typo="Typo.h2" Color="Color.Primary" Class="fw-bold">TrainzInfo</MudText>
+        <MudText Typo="Typo.h5" Class="mud-text-secondary">Твій персональний залізничний інформатор</MudText>
+        <div class="d-flex justify-center mt-4">
+            <div style="width: 80px; height: 4px; background-color: var(--mud-palette-primary); border-radius: 2px;"></div>
+        </div>
+    </div>
+
+    <MudGrid Spacing="6">
+        <MudItem xs="12" lg="8">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl mud-bg-background-grey mb-6">
+                <MudText Typo="Typo.h4" Class="mb-4 fw-bold">Про проєкт</MudText>
+                <MudText Typo="Typo.body1" Style="font-size: 1.1rem; line-height: 1.8;">
+                    <strong>TrainzInfo</strong> — це мультиплатформовий застосунок, створений для залізничних ентузіастів та професіоналів.
+                    Ми об’єднуємо оперативні дані, аналітику та зручний інтерфейс, щоб зробити взаємодію з залізничним транспортом
+                    простішою та зрозумілішою.
+                </MudText>
+                <MudText Typo="Typo.body1" Class="mt-4" Style="font-size: 1.1rem; line-height: 1.8;">
+                    Проєкт народився з ідеї створити єдину точку доступу до інформації про рух поїздів та стан інфраструктури,
+                    яка буде однаково зручною як на десктопі, так і на твоєму <strong>Pixel 7 Pro</strong>.
+                </MudText>
+            </MudPaper>
+
+            <MudText Typo="Typo.h4" Class="mb-4 fw-bold ml-2">Ключові переваги</MudText>
+            <MudGrid Spacing="3">
+                <MudItem xs="12" sm="6">
+                    <MudPaper Elevation="2" Class="pa-4 d-flex align-center gap-4 rounded-lg">
+                        <MudAvatar Color="Color.Primary" Variant="Variant.Filled">
+                            <MudIcon Icon="@Icons.Material.Filled.Memory" />
+                        </MudAvatar>
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">Швидкість</MudText>
+                            <MudText Typo="Typo.body2">Оптимізовано на .NET 10</MudText>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudPaper Elevation="2" Class="pa-4 d-flex align-center gap-4 rounded-lg">
+                        <MudAvatar Color="Color.Secondary" Variant="Variant.Filled">
+                            <MudIcon Icon="@Icons.Material.Filled.Devices" />
+                        </MudAvatar>
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">Кросплатформенність</MudText>
+                            <MudText Typo="Typo.body2">Windows, Android & Web</MudText>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudPaper Elevation="2" Class="pa-4 d-flex align-center gap-4 rounded-lg">
+                        <MudAvatar Color="Color.Tertiary" Variant="Variant.Filled">
+                            <MudIcon Icon="@Icons.Material.Filled.Update" />
+                        </MudAvatar>
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Class="fw-bold">Актуальність</MudText>
+                            <MudText Typo="Typo.body2">Оновлення даних у реальному часі через API</MudText>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+
+        <MudItem xs="12" lg="4">
+            <MudStack Spacing="4">
+                <MudCard Elevation="4" Class="rounded-xl">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6" Class="fw-bold">Технології</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <div class="d-flex flex-wrap gap-2">
+                            <MudChip T="string" Color="Color.Dark" Variant="Variant.Filled" Size="Size.Small">C# 14 / .NET 10</MudChip>
+                            <MudChip T="string" Color="Color.Info" Variant="Variant.Filled" Size="Size.Small">Blazor Hybrid</MudChip>
+                            <MudChip T="string" Style="background-color: #512bd4; color: white;" Variant="Variant.Filled" Size="Size.Small">.NET MAUI</MudChip>
+                            <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">MudBlazor</MudChip>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+
+                <MudPaper Elevation="0" Class="pa-8 rounded-xl mud-theme-primary d-flex flex-column align-center justify-center text-center">
+                    <MudText Typo="Typo.subtitle1">Версія застосунку</MudText>
+                    <MudText Typo="Typo.h2" Class="fw-bold my-2">2.0.0</MudText>
+                    <MudText Typo="Typo.caption" Style="opacity: 0.8;">Release Candidate (2026)</MudText>
+                </MudPaper>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+    <div class="mt-16 text-center">
+        <MudIcon Icon="@Icons.Material.Filled.FormatQuote" Color="Color.Default" Size="Size.Large" />
+        <MudText Typo="Typo.h5" Class="fst-italic mud-text-secondary mt-n2">
+            "TrainzInfo — залізниця у твоїй кишені."
+        </MudText>
+    </div>
+</MudContainer>

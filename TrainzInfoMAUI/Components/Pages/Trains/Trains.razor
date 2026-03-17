@@ -1,0 +1,224 @@
+﻿@page "/trains"
+@using System.Threading.Tasks
+@using SharedDTO.DTO.GetDTO
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JS
+<h1 class="text-center my-4">Призначені поїзди</h1>
+@if(IsAdmin)
+{
+    <div class="d-flex justify-end mb-4">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddTrain">Додати поїзд</MudButton>
+    </div>
+}
+
+@if (isLoad)
+{
+    <MudPaper Elevation="4" Class="rounded-xl pa-4 mb-4">
+        @* Заголовок секції для контексту *@
+        <MudText Typo="Typo.h6" Class="mud-text-secondary mb-3">Отримуємо дані про поїзди...</MudText>
+
+        <MudStack Spacing="2">
+            @foreach (var i in Enumerable.Range(0, 5))
+            {
+                <MudPaper Elevation="0" Class="pa-4 mud-bg-background-grey rounded-lg">
+                    <MudGrid Spacing="2" AlignItems="AlignItems.Center">
+                        @* Імітуємо номер (Chip) *@
+                        <MudItem xs="2" sm="1">
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="40px" Height="24px" Class="rounded-pill" />
+                        </MudItem>
+
+                        @* Імітуємо маршрут *@
+                        <MudItem xs="6" sm="4">
+                            <MudSkeleton Width="80%" Height="16px" Class="mb-1" />
+                            <MudSkeleton Width="60%" Height="16px" />
+                        </MudItem>
+
+                        @* Імітуємо тип та назву (тільки для десктопа hide-xs) *@
+                        <MudItem sm="4" Class="d-none d-sm-block">
+                            <MudSkeleton Width="40%" Height="16px" Class="mb-1" />
+                            <MudSkeleton Width="90%" Height="16px" />
+                        </MudItem>
+
+                        @* Імітуємо кнопки дій *@
+                        <MudItem xs="4" sm="3" Class="d-flex justify-end">
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="32px" Height="32px" Class="mr-2" />
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="32px" Height="32px" />
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+        </MudStack>
+
+        @* Пагінація-заглушка *@
+        <div class="d-flex justify-end mt-4">
+            <MudSkeleton Width="150px" Height="20px" />
+        </div>
+    </MudPaper>
+}
+else
+{
+
+    <MudTable Items="@trains" Hover="true" Striped="true" Breakpoint="Breakpoint.Sm" Elevation="4" Class="rounded-xl overflow-hidden">
+        <HeaderContent>
+            <MudTh>Номер</MudTh>
+            <MudTh>Маршрут (Звідки - Куди)</MudTh>
+            <MudTh>Тип</MudTh>
+            <MudTh>Назва</MudTh>
+            <MudTh Style="text-align:center">Дії</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Номер">
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="fw-bold">@context.Number</MudChip>
+            </MudTd>
+            <MudTd DataLabel="Маршрут">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.body2"><b>З:</b> @context.StationFrom</MudText>
+                    <MudText Typo="Typo.body2"><b>До:</b> @context.StationTo</MudText>
+                </MudStack>
+            </MudTd>
+            <MudTd DataLabel="Тип">@context.PassTrainType</MudTd>
+            <MudTd DataLabel="Назва"><i>@context.NameOfTrain</i></MudTd>
+            <MudTd DataLabel="Дії">
+                <MudStack Row="true" Justify="Justify.Center" Spacing="1">
+                    @if (context.TrainsShadulesCount > 0)
+                    {
+                        @* Виправили лямбду: @(() => ...) *@
+                        <MudIconButton Icon="@Icons.Material.Filled.Schedule" Color="Color.Info" Size="Size.Small"
+                        OnClick="@(() => Nav.NavigateTo($"/trains/shedule/{context.Id}"))" Title="Розклад" />
+                    }
+
+                    @* Додали Context="userContext" для усунення конфлікту *@
+                    <AuthorizeView Roles="Superadmin" Context="userContext">
+                        <Authorized>
+                            @if (context.TrainsShadulesCount > 0)
+                            {
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Success" Size="Size.Small"
+                                               OnClick="@(() => Nav.NavigateTo($"/trains-scheduler/edit/{context.Id}"))" Title="Редагувати" />
+                            }
+                            else
+                            {
+                                <MudIconButton Icon="@Icons.Material.Filled.AddAlarm" Color="Color.Warning" Size="Size.Small"
+                                OnClick="@(() => Nav.NavigateTo($"/trainsshedules/create/{context.Id}"))" Title="Додати розклад" />
+                            }
+                            @* Виправили лямбду: @(async () => await ...) *@
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small"
+                            OnClick="@(async () => await DeleteSchedule(context.Id))" Title="Видалити" />
+                        </Authorized>
+                    </AuthorizeView>
+                </MudStack>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Потягів на сторінці:" />
+        </PagerContent>
+    </MudTable>
+}
+@code {
+    private List<TrainDTO>? trains;
+    private List<string> numbers = new();
+    private string? selectedNumber;
+    private string? selectedFrom;
+    private string? selectedTo;
+    private bool isAdmin = false;
+    private List<string> stations = new();
+    private bool IsAdmin;
+    private bool isLoad = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        await CheckRoles();
+    }
+
+    private async Task Load()
+    {
+        isLoad = true;
+        StateHasChanged();
+        var url =
+               $"api/trains/gettrains?" +
+               $"{(string.IsNullOrWhiteSpace(selectedNumber) ? "" : $"&number={Uri.EscapeDataString(selectedNumber)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedFrom) ? "" : $"&stationFrom={Uri.EscapeDataString(selectedFrom)}")}" +
+               $"{(string.IsNullOrWhiteSpace(selectedTo) ? "" : $"&stationTo={Uri.EscapeDataString(selectedTo)}")}";
+
+        Console.WriteLine("Loading trains from URL: " + url);
+        trains = await Http.GetFromJsonAsync<List<TrainDTO>>(url);
+
+        numbers.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getnumbers"));
+        stations.AddRange(await Http.GetFromJsonAsync<List<string>>("api/trains/getstations"));
+        isLoad = false;
+    }
+    private async Task ApplyFilter()
+    {
+        trains.Clear();          // если хотите начать с нуля
+        await Load();                 // загружаем первую страницу
+
+        StateHasChanged();
+    }
+
+    private async Task ClearFilter()
+    {
+        selectedNumber = string.Empty;
+        selectedFrom = string.Empty;
+        selectedTo = string.Empty;
+        await Load();
+
+        StateHasChanged();
+    }
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin");
+                IsAdmin = roles.Contains("Superadmin");
+
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    private async Task DeleteSchedule(int id)
+    {
+        if (!await Confirm("Ви впевнені що хочете видалити розклад?"))
+            return;
+
+        var response = await Http.PostAsync($"api/trainsshaduller/delete/{id}", null);
+
+        if (response.IsSuccessStatusCode)
+            StateHasChanged();
+
+        else
+            Console.WriteLine("Помилка видалення: " + await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task<bool> Confirm(string message)
+    {
+        return await Task.FromResult(await JS.InvokeAsync<bool>("confirm", message));
+    }
+
+    public void AddTrain()
+    {
+        Nav.NavigateTo("/trains/create");
+    }
+
+}
