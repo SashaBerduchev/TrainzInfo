@@ -205,7 +205,7 @@
             Console.WriteLine($"Додано електричку: {electrics.Name} {electrics.Model}");
             Snackbar.Add("Збережено", Severity.Success);
             // Після успіху — навігація назад
-            Navigation.NavigateTo("/electric-trains");
+            Navigation.NavigateTo($"/electric-trains/details/{electrics.id}");
         }
         else
         {

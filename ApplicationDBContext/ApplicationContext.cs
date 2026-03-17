@@ -24,13 +24,20 @@ namespace ApplicationDBContext
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+           
             optionsBuilder
-        .AddInterceptors(new BlockingInterceptor())
-        //.EnableSensitiveDataLogging()
-        .LogTo(Log.SQLLogging,
-               LogLevel.Information,
-               DbContextLoggerOptions.LocalTime);
-            ; // лог у консоль
+            .LogTo((message) =>
+            {
+                // 1. Фільтр для SQL логу (тільки Executed DbCommand)
+                if (message.Contains("Executed DbCommand"))
+                {
+                    Log.SQLLogging(message);
+                }
+                else
+                {
+                    Log.ActivityLog(message);
+                }
+            }, LogLevel.Debug, DbContextLoggerOptions.LocalTime);
         }
 
         public DbSet<Locomotive> Locomotives { get; set; }

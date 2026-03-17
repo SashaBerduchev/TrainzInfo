@@ -86,6 +86,7 @@ namespace TrainzInfo.Controllers.Api
 
                     stations = await query
                         .OrderBy(s => s.id)
+                        .ThenBy(x=>x.Name)
                         .Skip((page - 1) * pageSize)
                         .Take(pageSize)
                         .Select(s => new StationsDTO
@@ -446,6 +447,7 @@ namespace TrainzInfo.Controllers.Api
                         OldImage = s.StationImages.Image != null
                                 ? $"data:{s.StationImages.ImageMimeTypeOfData};base64,{Convert.ToBase64String(s.StationImages.Image)}"
                                 : null,
+                        OldImageType = s.StationImages.ImageMimeTypeOfData
                     })
                     .FirstOrDefaultAsync();
                 Log.Wright("Station edit details successfully retrieved from database");
@@ -507,7 +509,7 @@ namespace TrainzInfo.Controllers.Api
                         station.StationImages = stationImages;
                     }
                     _context.Stations.Update(station);
-                }, IsolationLevel.Serializable);
+                }, IsolationLevel.ReadCommitted);
                 _stationsCache.Clear();
                 Log.Wright("Station successfully edited in database");
                 return Ok();

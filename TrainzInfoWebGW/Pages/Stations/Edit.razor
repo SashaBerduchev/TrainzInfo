@@ -2,6 +2,8 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject AuthenticationStateProvider AuthStateProvider
+
 
 <PageTitle>Редагування станції | TrainzInfo</PageTitle>
 
@@ -123,7 +125,7 @@
     private StationEditDTO stationsDTO;
     private string imagePreview;
     private string ErrorMessage;
-
+    private bool IsAdmin;
     // Списки (можна винести в сервіс)
     private List<string> OblastList = new(); // Приклад
     private List<string> FiliasList = new(); // Приклад
@@ -132,7 +134,10 @@
     {
         try 
         {
+            await CheckRoles();
             stationsDTO = await Http.GetFromJsonAsync<StationEditDTO>($"api/stations/getedit/{Id}");
+            FiliasList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-filias");
+            OblastList = await Http.GetFromJsonAsync<List<string>>($"api/stations/get-oblasts");
             if (stationsDTO != null && !string.IsNullOrEmpty(stationsDTO.OldImage))
             {
                 Console.WriteLine($"Отримано дані станції: {stationsDTO.Name}, Фото: {stationsDTO.OldImage}");
@@ -148,9 +153,44 @@
         }
     }
 
+
+    private async Task CheckRoles()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customAuth)
+        {
+            // Перевірка стану авторизації на сервері
+            await customAuth.CheckAuthenticationAsync();
+
+            // Отримуємо ClaimsPrincipal
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var email = user.Identity.Name;
+                var roles = user.Claims
+                                .Where(c => c.Type == ClaimTypes.Role)
+                                .Select(c => c.Value)
+                                .ToList();
+
+                IsAdmin = roles.Contains("Admin") || roles.Contains("Superadmin");
+
+            }
+            else
+            {
+                Navigation.NavigateTo("/erroraccess");
+            }
+        }
+    }
+
     private async Task HandleValidSubmit()
     {
         Console.WriteLine("HandleValidSubmit " + stationsDTO.Name);
+        if(stationsDTO.NewImage == null)
+        {
+            stationsDTO.NewImage = stationsDTO.OldImage;
+            stationsDTO.NewImageType = stationsDTO.OldImageType;
+        }
         ErrorMessage = "";
         try
         {

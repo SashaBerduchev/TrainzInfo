@@ -7,9 +7,9 @@ namespace Logging
     {
         static string folder = "Logs";
         static string folderlog = @"Logs";
-        static string StandartLog = "StandartWork.log";
+        static string StandartLog = "Standart.log";
         static string SQLserversLog = "SQL.log";
-        static string worklog = "WorkLog.log";
+        static string Activity = "Activity.log";
         static string ExceptionLog = "Exceptions.log";
         static string ErrorLog = "ErrorLog.log";
         static string ConnectionLog = "ConnectionLog.log";
@@ -31,6 +31,32 @@ namespace Logging
             StandartLogFile(startStandartLogStr + " - " + "Finish");
             startStandartLogStr = "";
         }
+
+        public static void ActivityLog(string log)
+        {
+            try
+            {
+                string logstr = log + "\n";
+                Trace.WriteLine(logstr);
+                //Console.WriteLine(logstr);
+                string filePath = Path.Combine(folderlog, DateTime.Now.ToString("yyyy-MM-dd") + " - " + Activity);
+
+                lock (_logLock)
+                {
+                    using (var filestreamlog = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    using (var writer = new StreamWriter(filestreamlog, Encoding.UTF8))
+                    {
+                        writer.Write(logstr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                Exceptions(e.ToString());
+            }
+        }
+
 
         public static void SQLLogging(string log)
         {

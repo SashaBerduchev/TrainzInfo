@@ -453,6 +453,7 @@ namespace TrainzInfo.Controllers.Api
                     .Where(x => x.Name == electricTrainDTO.DepotList).FirstOrDefaultAsync();
                 City city = depot.City;
                 Oblast oblast = city.Oblasts;   
+                Log.Wright("Try update data");
                 await _context.ExecuteInTransactionAsync(async () =>
                 {
                     ElectricTrain electricTrain = await _context.Electrics.Where(x => x.id == electricTrainDTO.id).FirstOrDefaultAsync();
@@ -462,6 +463,10 @@ namespace TrainzInfo.Controllers.Api
                     electricTrain.Model = electricTrainDTO.Model;
                     electricTrain.MaxSpeed = electricTrainDTO.MaxSpeed;
                     electricTrain.DepotCity = city.Name;
+                    electricTrain.Image = !string.IsNullOrEmpty(electricTrainDTO.Image)
+                                    ? Convert.FromBase64String(electricTrainDTO.Image.Split(',')[1])
+                                    : null;
+                    electricTrain.ImageMimeTypeOfData = electricTrainDTO.ImageMimeTypeOfData;
                     _context.Electrics.Update(electricTrain);
                 }, IsolationLevel.ReadCommitted);
                 Log.Wright("Electric train updater sucessfull!");
