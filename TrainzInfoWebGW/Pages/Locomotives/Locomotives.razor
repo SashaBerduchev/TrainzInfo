@@ -67,7 +67,7 @@
                 </MudSelect>
             </MudItem>
 
-            <MudItem xs="12" md="3">
+            <MudItem xs="12" md="3" Class="d-flex align-end pb-1">
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.FilterAltOff"
                            OnClick="ClearFilter" FullWidth="true" Size="Size.Large">
                     Скинути
@@ -401,7 +401,7 @@
         StateHasChanged();
         await Load();
         //await Task.Delay(50);
-        await JS.InvokeVoidAsync("revealNewLocoCards");
+        //await JS.InvokeVoidAsync("revealNewLocoCards");
     }
 
     private async Task CheckRoles()
