@@ -336,8 +336,8 @@
         Filias.Clear();
         Oblasts.Clear();
         StationNames.Clear();
-        stationsList.Clear();          // если хотите начать с нуля
-        await LoadStations();                 // загружаем первую страницу
+        stationsList.Clear();          
+        await LoadStations();          
 
         StateHasChanged();
     }
@@ -350,7 +350,23 @@
         isFilterLoad = false;
         currentPage = 1;
         stationsList.Clear();
-        await LoadStations();
+        _ = InvokeAsync(async () =>
+        {
+            // 2. Формуємо URL, де вказуємо null для всіх фільтрів, які треба стерти
+            var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["filia"] = null,
+                ["name"] = null,
+                ["oblast"] = null,
+                
+            });
+
+            // 3. Робимо перехід (це прибере ?filia=...&depo=... з адресного рядка)
+            Nav.NavigateTo(newUri);
+
+            // 4. Завантажуємо чистий список
+            await LoadStations();
+        });
 
         StateHasChanged();
     }

@@ -247,9 +247,10 @@ namespace TrainzInfo.Controllers.Api
 
                     Log.Wright("Locomotive found: " + locomotive?.Seria + " " + locomotive?.Number);
                     Log.Wright("Caching locomotive details with key: " + cacheKey);
+                    IChangeToken token = _locomotivesCache.GetToken();
                     var cacheOptions = new MemoryCacheEntryOptions()
                                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15)) // кеш 5 хв
-                               .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+                               .AddExpirationToken(token);
                     _cache.Set(cacheKey, locomotive, cacheOptions);
                 }
                 catch (Exception ex)
@@ -685,6 +686,115 @@ namespace TrainzInfo.Controllers.Api
             var obl = await _context.Oblasts.OrderBy(x => x.Name).Select(x => x.Name).ToListAsync();
             return Ok(obl);
         }
+
+        [HttpGet("getedit/{Id}")]
+        public async Task<ActionResult> GetEdit(int id)
+        {
+            Log.Init("LocomotivesApiController", "GetEdit");
+            Log.Wright("Start Get GetEdit with id: " + id);
+            try
+            {
+                var loco = await _context.Locomotives
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.UkrainsRailway)
+                    .Include(x => x.Locomotive_Series)
+                    .Where(x => x.id == id)
+                    .Select(xs => new LocomotiveSetDTO
+                    {
+                        id = xs.id,
+                        Number = xs.Number,
+                        Speed = xs.Speed,
+                        Depot = xs.Depot,
+                        Seria = xs.Locomotive_Series.Seria,
+                        // Логіка для картинки локомотива
+                        ImgSrc = xs.Image != null
+                        ? $"data:{xs.ImageMimeTypeOfData};base64,{Convert.ToBase64String(xs.Image)}"
+                        : null,
+                        ImageType = xs.ImageMimeTypeOfData
+                    }
+                    ).FirstOrDefaultAsync();
+                Log.Wright("Locomotive found: " + loco?.Seria + " " + loco?.Number);
+                return Ok(loco);
+            }
+            catch (Exception ex)
+            {
+                Log.Exceptions(ex.ToString());
+                Log.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
+
+        [HttpPost("update")]
+        public async Task<ActionResult> UpdateLocomotive([FromBody] LocomotiveSetDTO locomotiveDTO)
+        {
+            try
+            {
+                Log.Init("LocomotivesApiController", "UpdateLocomotive");
+                Log.Wright("Start Post UpdateLocomotive with id: " + locomotiveDTO.id);
+                var locomotive = await _context.Locomotives
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.City)
+                    .ThenInclude(x => x.Oblasts)
+                    .Include(x => x.DepotList)
+                    .ThenInclude(x => x.UkrainsRailway)
+                    .Include(x => x.Locomotive_Series)
+                    .Where(x => x.id == locomotiveDTO.id)
+                    .FirstOrDefaultAsync();
+                if (locomotive == null)
+                {
+                    return NotFound();
+                }
+
+                await _context.ExecuteInTransactionAsync(async () =>
+                {
+                    locomotive.Number = locomotiveDTO.Number;
+                    locomotive.Speed = locomotiveDTO.Speed;
+                    locomotive.Seria = locomotiveDTO.Seria;
+                    locomotive.Locomotive_Series = await _context.Locomotive_Series
+                        .FirstOrDefaultAsync(s => s.Seria == locomotiveDTO.Seria);
+                    locomotive.Depot = locomotiveDTO.Depot;
+                    locomotive.DepotList = await _context.Depots.Where(d => d.Name == locomotiveDTO.Depot)
+                        .Include(x => x.City)
+                        .ThenInclude(x => x.Oblasts)
+                        .FirstOrDefaultAsync();
+
+                    // Оновлення інших полів за потребою
+                    if (!string.IsNullOrEmpty(locomotiveDTO.ImgSrc))
+                    {
+                        var base64Data = locomotiveDTO.ImgSrc.Contains(",")
+                            ? locomotiveDTO.ImgSrc.Split(',')[1]
+                            : locomotiveDTO.ImgSrc;
+                        byte[] imageBytes = Convert.FromBase64String(base64Data);
+                        locomotive.Image = imageBytes;
+                        locomotive.ImageMimeTypeOfData = locomotiveDTO.ImageType;
+                    }
+                    _context.Locomotives.Update(locomotive);
+                }, IsolationLevel.ReadCommitted);
+                _locomotivesCache.Clear();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Exceptions(ex.ToString());
+                Log.Wright(ex.ToString());
+                return BadRequest(ex.ToString());
+                throw;
+            }
+            finally
+            {
+                Log.Finish();
+            }
+        }
+
 
         [HttpPost("deleteapprove/{id}")]
         //[Authorize(Roles = "Superadmin, Admin")]

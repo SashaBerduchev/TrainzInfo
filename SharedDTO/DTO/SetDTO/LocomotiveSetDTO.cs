@@ -6,6 +6,7 @@ namespace SharedDTO.DTO.SetDTO
 {
     public class LocomotiveSetDTO
     {
+        public int id { get; set; }
         public string Number { get; set; }
         public int Speed { get; set; }
         public string Seria { get; set; }

@@ -30,14 +30,14 @@
         <MudGrid Spacing="3" AlignItems="AlignItems.Center">
             <MudItem xs="12" md="3">
                 <MudStack Spacing="1">
-                    <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v=> OnFiliaChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelect T="string" Label="Філія" Value="@SelectedFilia" ValueChanged="@(v => OnFiliaChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
                         <MudSelectItem Value="@("")">Всі філії</MudSelectItem>
                         @foreach (var f in FiliaList)
                         {
                             <MudSelectItem Value="@f">@f</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudSelect T="string" Label="Область" Value="@SelectedObl" ValueChanged="@(v=>OnOblastChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
+                    <MudSelect T="string" Label="Область" Value="@SelectedObl" ValueChanged="@(v => OnOblastChanged(v))" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense">
                         <MudSelectItem Value="@("")">Всі області</MudSelectItem>
                         @foreach (var o in OblastList)
                         {
@@ -48,7 +48,7 @@
             </MudItem>
 
             <MudItem xs="12" md="3">
-                <MudSelect T="string" Label="Депо" Value="@SelectedDepot" ValueChanged="@(v=> OnDepotChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                <MudSelect T="string" Label="Депо" Value="@SelectedDepot" ValueChanged="@(v => OnDepotChanged(v))" Variant="Variant.Outlined" FullWidth="true">
                     <MudSelectItem Value="@("")">Всі депо</MudSelectItem>
                     @foreach (var d in DepotList)
                     {
@@ -58,7 +58,7 @@
             </MudItem>
 
             <MudItem xs="12" md="3">
-                <MudSelect T="string" Label="Серія" Value="@SelectedSeria" ValueChanged="@(v=> OnSeriaChanged(v))" Variant="Variant.Outlined" FullWidth="true">
+                <MudSelect T="string" Label="Серія" Value="@SelectedSeria" ValueChanged="@(v => OnSeriaChanged(v))" Variant="Variant.Outlined" FullWidth="true">
                     <MudSelectItem Value="@("")">Всі серії</MudSelectItem>
                     @foreach (var s in SeriaList)
                     {
@@ -178,7 +178,7 @@
 </MudContainer>
 
 
-@code {
+    @code {
     private List<LocomotiveDTO> locomotives = new();
     private List<LocomotiveDTO> FilteredLocomotives = new();
     private int count;
@@ -211,6 +211,43 @@
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
         depotNameFromQuery = query["depotsName"];
+
+        var queryStr = QueryHelpers.ParseQuery(uri.Query);
+        bool hasFilter = false;
+
+        if (queryStr.TryGetValue("filia", out var filia))
+        {
+            SelectedFilia = filia.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("oblast", out var oblast))
+        {
+            SelectedObl = oblast.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("depo", out var name))
+        {
+            SelectedDepot = name.ToString();
+            hasFilter = true;
+        }
+
+        if (queryStr.TryGetValue("seria", out var seria))
+        {
+            SelectedSeria = seria.ToString();
+            hasFilter = true;
+        }
+
+        // Викликаємо фільтр тільки один раз, якщо хоча б один параметр знайдено
+        if (hasFilter)
+        {
+            await ApplyFilter();
+        }
+        else
+        {
+            await Load();
+        }
         await Load();
         // Підписка на скрол через JS
         await JS.InvokeVoidAsync("addLocomotiveScrollListener", DotNetObjectReference.Create(this));
@@ -292,26 +329,62 @@
 
     private async Task OnFiliaChanged(string value)
     {
-        SelectedFilia = value ?? "";
-        await ApplyFilter();
+        SelectedFilia = value ?? ""; 
+        _ = InvokeAsync(async () =>
+        {
+            var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["filia"] = string.IsNullOrEmpty(SelectedFilia) ? null : SelectedFilia
+            });
+
+            Nav.NavigateTo(newUri);
+            await ApplyFilter();
+        });
     }
 
     private async Task OnOblastChanged(string value)
     {
         SelectedObl = value ?? "";
-        await ApplyFilter();
+        _ = InvokeAsync(async () =>
+        {
+            var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["oblast"] = string.IsNullOrEmpty(SelectedObl) ? null : SelectedObl
+            });
+            Nav.NavigateTo(newUri);
+            await ApplyFilter();
+        });
+
     }
 
     private async Task OnDepotChanged(string value)
     {
         SelectedDepot = value ?? "";
-        await ApplyFilter();
+        _ = InvokeAsync(async () =>
+        {
+            var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["depo"] = string.IsNullOrEmpty(SelectedDepot) ? null : SelectedDepot
+            });
+            Nav.NavigateTo(newUri);
+            await ApplyFilter();
+        });
+
     }
 
     private async Task OnSeriaChanged(string value)
     {
         SelectedSeria = value ?? "";
-        await ApplyFilter();
+        _ = InvokeAsync(async () =>
+       {
+           var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+           {
+               ["seria"] = string.IsNullOrEmpty(SelectedSeria) ? null : SelectedSeria
+           });
+           Nav.NavigateTo(newUri);
+           await ApplyFilter();
+       });
+
     }
 
     private async Task ApplyFilter()
@@ -325,9 +398,9 @@
         DepotList.Clear();
         SeriaList.Clear();
         OblastList.Clear();
-        await Load();                 // загружаем первую страницу
         StateHasChanged();
-        await Task.Delay(50);
+        await Load();
+        //await Task.Delay(50);
         await JS.InvokeVoidAsync("revealNewLocoCards");
     }
 
@@ -369,7 +442,23 @@
         DepotList.Clear();
         SeriaList.Clear();
         OblastList.Clear();
-        await Load();
+        _ = InvokeAsync(async () =>
+        {
+            // 2. Формуємо URL, де вказуємо null для всіх фільтрів, які треба стерти
+            var newUri = Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["filia"] = null,
+                ["seria"] = null,
+                ["depo"] = null,
+                ["oblast"] = null
+            });
+
+            // 3. Робимо перехід (це прибере ?filia=...&depo=... з адресного рядка)
+            Nav.NavigateTo(newUri);
+
+            // 4. Завантажуємо чистий список
+            await Load();
+        });
         StateHasChanged();
         await Task.Delay(50);
         await JS.InvokeVoidAsync("revealNewLocoCards");
